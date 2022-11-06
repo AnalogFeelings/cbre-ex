@@ -29,7 +29,9 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using LayoutSettings = CBRE.Editor.UI.Layout.LayoutSettings;
 
@@ -39,6 +41,7 @@ namespace CBRE.Editor
 	{
 		private JumpList _jumpList;
 		private DiscordManager _DiscordManager;
+		private HttpClient _UpdaterClient;
 		
 		public static Editor Instance { get; private set; }
 
@@ -191,9 +194,11 @@ namespace CBRE.Editor
 
 			ViewportManager.RefreshClearColour(DocumentTabs.TabPages.Count == 0);
 
-            if (CBRE.Settings.General.CheckUpdatesOnStartup) CheckForUpdates(true);
+			_UpdaterClient = new HttpClient();
+
+            if (General.CheckUpdatesOnStartup) CheckForUpdates(true);
             
-            ToggleDiscord(CBRE.Settings.General.EnableDiscordPresence);
+            ToggleDiscord(General.EnableDiscordPresence);
 		}
 
 		public void ToggleDiscord(bool Enabled)
@@ -218,16 +223,14 @@ namespace CBRE.Editor
 
 		private void CheckForUpdates(bool notFromMenu)
 		{
-			using (WebClient Client = new WebClient())
-			{
-				try
+			try
 				{
 					Version ParsedNewVersion;
 					Version CurrentVersion = GetCurrentVersion();
 
 					//Github wants me to set a user agent, sure!
-					Client.Headers.Add("Accept", "application/vnd.github.v3+json");
-					Client.Headers.Add("User-Agent", "AestheticalZ/cbre-ex");
+					_UpdaterClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+					_UpdaterClient.DefaultRequestHeaders.Add("User-Agent", "AestheticalZ/cbre-ex");
 
 					JsonSerializerSettings DeserializeSettings = new JsonSerializerSettings
 					{
@@ -236,7 +239,9 @@ namespace CBRE.Editor
 
 					ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-					UpdaterResponse Response = JsonConvert.DeserializeObject<UpdaterResponse>(Client.DownloadString(API_RELEASES_URL), DeserializeSettings);
+					string ServerResponse = Task.Run(() => _UpdaterClient.GetStringAsync(API_RELEASES_URL)).Result;
+
+					UpdaterResponse Response = JsonConvert.DeserializeObject<UpdaterResponse>(ServerResponse, DeserializeSettings);
 
 					//Version is invalid? Die
 					if (!Version.TryParse(Response.VersionTag, out ParsedNewVersion)) return;
@@ -274,7 +279,6 @@ namespace CBRE.Editor
 				{
 					return; //Do nothing.
 				}
-			}
 		}
 		#endregion
 
