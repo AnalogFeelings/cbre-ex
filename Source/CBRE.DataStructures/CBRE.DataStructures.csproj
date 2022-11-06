@@ -1,152 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{26A974C9-E495-4FA3-8E87-1E00019D04F5}</ProjectGuid>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CBRE.DataStructures</RootNamespace>
-    <AssemblyName>CBRE.DataStructures</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
-    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
       <HintPath>..\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameData\AutoVisgroup.cs" />
-    <Compile Include="GameData\AutoVisgroupSection.cs" />
-    <Compile Include="GameData\CustomEntity.cs" />
-    <Compile Include="Geometric\Box.cs" />
-    <Compile Include="Geometric\BoxF.cs" />
-    <Compile Include="Geometric\Cloud.cs" />
-    <Compile Include="Geometric\CoordinateF.cs" />
-    <Compile Include="Geometric\CsgNode.cs" />
-    <Compile Include="Geometric\CsgSolid.cs" />
-    <Compile Include="Geometric\LineF.cs" />
-    <Compile Include="Geometric\PlaneF.cs" />
-    <Compile Include="Geometric\Polygon.cs" />
-    <Compile Include="Geometric\QuaternionF.cs" />
-    <Compile Include="Geometric\MatrixF.cs" />
-    <Compile Include="Geometric\MathFunctions.cs" />
-    <Compile Include="Geometric\Matrix.cs" />
-    <Compile Include="Geometric\Plane.cs" />
-    <Compile Include="Geometric\Quaternion.cs" />
-    <Compile Include="Geometric\Vector.cs" />
-    <Compile Include="GameData\Behaviour.cs" />
-    <Compile Include="GameData\ClassType.cs" />
-    <Compile Include="GameData\GameData.cs" />
-    <Compile Include="GameData\GameDataObject.cs" />
-    <Compile Include="GameData\IO.cs" />
-    <Compile Include="GameData\IOType.cs" />
-    <Compile Include="GameData\Option.cs" />
-    <Compile Include="GameData\Property.cs" />
-    <Compile Include="GameData\VariableType.cs" />
-    <Compile Include="Geometric\Line.cs" />
-    <Compile Include="MapObjects\AutoVisgroup.cs" />
-    <Compile Include="MapObjects\MapFeature.cs" />
-    <Compile Include="MapObjects\TransformFlags.cs" />
-    <Compile Include="MapObjects\VisgroupFilters\IAutoVisgroup.cs" />
-    <Compile Include="MapObjects\DisplacementPoint.cs" />
-    <Compile Include="Geometric\Coordinate.cs" />
-    <Compile Include="MapObjects\Camera.cs" />
-    <Compile Include="MapObjects\Displacement.cs" />
-    <Compile Include="MapObjects\Entity.cs" />
-    <Compile Include="MapObjects\EntityData.cs" />
-    <Compile Include="MapObjects\Face.cs" />
-    <Compile Include="Meta\MetaData.cs" />
-    <Compile Include="Models\BodyPart.cs" />
-    <Compile Include="Models\Texture.cs" />
-    <Compile Include="PlaneClassification.cs" />
-    <Compile Include="MapObjects\Group.cs" />
-    <Compile Include="MapObjects\IDGenerator.cs" />
-    <Compile Include="MapObjects\Map.cs" />
-    <Compile Include="MapObjects\MapObject.cs" />
-    <Compile Include="MapObjects\Output.cs" />
-    <Compile Include="MapObjects\Path.cs" />
-    <Compile Include="MapObjects\PathDirection.cs" />
-    <Compile Include="MapObjects\PathNode.cs" />
-    <Compile Include="MapObjects\Property.cs" />
-    <Compile Include="MapObjects\Solid.cs" />
-    <Compile Include="MapObjects\TextureReference.cs" />
-    <Compile Include="MapObjects\Vertex.cs" />
-    <Compile Include="MapObjects\Visgroup.cs" />
-    <Compile Include="MapObjects\World.cs" />
-    <Compile Include="Models\Animation.cs" />
-    <Compile Include="Models\AnimationFrame.cs" />
-    <Compile Include="Models\Bone.cs" />
-    <Compile Include="Models\BoneAnimationFrame.cs" />
-    <Compile Include="Models\BoneWeighting.cs" />
-    <Compile Include="Models\Mesh.cs" />
-    <Compile Include="Models\MeshVertex.cs" />
-    <Compile Include="Models\Model.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transformations\UnitMatrixMult.cs" />
-    <Compile Include="Transformations\UnitRotate.cs" />
-    <Compile Include="Transformations\UnitScale.cs" />
-    <Compile Include="Transformations\IUnitTransformation.cs" />
-    <Compile Include="Transformations\UnitTranslate.cs" />
+    <ProjectReference Include="..\CBRE.Common\CBRE.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBRE.Common\CBRE.Common.csproj">
-      <Project>{5D414AC8-8B93-489F-9960-877923400FED}</Project>
-      <Name>CBRE.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.346202">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

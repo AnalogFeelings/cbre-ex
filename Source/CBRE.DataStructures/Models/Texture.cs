@@ -1,3 +1,4 @@
+using System.Drawing;
 using CBRE.Common;
 
 namespace CBRE.DataStructures.Models
@@ -10,6 +11,6 @@ namespace CBRE.DataStructures.Models
         public int Width { get; set; }
         public int Height { get; set; }
         public int Flags { get; set; }
-        public System.Drawing.Bitmap Image { get; set; }
+        public Bitmap Image { get; set; }
     }
 }

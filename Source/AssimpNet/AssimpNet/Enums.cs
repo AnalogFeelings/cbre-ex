@@ -687,12 +687,12 @@ namespace Assimp
         Gouraud = 0x2,
 
         /// <summary>
-        /// Phong Shading.
+        /// LightCalc Shading.
         /// </summary>
-        Phong = 0x3,
+        LightCalc = 0x3,
 
         /// <summary>
-        /// Phong-Blinn Shading.
+        /// LightCalc-Blinn Shading.
         /// </summary>
         Blinn = 0x4,
 

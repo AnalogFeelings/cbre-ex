@@ -22,7 +22,7 @@ namespace CBRE.Editor.Rendering
         private RectangleF _rect;
         private string _text;
         private bool _showing;
-        private ContextMenu _menu;
+        private ContextMenuStrip _menu;
 
         public ViewportLabelListener(ViewportBase viewport)
         {
@@ -58,32 +58,31 @@ namespace CBRE.Editor.Rendering
                 _text = type.ToString();
             }
             if (_menu != null) _menu.Dispose();
-            _menu = new ContextMenu(new[]
-                                        {
-                                            CreateMenu("3D Lightmapped", Viewport3D.ViewType.Lightmapped, null),
-                                            CreateMenu("3D Textured", Viewport3D.ViewType.Textured, null),
-                                            CreateMenu("3D Shaded", Viewport3D.ViewType.Shaded, null),
-                                            CreateMenu("3D Flat", Viewport3D.ViewType.Flat, null),
-                                            CreateMenu("3D Wireframe", Viewport3D.ViewType.Wireframe, null),
-                                            new MenuItem("-"),
-                                            CreateMenu("2D Top (x/z)", null, Viewport2D.ViewDirection.Top),
-                                            CreateMenu("2D Side (x/y)", null, Viewport2D.ViewDirection.Side),
-                                            CreateMenu("2D Front (z/y)", null, Viewport2D.ViewDirection.Front),
-                                            new MenuItem("-"),
-                                            ScreenshotMenuItem()
-                                        });
+            _menu = new ContextMenuStrip();
+
+            _menu.Items.Add(CreateMenu("3D Lightmapped", Viewport3D.ViewType.Lightmapped, null));
+            _menu.Items.Add(CreateMenu("3D Textured", Viewport3D.ViewType.Textured, null));
+            _menu.Items.Add(CreateMenu("3D Shaded", Viewport3D.ViewType.Shaded, null));
+            _menu.Items.Add(CreateMenu("3D Flat", Viewport3D.ViewType.Flat, null));
+            _menu.Items.Add(CreateMenu("3D Wireframe", Viewport3D.ViewType.Wireframe, null));
+            _menu.Items.Add(new ToolStripSeparator());
+            _menu.Items.Add(CreateMenu("2D Top (x/z)", null, Viewport2D.ViewDirection.Top));
+            _menu.Items.Add(CreateMenu("2D Side (x/y)", null, Viewport2D.ViewDirection.Side));
+            _menu.Items.Add(CreateMenu("2D Front (z/y)", null, Viewport2D.ViewDirection.Front));
+            _menu.Items.Add(new ToolStripSeparator());
+            _menu.Items.Add(ScreenshotMenuItem());
         }
 
-        private MenuItem ScreenshotMenuItem()
+        private ToolStripMenuItem ScreenshotMenuItem()
         {
-            MenuItem menu = new MenuItem("Take Screenshot...");
+            ToolStripMenuItem menu = new ToolStripMenuItem("Take Screenshot...");
             menu.Click += (s, e) => Mediator.Publish(HotkeysMediator.ScreenshotViewport, Viewport);
             return menu;
         }
 
-        private MenuItem CreateMenu(string text, Viewport3D.ViewType? type, Viewport2D.ViewDirection? dir)
+        private ToolStripMenuItem CreateMenu(string text, Viewport3D.ViewType? type, Viewport2D.ViewDirection? dir)
         {
-            MenuItem menu = new MenuItem(text);
+            ToolStripMenuItem menu = new ToolStripMenuItem(text);
             menu.Click += (sender, e) => SwitchType(type, dir);
             if (dir.HasValue && Viewport is Viewport2D)
             {

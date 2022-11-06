@@ -1,53 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{ABBEE97F-B5A6-4ED6-8D8F-6D4091FB9D44}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CBRE.UI</RootNamespace>
-    <AssemblyName>CBRE.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
-    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -62,65 +38,29 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OpenTK.GLControl.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrameInfo.cs" />
-    <Compile Include="IViewport2DEventListener.cs" />
-    <Compile Include="KeyboardState.cs" />
-    <Compile Include="Native\NativeIcons.cs" />
-    <Compile Include="ReadOnlyTextBox.cs" />
-    <Compile Include="Viewport2D.cs">
+    <Compile Update="Viewport2D.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Viewport3D.cs">
+    <Compile Update="Viewport3D.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ViewportBase.cs">
+    <Compile Update="ViewportBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="IViewportEventListener.cs" />
-    <Compile Include="ViewportEvent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBRE.Common\CBRE.Common.csproj">
-      <Project>{5d414ac8-8b93-489f-9960-877923400fed}</Project>
-      <Name>CBRE.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CBRE.DataStructures\CBRE.DataStructures.csproj">
-      <Project>{26A974C9-E495-4FA3-8E87-1E00019D04F5}</Project>
-      <Name>CBRE.DataStructures</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CBRE.Graphics\CBRE.Graphics.csproj">
-      <Project>{614D4144-8920-4975-AC67-DBBA5CB1EB43}</Project>
-      <Name>CBRE.Graphics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CBRE.Providers\CBRE.Providers.csproj">
-      <Project>{C7BD4AC8-1F8D-4520-AF2D-D279C0601AB4}</Project>
-      <Name>CBRE.Providers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CBRE.Settings\CBRE.Settings.csproj">
-      <Project>{a79ff02f-3eaa-4ff1-a060-2e2ffe983ef3}</Project>
-      <Name>CBRE.Settings</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\CBRE.Common\CBRE.Common.csproj" />
+    <ProjectReference Include="..\CBRE.DataStructures\CBRE.DataStructures.csproj" />
+    <ProjectReference Include="..\CBRE.Graphics\CBRE.Graphics.csproj" />
+    <ProjectReference Include="..\CBRE.Settings\CBRE.Settings.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.346202">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.1" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
