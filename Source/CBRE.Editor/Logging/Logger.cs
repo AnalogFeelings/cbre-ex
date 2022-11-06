@@ -102,7 +102,7 @@ namespace CBRE.Editor.Logging
 
                 AvailableMemory = new ComputerInfo().AvailablePhysicalMemory / 1000000 + "MB";
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ProcessorName = "Unknown Processor";
                 AvailableMemory = "Unknown";
