@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
@@ -18,6 +19,8 @@ namespace CBRE.Editor
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+			//TODO: fix this tomfuckery that .NET 6.0 did
+			Application.SetDefaultFont(new Font(new FontFamily("Microsoft Sans Serif"), 8f));
 			RegisterHandlers();
 			SingleInstance.Start(typeof(Editor));
 		}
