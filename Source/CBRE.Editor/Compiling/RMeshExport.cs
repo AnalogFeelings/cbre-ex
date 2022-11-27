@@ -390,35 +390,34 @@ namespace CBRE.Editor.Compiling
             switch (property.VariableType)
             {
                 case DataStructures.GameData.VariableType.Bool:
-                    binaryWriter.Write(mapProperty.Value.ToBool());
+                    binaryWriter.Write(mapProperty.Value?.ToBool() ?? false);
                     
                     break;
                 case DataStructures.GameData.VariableType.Integer:
-                    binaryWriter.Write(int.Parse(mapProperty.Value));
+                    int.TryParse(mapProperty.Value, out int parsedInt);
+
+                    binaryWriter.Write(parsedInt);
                     
                     break;
                 case DataStructures.GameData.VariableType.Color255:
-                    Coordinate colorCoord = entity.EntityData.GetPropertyCoordinate(property.Name);
+                    Coordinate colorCoord = entity.EntityData.GetPropertyCoordinate(property.Name, Coordinate.Zero);
                     string color = colorCoord.X + " " + colorCoord.Y + " " + colorCoord.Z;
                     
-                    binaryWriter.Write(color.Length);
-                    
-                    for (int i = 0; i < color.Length; i++)
-                    {
-                        binaryWriter.Write((byte)color[i]);
-                    }
+                    binaryWriter.WriteB3DString(color);
                     
                     break;
                 case DataStructures.GameData.VariableType.Float:
-                    binaryWriter.Write(float.Parse(mapProperty.Value));
+                    float.TryParse(mapProperty.Value, out float parsedFloat);
+
+                    binaryWriter.Write(parsedFloat);
                     
                     break;
                 case DataStructures.GameData.VariableType.String:
-                    binaryWriter.WriteB3DString(mapProperty.Value);
+                    binaryWriter.WriteB3DString(mapProperty.Value ?? string.Empty);
                     
                     break;
                 case DataStructures.GameData.VariableType.Vector:
-                    Coordinate coord = entity.EntityData.GetPropertyCoordinate(property.Name);
+                    Coordinate coord = entity.EntityData.GetPropertyCoordinate(property.Name, Coordinate.Zero);
                     
                     binaryWriter.Write((float)coord.X);
                     binaryWriter.Write((float)coord.Y);

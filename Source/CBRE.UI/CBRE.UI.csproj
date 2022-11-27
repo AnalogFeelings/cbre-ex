@@ -76,7 +76,9 @@
     <Compile Include="IViewport2DEventListener.cs" />
     <Compile Include="KeyboardState.cs" />
     <Compile Include="Native\NativeIcons.cs" />
-    <Compile Include="ReadOnlyTextBox.cs" />
+    <Compile Include="ReadOnlyTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Viewport2D.cs">
       <SubType>UserControl</SubType>
     </Compile>
