@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Source/CBRE.Extended.Editor/App.axaml" value="Source/CBRE.Extended.Editor/CBRE.Extended.Editor.csproj" />
+        <entry key="Source/CBRE.Extended.Editor/MainWindow.axaml" value="Source/CBRE.Extended.Editor/CBRE.Extended.Editor.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
