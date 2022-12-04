@@ -4,6 +4,7 @@
     <option name="projectPerEditor">
       <map>
         <entry key="Source/CBRE.Extended.Editor/App.axaml" value="Source/CBRE.Extended.Editor/CBRE.Extended.Editor.csproj" />
+        <entry key="Source/CBRE.Extended.Editor/Editor.axaml" value="Source/CBRE.Extended.Editor/CBRE.Extended.Editor.csproj" />
         <entry key="Source/CBRE.Extended.Editor/MainWindow.axaml" value="Source/CBRE.Extended.Editor/CBRE.Extended.Editor.csproj" />
       </map>
     </option>

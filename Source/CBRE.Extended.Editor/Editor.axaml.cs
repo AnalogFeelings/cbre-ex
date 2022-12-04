@@ -1,18 +1,24 @@
 using System;
 using System.Reflection;
 using Avalonia.Controls;
+using CBRE.Extended.Editor.Logging;
 
 namespace CBRE.Extended.Editor
 {
-    public partial class MainWindow : Window
+    public partial class Editor : Window
     {
-        private static readonly Version _Version = Assembly.GetEntryAssembly()!.GetName().Version!;
-        private readonly string _TitleStart = $"CBRE-EX v{_Version.ToString(3)}";
+        public static Editor? Instance { get; private set; }
         
-        public MainWindow()
+        public static readonly Version Version = Assembly.GetEntryAssembly()!.GetName().Version!;
+
+        private readonly string _TitleStart = $"CBRE-EX v{Version.ToString(3)}";
+
+        public Editor()
         {
             InitializeComponent();
             UpdateTitle();
+
+            Instance = this;
         }
 
         private void UpdateTitle()
