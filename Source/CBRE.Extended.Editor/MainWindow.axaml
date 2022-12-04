@@ -9,84 +9,292 @@
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="New"/>
-                <MenuItem Header="Open"/>
-                <MenuItem Header="Close"/>
-                <MenuItem Header="Save"/>
-                <MenuItem Header="Save As..."/>
+                <MenuItem Header="New">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_New.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Open.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Close">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Close.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Save.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save As...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_SaveAs.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Export/Lightmap"/>
+                <MenuItem Header="Export/Lightmap">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ExportRmesh.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Exit"/>
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Header="Undo"/>
-                <MenuItem Header="Redo"/>
-                <Separator/>
-                <MenuItem Header="Cut"/>
-                <MenuItem Header="Copy"/>
-                <MenuItem Header="Paste"/>
-                <MenuItem Header="Paste Special"/>
-                <MenuItem Header="Delete"/>
-                <Separator/>
-                <MenuItem Header="Clear Selection"/>
-                <MenuItem Header="Select All"/>
-                <Separator/>
-                <MenuItem Header="Object Properties"/>
-            </MenuItem>
-            <MenuItem Header="Map">
-                <MenuItem Header="Snap To Grid"/>
-                <MenuItem Header="Show 2D Grid"/>
-                <MenuItem Header="Show 3D Grid"/>
-                <MenuItem Header="Grid Settings">
-                    <MenuItem Header="Smaller Grid"/>
-                    <MenuItem Header="Bigger Grid"/>
+                <MenuItem Header="Undo">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Undo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Redo">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Redo.png"/>
+                    </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Ignore Grouping"/>
+                <MenuItem Header="Cut">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Cut.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Copy">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Copy.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Paste">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Paste.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Paste Special">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_PasteSpecial.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Delete">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Delete.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Texture Lock"/>
-                <MenuItem Header="Texture Scaling Lock"/>
+                <MenuItem Header="Clear Selection">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ClearSelection.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Select All">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_SelectAll.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Hide Tool Textures"/>
-                <MenuItem Header="Hide Entity Sprites"/>
-                <MenuItem Header="Hide Map Origin"/>
+                <MenuItem Header="Object Properties">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ObjectProperties.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Map">
+                <MenuItem Header="Snap To Grid">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_SnapToGrid.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Show 2D Grid">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Show2DGrid.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Show 3D Grid">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Show3DGrid.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Grid Settings">
+                    <MenuItem Header="Smaller Grid">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Menu_SmallerGrid.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Bigger Grid">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Menu_LargerGrid.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Show Information"/>
-                <MenuItem Header="Show Selected Brush ID"/>
-                <MenuItem Header="Entity Report..."/>
-                <MenuItem Header="Show Logical Tree"/>
+                <MenuItem Header="Ignore Grouping">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_IgnoreGrouping.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Map Properties..."/>
+                <MenuItem Header="Texture Lock">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_TextureLock.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Texture Scaling Lock">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_TextureScalingLock.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Hide Tool Textures">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_HideNullTextures.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Hide Entity Sprites">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_HideEntitySprites.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Hide Map Origin">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_HideMapOrigin.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Show Information">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ShowInformation.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Show Selected Brush ID">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ShowBrushID.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Entity Report...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_EntityReport.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Show Logical Tree">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ShowLogicalTree.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Map Properties...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_MapProperties.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="View">
-                <MenuItem Header="Autosize All Views"/>
-                <MenuItem Header="Center 2D Views on Selection"/>
-                <MenuItem Header="Center 3D Views on Selection"/>
+                <MenuItem Header="Autosize All Views">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_AutosizeViews.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Center All Views on Selection">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_CenterSelectionAll.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Center 2D Views on Selection">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_CenterSelection2D.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Center 3D Views on Selection">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_CenterSelection3D.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Go to Brush ID..."/>
-                <MenuItem Header="Go to Coordinates..."/>
+                <MenuItem Header="Go to Brush ID...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_GoToBrushID.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Go to Coordinates...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_GoToCoordinates.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Hide Selected Objects"/>
-                <MenuItem Header="Hide Unselected Objects"/>
-                <MenuItem Header="Show Hidden Objects"/>
+                <MenuItem Header="Hide Selected Objects">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_HideSelected.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Hide Unselected Objects">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_HideUnselected.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Show Hidden Objects">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ShowHidden.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Tools">
-                <MenuItem Header="Carve"/>
-                <MenuItem Header="Make Hollow"/>
+                <MenuItem Header="Carve">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Carve.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Make Hollow">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Hollow.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Group"/>
-                <MenuItem Header="Ungroup"/>
+                <MenuItem Header="Group">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Group.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Ungroup">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Ungroup.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Tie to Entity"/>
-                <MenuItem Header="Move to World"/>
+                <MenuItem Header="Tie to Entity">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_TieToEntity.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Move to World">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_TieToWorld.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Replace Textures"/>
+                <MenuItem Header="Replace Textures">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ReplaceTextures.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Transform"/>
-                <MenuItem Header="Snap Selected to Grid"/>
-                <MenuItem Header="Snap Selected to Grid Individually"/>
+                <MenuItem Header="Transform">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Transform.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Snap Selected to Grid">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_SnapSelection.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Snap Selected to Grid Individually">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_SnapSelectionIndividual.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Align Objects">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Align.png"/>
+                    </MenuItem.Icon>
                     <MenuItem Header="To X Axis Min"/>
                     <MenuItem Header="To X Axis Max"/>
                     <MenuItem Header="To Y Axis Min"/>
@@ -95,18 +303,37 @@
                     <MenuItem Header="To Z Axis Max"/>
                 </MenuItem>
                 <MenuItem Header="Flip Objects">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Flip.png"/>
+                    </MenuItem.Icon>
                     <MenuItem Header="X Axis"/>
                     <MenuItem Header="Y Axis"/>
                     <MenuItem Header="Z Axis"/>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Settings..."/>
+                <MenuItem Header="Settings...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Options.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="Check for Updates..."/>
-                <MenuItem Header="Report a Bug..."/>
+                <MenuItem Header="Check for Updates...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_Update.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Report a Bug...">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_GitHub.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="About CBRE-EX"/>
+                <MenuItem Header="About CBRE-EX">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Menu_ShowInformation.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
     </DockPanel>
