@@ -2,9 +2,112 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="400"
         x:Class="CBRE.Extended.Editor.MainWindow"
         Title="CBRE-EX v3.0.0"
         Icon="/Resources/CBRE-EX-Icon.ico">
-    juanpro gaming
+    <DockPanel LastChildFill="False">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New"/>
+                <MenuItem Header="Open"/>
+                <MenuItem Header="Close"/>
+                <MenuItem Header="Save"/>
+                <MenuItem Header="Save As..."/>
+                <Separator/>
+                <MenuItem Header="Export/Lightmap"/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo"/>
+                <MenuItem Header="Redo"/>
+                <Separator/>
+                <MenuItem Header="Cut"/>
+                <MenuItem Header="Copy"/>
+                <MenuItem Header="Paste"/>
+                <MenuItem Header="Paste Special"/>
+                <MenuItem Header="Delete"/>
+                <Separator/>
+                <MenuItem Header="Clear Selection"/>
+                <MenuItem Header="Select All"/>
+                <Separator/>
+                <MenuItem Header="Object Properties"/>
+            </MenuItem>
+            <MenuItem Header="Map">
+                <MenuItem Header="Snap To Grid"/>
+                <MenuItem Header="Show 2D Grid"/>
+                <MenuItem Header="Show 3D Grid"/>
+                <MenuItem Header="Grid Settings">
+                    <MenuItem Header="Smaller Grid"/>
+                    <MenuItem Header="Bigger Grid"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Ignore Grouping"/>
+                <Separator/>
+                <MenuItem Header="Texture Lock"/>
+                <MenuItem Header="Texture Scaling Lock"/>
+                <Separator/>
+                <MenuItem Header="Hide Tool Textures"/>
+                <MenuItem Header="Hide Entity Sprites"/>
+                <MenuItem Header="Hide Map Origin"/>
+                <Separator/>
+                <MenuItem Header="Show Information"/>
+                <MenuItem Header="Show Selected Brush ID"/>
+                <MenuItem Header="Entity Report..."/>
+                <MenuItem Header="Show Logical Tree"/>
+                <Separator/>
+                <MenuItem Header="Map Properties..."/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="Autosize All Views"/>
+                <MenuItem Header="Center 2D Views on Selection"/>
+                <MenuItem Header="Center 3D Views on Selection"/>
+                <Separator/>
+                <MenuItem Header="Go to Brush ID..."/>
+                <MenuItem Header="Go to Coordinates..."/>
+                <Separator/>
+                <MenuItem Header="Hide Selected Objects"/>
+                <MenuItem Header="Hide Unselected Objects"/>
+                <MenuItem Header="Show Hidden Objects"/>
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Carve"/>
+                <MenuItem Header="Make Hollow"/>
+                <Separator/>
+                <MenuItem Header="Group"/>
+                <MenuItem Header="Ungroup"/>
+                <Separator/>
+                <MenuItem Header="Tie to Entity"/>
+                <MenuItem Header="Move to World"/>
+                <Separator/>
+                <MenuItem Header="Replace Textures"/>
+                <Separator/>
+                <MenuItem Header="Transform"/>
+                <MenuItem Header="Snap Selected to Grid"/>
+                <MenuItem Header="Snap Selected to Grid Individually"/>
+                <MenuItem Header="Align Objects">
+                    <MenuItem Header="To X Axis Min"/>
+                    <MenuItem Header="To X Axis Max"/>
+                    <MenuItem Header="To Y Axis Min"/>
+                    <MenuItem Header="To Y Axis Max"/>
+                    <MenuItem Header="To Z Axis Min"/>
+                    <MenuItem Header="To Z Axis Max"/>
+                </MenuItem>
+                <MenuItem Header="Flip Objects">
+                    <MenuItem Header="X Axis"/>
+                    <MenuItem Header="Y Axis"/>
+                    <MenuItem Header="Z Axis"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Settings..."/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="Check for Updates..."/>
+                <MenuItem Header="Report a Bug..."/>
+                <Separator/>
+                <MenuItem Header="About CBRE-EX"/>
+            </MenuItem>
+        </Menu>
+    </DockPanel>
 </Window>
