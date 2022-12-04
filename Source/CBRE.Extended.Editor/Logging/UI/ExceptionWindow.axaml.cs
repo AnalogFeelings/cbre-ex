@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using TextCopy;
 
 namespace CBRE.Extended.Editor.Logging.UI;
 
@@ -49,5 +51,15 @@ public partial class ExceptionWindow : Window
         {
             HeaderLabel.Text += $"\nCouldn't write error log: {e.Message}.";
         }
+    }
+
+    private void CloseButton_OnClick(object? Sender, RoutedEventArgs E)
+    {
+        this.Close();
+    }
+
+    private void CopyErrorButton_OnClick(object? Sender, RoutedEventArgs E)
+    {
+        ClipboardService.SetText(LogText);
     }
 }
