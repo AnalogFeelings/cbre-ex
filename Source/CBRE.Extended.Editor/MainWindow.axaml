@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="400"
         x:Class="CBRE.Extended.Editor.MainWindow"
-        Title="CBRE-EX v3.0.0"
+        Title="CBRE-EX"
         Icon="/Resources/CBRE-EX-Icon.ico">
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
