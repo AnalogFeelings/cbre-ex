@@ -1,0 +1,168 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="810" d:DesignHeight="530"
+        x:Class="CBRE.Extended.Editor.Logging.UI.ExceptionWindow"
+        Title="Error!"
+        CanResize="False"
+        MinWidth="810"
+        MinHeight="530"
+        SizeToContent="WidthAndHeight"
+        Padding="8, 8, 8, 8">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Image Grid.Column="0" 
+                   Source="/Resources/CBRE-EX-Icon.png"/>
+            <TextBlock Grid.Column="1" 
+                       VerticalAlignment="Center"
+                       Name="HeaderLabel"
+                       Margin="12, 0, 0, 0">
+                CBRE-EX has encountered an error but couldn't recover from it. CBRE-EX will try to continue running. More information below.
+            </TextBlock>
+        </Grid>
+        
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Margin="0, 8, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" 
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right">
+                System Processor
+            </TextBlock>
+            <TextBox Grid.Row="0" 
+                     Grid.Column="2"
+                     Name="SystemProcessor"
+                     HorizontalAlignment="Stretch"
+                     Height="26"
+                     IsReadOnly="True"></TextBox>
+            
+            <TextBlock Grid.Row="1" 
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right">
+                Working Set
+            </TextBlock>
+            <TextBox Grid.Row="1" 
+                     Grid.Column="2"
+                     Margin="0, 5, 0, 0"
+                     Name="WorkingSet"
+                     HorizontalAlignment="Stretch"
+                     Height="26"
+                     IsReadOnly="True"></TextBox>
+            
+            <TextBlock Grid.Row="2" 
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right">
+                .NET Version
+            </TextBlock>
+            <TextBox Grid.Row="2" 
+                     Grid.Column="2"
+                     Margin="0, 5, 0, 0"
+                     Name="RuntimeVersion"
+                     HorizontalAlignment="Stretch"
+                     Height="26"
+                     IsReadOnly="True"></TextBox>
+            
+            <TextBlock Grid.Row="3" 
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right">
+                Operating System
+            </TextBlock>
+            <TextBox Grid.Row="3" 
+                     Grid.Column="2"
+                     Margin="0, 5, 0, 0"
+                     Name="OperatingSystem"
+                     HorizontalAlignment="Stretch"
+                     Height="26"
+                     IsReadOnly="True"></TextBox>
+            
+            <TextBlock Grid.Row="4" 
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right">
+                CBRE-EX Version
+            </TextBlock>
+            <TextBox Grid.Row="4" 
+                     Grid.Column="2"
+                     Margin="0, 5, 0, 0"
+                     Name="EditorVersion"
+                     HorizontalAlignment="Stretch"
+                     Height="26"
+                     IsReadOnly="True"></TextBox>
+            
+            <Grid Grid.Row="5"
+                  Grid.Column="0"
+                  Margin="0, 5, 0, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Grid.Row="0" 
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Right"
+                           Margin="0, 5, 0, 0">
+                    Full Error Message
+                </TextBlock>
+                
+                <Button Grid.Row="2"
+                        HorizontalAlignment="Stretch"
+                        Margin="0, 5, 0, 0"
+                        Name="CopyError">
+                    Copy Error
+                </Button>
+                <Button Grid.Row="3"
+                        HorizontalAlignment="Stretch"
+                        Margin="0, 5, 0, 0"
+                        Name="ReportBug">
+                    Report Bug...
+                </Button>
+                <Button Grid.Row="4"
+                        HorizontalAlignment="Stretch"
+                        Margin="0, 5, 0, 0"
+                        Name="Close">
+                    Close
+                </Button>
+            </Grid>
+            <TextBox Grid.Row="5" 
+                     Grid.Column="2"
+                     Margin="0, 5, 0, 0"
+                     Name="FullError"
+                     HorizontalAlignment="Stretch"
+                     Height="300"
+                     IsReadOnly="True"></TextBox>
+        </Grid>
+    </Grid>
+</Window>
