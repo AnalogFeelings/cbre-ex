@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Extended.Editor", "Source/CBRE.Extended.Editor/CBRE.Extended.Editor.csproj", "{0E9F2822-B111-404A-B287-AEFE78083FEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Extended.Editor", "Source\CBRE.Extended.Editor\CBRE.Extended.Editor.csproj", "{0E9F2822-B111-404A-B287-AEFE78083FEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Extended.Common", "CBRE.Extended.Common\CBRE.Extended.Common.csproj", "{14B99294-EAC2-4FD2-BA9B-0F65B22D25F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Extended.Common", "Source\CBRE.Extended.Common\CBRE.Extended.Common.csproj", "{14B99294-EAC2-4FD2-BA9B-0F65B22D25F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Extended.Updater", "Source\CBRE.Extended.Updater\CBRE.Extended.Updater.csproj", "{F4FC11CA-0DA8-4505-A77F-98306B5D2AFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{14B99294-EAC2-4FD2-BA9B-0F65B22D25F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14B99294-EAC2-4FD2-BA9B-0F65B22D25F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14B99294-EAC2-4FD2-BA9B-0F65B22D25F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4FC11CA-0DA8-4505-A77F-98306B5D2AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4FC11CA-0DA8-4505-A77F-98306B5D2AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4FC11CA-0DA8-4505-A77F-98306B5D2AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4FC11CA-0DA8-4505-A77F-98306B5D2AFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
