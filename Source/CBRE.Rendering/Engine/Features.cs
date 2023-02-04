@@ -1,4 +1,4 @@
-﻿using SharpDX.Direct3D;
+﻿using Vortice.Direct3D;
 
 namespace CBRE.Rendering.Engine
 {

@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using SharpDX.Direct3D;
 using CBRE.Rendering.Cameras;
 using CBRE.Rendering.Interfaces;
 using CBRE.Rendering.Pipelines;
 using CBRE.Rendering.Renderables;
 using CBRE.Rendering.Viewports;
 using Veldrid;
+using Vortice.Direct3D;
+using Vortice.Direct3D11;
 
 namespace CBRE.Rendering.Engine
 {
@@ -88,7 +89,7 @@ namespace CBRE.Rendering.Engine
         private void DetectFeatures(GraphicsDevice device)
         {
             var dev = device.GetType().GetProperty("Device");
-            var dxd = dev?.GetValue(device) as SharpDX.Direct3D11.Device;
+            var dxd = dev?.GetValue(device) as ID3D11Device;
             var fl = dxd?.FeatureLevel ?? FeatureLevel.Level_10_0; // Just assume it's DX10, whatever
             if (fl < FeatureLevel.Level_10_0)
             {
