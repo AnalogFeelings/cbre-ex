@@ -1,0 +1,195 @@
+﻿{
+    "@Meta": {
+        "Base": "Sledge.BspEditor", 
+        "Language": "en",
+        "LanguageDescription":  "English",
+        "Inherit": ""
+    },
+    "@Settings": {
+        "Grid": {
+            "SquareGridFactory": {
+                "GridHideSmallerThan": "Hide grid lines when they are closer than this many pixels together",
+                "GridHideFactor": "Factor to skip by when hiding close grid lines",
+                "GridSecondaryHighlight": "Highlight grid lines every X units (0 disables)", 
+                "GridPrimaryHighlight": "Highlight every Xth grid line (0 disables)"
+            }
+        } 
+    },
+    "Commands": {
+        "Modification": {
+            "SelectNone": {
+                "Name": "Select None",
+                "Details": "Clear the current selection."
+            },
+            "SelectAll": {
+                "Name": "Select All",
+                "Details": "Select all objects in the document."
+            }
+        },
+        "Clipboard": {
+            "Paste": {
+                "Name": "Paste",
+                "Details": "Paste the current clipboard contents."
+            },
+            "Cut": {
+                "Name": "Cut",
+                "Details": "Copy the current selection and remove it."
+            },
+            "Copy": {
+                "Name": "Copy",
+                "Details": "Copy the current selection."
+            },
+            "Delete": {
+                "Name": "Delete",
+                "Details": "Delete the current selection."
+            }
+        },
+        "Grouping": {
+            "Group": {
+                "Name": "Group",
+                "Details": "Group selected objects."
+            },
+            "Ungroup": {
+                "Name": "Ungroup",
+                "Details": "Ungroup selected groups"
+            }
+        }
+    },
+    "Compile": {
+        "BatchProcess": {
+            "ProgramNotFoundTitle": "Configuration error",
+            "ProgramNotFoundMessage": "The batch is trying to run a process that doesn't exist.\n\nPlease check your build configuration and ensure that the build programs are set up correctly."
+        }
+    }, 
+    "Components": {
+        "ClipboardManager": {
+            "NothingSelected": "Nothing",
+            "NumSelected": "{0} objects"
+        },
+        "ClipboardSidebarPanel": {
+            "Title": "Clipboard"
+        }
+    },
+    "Controls": {
+        "Layout": {
+            "OpenWindowSettings": {
+                "Name": "Modify window layout...",
+                "Details": "Open the window layout settings dialog"
+            },
+            "CreateLayoutWindow": {
+                "Name": "New window",
+                "Details": "Create a new window"
+            },
+            "LayoutSettings": {
+                "Title": "Layout settings",
+                "Window": "Window",
+                "Rows": "Rows",
+                "Columns": "Columns",
+                "Apply": "Apply",
+                "Cancel": "Cancel",
+                "Instructions": "Each rectangle represents a viewport.\nClick and drag rectangles to combine viewports.\nClick a combined viewport to un-combine it.",
+                "ClickAPreset": "Click to try a preset layout:"
+            }
+        }
+    },
+    "Documents": {
+        "BspSourceDocumentLoader": {
+            "FileTypeDescription": "BSP Source File",
+            "UntitledDocumentName": "Untitled {0}",
+            "UnsupportedFileFormat": "Unsupported file format",
+            "FileTypeNotSupported": "This file type is not supported.",
+            "LoadResultTitle": "Load completed with warnings",
+            "InvalidObjectsWereDiscarded":  "{0} object(s) in the file were found to be invalid and were discarded.",
+            "OK": "OK"
+        }
+    },
+    "Environment": {
+        "Controls": {
+            "EnvironmentCollectionEditor": {
+                "Add": "Add",
+                "Remove": "Remove",
+                "Name": "Name" 
+            }
+        },
+        "Goldsource": {
+            "AutomaticVisgroups": {
+                "Entities": "Entities",
+                "ToolBrushes": "Tool brushes",
+                "WorldGeometry": "World geometry",
+
+                "BrushEntities": "Brush entities",
+                "PointEntities": "Point entities",
+                "Lights": "Lights",
+                "Triggers": "Triggers",
+                "Nodes": "Nodes",
+
+                "Bevel": "Bevel",
+                "Hint": "Hint",
+                "Origin": "Origin",
+                "Skip": "Skip",
+                "Trigger": "Trigger",
+
+                "Brushes": "Brushes",
+                "Null": "Null",
+                "Sky": "Sky",
+                "Water": "Water"
+            },
+            "GoldsourceEnvironmentFactory": {
+                "Description": "Goldsource (HL1)"
+            },
+            "GoldsourceEnvironmentEditor": {
+                "Directories": "Directories",
+                "GameDataFiles": "Game Data Files",
+                "BuildTools": "Build Tools",
+                "Textures": "Textures",
+                "Browse": "Browse...",
+                "Add": "Add...",
+                "Remove": "Remove",
+                "Name": "Name",
+                "Path": "Path",
+                "GameDirectory": "Game directory",
+                "BaseDirectory": "Base game directory (e.g. 'valve')",
+                "ModDirectory": "Mod directory (e.g. 'cstrike')",
+                "GameExecutable": "Game executable (e.g. 'hl.exe')",
+                "LoadHDModels": "Load HD models (if available)",
+                "DefaultPointEntity": "Default point entity",
+                "DefaultBrushEntity": "Default brush entity",
+                "Low": "Low",
+                "High": "High",
+                "OverrideMapSize": "Override map size",
+                "IncludeFgdDirectories": "Load sprites and models from FGD directories",
+                "BuildDirectory": "Folder containing build tools:",
+                "IncludeToolsDirectory": "Automatically include textures found in this directory",
+                "CopyBspToGameFolder": "Copy BSP/RES to game folder",
+                "RunGame": "Run the game after successful compile",
+                "AskToRunGame": "Ask before running the game",
+                "CopyToMapFolder": "Copy to map folder:",
+                "DefaultTextureScale": "Default texture scale",
+                "TexturePackagesToInclude": "Texture packages to include:",
+                "ToggleAll": "Toggle all",
+                "AdditionalTexturePackages": "Additional texture packages:"
+            }
+        }
+    },
+    "Grid": {
+        "NoGridFactory": {
+            "Name": "No grid",
+            "Details": "Do not show any grid."
+        },
+        "SquareGridFactory": {
+            "Name": "Standard grid",
+            "Details": "A normal square grid based on powers of two."
+        }
+    },
+    "Modification": {
+        "ChangeHandling": {
+            "SelectionHandler": {
+                "NoObjectsSelected": "No objects selected",
+                "NumObjectsSelected": "{0} objects selected"
+            }
+        }
+    },
+    "MenuDataProvider": {
+        "Window": "Window"
+    } 
+}

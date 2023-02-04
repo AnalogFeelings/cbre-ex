@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "AssimpNet": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}
