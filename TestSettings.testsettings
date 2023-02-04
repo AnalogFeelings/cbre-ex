@@ -3,7 +3,7 @@
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
     <DeploymentItem filename="_Resources\RMF\intersect.rmf" />
-    <DeploymentItem filename="Sledge.Libs\HLLib.dll" />
+    <DeploymentItem filename="CBRE.Libs\HLLib.dll" />
     <DeploymentItem filename="_Resources\RMF\verc_18.rmf" />
     <DeploymentItem filename="_Resources\RMF\decalflip_bad.rmf" />
     <DeploymentItem filename="_Resources\RMF\decalflip.rmf" />
