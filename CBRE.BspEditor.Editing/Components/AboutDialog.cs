@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Forms;
-using CBRE.BspEditor.Documents;
 
 namespace CBRE.BspEditor.Editing.Components
 {
@@ -10,13 +10,14 @@ namespace CBRE.BspEditor.Editing.Components
         {
             InitializeComponent();
 
-            VersionLabel.Text = FileVersionInfo.GetVersionInfo(typeof (MapDocument).Assembly.Location).FileVersion;
+            VersionLabel.Text = VersionLabel.Text.Replace("(version)", Assembly.GetAssembly(typeof(AboutDialog)).GetName().Version.ToString(3));
 
-            LTLink.Click += (s, e) => OpenSite("http://logic-and-trick.com");
-            GithubLink.Click += (s, e) => OpenSite("https://github.com/LogicAndTrick/sledge");
-            GPLLink.Click += (s, e) => OpenSite("https://opensource.org/licenses/BSD-3-Clause");
-            AJLink.Click += (s, e) => OpenSite("http://scrub-studios.com");
-            TWHLLink.Click += (s, e) => OpenSite("https://twhl.info");
+            GitHubLink.Click += (s, e) => OpenSite(GitHubLink.Text);
+            LicenseLink.Click += (s, e) => OpenSite(LicenseLink.Text);
+            ExtraLicenseLink.Click += (s, e) => OpenSite(ExtraLicenseLink.Text);
+
+            DescriptionLabel.Links.Add(211, 19, "http://logic-and-trick.com");
+            DescriptionLabel.LinkClicked += (s, e) => OpenSite(e.Link.LinkData.ToString());
         }
 
         private void OpenSite(string url)

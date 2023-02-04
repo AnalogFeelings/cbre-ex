@@ -28,223 +28,188 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.LTLink = new System.Windows.Forms.LinkLabel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.DescriptionLabel = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
-            this.GithubLink = new System.Windows.Forms.LinkLabel();
-            this.GPLLink = new System.Windows.Forms.LinkLabel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.ExtraLicenseLink = new System.Windows.Forms.LinkLabel();
+            this.LicenseLink = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.TWHLLink = new System.Windows.Forms.LinkLabel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.AJLink = new System.Windows.Forms.LinkLabel();
+            this.GitHubLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(213, 278);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(131, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Close";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::CBRE.BspEditor.Editing.Properties.Resources.CBRE_Large;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(256, 256);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.Size = new System.Drawing.Size(493, 235);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Georgia", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(316, 12);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 250);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(134, 46);
+            this.label1.Size = new System.Drawing.Size(493, 41);
             this.label1.TabIndex = 3;
             this.label1.Text = "CBRE-EX";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // VersionLabel
             // 
-            this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(459, 38);
+            this.VersionLabel.Location = new System.Drawing.Point(12, 291);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(47, 13);
+            this.VersionLabel.Size = new System.Drawing.Size(493, 13);
             this.VersionLabel.TabIndex = 4;
-            this.VersionLabel.Text = "(version)";
+            this.VersionLabel.Text = "Version (version)";
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label2
+            // label11
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(288, 79);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(137, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Created by Daniel Walder - ";
+            this.label11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label11.Location = new System.Drawing.Point(18, 313);
+            this.label11.Margin = new System.Windows.Forms.Padding(9);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(481, 2);
+            this.label11.TabIndex = 9;
             // 
-            // LTLink
+            // DescriptionLabel
             // 
-            this.LTLink.AutoSize = true;
-            this.LTLink.Location = new System.Drawing.Point(420, 79);
-            this.LTLink.Name = "LTLink";
-            this.LTLink.Size = new System.Drawing.Size(96, 13);
-            this.LTLink.TabIndex = 6;
-            this.LTLink.TabStop = true;
-            this.LTLink.Text = "logic-and-trick.com";
+            this.DescriptionLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.DescriptionLabel.Location = new System.Drawing.Point(12, 324);
+            this.DescriptionLabel.Name = "DescriptionLabel";
+            this.DescriptionLabel.Size = new System.Drawing.Size(493, 145);
+            this.DescriptionLabel.TabIndex = 10;
+            this.DescriptionLabel.Text = resources.GetString("DescriptionLabel.Text");
+            this.DescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(286, 103);
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label3.Location = new System.Drawing.Point(18, 478);
+            this.label3.Margin = new System.Windows.Forms.Padding(9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(223, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Open source software - licensed under BSD-3";
+            this.label3.Size = new System.Drawing.Size(481, 2);
+            this.label3.TabIndex = 11;
             // 
-            // GithubLink
+            // tableLayoutPanel1
             // 
-            this.GithubLink.AutoSize = true;
-            this.GithubLink.Location = new System.Drawing.Point(348, 124);
-            this.GithubLink.Name = "GithubLink";
-            this.GithubLink.Size = new System.Drawing.Size(169, 13);
-            this.GithubLink.TabIndex = 6;
-            this.GithubLink.TabStop = true;
-            this.GithubLink.Text = "github.com/LogicAndTrick/sledge";
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.27992F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.72008F));
+            this.tableLayoutPanel1.Controls.Add(this.ExtraLicenseLink, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.LicenseLink, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.GitHubLink, 1, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 492);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33533F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33233F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33233F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(493, 107);
+            this.tableLayoutPanel1.TabIndex = 12;
             // 
-            // GPLLink
+            // ExtraLicenseLink
             // 
-            this.GPLLink.AutoSize = true;
-            this.GPLLink.Location = new System.Drawing.Point(348, 146);
-            this.GPLLink.Name = "GPLLink";
-            this.GPLLink.Size = new System.Drawing.Size(195, 13);
-            this.GPLLink.TabIndex = 6;
-            this.GPLLink.TabStop = true;
-            this.GPLLink.Text = "opensource.org/licenses/BSD-3-Clause";
+            this.ExtraLicenseLink.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExtraLicenseLink.Location = new System.Drawing.Point(172, 70);
+            this.ExtraLicenseLink.Name = "ExtraLicenseLink";
+            this.ExtraLicenseLink.Size = new System.Drawing.Size(318, 37);
+            this.ExtraLicenseLink.TabIndex = 14;
+            this.ExtraLicenseLink.TabStop = true;
+            this.ExtraLicenseLink.Text = "https://github.com/AestheticalZ/cbre-ex#license-information";
+            this.ExtraLicenseLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LicenseLink
+            // 
+            this.LicenseLink.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LicenseLink.Location = new System.Drawing.Point(172, 35);
+            this.LicenseLink.Name = "LicenseLink";
+            this.LicenseLink.Size = new System.Drawing.Size(318, 35);
+            this.LicenseLink.TabIndex = 13;
+            this.LicenseLink.TabStop = true;
+            this.LicenseLink.Text = "https://github.com/AestheticalZ/cbre-ex/blob/main/LICENSE";
+            this.LicenseLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(298, 124);
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.Location = new System.Drawing.Point(3, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 13);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Source:";
+            this.label4.Size = new System.Drawing.Size(163, 35);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "GitHub Repository:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(295, 146);
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.Location = new System.Drawing.Point(3, 35);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(47, 13);
-            this.label5.TabIndex = 5;
+            this.label5.Size = new System.Drawing.Size(163, 35);
+            this.label5.TabIndex = 1;
             this.label5.Text = "License:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(285, 177);
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.Location = new System.Drawing.Point(3, 70);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(95, 13);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Special Thanks";
+            this.label6.Size = new System.Drawing.Size(163, 37);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Extra License Information:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label7
+            // GitHubLink
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(295, 197);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(215, 13);
-            this.label7.TabIndex = 8;
-            this.label7.Text = "Strider && Instant Mix (from TWHL) - Graphics";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(295, 215);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(123, 13);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "AJ Scarcella - Website - ";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(295, 233);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(171, 13);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "The members of TWHL - Testing - ";
-            // 
-            // TWHLLink
-            // 
-            this.TWHLLink.AutoSize = true;
-            this.TWHLLink.Location = new System.Drawing.Point(464, 233);
-            this.TWHLLink.Name = "TWHLLink";
-            this.TWHLLink.Size = new System.Drawing.Size(46, 13);
-            this.TWHLLink.TabIndex = 6;
-            this.TWHLLink.TabStop = true;
-            this.TWHLLink.Text = "twhl.info";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(295, 251);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(231, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "...and everyone else in the modding community!";
-            // 
-            // AJLink
-            // 
-            this.AJLink.AutoSize = true;
-            this.AJLink.Location = new System.Drawing.Point(416, 215);
-            this.AJLink.Name = "AJLink";
-            this.AJLink.Size = new System.Drawing.Size(92, 13);
-            this.AJLink.TabIndex = 6;
-            this.AJLink.TabStop = true;
-            this.AJLink.Text = "scrub-studios.com";
+            this.GitHubLink.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.GitHubLink.Location = new System.Drawing.Point(172, 0);
+            this.GitHubLink.Name = "GitHubLink";
+            this.GitHubLink.Size = new System.Drawing.Size(318, 35);
+            this.GitHubLink.TabIndex = 3;
+            this.GitHubLink.TabStop = true;
+            this.GitHubLink.Text = "https://github.com/AestheticalZ/cbre-ex";
+            this.GitHubLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // AboutDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(560, 305);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.GPLLink);
-            this.Controls.Add(this.GithubLink);
+            this.ClientSize = new System.Drawing.Size(517, 611);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.AJLink);
-            this.Controls.Add(this.TWHLLink);
-            this.Controls.Add(this.LTLink);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.DescriptionLabel);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -254,30 +219,24 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About CBRE-EX";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label VersionLabel;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.LinkLabel LTLink;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.LinkLabel DescriptionLabel;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.LinkLabel GithubLink;
-        private System.Windows.Forms.LinkLabel GPLLink;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.LinkLabel TWHLLink;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.LinkLabel AJLink;
+        private System.Windows.Forms.LinkLabel GitHubLink;
+        private System.Windows.Forms.LinkLabel ExtraLicenseLink;
+        private System.Windows.Forms.LinkLabel LicenseLink;
     }
 }

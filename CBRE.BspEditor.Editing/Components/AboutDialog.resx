@@ -117,4 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DescriptionLabel.Text" xml:space="preserve">
+    <value>A fork of CBRE by AestheticalZ that adds new QOL features.
+
+Thanks to all of the contributors who have helped with development!
+
+Licensed under the BSD-3-Clause license.
+
+Based on Sledge by Daniel Walder
+logic-and-trick.com
+The original CBRE is a fork of Sledge
+created by juanjp600.</value>
+  </data>
 </root>
