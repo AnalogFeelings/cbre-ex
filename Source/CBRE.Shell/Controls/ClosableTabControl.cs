@@ -116,13 +116,20 @@ namespace CBRE.Shell.Controls
             var selected = SelectedIndex == index;
             var tab = TabPages[index];
 
-            var points = new[]
+            Point[] points = new[]
             {
                 new Point(rect.Left, rect.Bottom),
-                new Point(rect.Left, rect.Top + 3),
-                new Point(rect.Left + 3, rect.Top),
-                new Point(rect.Right - 3, rect.Top),
-                new Point(rect.Right, rect.Top + 3),
+                new Point(rect.Left, rect.Top),
+                new Point(rect.Right, rect.Top),
+                new Point(rect.Right, rect.Bottom),
+                new Point(rect.Left, rect.Bottom)
+            };
+
+            Point[] pointsUnselected = new[]
+            {
+                new Point(rect.Left, rect.Bottom),
+                new Point(rect.Left, rect.Top + 2),
+                new Point(rect.Right, rect.Top + 2),
                 new Point(rect.Right, rect.Bottom),
                 new Point(rect.Left, rect.Bottom)
             };
@@ -138,12 +145,12 @@ namespace CBRE.Shell.Controls
 
             using (var b = new SolidBrush(backColour))
             {
-                g.FillPolygon(b, points);
+                g.FillPolygon(b, selected ? points : pointsUnselected);
             }
 
             // Border
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.DrawPolygon(SystemPens.ControlDark, points);
+            g.DrawPolygon(SystemPens.ControlDark, selected ? points : pointsUnselected);
             if (selected)
             {
                 using (var pen = new Pen(tab.BackColor))
@@ -155,37 +162,41 @@ namespace CBRE.Shell.Controls
             // Icon
             if (tab.ImageKey == "Dirty")
             {
-                g.FillEllipse(Brushes.OrangeRed, rect.X + 5, rect.Y + 5, 5, 5);
+                int dirtyOffset = selected ? 8 : 10;
+                g.FillEllipse(Brushes.OrangeRed, rect.X + 8, rect.Y + dirtyOffset, 5, 5);
             }
 
             // Text
             var sf = new StringFormat(StringFormatFlags.NoWrap);
             var textWidth = (int) g.MeasureString(tab.Text, Font, SizeF.Empty, sf).Width;
-            var textLeft = rect.X + 14;
+            var textLeft = rect.X + 18;
             var textRight = rect.Right - 26;
-            var textRect = new Rectangle(textLeft + (textRight - textLeft - textWidth) / 2, rect.Y + 4, rect.Width - 26, rect.Height - 5);
+            int offset = selected ? 4 : 6;
+            var textRect = new Rectangle(textLeft, rect.Y + offset, rect.Width - 26, rect.Height - 5);
             using (var b = new SolidBrush(tab.ForeColor))
             {
                 g.DrawString(tab.Text, Font, b, textRect, sf);
             }
 
             // Close icon
+            int borderOffset = selected ? 1 : 3;
+            int crossOffset = selected ? 0 : 2;
             using (var pen = new Pen(tab.ForeColor))
             {
                 if (hoverClose)
                 {
-                    g.DrawRectangle(pen, closeRect.Left + 1, closeRect.Top + 1, closeRect.Width - 2, closeRect.Height - 2);
+                    g.DrawRectangle(pen, closeRect.Left + 1, closeRect.Top + borderOffset, closeRect.Width - 2, closeRect.Height - 2);
                 }
                 const int padding = 5;
-                g.DrawLine(pen, closeRect.Left + padding, closeRect.Top + padding, closeRect.Right - padding, closeRect.Bottom - padding);
-                g.DrawLine(pen, closeRect.Right - padding, closeRect.Top + padding, closeRect.Left + padding, closeRect.Bottom - padding);
+                g.DrawLine(pen, closeRect.Left + padding, closeRect.Top + crossOffset + padding, closeRect.Right - padding, closeRect.Bottom + crossOffset - padding);
+                g.DrawLine(pen, closeRect.Right - padding, closeRect.Top + crossOffset + padding, closeRect.Left + padding, closeRect.Bottom + crossOffset - padding);
             }
         }
 
         private Rectangle GetCloseRect(int index)
         {
             var rect = GetTabRect(index);
-            return new Rectangle(rect.Right - 20, rect.Top + 1 + (rect.Height - 16) / 2, 16, 16);
+            return new Rectangle(rect.Right - 20, rect.Top + (rect.Height - 16) / 2, 16, 16);
         }
     }
 }
