@@ -6,6 +6,6 @@
 	"Inherit": "en"
   },
   "ShellSetup": {
-	"Title": "Editeur CBRE-EX"
+	"Title": "CBRE-EX v{0}"
   }
 }

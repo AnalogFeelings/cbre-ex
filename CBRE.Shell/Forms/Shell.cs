@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LogicAndTrick.Oy;
@@ -33,6 +34,9 @@ namespace CBRE.Shell.Forms
         private readonly Lazy<ITranslationStringProvider> _translation;
 
         public string Title { get; set; } = "CBRE-EX Shell";
+        public string Version { get; set; }
+
+        private string PreformattedTitle => string.Format(Title, Version);
 
         public string UnsavedChanges { get; set; } = "Unsaved changes in file";
         public string SaveChangesToFile { get; set; } = "Save changes to {0}?";
@@ -60,7 +64,9 @@ namespace CBRE.Shell.Forms
         private void InitializeShell()
         {
             DocumentTabs.TabPages.Clear();
-            
+
+            Version = Assembly.GetAssembly(typeof(Shell)).GetName().Version.ToString(3);
+
             Oy.Subscribe<List<string>>("Shell:InstanceOpened", async a => await this.InvokeAsync(() => InstanceOpened(a)));
 
             Oy.Subscribe<IDocument>("Document:Opened", async d => await this.InvokeAsync(() => OpenDocument(d)));
@@ -131,7 +137,7 @@ namespace CBRE.Shell.Forms
             // Set up bootstrapping for shutdown
             Closing += DoClosing;
 
-            Text = Title;
+            Text = PreformattedTitle;
         }
 
         private async Task PostLoad()
@@ -285,7 +291,7 @@ namespace CBRE.Shell.Forms
             if (document == null || document is NoDocument)
             {
                 DocumentContainer.Controls.Clear();
-                Text = Title;
+                Text = PreformattedTitle;
             }
             else
             {
@@ -297,7 +303,7 @@ namespace CBRE.Shell.Forms
                     DocumentContainer.Controls[0].Dock = DockStyle.Fill;
                 }
 
-                Text = Title + @" - " + document.Name;
+                Text = $"{PreformattedTitle} - {document.Name}";
             }
         }
 
@@ -325,7 +331,7 @@ namespace CBRE.Shell.Forms
 
             if (DocumentTabs.SelectedTab?.Tag is IDocument sd)
             {
-                Text = Title + @" - " + sd.Name;
+                Text = $"{PreformattedTitle} - {sd.Name}";
             }
 
             return Task.CompletedTask;
