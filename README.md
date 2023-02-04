@@ -21,10 +21,8 @@ CBRE-EX has an automatic updater, so this is probably the only time you will nee
 
 <div align="center"><h2>License Information</h2></div>
 
-The Editor is licensed under the GNU General Public License, version 2.0.  
-All other components are licensed under the GNU Lesser General Public License, version 2.1, unless otherwise stated.
+The Editor is licensed under the BSD-3-Clause license.  
 
-Editor sidebar icons are taken from **Sledge**, which is licensed under BSD-3.   
 Editor logo is a modified version of **The SCP Foundation** Wiki logo, which is licensed under the CC-BY-SA 3.0 license.
 
 <div align="center"><h2>External Repositories</h2></div>
