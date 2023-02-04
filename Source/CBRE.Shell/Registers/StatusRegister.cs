@@ -44,6 +44,8 @@ namespace CBRE.Shell.Registers
         {
             var si = new StatusBarItem(item);
             _items.Add(si);
+
+            if (_shell.StatusStrip.Items.Count == 0) si.Label.BorderSides = ToolStripStatusLabelBorderSides.None;
             _shell.StatusStrip.Items.Add(si.Label);
         }
 
@@ -68,7 +70,7 @@ namespace CBRE.Shell.Registers
                 Label = new ToolStripStatusLabel
                 {
                     Text = item.Text ?? "",
-                    BorderSides = item.HasBorder ? ToolStripStatusLabelBorderSides.All : ToolStripStatusLabelBorderSides.None,
+                    BorderSides = item.HasBorder ? ToolStripStatusLabelBorderSides.Left : ToolStripStatusLabelBorderSides.None,
                     AutoSize = item.Width <= 0,
                     Spring = item.Width <= 0,
                     TextAlign = item.Width <= 0 ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter,
