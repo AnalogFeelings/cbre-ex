@@ -22,21 +22,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TestSettings.testsettings = TestSettings.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Packages", "Source\CBRE.Packages\CBRE.Packages.csproj", "{BB1AF818-8CCA-4BC8-A4A8-B7A0627B68DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Packages", "CBRE.Packages\CBRE.Packages.csproj", "{BB1AF818-8CCA-4BC8-A4A8-B7A0627B68DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Rendering", "Source\CBRE.Rendering\CBRE.Rendering.csproj", "{4DA7F88D-64FF-4036-8A11-6175169DA851}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Rendering", "CBRE.Rendering\CBRE.Rendering.csproj", "{4DA7F88D-64FF-4036-8A11-6175169DA851}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Shell", "Source\CBRE.Shell\CBRE.Shell.csproj", "{1E0BEB41-CF2E-4F48-838E-452C1DCF575F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Shell", "CBRE.Shell\CBRE.Shell.csproj", "{1E0BEB41-CF2E-4F48-838E-452C1DCF575F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Editor", "Source\CBRE.Editor\CBRE.Editor.csproj", "{0F7EBC7C-8FF3-484C-ACD2-6682450A91DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Editor", "CBRE.Editor\CBRE.Editor.csproj", "{0F7EBC7C-8FF3-484C-ACD2-6682450A91DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor", "Source\CBRE.BspEditor\CBRE.BspEditor.csproj", "{37C3FE6B-16F4-431F-AB67-FBA7C681CCEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor", "CBRE.BspEditor\CBRE.BspEditor.csproj", "{37C3FE6B-16F4-431F-AB67-FBA7C681CCEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Rendering", "Source\CBRE.BspEditor.Rendering\CBRE.BspEditor.Rendering.csproj", "{D27BB6A7-FE81-45B5-9B68-B23E4169F16D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Rendering", "CBRE.BspEditor.Rendering\CBRE.BspEditor.Rendering.csproj", "{D27BB6A7-FE81-45B5-9B68-B23E4169F16D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Tools", "Source\CBRE.BspEditor.Tools\CBRE.BspEditor.Tools.csproj", "{F5715CFA-8F04-4892-A1EF-C3E2C3017750}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Tools", "CBRE.BspEditor.Tools\CBRE.BspEditor.Tools.csproj", "{F5715CFA-8F04-4892-A1EF-C3E2C3017750}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Editing", "Source\CBRE.BspEditor.Editing\CBRE.BspEditor.Editing.csproj", "{D33E1027-1956-44C4-B920-85281F703704}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Editing", "CBRE.BspEditor.Editing\CBRE.BspEditor.Editing.csproj", "{D33E1027-1956-44C4-B920-85281F703704}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
