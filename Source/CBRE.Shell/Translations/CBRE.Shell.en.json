@@ -13,6 +13,9 @@
 	"Translations": {
 	  "Language": "Interface language (requires restart)"
 	},
+	"DiscordManager": {
+	  "EnableDiscordPresence": "Enable Discord Rich Presence"
+	},
 	"Autosaver": {
 	  "Enabled": "Enable automatic saving",
 	  "IntervalMinutes": "Interval between autosaves (minutes)",

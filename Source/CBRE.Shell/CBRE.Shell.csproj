@@ -75,6 +75,7 @@
     <Compile Include="Commands\CommandActivator.cs" />
     <Compile Include="Commands\IActivator.cs" />
     <Compile Include="Components\DefaultMenuMetadataProvider.cs" />
+    <Compile Include="Components\DiscordManager.cs" />
     <Compile Include="Components\InformationStatusItem.cs" />
     <Compile Include="Components\LogComponent.cs" />
     <Compile Include="Components\RecentFilesMenuItemProvider.cs" />
@@ -338,6 +339,9 @@
     <None Include="Resources\arrow_up.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DiscordRichPresence">
+      <Version>1.1.3.18</Version>
+    </PackageReference>
     <PackageReference Include="LogicAndTrick.Oy">
       <Version>1.2.0</Version>
     </PackageReference>
