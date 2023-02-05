@@ -249,7 +249,6 @@ namespace CBRE.Shell.Forms
         /// <returns>The list of docking panels</returns>
         internal IEnumerable<DockedPanel> GetDockPanels()
         {
-            yield return LeftSidebar;
             yield return RightSidebar;
             yield return BottomSidebar;
         }

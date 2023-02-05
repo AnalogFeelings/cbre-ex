@@ -40,8 +40,6 @@ namespace CBRE.Shell.Forms
             this.DocumentTabs = new CBRE.Shell.Controls.ClosableTabControl();
             this.RightSidebar = new CBRE.Shell.Controls.DockedPanel();
             this.RightSidebarContainer = new CBRE.Shell.Controls.SidebarContainer();
-            this.LeftSidebar = new CBRE.Shell.Controls.DockedPanel();
-            this.LeftSidebarContainer = new CBRE.Shell.Controls.SidebarContainer();
             this.BottomSidebar = new CBRE.Shell.Controls.DockedPanel();
             this.BottomTabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -51,7 +49,6 @@ namespace CBRE.Shell.Forms
             this.ToolStripContainer.LeftToolStripPanel.SuspendLayout();
             this.ToolStripContainer.SuspendLayout();
             this.RightSidebar.SuspendLayout();
-            this.LeftSidebar.SuspendLayout();
             this.BottomSidebar.SuspendLayout();
             this.BottomTabs.SuspendLayout();
             this.SuspendLayout();
@@ -80,7 +77,6 @@ namespace CBRE.Shell.Forms
             this.ToolStripContainer.ContentPanel.Controls.Add(this.DocumentContainer);
             this.ToolStripContainer.ContentPanel.Controls.Add(this.DocumentTabs);
             this.ToolStripContainer.ContentPanel.Controls.Add(this.RightSidebar);
-            this.ToolStripContainer.ContentPanel.Controls.Add(this.LeftSidebar);
             this.ToolStripContainer.ContentPanel.Controls.Add(this.BottomSidebar);
             this.ToolStripContainer.ContentPanel.Size = new System.Drawing.Size(660, 382);
             this.ToolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -97,18 +93,18 @@ namespace CBRE.Shell.Forms
             // DocumentContainer
             // 
             this.DocumentContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DocumentContainer.Location = new System.Drawing.Point(8, 24);
+            this.DocumentContainer.Location = new System.Drawing.Point(0, 24);
             this.DocumentContainer.Name = "DocumentContainer";
-            this.DocumentContainer.Size = new System.Drawing.Size(452, 258);
+            this.DocumentContainer.Size = new System.Drawing.Size(460, 258);
             this.DocumentContainer.TabIndex = 3;
             // 
             // DocumentTabs
             // 
             this.DocumentTabs.Dock = System.Windows.Forms.DockStyle.Top;
-            this.DocumentTabs.Location = new System.Drawing.Point(8, 0);
+            this.DocumentTabs.Location = new System.Drawing.Point(0, 0);
             this.DocumentTabs.Name = "DocumentTabs";
             this.DocumentTabs.SelectedIndex = 0;
-            this.DocumentTabs.Size = new System.Drawing.Size(452, 24);
+            this.DocumentTabs.Size = new System.Drawing.Size(460, 24);
             this.DocumentTabs.TabIndex = 4;
             this.DocumentTabs.RequestClose += new CBRE.Shell.Controls.ClosableTabControl.RequestCloseEventHandler(this.RequestClose);
             this.DocumentTabs.SelectedIndexChanged += new System.EventHandler(this.TabChanged);
@@ -132,26 +128,6 @@ namespace CBRE.Shell.Forms
             this.RightSidebarContainer.Name = "RightSidebarContainer";
             this.RightSidebarContainer.Size = new System.Drawing.Size(192, 282);
             this.RightSidebarContainer.TabIndex = 0;
-            // 
-            // LeftSidebar
-            // 
-            this.LeftSidebar.Controls.Add(this.LeftSidebarContainer);
-            this.LeftSidebar.Dock = System.Windows.Forms.DockStyle.Left;
-            this.LeftSidebar.DockDimension = 8;
-            this.LeftSidebar.Hidden = true;
-            this.LeftSidebar.Location = new System.Drawing.Point(0, 0);
-            this.LeftSidebar.Name = "LeftSidebar";
-            this.LeftSidebar.Padding = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.LeftSidebar.Size = new System.Drawing.Size(8, 282);
-            this.LeftSidebar.TabIndex = 1;
-            // 
-            // LeftSidebarContainer
-            // 
-            this.LeftSidebarContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LeftSidebarContainer.Location = new System.Drawing.Point(0, 0);
-            this.LeftSidebarContainer.Name = "LeftSidebarContainer";
-            this.LeftSidebarContainer.Size = new System.Drawing.Size(0, 282);
-            this.LeftSidebarContainer.TabIndex = 0;
             // 
             // BottomSidebar
             // 
@@ -226,7 +202,6 @@ namespace CBRE.Shell.Forms
             this.ToolStripContainer.ResumeLayout(false);
             this.ToolStripContainer.PerformLayout();
             this.RightSidebar.ResumeLayout(false);
-            this.LeftSidebar.ResumeLayout(false);
             this.BottomSidebar.ResumeLayout(false);
             this.BottomTabs.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -238,11 +213,9 @@ namespace CBRE.Shell.Forms
         private System.Windows.Forms.ToolStripContainer ToolStripContainer;
         private CBRE.Shell.Controls.DockedPanel BottomSidebar;
         private CBRE.Shell.Controls.DockedPanel RightSidebar;
-        private CBRE.Shell.Controls.DockedPanel LeftSidebar;
         private System.Windows.Forms.Panel DocumentContainer;
         private CBRE.Shell.Controls.ClosableTabControl DocumentTabs;
         internal SidebarContainer RightSidebarContainer;
-        internal SidebarContainer LeftSidebarContainer;
         private TabPage tabPage2;
         internal TabPage tabPage1;
         internal TabControl BottomTabs;
