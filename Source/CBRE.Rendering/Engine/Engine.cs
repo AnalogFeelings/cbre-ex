@@ -90,10 +90,10 @@ namespace CBRE.Rendering.Engine
         {
             var dev = device.GetType().GetProperty("Device");
             var dxd = dev?.GetValue(device) as ID3D11Device;
-            var fl = dxd?.FeatureLevel ?? FeatureLevel.Level_10_0; // Just assume it's DX10, whatever
-            if (fl < FeatureLevel.Level_10_0)
+            var fl = dxd?.FeatureLevel ?? FeatureLevel.Level_11_0; // Just assume it's DX10, whatever
+            if (fl < FeatureLevel.Level_11_0)
             {
-                MessageBox.Show($"CBRE-EX requires DirectX 10, but your computer only has version {fl}.", "Unsupported graphics card!");
+                MessageBox.Show($"CBRE-EX requires DirectX 11, but your computer only has version {fl}.", "Unsupported graphics card!");
                 Environment.Exit(1);
             }
             Features.FeatureLevel = fl;
