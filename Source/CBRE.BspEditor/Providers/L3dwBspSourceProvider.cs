@@ -24,9 +24,16 @@ namespace CBRE.BspEditor.Providers
     {
         private static readonly IEnumerable<Type> SupportedTypes = new List<Type>
         {
-            typeof(IMapObject),
-            typeof(IMapObjectData),
-            typeof(IMapData),
+            typeof(Root),
+            typeof(Group),
+            typeof(Solid),
+            typeof(Entity),
+
+            typeof(Visgroup),
+            
+            typeof(VisgroupID),
+            typeof(EntityData),
+            typeof(ObjectColor)
         };
 
         public IEnumerable<Type> SupportedDataTypes => SupportedTypes;
