@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CBRE.Common.Logging;
@@ -108,7 +109,7 @@ namespace CBRE.BspEditor.Environment
             return new MultiTextureStreamSource(packages.Select(x => x.GetStreamSource()));
         }
 
-        public abstract bool IsNullTexture(string name);
+        public abstract bool IsToolTexture(string name);
         public abstract float GetOpacity(string name);
     }
 }

@@ -137,17 +137,17 @@
     </Compile>
     <Compile Include="Environment\Empty\EmptyEnvironment.cs" />
     <Compile Include="Environment\Empty\EmptyTextureCollection.cs" />
-    <Compile Include="Environment\Goldsource\GoldsourceEnvironmentEditor.cs">
+    <Compile Include="Environment\ContainmentBreach\ContainmentBreachEnvironmentEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Environment\Goldsource\GoldsourceEnvironmentEditor.Designer.cs">
-      <DependentUpon>GoldsourceEnvironmentEditor.cs</DependentUpon>
+    <Compile Include="Environment\ContainmentBreach\ContainmentBreachEnvironmentEditor.Designer.cs">
+      <DependentUpon>ContainmentBreachEnvironmentEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Environment\EnvironmentCollection.cs" />
     <Compile Include="Environment\EnvironmentRegister.cs" />
-    <Compile Include="Environment\Goldsource\GoldsourceEnvironment.cs" />
-    <Compile Include="Environment\Goldsource\GoldsourceEnvironmentFactory.cs" />
-    <Compile Include="Environment\Goldsource\GoldsourceTextureCollection.cs" />
+    <Compile Include="Environment\ContainmentBreach\ContainmentBreachEnvironment.cs" />
+    <Compile Include="Environment\ContainmentBreach\ContainmentBreachEnvironmentFactory.cs" />
+    <Compile Include="Environment\ContainmentBreach\ContainmentBreachTextureCollection.cs" />
     <Compile Include="Environment\IEnvironment.cs" />
     <Compile Include="Environment\IEnvironmentData.cs" />
     <Compile Include="Environment\IEnvironmentEditor.cs" />
@@ -305,8 +305,8 @@
     <EmbeddedResource Include="Environment\Controls\EnvironmentSelectionForm.resx">
       <DependentUpon>EnvironmentSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Environment\Goldsource\GoldsourceEnvironmentEditor.resx">
-      <DependentUpon>GoldsourceEnvironmentEditor.cs</DependentUpon>
+    <EmbeddedResource Include="Environment\ContainmentBreach\ContainmentBreachEnvironmentEditor.resx">
+      <DependentUpon>ContainmentBreachEnvironmentEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

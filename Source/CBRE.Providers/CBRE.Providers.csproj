@@ -81,6 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProviderException.cs" />
     <Compile Include="ProviderNotFoundException.cs" />
+    <Compile Include="Texture\Generic\GenericStreamSource.cs" />
+    <Compile Include="Texture\Generic\GenericTexturePackage.cs" />
+    <Compile Include="Texture\Generic\GenericTexturePackageProvider.cs" />
     <Compile Include="Texture\MultiTextureStreamSource.cs" />
     <Compile Include="Texture\ITexturePackageProvider.cs" />
     <Compile Include="Texture\Spr\SpriteRenderMode.cs" />
@@ -96,14 +99,6 @@
     <Compile Include="Texture\TexturePackage.cs" />
     <Compile Include="Texture\ITextureStreamSource.cs" />
     <Compile Include="Texture\TextureSubItem.cs" />
-    <Compile Include="Texture\Wad\WadTexturePackage.cs" />
-    <Compile Include="Texture\Wad\WadTexturePackageProvider.cs" />
-    <Compile Include="Texture\Wad\Format\WadEntry.cs" />
-    <Compile Include="Texture\Wad\Format\WadEntryType.cs" />
-    <Compile Include="Texture\Wad\Format\WadImageStream.cs" />
-    <Compile Include="Texture\Wad\Format\WadPackage.cs" />
-    <Compile Include="Texture\Wad\Format\WadPackageStreamSource.cs" />
-    <Compile Include="Texture\Wad\WadTextureStreamSourceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CBRE.Common\CBRE.Common.csproj">
@@ -135,6 +130,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

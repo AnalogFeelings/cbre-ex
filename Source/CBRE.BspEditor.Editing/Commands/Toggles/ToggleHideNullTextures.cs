@@ -40,7 +40,7 @@ namespace CBRE.BspEditor.Editing.Commands.Toggles
                     x =>
                     {
                         x.Update(tl);
-                        x.UpdateRange(x.Document.Map.Root.Find(s => s is Solid).Where(s => s.Data.Get<Face>().Any(f => tc.IsNullTexture(f.Texture.Name))));
+                        x.UpdateRange(x.Document.Map.Root.Find(s => s is Solid).Where(s => s.Data.Get<Face>().Any(f => tc.IsToolTexture(f.Texture.Name))));
                     })
             );
         }

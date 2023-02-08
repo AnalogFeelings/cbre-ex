@@ -11,9 +11,9 @@ using CBRE.Providers.GameData;
 using CBRE.Providers.Texture;
 using CBRE.Shell;
 
-namespace CBRE.BspEditor.Environment.Goldsource
+namespace CBRE.BspEditor.Environment.ContainmentBreach
 {
-    public partial class GoldsourceEnvironmentEditor : UserControl, IEnvironmentEditor
+    public partial class ContainmentBreachEnvironmentEditor : UserControl, IEnvironmentEditor
     {
         public event EventHandler EnvironmentChanged;
         public Control Control => this;
@@ -24,42 +24,21 @@ namespace CBRE.BspEditor.Environment.Goldsource
         public IEnvironment Environment
         {
             get => GetEnvironment();
-            set => SetEnvironment(value as GoldsourceEnvironment);
+            set => SetEnvironment(value as ContainmentBreachEnvironment);
         }
 
-        public GoldsourceEnvironmentEditor()
+        public ContainmentBreachEnvironmentEditor()
         {
             InitializeComponent();
 
             txtGameDir.TextChanged += OnEnvironmentChanged;
             cmbBaseGame.SelectedIndexChanged += OnEnvironmentChanged;
-            cmbGameMod.SelectedIndexChanged += OnEnvironmentChanged;
-            cmbGameExe.SelectedIndexChanged += OnEnvironmentChanged;
-            chkLoadHdModels.CheckedChanged += OnEnvironmentChanged;
 
             cmbDefaultPointEntity.SelectedIndexChanged += OnEnvironmentChanged;
             cmbDefaultBrushEntity.SelectedIndexChanged += OnEnvironmentChanged;
             chkOverrideMapSize.CheckedChanged += OnEnvironmentChanged;
             cmbMapSizeOverrideLow.SelectedIndexChanged += OnEnvironmentChanged;
             cmbMapSizeOverrideHigh.SelectedIndexChanged += OnEnvironmentChanged;
-            chkIncludeFgdDirectories.CheckedChanged += OnEnvironmentChanged;
-
-            txtBuildToolsDirectory.TextChanged += OnEnvironmentChanged;
-            chkIncludeToolsDirectory.CheckedChanged += OnEnvironmentChanged;
-            cmbBspExe.SelectedIndexChanged += OnEnvironmentChanged;
-            cmbCsgExe.SelectedIndexChanged += OnEnvironmentChanged;
-            cmbVisExe.SelectedIndexChanged += OnEnvironmentChanged;
-            cmbRadExe.SelectedIndexChanged += OnEnvironmentChanged;
-
-            chkCopyBsp.CheckedChanged += OnEnvironmentChanged;
-            chkRunGame.CheckedChanged += OnEnvironmentChanged;
-            chkAskRunGame.CheckedChanged += OnEnvironmentChanged;
-
-            chkMapCopyBsp.CheckedChanged += OnEnvironmentChanged;
-            chkCopyMap.CheckedChanged += OnEnvironmentChanged;
-            chkCopyLog.CheckedChanged += OnEnvironmentChanged;
-            chkCopyErr.CheckedChanged += OnEnvironmentChanged;
-            chkCopyRes.CheckedChanged += OnEnvironmentChanged;
 
             nudDefaultTextureScale.ValueChanged += OnEnvironmentChanged;
 
@@ -73,10 +52,8 @@ namespace CBRE.BspEditor.Environment.Goldsource
 
             grpDirectories.Text = strings.GetString(prefix, "Directories");
             grpFgds.Text = strings.GetString(prefix, "GameDataFiles");
-            grpBuildTools.Text = strings.GetString(prefix, "BuildTools");
             grpTextures.Text = strings.GetString(prefix, "Textures");
-
-            btnBuildToolsBrowse.Text = btnGameDirBrowse.Text = strings.GetString(prefix, "Browse");
+            
             btnAddFgd.Text = btnAddTextures.Text = strings.GetString(prefix, "Add");
             btnRemoveFgd.Text = btnRemoveTextures.Text = strings.GetString(prefix, "Remove");
 
@@ -85,23 +62,12 @@ namespace CBRE.BspEditor.Environment.Goldsource
 
             lblGameDir.Text = strings.GetString(prefix, "GameDirectory");
             lblBaseGame.Text = strings.GetString(prefix, "BaseDirectory");
-            lblGameMod.Text = strings.GetString(prefix, "ModDirectory");
-            lblGameExe.Text = strings.GetString(prefix, "GameExecutable");
-            chkLoadHdModels.Text = strings.GetString(prefix, "LoadHDModels");
             
             lblDefaultPointEntity.Text = strings.GetString(prefix, "DefaultPointEntity");
             lblDefaultBrushEntity.Text = strings.GetString(prefix, "DefaultBrushEntity");
             lblMapSizeOverrideLow.Text = strings.GetString(prefix, "Low");
             lblMapSizeOverrideHigh.Text = strings.GetString(prefix, "High");
             chkOverrideMapSize.Text = strings.GetString(prefix, "OverrideMapSize");
-            chkIncludeFgdDirectories.Text = strings.GetString(prefix, "IncludeFgdDirectories");
-
-            lblBuildExeFolder.Text = strings.GetString(prefix, "BuildDirectory");
-            chkIncludeToolsDirectory.Text = strings.GetString(prefix, "IncludeToolsDirectory");
-            chkCopyBsp.Text = strings.GetString(prefix, "CopyBspToGameFolder");
-            chkRunGame.Text = strings.GetString(prefix, "RunGame");
-            chkAskRunGame.Text = strings.GetString(prefix, "AskToRunGame");
-            lblCopyToMapFolder.Text = strings.GetString(prefix, "CopyToMapFolder");
 
             lblDefaultTextureScale.Text = strings.GetString(prefix, "DefaultTextureScale");
             lblTexturePackageExclusions.Text = strings.GetString(prefix, "TexturePackagesToInclude");
@@ -114,15 +80,12 @@ namespace CBRE.BspEditor.Environment.Goldsource
             EnvironmentChanged?.Invoke(this, e);
         }
 
-        public void SetEnvironment(GoldsourceEnvironment env)
+        public void SetEnvironment(ContainmentBreachEnvironment env)
         {
-            if (env == null) env = new GoldsourceEnvironment();
+            if (env == null) env = new ContainmentBreachEnvironment();
 
-            txtGameDir.Text = env.BaseDirectory;
-            cmbBaseGame.SelectedItem = env.GameDirectory;
-            cmbGameMod.SelectedItem = env.ModDirectory;
-            cmbGameExe.SelectedItem = env.GameExe;
-            chkLoadHdModels.Checked = env.LoadHdModels;
+            txtGameDir.Text = env.GameDirectory;
+            cmbBaseGame.SelectedItem = env.GraphicsDirectory;
 
             lstFgds.Items.Clear();
             foreach (var fileName in env.FgdFiles)
@@ -136,51 +99,22 @@ namespace CBRE.BspEditor.Environment.Goldsource
             chkOverrideMapSize.Checked = env.OverrideMapSize;
             cmbMapSizeOverrideLow.SelectedItem = Convert.ToString(env.MapSizeLow, CultureInfo.InvariantCulture);
             cmbMapSizeOverrideHigh.SelectedItem = Convert.ToString(env.MapSizeHigh, CultureInfo.InvariantCulture);
-            chkIncludeFgdDirectories.Checked = env.IncludeFgdDirectoriesInEnvironment;
-
-            txtBuildToolsDirectory.Text = env.ToolsDirectory;
-            chkIncludeToolsDirectory.Checked = env.IncludeToolsDirectoryInEnvironment;
-            cmbBspExe.SelectedItem = env.BspExe;
-            cmbCsgExe.SelectedItem = env.CsgExe;
-            cmbVisExe.SelectedItem = env.VisExe;
-            cmbRadExe.SelectedItem = env.RadExe;
-
-            chkCopyBsp.Checked = env.GameCopyBsp;
-            chkRunGame.Checked = env.GameRun;
-            chkAskRunGame.Checked = env.GameAsk;
-
-            chkMapCopyBsp.Checked = env.MapCopyBsp;
-            chkCopyMap.Checked = env.MapCopyMap;
-            chkCopyLog.Checked = env.MapCopyLog;
-            chkCopyErr.Checked = env.MapCopyErr;
-            chkCopyRes.Checked = env.MapCopyRes;
 
             nudDefaultTextureScale.Value = env.DefaultTextureScale;
 
             cklTexturePackages.Items.Clear();
-            foreach (var exc in env.ExcludedWads)
-            {
-                cklTexturePackages.Items.Add(exc, false); // all wads not in this list will be excluded
-            }
             UpdateTexturePackages();
 
             lstAdditionalTextures.Items.Clear();
-            foreach (var fileName in env.AdditionalTextureFiles)
-            {
-                lstAdditionalTextures.Items.Add(new ListViewItem(new[] { Path.GetFileName(fileName), fileName }) { ToolTipText = fileName });
-            }
             UpdateWadList();
         }
 
-        public GoldsourceEnvironment GetEnvironment()
+        public ContainmentBreachEnvironment GetEnvironment()
         {
-            return new GoldsourceEnvironment()
+            return new ContainmentBreachEnvironment()
             {
-                BaseDirectory = txtGameDir.Text,
-                GameDirectory = Convert.ToString(cmbBaseGame.SelectedItem, CultureInfo.InvariantCulture),
-                ModDirectory = Convert.ToString(cmbGameMod.SelectedItem, CultureInfo.InvariantCulture),
-                GameExe = Convert.ToString(cmbGameExe.SelectedItem, CultureInfo.InvariantCulture),
-                LoadHdModels = chkLoadHdModels.Checked,
+                GameDirectory = txtGameDir.Text,
+                GraphicsDirectory = Convert.ToString(cmbBaseGame.SelectedItem, CultureInfo.InvariantCulture),
 
                 FgdFiles = lstFgds.Items.OfType<ListViewItem>().Select(x => x.SubItems[1].Text).Where(File.Exists).ToList(),
                 DefaultPointEntity = Convert.ToString(cmbDefaultPointEntity.SelectedItem, CultureInfo.InvariantCulture),
@@ -188,28 +122,8 @@ namespace CBRE.BspEditor.Environment.Goldsource
                 OverrideMapSize = chkOverrideMapSize.Checked,
                 MapSizeLow = decimal.TryParse(Convert.ToString(cmbMapSizeOverrideLow.SelectedItem, CultureInfo.InvariantCulture), out decimal l) ? l : 0,
                 MapSizeHigh = decimal.TryParse(Convert.ToString(cmbMapSizeOverrideHigh.SelectedItem, CultureInfo.InvariantCulture), out decimal h) ? h : 0,
-                IncludeFgdDirectoriesInEnvironment = chkIncludeFgdDirectories.Checked,
 
-                ToolsDirectory = txtBuildToolsDirectory.Text,
-                IncludeToolsDirectoryInEnvironment = chkIncludeToolsDirectory.Checked,
-                BspExe = Convert.ToString(cmbBspExe.SelectedItem, CultureInfo.InvariantCulture),
-                CsgExe = Convert.ToString(cmbCsgExe.SelectedItem, CultureInfo.InvariantCulture),
-                VisExe = Convert.ToString(cmbVisExe.SelectedItem, CultureInfo.InvariantCulture),
-                RadExe = Convert.ToString(cmbRadExe.SelectedItem, CultureInfo.InvariantCulture),
-
-                GameCopyBsp = chkCopyBsp.Checked,
-                GameRun = chkRunGame.Checked,
-                GameAsk = chkAskRunGame.Checked,
-
-                MapCopyBsp = chkMapCopyBsp.Checked,
-                MapCopyMap = chkCopyMap.Checked,
-                MapCopyLog = chkCopyLog.Checked,
-                MapCopyErr = chkCopyErr.Checked,
-                MapCopyRes = chkCopyRes.Checked,
-
-                DefaultTextureScale = nudDefaultTextureScale.Value,
-                ExcludedWads = GetTexturePackageSelection().Where(x => !x.Value).Select(x => x.Key).ToList(),
-                AdditionalTextureFiles = lstAdditionalTextures.Items.OfType<ListViewItem>().Select(x => x.SubItems[1].Text).Where(File.Exists).ToList()
+                DefaultTextureScale = nudDefaultTextureScale.Value
             };
         }
 
@@ -239,39 +153,18 @@ namespace CBRE.BspEditor.Environment.Goldsource
             if (!Directory.Exists(dir)) return;
 
             // Set game/mod directories
-            var mod = cmbGameMod.SelectedItem ?? "";
             var bse = cmbBaseGame.SelectedItem ?? "";
             
-            cmbGameMod.Items.Clear();
             cmbBaseGame.Items.Clear();
 
             var mods = Directory.GetDirectories(dir).Select(Path.GetFileName);
             var ignored = new[] { "gldrv", "logos", "logs", "errorlogs", "platform", "config" };
 
             var range = mods.Where(x => !ignored.Contains(x.ToLowerInvariant())).OfType<object>().ToArray();
-            cmbGameMod.Items.AddRange(range);
             cmbBaseGame.Items.AddRange(range);
-
-            if (cmbGameMod.Items.Contains(mod)) cmbGameMod.SelectedItem = mod;
-            else if (cmbGameMod.Items.Count > 0) cmbGameMod.SelectedIndex = 0;
 
             if (cmbBaseGame.Items.Contains(bse)) cmbBaseGame.SelectedItem = bse;
             else if (cmbBaseGame.Items.Count > 0) cmbBaseGame.SelectedIndex = 0;
-
-            // Set game executable
-
-            var exe = cmbGameExe.SelectedItem ?? "";
-
-            cmbGameExe.Items.Clear();
-
-            var exes = Directory.GetFiles(dir, "*.exe").Select(Path.GetFileName);
-            ignored = new[] { "sxuninst.exe", "utdel32.exe", "upd.exe", "hlds.exe", "hltv.exe" };
-
-            range = exes.Where(x => !ignored.Contains(x.ToLowerInvariant())).OfType<object>().ToArray();
-            cmbGameExe.Items.AddRange(range);
-
-            if (cmbGameExe.Items.Contains(exe)) cmbGameExe.SelectedItem = exe;
-            else if (cmbGameExe.Items.Count > 0) cmbGameExe.SelectedIndex = 0;
         }
 
         // Game data files
@@ -357,66 +250,6 @@ namespace CBRE.BspEditor.Environment.Goldsource
             cmbDefaultBrushEntity.EndUpdate();
         }
 
-        // Build tools
-
-        private void BrowseBuildToolsDirectory(object sender, EventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                if (Directory.Exists(txtBuildToolsDirectory.Text)) fbd.SelectedPath = txtBuildToolsDirectory.Text;
-                if (fbd.ShowDialog() == DialogResult.OK)
-                {
-                    txtBuildToolsDirectory.Text = fbd.SelectedPath;
-                }
-            }
-        }
-
-        private void BuildToolsDirectoryTextChanged(object sender, EventArgs e)
-        {
-            UpdateBuildToolsDirectory();
-        }
-
-        private void UpdateBuildToolsDirectory()
-        {
-            var dir = txtBuildToolsDirectory.Text;
-            if (!Directory.Exists(dir)) return;
-
-            var selBsp = cmbBspExe.SelectedItem ?? "";
-            var selCsg = cmbCsgExe.SelectedItem ?? "";
-            var selVis = cmbVisExe.SelectedItem ?? "";
-            var selRad = cmbRadExe.SelectedItem ?? "";
-
-            cmbBspExe.Items.Clear();
-            cmbCsgExe.Items.Clear();
-            cmbVisExe.Items.Clear();
-            cmbRadExe.Items.Clear();
-
-            var range = Directory.GetFiles(dir, "*.exe").Select(Path.GetFileName).ToList();
-            var rangeArr = range.OfType<object>().ToArray();
-
-            cmbBspExe.Items.AddRange(rangeArr);
-            cmbCsgExe.Items.AddRange(rangeArr);
-            cmbVisExe.Items.AddRange(rangeArr);
-            cmbRadExe.Items.AddRange(rangeArr);
-
-            cmbBspExe.SelectedIndex = -1;
-            cmbCsgExe.SelectedIndex = -1;
-            cmbVisExe.SelectedIndex = -1;
-            cmbRadExe.SelectedIndex = -1;
-
-            if (cmbBspExe.Items.Contains(selBsp)) cmbBspExe.SelectedItem = selBsp;
-            else if (cmbBspExe.Items.Count > 0) cmbBspExe.SelectedIndex = Math.Max(0, range.FindIndex(x => x.ToLower().Contains("bsp")));
-
-            if (cmbCsgExe.Items.Contains(selCsg)) cmbCsgExe.SelectedItem = selCsg;
-            else if (cmbCsgExe.Items.Count > 0) cmbCsgExe.SelectedIndex = Math.Max(0, range.FindIndex(x => x.ToLower().Contains("csg")));
-
-            if (cmbVisExe.Items.Contains(selVis)) cmbVisExe.SelectedItem = selVis;
-            else if (cmbVisExe.Items.Count > 0) cmbVisExe.SelectedIndex = Math.Max(0, range.FindIndex(x => x.ToLower().Contains("vis")));
-
-            if (cmbRadExe.Items.Contains(selRad)) cmbRadExe.SelectedItem = selRad;
-            else if (cmbRadExe.Items.Count > 0) cmbRadExe.SelectedIndex = Math.Max(0, range.FindIndex(x => x.ToLower().Contains("rad")));
-        }
-
         public Dictionary<string, bool> GetTexturePackageSelection()
         {
             var d = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
@@ -463,21 +296,6 @@ namespace CBRE.BspEditor.Environment.Goldsource
                     Path.Combine(txtGameDir.Text, sbg + "_addon"),
                 });
             }
-            if (cmbGameMod.SelectedItem is string sgm)
-            {
-                directories.AddRange(new[]
-                {
-                    Path.Combine(txtGameDir.Text, sgm),
-                    Path.Combine(txtGameDir.Text, sgm + "_hd"),
-                    Path.Combine(txtGameDir.Text, sgm + "_downloads"),
-                    Path.Combine(txtGameDir.Text, sgm + "_addon"),
-                });
-            }
-
-            if (chkIncludeToolsDirectory.Checked)
-            {
-                directories.Add(txtBuildToolsDirectory.Text);
-            }
 
             directories = directories.Distinct().Where(Directory.Exists).ToList();
 
@@ -485,23 +303,23 @@ namespace CBRE.BspEditor.Environment.Goldsource
             {
                 try
                 {
-                    var packages = _wadProvider.GetPackagesInFile(new CompositeFile(
-                        new NativeFile(txtGameDir.Text),
-                        directories.Select(x => new NativeFile(x))
-                    )).ToList();
+                    //var packages = _wadProvider.GetPackagesInFile(null, new CompositeFile(
+                    //    new NativeFile(txtGameDir.Text),
+                    //    directories.Select(x => new NativeFile(x))
+                    //)).ToList();
 
-                    // Exclude game-internal packages that can not be used
-                    string[] _internalWads = new[] { "cached.wad", "fonts.wad", "gfx.wad", "tempdecal.wad" };
-                    foreach (var pr in packages)
-                    {
-                        if (!state.ContainsKey(pr.Name) && !_internalWads.Contains(pr.Name)) 
-                            state[pr.Name] = true;
-                    }
+                    //// Exclude game-internal packages that can not be used
+                    //string[] _internalWads = new[] { "cached.wad", "fonts.wad", "gfx.wad", "tempdecal.wad" };
+                    //foreach (var pr in packages)
+                    //{
+                    //    if (!state.ContainsKey(pr.Name) && !_internalWads.Contains(pr.Name)) 
+                    //        state[pr.Name] = true;
+                    //}
 
-                    foreach (var key in state.Keys.ToList())
-                    {
-                        if (packages.All(x => !string.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))) state.Remove(key);
-                    }
+                    //foreach (var key in state.Keys.ToList())
+                    //{
+                    //    if (packages.All(x => !string.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))) state.Remove(key);
+                    //}
                 }
                 catch
                 {

@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using CBRE.Providers.Texture;
 
-namespace CBRE.BspEditor.Environment.Goldsource
+namespace CBRE.BspEditor.Environment.ContainmentBreach
 {
-    public class GoldsourceTextureCollection : TextureCollection
+    public class ContainmentBreachTextureCollection : TextureCollection
     {
-        public GoldsourceTextureCollection(IEnumerable<TexturePackage> packages) : base(packages)
+        public ContainmentBreachTextureCollection(IEnumerable<TexturePackage> packages) : base(packages)
         {
         }
 
         public override IEnumerable<string> GetBrowsableTextures()
         {
-            var hs = new HashSet<string>();
-            foreach (var pack in Packages.Where(x => x.Type == "Wad3")) hs.UnionWith(pack.Textures);
+            HashSet<string> hs = new HashSet<string>();
+
+            foreach (TexturePackage pack in Packages.Where(x => x.Type == "Generic")) hs.UnionWith(pack.Textures);
+
             return hs;
         }
 
         public override IEnumerable<string> GetDecalTextures()
         {
-            return Packages.Where(x => string.Equals(x.Location, "decals.wad", StringComparison.CurrentCultureIgnoreCase)).SelectMany(x => x.Textures);
+            return Array.Empty<string>(); // TODO: Remove this, there are no decals in CB.
         }
 
         public override IEnumerable<string> GetSpriteTextures()
@@ -28,12 +30,13 @@ namespace CBRE.BspEditor.Environment.Goldsource
             return Packages.Where(x => string.Equals(x.Location, "sprites", StringComparison.InvariantCultureIgnoreCase)).SelectMany(x => x.Textures);
         }
 
-        public override bool IsNullTexture(string name)
+        public override bool IsToolTexture(string name)
         {
             switch (name?.ToLower())
             {
-                case "null":
-                case "bevel":
+                case "block_light":
+                case "remove_face":
+                case "invisible_collision":
                     return true;
                 default:
                     return false;
@@ -44,11 +47,9 @@ namespace CBRE.BspEditor.Environment.Goldsource
         {
             switch (name?.ToLower())
             {
-                case "aaatrigger":
-                case "hint":
-                case "clip":
-                case "origin":
-                case "skip":
+                case "block_light":
+                case "remove_face":
+                case "invisible_collision":
                     return 0.5f;
                 default:
                     return 1;

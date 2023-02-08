@@ -174,7 +174,7 @@ namespace CBRE.BspEditor.Rendering.Converters
             {
                 var texInd = (uint)(f.Vertices.Count - 2) * 3;
 
-                if (hideNull && tc.IsNullTexture(f.Texture.Name))
+                if (hideNull && tc.IsToolTexture(f.Texture.Name))
                 {
                     texOffset += texInd;
                     continue;
