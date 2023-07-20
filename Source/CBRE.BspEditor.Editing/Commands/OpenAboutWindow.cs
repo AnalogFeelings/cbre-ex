@@ -1,6 +1,7 @@
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using CBRE.BspEditor.Editing.Components;
+using CBRE.BspEditor.Editing.Properties;
 using CBRE.Common.Shell.Commands;
 using CBRE.Common.Shell.Context;
 using CBRE.Common.Shell.Menu;
@@ -12,9 +13,10 @@ namespace CBRE.BspEditor.Editing.Commands
     [Export(typeof(ICommand))]
     [MenuItem("Help", "", "About", "Z")]
     [CommandID("BspEditor:Help:About")]
+    [MenuImage(typeof(Resources), nameof(Resources.Menu_ShowInformation))]
     public class OpenAboutWindow : ICommand
     {
-        public string Name { get; set; } = "About CBRE";
+        public string Name { get; set; } = "About CBRE-EX";
         public string Details { get; set; } = "View information about this application";
 
         public bool IsInContext(IContext context)
