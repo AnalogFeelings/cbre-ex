@@ -121,4 +121,7 @@
   <data name="CBRE" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CBRE.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Menu_Update" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Menu_Update.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

@@ -70,7 +70,7 @@
     <Compile Include="Commands\OpenMapInformation.cs" />
     <Compile Include="Commands\OpenEntityReport.cs" />
     <Compile Include="Commands\OpenRootProperties.cs" />
-    <Compile Include="Commands\OpenSledgeWebsite.cs" />
+    <Compile Include="Commands\OpenBugReportSite.cs" />
     <Compile Include="Commands\OpenCompileWindow.cs" />
     <Compile Include="Commands\Pointfile\QuickLoadPointfile.cs" />
     <Compile Include="Commands\Pointfile\UnloadPointfile.cs" />
@@ -433,6 +433,7 @@
     <Content Include="Resources\Menu_CenterSelectionAll.png" />
     <Content Include="Resources\Menu_CheckForProblems.png" />
     <Content Include="Resources\Menu_EntityReport.png" />
+    <Content Include="Resources\Menu_GitHub.png" />
     <Content Include="Resources\Menu_GoToBrushID.png" />
     <Content Include="Resources\Menu_GoToCoordinates.png" />
     <Content Include="Resources\Menu_HideNullTextures.png" />

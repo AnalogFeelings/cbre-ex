@@ -7,6 +7,7 @@ using CBRE.Common.Shell.Commands;
 using CBRE.Common.Shell.Context;
 using CBRE.Common.Shell.Menu;
 using CBRE.Common.Translations;
+using CBRE.Editor.Properties;
 using CBRE.Shell;
 
 namespace CBRE.Editor.Update
@@ -15,6 +16,7 @@ namespace CBRE.Editor.Update
     [Export(typeof(ICommand))]
     [MenuItem("Help", "", "Update", "B")]
     [CommandID("CBRE:Editor:CheckForUpdates")]
+    [MenuImage(typeof(Resources), nameof(Resources.Menu_Update))]
     public class CheckForUpdates : ICommand
     {
         private readonly Form _shell;
