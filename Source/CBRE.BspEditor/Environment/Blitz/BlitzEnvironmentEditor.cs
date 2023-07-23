@@ -13,21 +13,21 @@ using CBRE.Shell;
 
 namespace CBRE.BspEditor.Environment.ContainmentBreach
 {
-    public partial class ContainmentBreachEnvironmentEditor : UserControl, IEnvironmentEditor
+    public partial class BlitzEnvironmentEditor : UserControl, IEnvironmentEditor
     {
         public event EventHandler EnvironmentChanged;
         public Control Control => this;
 
         private readonly IGameDataProvider _fgdProvider = Common.Container.Get<IGameDataProvider>("Fgd");
-        private readonly ITexturePackageProvider _wadProvider = Common.Container.Get<ITexturePackageProvider>("Wad3");
+        private readonly ITexturePackageProvider _wadProvider = Common.Container.Get<ITexturePackageProvider>("Generic");
 
         public IEnvironment Environment
         {
             get => GetEnvironment();
-            set => SetEnvironment(value as ContainmentBreachEnvironment);
+            set => SetEnvironment(value as BlitzEnvironment);
         }
 
-        public ContainmentBreachEnvironmentEditor()
+        public BlitzEnvironmentEditor()
         {
             InitializeComponent();
 
@@ -80,9 +80,9 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             EnvironmentChanged?.Invoke(this, e);
         }
 
-        public void SetEnvironment(ContainmentBreachEnvironment env)
+        public void SetEnvironment(BlitzEnvironment env)
         {
-            if (env == null) env = new ContainmentBreachEnvironment();
+            if (env == null) env = new BlitzEnvironment();
 
             txtGameDir.Text = env.GameDirectory;
             cmbBaseGame.SelectedItem = env.GraphicsDirectory;
@@ -109,9 +109,9 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             UpdateWadList();
         }
 
-        public ContainmentBreachEnvironment GetEnvironment()
+        public BlitzEnvironment GetEnvironment()
         {
-            return new ContainmentBreachEnvironment()
+            return new BlitzEnvironment()
             {
                 GameDirectory = txtGameDir.Text,
                 GraphicsDirectory = Convert.ToString(cmbBaseGame.SelectedItem, CultureInfo.InvariantCulture),

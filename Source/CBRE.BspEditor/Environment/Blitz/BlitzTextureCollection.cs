@@ -5,9 +5,9 @@ using CBRE.Providers.Texture;
 
 namespace CBRE.BspEditor.Environment.ContainmentBreach
 {
-    public class ContainmentBreachTextureCollection : TextureCollection
+    public class BlitzTextureCollection : TextureCollection
     {
-        public ContainmentBreachTextureCollection(IEnumerable<TexturePackage> packages) : base(packages)
+        public BlitzTextureCollection(IEnumerable<TexturePackage> packages) : base(packages)
         {
         }
 

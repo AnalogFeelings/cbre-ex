@@ -26,7 +26,7 @@ using Path = System.IO.Path;
 
 namespace CBRE.BspEditor.Environment.ContainmentBreach
 {
-    public class ContainmentBreachEnvironment : IEnvironment
+    public class BlitzEnvironment : IEnvironment
     {
         private readonly ITexturePackageProvider _genericProvider;
         private readonly ITexturePackageProvider _spriteProvider;
@@ -73,14 +73,14 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
         {
             get
             {
-                yield return Path.Combine(GameDirectory, GraphicsDirectory);
+                yield return GameDirectory;
 
                 // Editor location to the path, for sprites and the like
                 yield return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             }
         }
 
-        public ContainmentBreachEnvironment()
+        public BlitzEnvironment()
         {
             _genericProvider = Container.Get<ITexturePackageProvider>("Generic");
             _spriteProvider = Container.Get<ITexturePackageProvider>("Spr");
@@ -104,7 +104,7 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             var spriteRefs = _spriteProvider.GetPackagesInFile(null, Root);
             var sprites = await _spriteProvider.GetTexturePackages(null, spriteRefs);
 
-            return new ContainmentBreachTextureCollection(generics.Union(sprites));
+            return new BlitzTextureCollection(generics.Union(sprites));
         }
 
         private Task<GameData> MakeGameDataAsync()
@@ -363,7 +363,7 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             return Task.FromResult(new Batch());
         }
 
-        private static readonly string AutoVisgroupPrefix = typeof(ContainmentBreachEnvironment).Namespace + ".AutomaticVisgroups";
+        private static readonly string AutoVisgroupPrefix = typeof(BlitzEnvironment).Namespace + ".AutomaticVisgroups";
 
         public IEnumerable<AutomaticVisgroup> GetAutomaticVisgroups()
         {

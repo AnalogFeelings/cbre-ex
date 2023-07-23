@@ -1,6 +1,6 @@
 namespace CBRE.BspEditor.Environment.ContainmentBreach
 {
-    partial class ContainmentBreachEnvironmentEditor
+    partial class BlitzEnvironmentEditor
     {
         /// <summary> 
         /// Required designer variable.

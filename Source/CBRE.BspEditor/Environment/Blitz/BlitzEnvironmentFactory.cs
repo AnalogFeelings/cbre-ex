@@ -9,10 +9,10 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
 {
     [Export(typeof(IEnvironmentFactory))]
     [AutoTranslate]
-    public class ContainmentBreachEnvironmentFactory : IEnvironmentFactory
+    public class BlitzEnvironmentFactory : IEnvironmentFactory
     {
-        public Type Type => typeof(ContainmentBreachEnvironment);
-        public string TypeName => "ContainmentBreachEnvironment";
+        public Type Type => typeof(BlitzEnvironment);
+        public string TypeName => "BlitzEnvironment";
         public string Description { get; set; } = "Blitz3D";
 
         private T GetVal<T>(Dictionary<string, string> dictionary, string key, T def = default(T))
@@ -33,7 +33,7 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
 
         public IEnvironment Deserialise(SerialisedEnvironment environment)
         {
-            var gse = new ContainmentBreachEnvironment()
+            var gse = new BlitzEnvironment()
             {
                 ID = environment.ID,
                 Name = environment.Name,
@@ -54,7 +54,7 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
 
         public SerialisedEnvironment Serialise(IEnvironment environment)
         {
-            var env = (ContainmentBreachEnvironment) environment;
+            var env = (BlitzEnvironment) environment;
             var se = new SerialisedEnvironment
             {
                 ID = environment.ID,
@@ -80,12 +80,12 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
 
         public IEnvironment CreateEnvironment()
         {
-            return new ContainmentBreachEnvironment();
+            return new BlitzEnvironment();
         }
 
         public IEnvironmentEditor CreateEditor()
         {
-            return new ContainmentBreachEnvironmentEditor();
+            return new BlitzEnvironmentEditor();
         }
     }
 }
