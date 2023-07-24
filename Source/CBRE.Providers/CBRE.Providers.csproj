@@ -52,8 +52,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameData\FgdGameDataProvider.cs" />
-    <Compile Include="GameData\FgdProvider.cs" />
+    <Compile Include="GameData\BlitzGameDataProvider.cs" />
     <Compile Include="GameData\IGameDataProvider.cs" />
     <Compile Include="Model\Mdl10\Format\AnimationFrame.cs" />
     <Compile Include="Model\Mdl10\Format\Attachment.cs" />
@@ -86,15 +85,10 @@
     <Compile Include="Texture\Generic\GenericTexturePackageProvider.cs" />
     <Compile Include="Texture\MultiTextureStreamSource.cs" />
     <Compile Include="Texture\ITexturePackageProvider.cs" />
-    <Compile Include="Texture\Spr\SpriteRenderMode.cs" />
-    <Compile Include="Texture\Spr\SprTexturePackage.cs" />
-    <Compile Include="Texture\Spr\SprStreamSource.cs" />
-    <Compile Include="Texture\Spr\SprTexturePackageProvider.cs" />
     <Compile Include="Texture\TextureFlags.cs" />
     <Compile Include="Texture\TexturePackageReference.cs" />
     <Compile Include="Texture\NullTextureStreamSource.cs" />
     <Compile Include="Texture\TextureSubItemType.cs" />
-    <Compile Include="Texture\Spr\SpriteOrientation.cs" />
     <Compile Include="Texture\TextureItem.cs" />
     <Compile Include="Texture\TexturePackage.cs" />
     <Compile Include="Texture\ITextureStreamSource.cs" />

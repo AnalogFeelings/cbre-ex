@@ -146,22 +146,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="Sprites\lightbulb.png">
+    <Content Include="Sprites\ent_light.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sprites\model.png">
+    <Content Include="Sprites\ent_model.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sprites\screen.png">
+    <Content Include="Sprites\ent_screen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sprites\speaker.png">
+    <Content Include="Sprites\ent_speaker.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sprites\spotlight.png">
+    <Content Include="Sprites\ent_spot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sprites\waypoint.png">
+    <Content Include="Sprites\ent_waypoint.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ToolTextures\BLOCK_LIGHT.png">

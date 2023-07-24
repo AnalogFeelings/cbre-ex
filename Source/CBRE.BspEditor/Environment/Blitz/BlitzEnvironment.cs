@@ -26,8 +26,7 @@ namespace CBRE.BspEditor.Environment.Blitz
     public class BlitzEnvironment : IEnvironment
     {
         private readonly ITexturePackageProvider _genericProvider;
-        private readonly ITexturePackageProvider _spriteProvider;
-        private readonly IGameDataProvider _jsonProvider;
+        private readonly IGameDataProvider _blitzProvider;
 
         private readonly Lazy<Task<TextureCollection>> _textureCollection;
         private readonly List<IEnvironmentData> _data;
@@ -82,8 +81,7 @@ namespace CBRE.BspEditor.Environment.Blitz
         public BlitzEnvironment()
         {
             _genericProvider = Container.Get<ITexturePackageProvider>("Generic");
-            _spriteProvider = Container.Get<ITexturePackageProvider>("Spr");
-            _jsonProvider = Container.Get<IGameDataProvider>("Fgd");
+            _blitzProvider = Container.Get<IGameDataProvider>("Blitz");
 
             _textureCollection = new Lazy<Task<TextureCollection>>(MakeTextureCollectionAsync);
             _gameData = new Lazy<Task<GameData>>(MakeGameDataAsync);
@@ -112,7 +110,11 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         private Task<GameData> MakeGameDataAsync()
         {
-            return Task.FromResult(_jsonProvider.GetGameDataFromFiles(Array.Empty<string>()));
+            IEnumerable<string> entityFiles = string.IsNullOrWhiteSpace(EntityPath) ? 
+                Array.Empty<string>() : 
+                Directory.EnumerateFiles(EntityPath, "*.json");
+
+            return Task.FromResult(_blitzProvider.GetGameDataFromFiles(entityFiles));
         }
 
         public Task<TextureCollection> GetTextureCollection()

@@ -16,9 +16,6 @@ namespace CBRE.BspEditor.Environment.Blitz
         public event EventHandler EnvironmentChanged;
         public Control Control => this;
 
-        private readonly IGameDataProvider _fgdProvider = Common.Container.Get<IGameDataProvider>("Fgd");
-        private readonly ITexturePackageProvider _wadProvider = Common.Container.Get<ITexturePackageProvider>("Generic");
-
         public IEnvironment Environment
         {
             get => GetEnvironment();
@@ -201,6 +198,7 @@ namespace CBRE.BspEditor.Environment.Blitz
                 TextureDirectories = GetDirs(texturesGrid),
                 ModelDirectories = GetDirs(modelsGrid),
 
+                EntityPath = txtEntityPath.Text,
                 DefaultPointEntity = Convert.ToString(cmbDefaultPointEntity.SelectedItem, CultureInfo.InvariantCulture),
                 DefaultBrushEntity = Convert.ToString(cmbDefaultBrushEntity.SelectedItem, CultureInfo.InvariantCulture),
 
