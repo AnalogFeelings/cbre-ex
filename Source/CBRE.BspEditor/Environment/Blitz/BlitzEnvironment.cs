@@ -40,6 +40,8 @@ namespace CBRE.BspEditor.Environment.Blitz
         public List<string> TextureDirectories { get; set; }
         public List<string> ModelDirectories { get; set; }
 
+        public string EntityPath { get; set; }
+
         public string DefaultPointEntity { get; set; }
         public string DefaultBrushEntity { get; set; }
 

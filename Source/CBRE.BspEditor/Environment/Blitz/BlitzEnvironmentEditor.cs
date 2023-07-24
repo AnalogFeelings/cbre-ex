@@ -40,7 +40,18 @@ namespace CBRE.BspEditor.Environment.Blitz
             modelsGrid.EditingControlShowing += ModelsGrid_EditingControlShowing;
             modelsGrid.CellClick += ModelsGrid_CellClick;
 
+            txtEntityPath.TextChanged += OnEnvironmentChanged;
+            btnBrowseEntity.Click += BrowseEntity_Click;
+
             nudDefaultTextureScale.ValueChanged += OnEnvironmentChanged;
+        }
+
+        private void BrowseEntity_Click(object sender, EventArgs e)
+        {
+            OpenBrowseDirDialog((dir) => 
+            {
+                txtEntityPath.Text = dir;
+            });
         }
 
         private void ModelsGrid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -133,6 +144,9 @@ namespace CBRE.BspEditor.Environment.Blitz
             grpDirectories.Text = strings.GetString(prefix, "Directories");
             grpFgds.Text = strings.GetString(prefix, "Settings");
 
+            lblEntityPath.Text = strings.GetString(prefix, "EntityPath");
+            btnBrowseEntity.Text = strings.GetString(prefix, "BrowseEntity");
+
             lblDefaultPointEntity.Text = strings.GetString(prefix, "DefaultPointEntity");
             lblDefaultBrushEntity.Text = strings.GetString(prefix, "DefaultBrushEntity");
 
@@ -171,6 +185,8 @@ namespace CBRE.BspEditor.Environment.Blitz
             }
 
             AddDirsRow(modelsGrid, string.Empty);
+
+            txtEntityPath.Text = env.EntityPath;
 
             cmbDefaultPointEntity.SelectedItem = env.DefaultPointEntity;
             cmbDefaultBrushEntity.SelectedItem = env.DefaultBrushEntity;

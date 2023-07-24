@@ -36,19 +36,22 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.lblDefaultTextureScale = new System.Windows.Forms.Label();
             this.grpFgds = new System.Windows.Forms.GroupBox();
             this.grpDirectories = new System.Windows.Forms.GroupBox();
-            this.texturesGrid = new System.Windows.Forms.DataGridView();
-            this.deleteButtons = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.textureDirs = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.browseButtons = new System.Windows.Forms.DataGridViewButtonColumn();
             this.modelsGrid = new System.Windows.Forms.DataGridView();
             this.deleteButtonsModel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.modelDirs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.browseButtonsModel = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.texturesGrid = new System.Windows.Forms.DataGridView();
+            this.deleteButtons = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.textureDirs = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.browseButtons = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.lblEntityPath = new System.Windows.Forms.Label();
+            this.txtEntityPath = new System.Windows.Forms.TextBox();
+            this.btnBrowseEntity = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDefaultTextureScale)).BeginInit();
             this.grpFgds.SuspendLayout();
             this.grpDirectories.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.texturesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.modelsGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.texturesGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // lblDefaultBrushEntity
@@ -131,7 +134,7 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.grpFgds.Controls.Add(this.lblDefaultBrushEntity);
             this.grpFgds.Controls.Add(this.lblDefaultTextureScale);
             this.grpFgds.Controls.Add(this.nudDefaultTextureScale);
-            this.grpFgds.Location = new System.Drawing.Point(8, 425);
+            this.grpFgds.Location = new System.Drawing.Point(8, 454);
             this.grpFgds.Name = "grpFgds";
             this.grpFgds.Size = new System.Drawing.Size(456, 107);
             this.grpFgds.TabIndex = 47;
@@ -142,59 +145,17 @@ namespace CBRE.BspEditor.Environment.Blitz
             // 
             this.grpDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpDirectories.Controls.Add(this.btnBrowseEntity);
+            this.grpDirectories.Controls.Add(this.txtEntityPath);
+            this.grpDirectories.Controls.Add(this.lblEntityPath);
             this.grpDirectories.Controls.Add(this.modelsGrid);
             this.grpDirectories.Controls.Add(this.texturesGrid);
             this.grpDirectories.Location = new System.Drawing.Point(8, 8);
             this.grpDirectories.Name = "grpDirectories";
-            this.grpDirectories.Size = new System.Drawing.Size(456, 411);
+            this.grpDirectories.Size = new System.Drawing.Size(456, 440);
             this.grpDirectories.TabIndex = 50;
             this.grpDirectories.TabStop = false;
             this.grpDirectories.Text = "Resource Directories";
-            // 
-            // texturesGrid
-            // 
-            this.texturesGrid.AllowUserToAddRows = false;
-            this.texturesGrid.AllowUserToResizeColumns = false;
-            this.texturesGrid.AllowUserToResizeRows = false;
-            this.texturesGrid.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.texturesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.texturesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.deleteButtons,
-            this.textureDirs,
-            this.browseButtons});
-            this.texturesGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.texturesGrid.Location = new System.Drawing.Point(13, 19);
-            this.texturesGrid.Name = "texturesGrid";
-            this.texturesGrid.RowHeadersVisible = false;
-            this.texturesGrid.Size = new System.Drawing.Size(437, 187);
-            this.texturesGrid.TabIndex = 0;
-            // 
-            // deleteButtons
-            // 
-            this.deleteButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.deleteButtons.HeaderText = "";
-            this.deleteButtons.MinimumWidth = 24;
-            this.deleteButtons.Name = "deleteButtons";
-            this.deleteButtons.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.deleteButtons.Width = 24;
-            // 
-            // textureDirs
-            // 
-            this.textureDirs.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.textureDirs.HeaderText = "Texture Directories";
-            this.textureDirs.Name = "textureDirs";
-            this.textureDirs.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.textureDirs.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // browseButtons
-            // 
-            this.browseButtons.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.browseButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.browseButtons.HeaderText = "";
-            this.browseButtons.MinimumWidth = 50;
-            this.browseButtons.Name = "browseButtons";
-            this.browseButtons.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.browseButtons.Width = 50;
             // 
             // modelsGrid
             // 
@@ -241,6 +202,78 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.browseButtonsModel.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.browseButtonsModel.Width = 50;
             // 
+            // texturesGrid
+            // 
+            this.texturesGrid.AllowUserToAddRows = false;
+            this.texturesGrid.AllowUserToResizeColumns = false;
+            this.texturesGrid.AllowUserToResizeRows = false;
+            this.texturesGrid.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.texturesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.texturesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.deleteButtons,
+            this.textureDirs,
+            this.browseButtons});
+            this.texturesGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.texturesGrid.Location = new System.Drawing.Point(13, 19);
+            this.texturesGrid.Name = "texturesGrid";
+            this.texturesGrid.RowHeadersVisible = false;
+            this.texturesGrid.Size = new System.Drawing.Size(437, 187);
+            this.texturesGrid.TabIndex = 0;
+            // 
+            // deleteButtons
+            // 
+            this.deleteButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.deleteButtons.HeaderText = "";
+            this.deleteButtons.MinimumWidth = 24;
+            this.deleteButtons.Name = "deleteButtons";
+            this.deleteButtons.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.deleteButtons.Width = 24;
+            // 
+            // textureDirs
+            // 
+            this.textureDirs.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.textureDirs.HeaderText = "Texture Directories";
+            this.textureDirs.Name = "textureDirs";
+            this.textureDirs.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.textureDirs.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // browseButtons
+            // 
+            this.browseButtons.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.browseButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.browseButtons.HeaderText = "";
+            this.browseButtons.MinimumWidth = 50;
+            this.browseButtons.Name = "browseButtons";
+            this.browseButtons.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.browseButtons.Width = 50;
+            // 
+            // lblEntityPath
+            // 
+            this.lblEntityPath.Location = new System.Drawing.Point(5, 408);
+            this.lblEntityPath.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.lblEntityPath.Name = "lblEntityPath";
+            this.lblEntityPath.Size = new System.Drawing.Size(151, 20);
+            this.lblEntityPath.TabIndex = 32;
+            this.lblEntityPath.Text = "Entity Definition Path";
+            this.lblEntityPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtEntityPath
+            // 
+            this.txtEntityPath.Location = new System.Drawing.Point(162, 408);
+            this.txtEntityPath.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+            this.txtEntityPath.Name = "txtEntityPath";
+            this.txtEntityPath.Size = new System.Drawing.Size(199, 20);
+            this.txtEntityPath.TabIndex = 33;
+            // 
+            // btnBrowseEntity
+            // 
+            this.btnBrowseEntity.Location = new System.Drawing.Point(367, 406);
+            this.btnBrowseEntity.Name = "btnBrowseEntity";
+            this.btnBrowseEntity.Size = new System.Drawing.Size(83, 23);
+            this.btnBrowseEntity.TabIndex = 34;
+            this.btnBrowseEntity.Text = "Browse";
+            this.btnBrowseEntity.UseVisualStyleBackColor = true;
+            // 
             // BlitzEnvironmentEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -249,12 +282,13 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.Controls.Add(this.grpFgds);
             this.Name = "BlitzEnvironmentEditor";
             this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(472, 539);
+            this.Size = new System.Drawing.Size(472, 568);
             ((System.ComponentModel.ISupportInitialize)(this.nudDefaultTextureScale)).EndInit();
             this.grpFgds.ResumeLayout(false);
             this.grpDirectories.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.texturesGrid)).EndInit();
+            this.grpDirectories.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.modelsGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.texturesGrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -276,5 +310,8 @@ namespace CBRE.BspEditor.Environment.Blitz
         private System.Windows.Forms.DataGridViewButtonColumn deleteButtonsModel;
         private System.Windows.Forms.DataGridViewTextBoxColumn modelDirs;
         private System.Windows.Forms.DataGridViewButtonColumn browseButtonsModel;
+        private System.Windows.Forms.TextBox txtEntityPath;
+        private System.Windows.Forms.Label lblEntityPath;
+        private System.Windows.Forms.Button btnBrowseEntity;
     }
 }

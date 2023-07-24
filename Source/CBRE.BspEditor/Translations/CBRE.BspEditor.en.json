@@ -141,6 +141,8 @@
 		"Directories": "Resource Directories",
 		"Settings": "Environment Parameters",
 		"TextureDirectories": "Texture Directories",
+		"EntityPath": "Entity Definition Path",
+		"BrowseEntity": "Browse",
 		"ModelDirectories": "Model Directories",
 		"DefaultPointEntity": "Default point entity",
 		"DefaultBrushEntity": "Default brush entity",

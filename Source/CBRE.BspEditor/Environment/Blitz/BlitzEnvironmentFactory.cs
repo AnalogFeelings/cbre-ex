@@ -40,6 +40,7 @@ namespace CBRE.BspEditor.Environment.Blitz
 
                 TextureDirectories = GetVal(environment.Properties, "TextureDirectories", "").Split(';').Where(x => !string.IsNullOrWhiteSpace(x)).ToList(),
                 ModelDirectories = GetVal(environment.Properties, "ModelDirectories", "").Split(';').Where(x => !string.IsNullOrWhiteSpace(x)).ToList(),
+                EntityPath = GetVal(environment.Properties, "EntityPath", ""),
                 DefaultPointEntity = GetVal(environment.Properties, "DefaultPointEntity", ""),
                 DefaultBrushEntity = GetVal(environment.Properties, "DefaultBrushEntity", ""),
 
@@ -61,6 +62,7 @@ namespace CBRE.BspEditor.Environment.Blitz
                 {
                     { "TextureDirectories", string.Join(";", env.TextureDirectories) },
                     { "ModelDirectories", string.Join(";", env.ModelDirectories) },
+                    { "EntityPath", env.EntityPath },
                     { "DefaultPointEntity", env.DefaultPointEntity },
                     { "DefaultBrushEntity", env.DefaultBrushEntity },
 
