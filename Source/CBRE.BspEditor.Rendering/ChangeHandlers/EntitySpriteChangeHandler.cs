@@ -42,7 +42,6 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
             var cls = gd?.GetClass(entity.EntityData.Name);
             var scale = 1f;
             var color = Color.White;
-            SizeF? size = new SizeF(entity.BoundingBox.Width, entity.BoundingBox.Height);
 
             if (cls != null)
             {
@@ -59,14 +58,9 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
                     if (colProp.VariableType == VariableType.Color255) col /= 255f;
                     if (col.HasValue) color = col.Value.ToColor();
                 }
-
-                if (cls.Behaviours.Any(x => string.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    size = texture.Size;
-                }
             }
 
-            return new EntitySprite(name, scale, color, size);
+            return new EntitySprite(name, scale, color);
         }
 
         private static string GetSpriteName(Entity entity, GameData gd)

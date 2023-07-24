@@ -15,16 +15,14 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
         public string Name { get; set; }
         public float Scale { get; }
         public Color Color { get; set; }
-        public SizeF Size { get; }
 
         public bool ContentsReplaced => !string.IsNullOrWhiteSpace(Name);
 
-        public EntitySprite(string name, float scale, Color color, SizeF? size)
+        public EntitySprite(string name, float scale, Color color)
         {
             Name = name;
             Scale = scale;
             Color = color;
-            Size = size ?? SizeF.Empty;
         }
 
         public EntitySprite(SerialisedObject obj)
@@ -32,7 +30,6 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
             Name = obj.Get<string>("Name");
             Scale = obj.Get<float>("Scale");
             Color = obj.GetColor("Color");
-            Size = new SizeF(obj.Get<float>("Width"), obj.Get<float>("Height"));
         }
 
         [Export(typeof(IMapElementFormatter))]
@@ -43,15 +40,17 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
             info.AddValue("Name", Name);
             info.AddValue("Scale", Scale);
             info.AddValue("Color", Color);
-            info.AddValue("Width", Size.Width);
-            info.AddValue("Height", Size.Height);
         }
 
         public Box GetBoundingBox(IMapObject obj)
         {
-            if (string.IsNullOrWhiteSpace(Name) || Size.IsEmpty) return null;
+            if (string.IsNullOrWhiteSpace(Name)) return null;
+
+            SizeF size = new SizeF(64, 64);
+
             var origin = obj.Data.GetOne<Origin>()?.Location ?? Vector3.Zero;
-            var half = new Vector3(Size.Width, Size.Width, Size.Height) * Scale / 2;
+            var half = new Vector3(size.Width, size.Width, size.Height) * Scale / 2;
+
             return new Box(origin - half, origin + half);
         }
 
@@ -62,17 +61,17 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
         public IMapElement Clone()
         {
-            return new EntitySprite(Name, Scale, Color, Size);
+            return new EntitySprite(Name, Scale, Color);
         }
 
         public SerialisedObject ToSerialisedObject()
         {
             var so = new SerialisedObject(nameof(EntitySprite));
+
             so.Set(nameof(Name), Name);
             so.Set(nameof(Scale), Scale);
             so.SetColor(nameof(Color), Color);
-            so.Set("Width", Size.Width);
-            so.Set("Height", Size.Height);
+
             return so;
         }
     }
