@@ -34,9 +34,9 @@ namespace CBRE.BspEditor.Environment.Blitz
         {
             switch (name?.ToLower())
             {
-                case "block_light":
-                case "remove_face":
-                case "invisible_collision":
+                case "block_light.png":
+                case "remove_face.png":
+                case "invisible_collision.png":
                     return true;
                 default:
                     return false;
@@ -47,10 +47,10 @@ namespace CBRE.BspEditor.Environment.Blitz
         {
             switch (name?.ToLower())
             {
-                case "block_light":
-                case "remove_face":
-                case "invisible_collision":
-                    return 0.5f;
+                case "block_light.png":
+                case "remove_face.png":
+                case "invisible_collision.png":
+                    return 0.75f;
                 default:
                     return 1;
             }

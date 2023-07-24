@@ -20,11 +20,6 @@ namespace CBRE.Providers.Texture.Generic
         {
             return await Task.Factory.StartNew(() =>
             {
-                //if (!reference.File.Exists || (!string.Equals(reference.File.Extension, "png", StringComparison.InvariantCultureIgnoreCase) &&
-                //                               !string.Equals(reference.File.Extension, "jpg", StringComparison.InvariantCultureIgnoreCase) &&
-                //                               !string.Equals(reference.File.Extension, "jpeg", StringComparison.InvariantCultureIgnoreCase)))
-                //    return null;
-
                 return new GenericTexturePackage(name, reference);
             });
         }
@@ -35,10 +30,6 @@ namespace CBRE.Providers.Texture.Generic
             {
                 return references.AsParallel().Select(reference =>
                 {
-                    //if (!reference.File.Exists || (!string.Equals(reference.File.Extension, "png", StringComparison.InvariantCultureIgnoreCase) &&
-                    //                               !string.Equals(reference.File.Extension, "jpg", StringComparison.InvariantCultureIgnoreCase) &&
-                    //                               !string.Equals(reference.File.Extension, "jpeg", StringComparison.InvariantCultureIgnoreCase)))
-                    //    return null;
                     try
                     {
                         return new GenericTexturePackage(name, reference);

@@ -74,9 +74,6 @@ namespace CBRE.BspEditor.Environment.Blitz
                 {
                     yield return modelDir;
                 }
-
-                // Editor location to the path, for sprites and the like
-                yield return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             }
         }
 
@@ -96,11 +93,19 @@ namespace CBRE.BspEditor.Environment.Blitz
             var genericRefs = _genericProvider.GetPackagesInFile(Name, Root);
             var generics = await _genericProvider.GetTexturePackages(Name, genericRefs);
 
-            // TODO: Remove spr provider once entity sprites are able to be loaded with the generic provider.
-            var spriteRefs = _spriteProvider.GetPackagesInFile(null, Root);
-            var sprites = await _spriteProvider.GetTexturePackages(null, spriteRefs);
+            string editorPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            string toolsPath = Path.Combine(editorPath, "ToolTextures");
+            string spritesPath = Path.Combine(editorPath, "Sprites");
 
-            return new BlitzTextureCollection(generics.Union(sprites));
+            IFile toolFile = new NativeFile(toolsPath);
+            var toolRefs = _genericProvider.GetPackagesInFile("tooltextures", toolFile);
+            var tools = await _genericProvider.GetTexturePackages("tooltextures", toolRefs);
+
+            IFile spriteFile = new NativeFile(spritesPath);
+            var spriteRefs = _genericProvider.GetPackagesInFile("sprites", spriteFile);
+            var sprites = await _genericProvider.GetTexturePackages("sprites", spriteRefs);
+
+            return new BlitzTextureCollection(generics.Union(sprites).Union(tools));
         }
 
         private Task<GameData> MakeGameDataAsync()
