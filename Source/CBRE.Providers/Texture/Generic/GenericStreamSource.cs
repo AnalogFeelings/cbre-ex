@@ -29,7 +29,7 @@ namespace CBRE.Providers.Texture.Generic
             {
                 using (Stream stream = file.Open())
                 {
-                    return new Bitmap(Image.FromStream(stream));
+                    return new Bitmap(stream);
                 }
             });
 
