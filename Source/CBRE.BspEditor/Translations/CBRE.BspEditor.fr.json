@@ -55,7 +55,7 @@
 	}
   },
   "Environment": {
-	"Goldsource": {
+	"Blitz": {
 	  "AutomaticVisgroups": {
 		"Entities": "Entités",
 		"ToolBrushes": "Blocs d'outils",
@@ -78,8 +78,8 @@
 		"Sky": "Ciel (Sky)",
 		"Water": "Eau (Water)"
 	  },
-	  "GoldsourceEnvironmentFactory": {
-		"Description": "GoldSrc (HL1)"
+	  "BlitzEnvironmentFactory": {
+		"Description": "Blitz3D (SCP: CB)"
 	  }
 	}
   },

@@ -140,6 +140,8 @@
 	  "BlitzEnvironmentEditor": {
 		"Directories": "Resource Directories",
 		"Settings": "Environment Parameters",
+		"TextureDirectories": "Texture Directories",
+		"ModelDirectories": "Model Directories",
 		"DefaultPointEntity": "Default point entity",
 		"DefaultBrushEntity": "Default brush entity",
 		"DefaultTextureScale": "Default texture scale"

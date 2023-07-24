@@ -340,9 +340,6 @@
     <Content Include="Translations\CBRE.BspEditor.fr.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Translations\CBRE.BspEditor.it.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LogicAndTrick.Oy">

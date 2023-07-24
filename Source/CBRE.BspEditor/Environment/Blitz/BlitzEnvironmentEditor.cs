@@ -137,6 +137,9 @@ namespace CBRE.BspEditor.Environment.Blitz
             lblDefaultBrushEntity.Text = strings.GetString(prefix, "DefaultBrushEntity");
 
             lblDefaultTextureScale.Text = strings.GetString(prefix, "DefaultTextureScale");
+
+            texturesGrid.Columns[1].HeaderText = strings.GetString(prefix, "TextureDirectories");
+            modelsGrid.Columns[1].HeaderText = strings.GetString(prefix, "ModelDirectories");
         }
 
         private void OnEnvironmentChanged(object sender, EventArgs e)
