@@ -111,7 +111,7 @@
 		"Name": "Name"
 	  }
 	},
-	"Goldsource": {
+	"Blitz": {
 	  "AutomaticVisgroups": {
 		"Entities": "Entities",
 		"ToolBrushes": "Tool brushes",
@@ -134,40 +134,15 @@
 		"Sky": "Sky",
 		"Water": "Water"
 	  },
-	  "GoldsourceEnvironmentFactory": {
-		"Description": "Goldsource (HL1)"
+	  "BlitzEnvironmentFactory": {
+		"Description": "Blitz3D (SCP: CB)"
 	  },
-	  "GoldsourceEnvironmentEditor": {
-		"Directories": "Directories",
-		"GameDataFiles": "Game Data Files",
-		"BuildTools": "Build Tools",
-		"Textures": "Textures",
-		"Browse": "Browse...",
-		"Add": "Add...",
-		"Remove": "Remove",
-		"Name": "Name",
-		"Path": "Path",
-		"GameDirectory": "Game directory",
-		"BaseDirectory": "Base game directory (e.g. 'valve')",
-		"ModDirectory": "Mod directory (e.g. 'cstrike')",
-		"GameExecutable": "Game executable (e.g. 'hl.exe')",
-		"LoadHDModels": "Load HD models (if available)",
+	  "BlitzEnvironmentEditor": {
+		"Directories": "Resource Directories",
+		"Settings": "Environment Parameters",
 		"DefaultPointEntity": "Default point entity",
 		"DefaultBrushEntity": "Default brush entity",
-		"Low": "Low",
-		"High": "High",
-		"OverrideMapSize": "Override map size",
-		"IncludeFgdDirectories": "Load sprites and models from FGD directories",
-		"BuildDirectory": "Folder containing build tools:",
-		"IncludeToolsDirectory": "Automatically include textures found in this directory",
-		"CopyBspToGameFolder": "Copy BSP/RES to game folder",
-		"RunGame": "Run the game after successful compile",
-		"AskToRunGame": "Ask before running the game",
-		"CopyToMapFolder": "Copy to map folder:",
-		"DefaultTextureScale": "Default texture scale",
-		"TexturePackagesToInclude": "Texture packages to include:",
-		"ToggleAll": "Toggle all",
-		"AdditionalTexturePackages": "Additional texture packages:"
+		"DefaultTextureScale": "Default texture scale"
 	  }
 	}
   },

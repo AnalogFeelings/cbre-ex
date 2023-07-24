@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using CBRE.Common.Translations;
 
-namespace CBRE.BspEditor.Environment.ContainmentBreach
+namespace CBRE.BspEditor.Environment.Blitz
 {
     [Export(typeof(IEnvironmentFactory))]
     [AutoTranslate]
@@ -37,18 +37,15 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             {
                 ID = environment.ID,
                 Name = environment.Name,
-                GraphicsDirectory = GetVal(environment.Properties, "GraphicsDirectory", ""),
-                GameDirectory = GetVal(environment.Properties, "GameDirectory", ""),
 
-                FgdFiles = GetVal(environment.Properties, "FgdFiles", "").Split(';').Where(x => !String.IsNullOrWhiteSpace(x)).ToList(),
+                TextureDirectories = GetVal(environment.Properties, "TextureDirectories", "").Split(';').Where(x => !string.IsNullOrWhiteSpace(x)).ToList(),
+                ModelDirectories = GetVal(environment.Properties, "ModelDirectories", "").Split(';').Where(x => !string.IsNullOrWhiteSpace(x)).ToList(),
                 DefaultPointEntity = GetVal(environment.Properties, "DefaultPointEntity", ""),
                 DefaultBrushEntity = GetVal(environment.Properties, "DefaultBrushEntity", ""),
-                OverrideMapSize = GetVal(environment.Properties, "OverrideMapSize", false),
-                MapSizeLow = GetVal(environment.Properties, "MapSizeLow", -4096m),
-                MapSizeHigh = GetVal(environment.Properties, "MapSizeHigh", 4096m),
 
                 DefaultTextureScale = GetVal(environment.Properties, "DefaultTextureScale", 1m),
             };
+
             return gse;
         }
 
@@ -62,15 +59,10 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
                 Type = TypeName,
                 Properties =
                 {
-                    { "GameDirectory", env.GameDirectory },
-                    { "GraphicsDirectory", env.GraphicsDirectory },
-
-                    { "FgdFiles", String.Join(";", env.FgdFiles) },
+                    { "TextureDirectories", string.Join(";", env.TextureDirectories) },
+                    { "ModelDirectories", string.Join(";", env.ModelDirectories) },
                     { "DefaultPointEntity", env.DefaultPointEntity },
                     { "DefaultBrushEntity", env.DefaultBrushEntity },
-                    { "OverrideMapSize", Convert.ToString(env.OverrideMapSize, CultureInfo.InvariantCulture) },
-                    { "MapSizeLow", Convert.ToString(env.MapSizeLow, CultureInfo.InvariantCulture) },
-                    { "MapSizeHigh", Convert.ToString(env.MapSizeHigh, CultureInfo.InvariantCulture) },
 
                     { "DefaultTextureScale", Convert.ToString(env.DefaultTextureScale, CultureInfo.InvariantCulture) }
                 }

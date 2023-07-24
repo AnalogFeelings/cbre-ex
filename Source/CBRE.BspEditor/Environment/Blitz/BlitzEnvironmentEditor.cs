@@ -1,17 +1,15 @@
+using CBRE.Common.Translations;
+using CBRE.Providers.GameData;
+using CBRE.Providers.Texture;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using CBRE.Common.Translations;
-using CBRE.DataStructures.GameData;
-using CBRE.FileSystem;
-using CBRE.Providers.GameData;
-using CBRE.Providers.Texture;
-using CBRE.Shell;
 
-namespace CBRE.BspEditor.Environment.ContainmentBreach
+namespace CBRE.BspEditor.Environment.Blitz
 {
     public partial class BlitzEnvironmentEditor : UserControl, IEnvironmentEditor
     {
@@ -31,18 +29,100 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
         {
             InitializeComponent();
 
-            txtGameDir.TextChanged += OnEnvironmentChanged;
-            cmbBaseGame.SelectedIndexChanged += OnEnvironmentChanged;
-
             cmbDefaultPointEntity.SelectedIndexChanged += OnEnvironmentChanged;
             cmbDefaultBrushEntity.SelectedIndexChanged += OnEnvironmentChanged;
-            chkOverrideMapSize.CheckedChanged += OnEnvironmentChanged;
-            cmbMapSizeOverrideLow.SelectedIndexChanged += OnEnvironmentChanged;
-            cmbMapSizeOverrideHigh.SelectedIndexChanged += OnEnvironmentChanged;
+
+            texturesGrid.CellEndEdit += TexturesGrid_CellEndEdit;
+            texturesGrid.EditingControlShowing += TexturesGrid_EditingControlShowing;
+            texturesGrid.CellClick += TexturesGrid_CellClick;
+
+            modelsGrid.CellEndEdit += ModelsGrid_CellEndEdit;
+            modelsGrid.EditingControlShowing += ModelsGrid_EditingControlShowing;
+            modelsGrid.CellClick += ModelsGrid_CellClick;
 
             nudDefaultTextureScale.ValueChanged += OnEnvironmentChanged;
+        }
 
-            cklTexturePackages.ItemCheck += (s, e) => this.InvokeLater(() => OnEnvironmentChanged(s, e)); // So it happens after the checkstate has changed, not before
+        private void ModelsGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 2)
+            {
+                OpenBrowseDirDialog((dir) =>
+                {
+                    modelsGrid.Rows[e.RowIndex].Cells[1].Value = dir;
+
+                    DirsChanged(modelsGrid);
+                });
+            }
+            else if (e.ColumnIndex == 0)
+            {
+                modelsGrid.Rows[e.RowIndex].Cells[1].Value = string.Empty;
+
+                DirsChanged(modelsGrid);
+            }
+        }
+
+        private void ModelsGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (e.Control is DataGridViewTextBoxEditingControl textBox)
+            {
+                textBox.PreviewKeyDown -= ModelsGrid_KeyDown;
+                textBox.PreviewKeyDown += ModelsGrid_KeyDown;
+            }
+        }
+
+        private void ModelsGrid_KeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BeginInvoke(new MethodInvoker(() => DirsChanged(modelsGrid)));
+            }
+        }
+
+        private void ModelsGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            BeginInvoke(new MethodInvoker(() => DirsChanged(modelsGrid)));
+        }
+
+        private void TexturesGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 2)
+            {
+                OpenBrowseDirDialog((dir) =>
+                {
+                    texturesGrid.Rows[e.RowIndex].Cells[1].Value = dir;
+
+                    DirsChanged(texturesGrid);
+                });
+            }
+            else if (e.ColumnIndex == 0)
+            {
+                texturesGrid.Rows[e.RowIndex].Cells[1].Value = string.Empty;
+
+                DirsChanged(texturesGrid);
+            }
+        }
+
+        private void TexturesGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (e.Control is DataGridViewTextBoxEditingControl textBox)
+            {
+                textBox.PreviewKeyDown -= TexturesGrid_KeyDown;
+                textBox.PreviewKeyDown += TexturesGrid_KeyDown;
+            }
+        }
+
+        private void TexturesGrid_KeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BeginInvoke(new MethodInvoker(() => DirsChanged(texturesGrid)));
+            }
+        }
+
+        private void TexturesGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            BeginInvoke(new MethodInvoker(() => DirsChanged(texturesGrid)));
         }
 
         public void Translate(ITranslationStringProvider strings)
@@ -51,28 +131,12 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             var prefix = GetType().FullName;
 
             grpDirectories.Text = strings.GetString(prefix, "Directories");
-            grpFgds.Text = strings.GetString(prefix, "GameDataFiles");
-            grpTextures.Text = strings.GetString(prefix, "Textures");
-            
-            btnAddFgd.Text = btnAddTextures.Text = strings.GetString(prefix, "Add");
-            btnRemoveFgd.Text = btnRemoveTextures.Text = strings.GetString(prefix, "Remove");
+            grpFgds.Text = strings.GetString(prefix, "Settings");
 
-            colFgdName.Text = colWadName.Text = strings.GetString(prefix, "Name");
-            colFgdPath.Text = colWadPath.Text = strings.GetString(prefix, "Path");
-
-            lblGameDir.Text = strings.GetString(prefix, "GameDirectory");
-            lblBaseGame.Text = strings.GetString(prefix, "BaseDirectory");
-            
             lblDefaultPointEntity.Text = strings.GetString(prefix, "DefaultPointEntity");
             lblDefaultBrushEntity.Text = strings.GetString(prefix, "DefaultBrushEntity");
-            lblMapSizeOverrideLow.Text = strings.GetString(prefix, "Low");
-            lblMapSizeOverrideHigh.Text = strings.GetString(prefix, "High");
-            chkOverrideMapSize.Text = strings.GetString(prefix, "OverrideMapSize");
 
             lblDefaultTextureScale.Text = strings.GetString(prefix, "DefaultTextureScale");
-            lblTexturePackageExclusions.Text = strings.GetString(prefix, "TexturePackagesToInclude");
-            chkToggleAllTextures.Text = strings.GetString(prefix, "ToggleAll");
-            lblAdditionalTexturePackages.Text = strings.GetString(prefix, "AdditionalTexturePackages");
         }
 
         private void OnEnvironmentChanged(object sender, EventArgs e)
@@ -84,302 +148,124 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
         {
             if (env == null) env = new BlitzEnvironment();
 
-            txtGameDir.Text = env.GameDirectory;
-            cmbBaseGame.SelectedItem = env.GraphicsDirectory;
+            texturesGrid.Rows.Clear();
+            modelsGrid.Rows.Clear();
 
-            lstFgds.Items.Clear();
-            foreach (var fileName in env.FgdFiles)
+            foreach (string textureDir in env.TextureDirectories)
             {
-                lstFgds.Items.Add(new ListViewItem(new[] { Path.GetFileName(fileName), fileName }) {ToolTipText = fileName});
+                if (string.IsNullOrEmpty(textureDir)) continue;
+
+                AddDirsRow(texturesGrid, textureDir);
             }
-            UpdateFgdList();
+
+            AddDirsRow(texturesGrid, string.Empty);
+
+            foreach (string modelDir in env.ModelDirectories)
+            {
+                if (string.IsNullOrEmpty(modelDir)) continue;
+
+                AddDirsRow(modelsGrid, modelDir);
+            }
+
+            AddDirsRow(modelsGrid, string.Empty);
 
             cmbDefaultPointEntity.SelectedItem = env.DefaultPointEntity;
             cmbDefaultBrushEntity.SelectedItem = env.DefaultBrushEntity;
-            chkOverrideMapSize.Checked = env.OverrideMapSize;
-            cmbMapSizeOverrideLow.SelectedItem = Convert.ToString(env.MapSizeLow, CultureInfo.InvariantCulture);
-            cmbMapSizeOverrideHigh.SelectedItem = Convert.ToString(env.MapSizeHigh, CultureInfo.InvariantCulture);
 
             nudDefaultTextureScale.Value = env.DefaultTextureScale;
-
-            cklTexturePackages.Items.Clear();
-            UpdateTexturePackages();
-
-            lstAdditionalTextures.Items.Clear();
-            UpdateWadList();
         }
 
         public BlitzEnvironment GetEnvironment()
         {
             return new BlitzEnvironment()
             {
-                GameDirectory = txtGameDir.Text,
-                GraphicsDirectory = Convert.ToString(cmbBaseGame.SelectedItem, CultureInfo.InvariantCulture),
+                TextureDirectories = GetDirs(texturesGrid),
+                ModelDirectories = GetDirs(modelsGrid),
 
-                FgdFiles = lstFgds.Items.OfType<ListViewItem>().Select(x => x.SubItems[1].Text).Where(File.Exists).ToList(),
                 DefaultPointEntity = Convert.ToString(cmbDefaultPointEntity.SelectedItem, CultureInfo.InvariantCulture),
                 DefaultBrushEntity = Convert.ToString(cmbDefaultBrushEntity.SelectedItem, CultureInfo.InvariantCulture),
-                OverrideMapSize = chkOverrideMapSize.Checked,
-                MapSizeLow = decimal.TryParse(Convert.ToString(cmbMapSizeOverrideLow.SelectedItem, CultureInfo.InvariantCulture), out decimal l) ? l : 0,
-                MapSizeHigh = decimal.TryParse(Convert.ToString(cmbMapSizeOverrideHigh.SelectedItem, CultureInfo.InvariantCulture), out decimal h) ? h : 0,
 
                 DefaultTextureScale = nudDefaultTextureScale.Value
             };
         }
 
-        // Directories
-
-        private void BrowseGameDirectory(object sender, EventArgs e)
+        private List<string> GetDirs(DataGridView dataGridView)
         {
-            using (var fbd = new FolderBrowserDialog())
+            List<string> result = new List<string>();
+
+            foreach(DataGridViewRow row in dataGridView.Rows)
             {
-                if (Directory.Exists(txtGameDir.Text)) fbd.SelectedPath = txtGameDir.Text;
-                if (fbd.ShowDialog() == DialogResult.OK)
-                {
-                    txtGameDir.Text = fbd.SelectedPath;
-                }
+                string dir = row.Cells[1].Value as string;
+
+                if (string.IsNullOrEmpty(dir)) continue;
+
+                result.Add(dir);
             }
+
+            return result;
         }
 
-        private void GameDirectoryTextChanged(object sender, EventArgs e)
+        private void DirsChanged(DataGridView dataGridView)
         {
-            UpdateGameDirectory();
-            UpdateTexturePackages();
-        }
-
-        private void UpdateGameDirectory()
-        {
-            var dir = txtGameDir.Text;
-            if (!Directory.Exists(dir)) return;
-
-            // Set game/mod directories
-            var bse = cmbBaseGame.SelectedItem ?? "";
-            
-            cmbBaseGame.Items.Clear();
-
-            var mods = Directory.GetDirectories(dir).Select(Path.GetFileName);
-            var ignored = new[] { "gldrv", "logos", "logs", "errorlogs", "platform", "config" };
-
-            var range = mods.Where(x => !ignored.Contains(x.ToLowerInvariant())).OfType<object>().ToArray();
-            cmbBaseGame.Items.AddRange(range);
-
-            if (cmbBaseGame.Items.Contains(bse)) cmbBaseGame.SelectedItem = bse;
-            else if (cmbBaseGame.Items.Count > 0) cmbBaseGame.SelectedIndex = 0;
-        }
-
-        // Game data files
-
-        public string FgdFilesLabel { get; set; } = "Forge Game Data files";
-
-        private void BrowseFgd(object sender, EventArgs e)
-        {
-            using (var ofd = new OpenFileDialog { Filter = FgdFilesLabel + @" (*.fgd)|*.fgd", Multiselect = true })
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
             {
-                if (ofd.ShowDialog() == DialogResult.OK)
+                DataGridViewRow row = dataGridView.Rows[i];
+                string dir = row.Cells[1].Value as string;
+
+                if (!string.IsNullOrEmpty(dir))
                 {
-                    foreach (var fileName in ofd.FileNames)
+                    dir = dir.Replace('\\', '/');
+
+                    if (dir.Last() != '/')
                     {
-                        lstFgds.Items.Add(new ListViewItem(new[]
-                        {
-                            Path.GetFileName(fileName),
-                            fileName
-                        }) {ToolTipText = fileName});
+                        dir += "/";
                     }
-                    UpdateFgdList();
-                    OnEnvironmentChanged(this, EventArgs.Empty);
                 }
-            }
-        }
-        
-        private void RemoveFgd(object sender, EventArgs e)
-        {
-            if (lstFgds.SelectedItems.Count > 0)
-            {
-                foreach (var i in lstFgds.SelectedItems.OfType<ListViewItem>().ToList())
+                if (Directory.Exists(dir))
                 {
-                    lstFgds.Items.Remove(i);
-                }
-                UpdateFgdList();
-                OnEnvironmentChanged(this, EventArgs.Empty);
-            }
-        }
+                    row.Cells[1].Value = dir;
 
-        private void UpdateFgdList()
-        {
-            lstFgds.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    if (i >= dataGridView.Rows.Count - 1)
+                    {
+                        int newRowInd = AddDirsRow(dataGridView, "");
 
-            var entities = new List<GameDataObject>();
-            if (_fgdProvider != null)
-            {
-                var files = lstFgds.Items.OfType<ListViewItem>().Select(x => x.SubItems[1].Text).Where(File.Exists).Where(_fgdProvider.IsValidForFile);
-                try
-                {
-                    var gd = _fgdProvider.GetGameDataFromFiles(files);
-                    entities.AddRange(gd.Classes);
+                        if (dataGridView.CurrentRow.Index == i)
+                        {
+                            dataGridView.CurrentCell = dataGridView.Rows[newRowInd].Cells[1];
+                        }
+                    }
                 }
-                catch
+                else if (i < dataGridView.Rows.Count - 1)
                 {
-                    //
+                    dataGridView.Rows.RemoveAt(i);
+
+                    i--;
+                }
+                else
+                {
+                    row.Cells[1].Value = "";
                 }
             }
 
-            var selPoint = cmbDefaultPointEntity.SelectedItem as string;
-            var selBrush = cmbDefaultBrushEntity.SelectedItem as string;
+            OnEnvironmentChanged(this, EventArgs.Empty);
+        }
 
-            cmbDefaultPointEntity.BeginUpdate();
-            cmbDefaultBrushEntity.BeginUpdate();
+        private int AddDirsRow(DataGridView dataGridView, string dir)
+        {
+            int r = dataGridView.Rows.Add("X", dir, "...");
 
-            cmbDefaultPointEntity.Items.Clear();
-            cmbDefaultBrushEntity.Items.Clear();
+            return r;
+        }
 
-            cmbDefaultPointEntity.Items.Add("");
-            cmbDefaultBrushEntity.Items.Add("");
+        private void OpenBrowseDirDialog(Action<string> callback)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
 
-            foreach (var gdo in entities.OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase))
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                if (gdo.ClassType == ClassType.Solid) cmbDefaultBrushEntity.Items.Add(gdo.Name);
-                else if (gdo.ClassType != ClassType.Base) cmbDefaultPointEntity.Items.Add(gdo.Name);
+                BeginInvoke(new MethodInvoker(() => callback?.Invoke(dialog.FileName)));
             }
-
-            var idx = cmbDefaultBrushEntity.Items.IndexOf(selBrush ?? "");
-            if (idx >= 0) cmbDefaultBrushEntity.SelectedIndex = idx;
-            idx = cmbDefaultPointEntity.Items.IndexOf(selPoint ?? "");
-            if (idx >= 0) cmbDefaultPointEntity.SelectedIndex = idx;
-
-            cmbDefaultPointEntity.EndUpdate();
-            cmbDefaultBrushEntity.EndUpdate();
-        }
-
-        public Dictionary<string, bool> GetTexturePackageSelection()
-        {
-            var d = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
-
-            var packages = cklTexturePackages.Items.OfType<string>().ToList();
-            for (var i = 0; i < packages.Count; i++)
-            {
-                var name = packages[i];
-                var state = cklTexturePackages.GetItemCheckState(i);
-                if (state == CheckState.Indeterminate) continue;
-                d[name] = state == CheckState.Checked;
-            }
-
-            return d;
-        }
-
-        private void BaseGameDirectoryChanged(object sender, EventArgs e)
-        {
-            UpdateTexturePackages();
-        }
-
-        private void ModDirectoryChanged(object sender, EventArgs e)
-        {
-            UpdateTexturePackages();
-        }
-
-        private void IncludeBuildToolsChanged(object sender, EventArgs e)
-        {
-            UpdateTexturePackages();
-        }
-
-        private void UpdateTexturePackages()
-        {
-            var state = GetTexturePackageSelection();
-
-            var directories = new List<string>();
-            if (cmbBaseGame.SelectedItem is string sbg)
-            {
-                directories.AddRange(new[]
-                {
-                    Path.Combine(txtGameDir.Text, sbg),
-                    Path.Combine(txtGameDir.Text, sbg + "_hd"),
-                    Path.Combine(txtGameDir.Text, sbg + "_downloads"),
-                    Path.Combine(txtGameDir.Text, sbg + "_addon"),
-                });
-            }
-
-            directories = directories.Distinct().Where(Directory.Exists).ToList();
-
-            if (directories.Any())
-            {
-                try
-                {
-                    //var packages = _wadProvider.GetPackagesInFile(null, new CompositeFile(
-                    //    new NativeFile(txtGameDir.Text),
-                    //    directories.Select(x => new NativeFile(x))
-                    //)).ToList();
-
-                    //// Exclude game-internal packages that can not be used
-                    //string[] _internalWads = new[] { "cached.wad", "fonts.wad", "gfx.wad", "tempdecal.wad" };
-                    //foreach (var pr in packages)
-                    //{
-                    //    if (!state.ContainsKey(pr.Name) && !_internalWads.Contains(pr.Name)) 
-                    //        state[pr.Name] = true;
-                    //}
-
-                    //foreach (var key in state.Keys.ToList())
-                    //{
-                    //    if (packages.All(x => !string.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))) state.Remove(key);
-                    //}
-                }
-                catch
-                {
-                    //
-                }
-            }
-            cklTexturePackages.BeginUpdate();
-
-            cklTexturePackages.Items.Clear();
-            foreach (var kv in state.OrderBy(x => x.Key, StringComparer.InvariantCultureIgnoreCase))
-            {
-                cklTexturePackages.Items.Add(kv.Key, kv.Value);
-            }
-
-            cklTexturePackages.EndUpdate();
-        }
-
-        private void ToggleAllTextures(object sender, EventArgs e)
-        {
-            var on = chkToggleAllTextures.Checked;
-            for (var i = 0; i < cklTexturePackages.Items.Count; i++)
-            {
-                cklTexturePackages.SetItemChecked(i, on);
-            }
-        }
-
-        public string WadFilesLabel { get; set; } = "WAD texture packages";
-
-        private void BrowseWad(object sender, EventArgs e)
-        {
-            using (var ofd = new OpenFileDialog { Filter = WadFilesLabel + @" (*.wad)|*.wad", Multiselect = true })
-            {
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-
-                foreach (var fileName in ofd.FileNames)
-                {
-                    lstAdditionalTextures.Items.Add(new ListViewItem(new[] { Path.GetFileName(fileName), fileName }) { ToolTipText = fileName });
-                }
-
-                UpdateWadList();
-                OnEnvironmentChanged(this, EventArgs.Empty);
-            }
-        }
-
-        private void RemoveWad(object sender, EventArgs e)
-        {
-            if (lstAdditionalTextures.SelectedItems.Count > 0)
-            {
-                foreach (var i in lstAdditionalTextures.SelectedItems.OfType<ListViewItem>().ToList())
-                {
-                    lstAdditionalTextures.Items.Remove(i);
-                }
-                UpdateWadList();
-                OnEnvironmentChanged(this, EventArgs.Empty);
-            }
-        }
-
-        private void UpdateWadList()
-        {
-            lstAdditionalTextures.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
     }
 }

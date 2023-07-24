@@ -1,13 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using LogicAndTrick.Oy;
 using CBRE.BspEditor.Compile;
 using CBRE.BspEditor.Documents;
 using CBRE.BspEditor.Primitives;
@@ -22,9 +12,16 @@ using CBRE.DataStructures.Geometric;
 using CBRE.FileSystem;
 using CBRE.Providers.GameData;
 using CBRE.Providers.Texture;
+using LogicAndTrick.Oy;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Path = System.IO.Path;
 
-namespace CBRE.BspEditor.Environment.ContainmentBreach
+namespace CBRE.BspEditor.Environment.Blitz
 {
     public class BlitzEnvironment : IEnvironment
     {
@@ -40,16 +37,11 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
         public string ID { get; set; }
         public string Name { get; set; }
 
-        public List<string> FgdFiles { get; set; }
+        public List<string> TextureDirectories { get; set; }
+        public List<string> ModelDirectories { get; set; }
 
-        public string GraphicsDirectory { get; set; }
-        public string GameDirectory { get; set; }
-        
         public string DefaultPointEntity { get; set; }
         public string DefaultBrushEntity { get; set; }
-        public bool OverrideMapSize { get; set; }
-        public decimal MapSizeLow { get; set; }
-        public decimal MapSizeHigh { get; set; }
 
         public decimal DefaultTextureScale { get; set; } = 1;
 
@@ -73,7 +65,15 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
         {
             get
             {
-                yield return GameDirectory;
+                foreach (string textureDir in TextureDirectories)
+                {
+                    yield return textureDir;
+                }
+
+                foreach (string modelDir in ModelDirectories)
+                {
+                    yield return modelDir;
+                }
 
                 // Editor location to the path, for sprites and the like
                 yield return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -89,15 +89,11 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             _textureCollection = new Lazy<Task<TextureCollection>>(MakeTextureCollectionAsync);
             _gameData = new Lazy<Task<GameData>>(MakeGameDataAsync);
             _data = new List<IEnvironmentData>();
-
-            FgdFiles = new List<string>();
         }
 
         private async Task<TextureCollection> MakeTextureCollectionAsync()
         {
-            IFile graphicsDirectory = Root.GetChild(GraphicsDirectory);
-
-            var genericRefs = _genericProvider.GetPackagesInFile(Name, graphicsDirectory);
+            var genericRefs = _genericProvider.GetPackagesInFile(Name, Root);
             var generics = await _genericProvider.GetTexturePackages(Name, genericRefs);
 
             // TODO: Remove spr provider once entity sprites are able to be loaded with the generic provider.
@@ -109,7 +105,7 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
 
         private Task<GameData> MakeGameDataAsync()
         {
-            return Task.FromResult(_jsonProvider.GetGameDataFromFiles(FgdFiles));
+            return Task.FromResult(_jsonProvider.GetGameDataFromFiles(Array.Empty<string>()));
         }
 
         public Task<TextureCollection> GetTextureCollection()
@@ -224,7 +220,7 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
 
             //    await Oy.Publish("Compile:Debug", $"Map file is: {path}\r\n");
             //}));
-            
+
             //// Run the compile tools
             //if (args.ContainsKey("CSG")) batch.Steps.Add(new BatchProcess(BatchStepType.RunBuildExecutable, Path.Combine(ToolsDirectory, CsgExe), args["CSG"] + " \"{MapFile}\""));
             //if (args.ContainsKey("BSP")) batch.Steps.Add(new BatchProcess(BatchStepType.RunBuildExecutable, Path.Combine(ToolsDirectory, BspExe), args["BSP"] + " \"{MapFile}\""));
@@ -296,7 +292,7 @@ namespace CBRE.BspEditor.Environment.ContainmentBreach
             //    batch.Steps.Add(new BatchCallback(BatchStepType.RunGame, (b, d) =>
             //    {
             //        if (!b.Successful) return Task.CompletedTask;
-                    
+
             //        var silent = options.AllowUserInterruption.GetValueOrDefault(false);
 
             //        if (options.AskRunGame ?? GameAsk)

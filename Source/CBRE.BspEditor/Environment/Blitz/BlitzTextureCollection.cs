@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CBRE.Providers.Texture;
 
-namespace CBRE.BspEditor.Environment.ContainmentBreach
+namespace CBRE.BspEditor.Environment.Blitz
 {
     public class BlitzTextureCollection : TextureCollection
     {
