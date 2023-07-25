@@ -99,7 +99,6 @@
     <Compile Include="Commands\OpenSelectionDetails.cs" />
     <Compile Include="Commands\OpenMapInformation.cs" />
     <Compile Include="Commands\OpenEntityReport.cs" />
-    <Compile Include="Commands\OpenRootProperties.cs" />
     <Compile Include="Commands\OpenBugReportSite.cs" />
     <Compile Include="Commands\OpenCompileWindow.cs" />
     <Compile Include="Commands\Quick\HideSelectedObjects.cs" />
@@ -465,7 +464,6 @@
     <Content Include="Resources\Menu_HideSelected.png" />
     <Content Include="Resources\Menu_HideUnselected.png" />
     <Content Include="Resources\Menu_Hollow.png" />
-    <Content Include="Resources\Menu_MapProperties.png" />
     <Content Include="Resources\Menu_ObjectProperties.png" />
     <Content Include="Resources\Menu_PasteSpecial.png" />
     <Content Include="Resources\Menu_Redo.png" />
