@@ -220,14 +220,14 @@ namespace CBRE.BspEditor.Tools.Texture
             Face sampleFace = GetSelection(document).FirstOrDefault();
 
             string activeTexture = document.Map.Data.GetOne<ActiveTexture>()?.Name ?? sampleFace?.Texture.Name ?? "";
-            if (String.IsNullOrWhiteSpace(activeTexture)) return Task.CompletedTask;
+            if (string.IsNullOrWhiteSpace(activeTexture)) return Task.CompletedTask;
 
             Face clone = (Face) face.Clone();
 
             bool changed = false;
 
             // Apply texture
-            if (!String.IsNullOrWhiteSpace(activeTexture) && action.HasFlag(ClickAction.Apply))
+            if (!string.IsNullOrWhiteSpace(activeTexture) && action.HasFlag(ClickAction.Apply))
             {
                 clone.Texture.Name = activeTexture;
                 changed = true;

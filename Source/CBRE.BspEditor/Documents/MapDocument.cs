@@ -31,7 +31,7 @@ namespace CBRE.BspEditor.Documents
                 _fileName = value;
 
                 string p = System.IO.Path.GetFileName(_fileName);
-                if (!String.IsNullOrWhiteSpace(p)) Name = p;
+                if (!string.IsNullOrWhiteSpace(p)) Name = p;
             }
         }
 

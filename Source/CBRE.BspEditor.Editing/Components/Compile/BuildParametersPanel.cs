@@ -101,7 +101,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                 }
             }
 
-            return String.Join(" ", list);
+            return string.Join(" ", list);
         }
 
         private void SetArguments(string arguments)

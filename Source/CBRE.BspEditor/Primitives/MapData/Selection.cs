@@ -103,7 +103,7 @@ namespace CBRE.BspEditor.Primitives.MapData
         public SerialisedObject ToSerialisedObject()
         {
             SerialisedObject so = new SerialisedObject("Selection");
-            so.Set("SelectedObjects", String.Join(",", _selectedObjects.Select(x => Convert.ToString(x.ID, CultureInfo.InvariantCulture))));
+            so.Set("SelectedObjects", string.Join(",", _selectedObjects.Select(x => Convert.ToString(x.ID, CultureInfo.InvariantCulture))));
             return so;
         }
 

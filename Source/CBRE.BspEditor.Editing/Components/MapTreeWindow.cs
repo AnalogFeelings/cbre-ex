@@ -187,7 +187,7 @@ namespace CBRE.BspEditor.Editing.Components
             if (ed != null)
             {
                 string targetName = ed.Get("targetname", "");
-                return ": " + ed.Name + (String.IsNullOrWhiteSpace(targetName) ? "" : " (" + targetName + ")");
+                return ": " + ed.Name + (string.IsNullOrWhiteSpace(targetName) ? "" : " (" + targetName + ")");
             }
             return "";
         }
@@ -272,8 +272,8 @@ namespace CBRE.BspEditor.Editing.Components
             DataStructures.GameData.GameDataObject gd = gameData.GetClass(ed.Name);
             foreach (KeyValuePair<string, string> prop in ed.Properties)
             {
-                DataStructures.GameData.Property gdp = gd?.Properties.FirstOrDefault(x => String.Equals(x.Name, prop.Key, StringComparison.InvariantCultureIgnoreCase));
-                string key = gdp != null && !String.IsNullOrWhiteSpace(gdp.ShortDescription) ? gdp.ShortDescription : prop.Key;
+                DataStructures.GameData.Property gdp = gd?.Properties.FirstOrDefault(x => string.Equals(x.Name, prop.Key, StringComparison.InvariantCultureIgnoreCase));
+                string key = gdp != null && !string.IsNullOrWhiteSpace(gdp.ShortDescription) ? gdp.ShortDescription : prop.Key;
                 list.Add(Tuple.Create(key, prop.Value));
             }
             return list;

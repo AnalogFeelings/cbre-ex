@@ -72,7 +72,7 @@ namespace CBRE.Shell.Settings.Editors
 
         private IEnumerable<IHotkey> FilterHotkeys(IEnumerable<IHotkey> hotkeys, string filter)
         {
-            return String.IsNullOrWhiteSpace(filter) ? hotkeys : hotkeys.Where(IsMatch);
+            return string.IsNullOrWhiteSpace(filter) ? hotkeys : hotkeys.Where(IsMatch);
 
             bool IsMatch(IHotkey h) => h.Name.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0 ||
                                        h.Description.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0;
@@ -95,7 +95,7 @@ namespace CBRE.Shell.Settings.Editors
         private void HotkeySetButtonClicked(object sender, EventArgs e)
         {
             string key = HotkeyCombination.Text;
-            if (HotkeyActionList.SelectedIndex < 0 || String.IsNullOrWhiteSpace(key)) return;
+            if (HotkeyActionList.SelectedIndex < 0 || string.IsNullOrWhiteSpace(key)) return;
 
             if (_bindings.ContainsValue(key))
             {
@@ -131,7 +131,7 @@ namespace CBRE.Shell.Settings.Editors
             _bindings.Clear();
             foreach (IHotkey hk in BaseForm.HotkeyRegister.GetHotkeys())
             {
-                if (!String.IsNullOrWhiteSpace(hk.DefaultHotkey))
+                if (!string.IsNullOrWhiteSpace(hk.DefaultHotkey))
                 {
                     _bindings[hk.ID] = hk.DefaultHotkey;
                 }

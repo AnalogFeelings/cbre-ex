@@ -266,7 +266,7 @@ namespace CBRE.Rendering.Cameras
 
         public string Serialise()
         {
-            return String.Format(CultureInfo.InvariantCulture,
+            return string.Format(CultureInfo.InvariantCulture,
                 "{0},{1},{2}/{3},{4},{5}/{6}/{7}",
                 _position.X, _position.Y, _position.Z,
                 _angles.X, _angles.Y, _angles.Z,

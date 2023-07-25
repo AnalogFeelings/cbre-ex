@@ -59,8 +59,8 @@ namespace CBRE.BspEditor.Tools.Entity
                 foreach (GameDataObject gdo in gameData.Classes.Where(x => x.ClassType == ClassType.Point).OrderBy(x => x.Name.ToLowerInvariant()))
                 {
                     EntityTypeList.Items.Add(gdo);
-                    if (String.Equals(sel, gdo.Name, StringComparison.InvariantCultureIgnoreCase)) reselect = gdo;
-                    if (String.Equals(def, gdo.Name, StringComparison.InvariantCultureIgnoreCase)) redef = gdo;
+                    if (string.Equals(sel, gdo.Name, StringComparison.InvariantCultureIgnoreCase)) reselect = gdo;
+                    if (string.Equals(def, gdo.Name, StringComparison.InvariantCultureIgnoreCase)) redef = gdo;
                 }
 
                 if (reselect == null && redef == null)

@@ -28,8 +28,8 @@ namespace CBRE.Common.Scheduling
                 ScheduleTime = schedule.ScheduleTime,
                 TimeInterval = (int)schedule.TimeInterval.TotalSeconds,
                 TimeToRun = (int)schedule.TimeToRun.TotalSeconds,
-                WeekDaysToRun = String.Join(",", schedule.WeekDaysToRun),
-                MonthDaysToRun = String.Join(",", schedule.MonthDaysToRun).Replace("-1", "Last")
+                WeekDaysToRun = string.Join(",", schedule.WeekDaysToRun),
+                MonthDaysToRun = string.Join(",", schedule.MonthDaysToRun).Replace("-1", "Last")
             };
         }
 
@@ -47,13 +47,13 @@ namespace CBRE.Common.Scheduling
                 TimeToRun = TimeSpan.FromSeconds(schedule.TimeToRun),
                 WeekDaysToRun =
                     (schedule.WeekDaysToRun ?? "").Split(',')
-                    .Where(x => !String.IsNullOrEmpty(x))
+                    .Where(x => !string.IsNullOrEmpty(x))
                     .Select(x => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), x))
                     .ToList(),
                 MonthDaysToRun =
                     (schedule.MonthDaysToRun ?? "").Replace("Last", "-1")
                     .Split(',')
-                    .Where(x => !String.IsNullOrEmpty(x))
+                    .Where(x => !string.IsNullOrEmpty(x))
                     .Select(int.Parse)
                     .ToList()
             };

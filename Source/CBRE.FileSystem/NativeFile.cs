@@ -115,7 +115,7 @@ namespace CBRE.FileSystem
 
         public IFile GetRelatedFile(string extension)
         {
-            return GetRelatedFiles().FirstOrDefault(x => String.Equals(x.Extension, extension, StringComparison.CurrentCultureIgnoreCase));
+            return GetRelatedFiles().FirstOrDefault(x => string.Equals(x.Extension, extension, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private void LoadPackages()
@@ -129,7 +129,7 @@ namespace CBRE.FileSystem
 
         public IFile GetChild(string name)
         {
-            return GetChildren().FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            return GetChildren().FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public IEnumerable<IFile> GetChildren()
@@ -140,7 +140,7 @@ namespace CBRE.FileSystem
             List<IFile> dirs = DirectoryInfo.GetDirectories().Select<DirectoryInfo, IFile>(x =>
             {
                 NativeFile nf = new NativeFile(x);
-                List<IFile> paks = children.Where(p => String.Equals(x.Name, p.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                List<IFile> paks = children.Where(p => string.Equals(x.Name, p.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 if (paks.Any())
                 {
                     paks.Insert(0, nf);
@@ -150,7 +150,7 @@ namespace CBRE.FileSystem
             }).ToList();
             foreach (IFile d in children)
             {
-                if (!dirs.Any(x => String.Equals(x.Name, d.Name, StringComparison.CurrentCultureIgnoreCase)))
+                if (!dirs.Any(x => string.Equals(x.Name, d.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     dirs.Add(d);
                 }
@@ -165,7 +165,7 @@ namespace CBRE.FileSystem
 
         public IFile GetFile(string name)
         {
-            return GetFiles().FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            return GetFiles().FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public IEnumerable<IFile> GetFiles()
@@ -175,7 +175,7 @@ namespace CBRE.FileSystem
             List<IFile> files = DirectoryInfo.GetFiles().Select(fileInfo => new NativeFile(fileInfo)).ToList<IFile>();
             foreach (IFile f in _packages.SelectMany(x => x.GetFiles()))
             {
-                if (!files.Any(x => String.Equals(x.Name, f.Name, StringComparison.CurrentCultureIgnoreCase)))
+                if (!files.Any(x => string.Equals(x.Name, f.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     files.Add(f);
                 }
@@ -190,7 +190,7 @@ namespace CBRE.FileSystem
 
         public IEnumerable<IFile> GetFilesWithExtension(string extension)
         {
-            return GetFiles().Where(x => String.Equals(x.Extension, extension, StringComparison.CurrentCultureIgnoreCase));
+            return GetFiles().Where(x => string.Equals(x.Extension, extension, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

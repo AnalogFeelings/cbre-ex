@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Environment
             _packages = packages.ToList();
             _itemCache = new ConcurrentDictionary<string, TextureItem>(StringComparer.InvariantCultureIgnoreCase);
             
-            Log.Debug(nameof(TextureCollection), $"Reading textures from: {String.Join("; ", _packages.Select(x => x.Location))}");
+            Log.Debug(nameof(TextureCollection), $"Reading textures from: {string.Join("; ", _packages.Select(x => x.Location))}");
         }
 
         public bool HasTexture(string name)
@@ -35,7 +35,7 @@ namespace CBRE.BspEditor.Environment
             return
             (from item in _packages.SelectMany(x => x.Textures).OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase)
                 where item.Length > 0
-                let c = Char.ToLower(item[0])
+                let c = char.ToLower(item[0])
                 where c >= 'a' && c <= 'z'
                 select item).FirstOrDefault();
         }

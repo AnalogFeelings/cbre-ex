@@ -150,7 +150,7 @@ namespace CBRE.Common.Transport
                 do
                 {
                     line = CleanLine(reader.ReadLine());
-                } while (String.IsNullOrWhiteSpace(line));
+                } while (string.IsNullOrWhiteSpace(line));
                 if (line != "{")
                 {
                     return gs;

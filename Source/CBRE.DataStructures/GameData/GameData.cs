@@ -31,7 +31,7 @@ namespace CBRE.DataStructures.GameData
             while (unresolved.Any())
             {
                 List<GameDataObject> resolve = unresolved.Where(x => x.BaseClasses.All(resolved.Contains)).ToList();
-                if (!resolve.Any()) throw new Exception("Circular dependencies: " + String.Join(", ", unresolved.Select(x => x.Name)));
+                if (!resolve.Any()) throw new Exception("Circular dependencies: " + string.Join(", ", unresolved.Select(x => x.Name)));
                 resolve.ForEach(x => x.Inherit(Classes.Where(y => x.BaseClasses.Contains(y.Name))));
                 unresolved.RemoveAll(resolve.Contains);
                 resolved.AddRange(resolve.Select(x => x.Name));

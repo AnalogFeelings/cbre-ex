@@ -30,7 +30,7 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
             
             // Also update any decals had geometry for a changed solid
             var documentEntities = change.Document.Map.Root
-                .Find(x => x is Entity e && !String.IsNullOrWhiteSpace(GetDecalName(e))).OfType<Entity>()
+                .Find(x => x is Entity e && !string.IsNullOrWhiteSpace(GetDecalName(e))).OfType<Entity>()
                 .Except(changedEntities) // don't bother checking entities already in the change
                 .Select(x => new
                 {

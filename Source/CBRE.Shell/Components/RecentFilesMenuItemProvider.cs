@@ -32,7 +32,7 @@ namespace CBRE.Shell.Components
         {
             if (doc?.FileName != null && File.Exists(doc.FileName))
             {
-                _recentFiles.RemoveAll(x => String.Equals(doc.FileName, x.Location, StringComparison.InvariantCultureIgnoreCase));
+                _recentFiles.RemoveAll(x => string.Equals(doc.FileName, x.Location, StringComparison.InvariantCultureIgnoreCase));
                 _recentFiles.Add(new RecentFile {Location = doc.FileName});
                 while (_recentFiles.Count > 10) _recentFiles.RemoveAt(0);
             }

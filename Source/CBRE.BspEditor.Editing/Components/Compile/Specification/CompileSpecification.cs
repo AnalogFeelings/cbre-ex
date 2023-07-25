@@ -21,7 +21,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public CompileTool GetTool(string name)
         {
-            return Tools.FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            return Tools.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static CompileSpecification Parse(SerialisedObject gs)
@@ -49,7 +49,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
             CompileTool tool = GetTool(name);
             return tool == null
                 ? ""
-                : String.Join(" ", tool.Parameters.Select(x => x.GetDefaultArgumentString()).Where(x => !String.IsNullOrWhiteSpace(x)));
+                : string.Join(" ", tool.Parameters.Select(x => x.GetDefaultArgumentString()).Where(x => !string.IsNullOrWhiteSpace(x)));
         }
 
         public bool GetDefaultRun(string name)

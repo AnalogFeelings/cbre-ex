@@ -65,7 +65,7 @@ namespace CBRE.BspEditor.Editing.Commands
                 // One entity selected, user chooses to merge or create a new entity
                 using (
                     QuickForm qf = new QuickForm(EntitySelectedTitle) {Width = 400}
-                        .Label(String.Format(OneEntitySelectedMessage, existingEntities[0].EntityData?.Name))
+                        .Label(string.Format(OneEntitySelectedMessage, existingEntities[0].EntityData?.Name))
                         .DialogButtons(
                             (KeepExisting, DialogResult.Yes),
                             (CreateNew, DialogResult.No),
@@ -103,8 +103,8 @@ namespace CBRE.BspEditor.Editing.Commands
             GameDataObject defaultEntityClass = (
                 from g in gameData.Classes
                 where g.ClassType == ClassType.Solid
-                orderby String.Equals(g.Name, def, StringComparison.InvariantCultureIgnoreCase) ? 0 : 1,
-                        String.Equals(g.Name, "trigger_once", StringComparison.InvariantCultureIgnoreCase) ? 0 : 1,
+                orderby string.Equals(g.Name, def, StringComparison.InvariantCultureIgnoreCase) ? 0 : 1,
+                        string.Equals(g.Name, "trigger_once", StringComparison.InvariantCultureIgnoreCase) ? 0 : 1,
                         g.Description.ToLower()
                 select g
             ).FirstOrDefault() ?? new GameDataObject("trigger_once", "", ClassType.Solid);

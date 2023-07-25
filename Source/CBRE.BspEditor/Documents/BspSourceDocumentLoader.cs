@@ -183,11 +183,11 @@ namespace CBRE.BspEditor.Documents
             if (result.InvalidObjects.Any() || result.Messages.Any())
             {
                 List<string> messages = new List<string>();
-                if (result.InvalidObjects.Any()) messages.Add(String.Format(InvalidObjectsWereDiscarded, result.InvalidObjects.Count));
+                if (result.InvalidObjects.Any()) messages.Add(string.Format(InvalidObjectsWereDiscarded, result.InvalidObjects.Count));
                 foreach (string m in result.Messages) messages.Add(m);
                 _shell.Value.InvokeSync(() =>
                 {
-                    MessageBox.Show(String.Join(System.Environment.NewLine, messages), LoadResultTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(string.Join(System.Environment.NewLine, messages), LoadResultTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 });
             }
         }
@@ -261,7 +261,7 @@ namespace CBRE.BspEditor.Documents
         {
             string fileName = documentPointer.FileName;
             string envId = documentPointer.Get<string>("Environment");
-            if (String.IsNullOrWhiteSpace(fileName) || String.IsNullOrWhiteSpace(envId)) return null;
+            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(envId)) return null;
 
             IEnvironment env = _environments.Value.GetEnvironment(envId);
             if (env?.ID == null) return null;

@@ -88,7 +88,7 @@ namespace CBRE.BspEditor.Tools.Vertex
             {
                 CurrentSubTool = _subTools.Select(x => x.Value).FirstOrDefault(x => x.GetType() == t);
             });
-            yield return Oy.Subscribe<String>("VertexTool:Reset", async _ =>
+            yield return Oy.Subscribe<string>("VertexTool:Reset", async _ =>
             {
                 MapDocument document = GetDocument();
                 if (document != null) await _selection.Reset(document);

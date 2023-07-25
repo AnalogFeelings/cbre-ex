@@ -68,7 +68,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         private void UpdateGeneratedCommand()
         {
             _pauseEvents = true;
-            GeneratedParametersTextbox.Text = String.Join(" ", _panels.Where(x => x.CheckBox.Checked).Select(x => x.GetValue()));
+            GeneratedParametersTextbox.Text = string.Join(" ", _panels.Where(x => x.CheckBox.Checked).Select(x => x.GetValue()));
             _pauseEvents = false;
         }
 
@@ -101,7 +101,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             }
 
             AdditionalParametersTextbox.Text = additional;
-            AdditionalParametersCheckbox.Checked = !String.IsNullOrWhiteSpace(additional);
+            AdditionalParametersCheckbox.Checked = !string.IsNullOrWhiteSpace(additional);
             _pauseEvents = false;
 
             UpdateGeneratedCommand();
@@ -308,17 +308,17 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         }
                         return "";
                     case CompileParameterType.File:
-                        TextBox file = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "File"));
+                        TextBox file = Controls.OfType<TextBox>().FirstOrDefault(x => string.Equals(x.Tag as string, "File"));
                         return '"' + (file == null ? "" : file.Text) + '"';
                     case CompileParameterType.Folder:
-                        TextBox folder = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "Folder"));
+                        TextBox folder = Controls.OfType<TextBox>().FirstOrDefault(x => string.Equals(x.Tag as string, "Folder"));
                         return '"' + (folder == null ? "" : folder.Text) + '"';
                     case CompileParameterType.Colour:
                     case CompileParameterType.ColourFloat:
                         Color c = Color.Black;
                         Panel colour = Controls.OfType<Panel>().FirstOrDefault();
                         if (colour != null) c = colour.BackColor;
-                        return String.Join(" ",
+                        return string.Join(" ",
                             new[] {c.R, c.G, c.B}.Select(x => Parameter.Type == CompileParameterType.ColourFloat
                                 ? (x / 255f).ToString("0.##")
                                 : x.ToString(CultureInfo.InvariantCulture)));
@@ -339,19 +339,19 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         NumericUpDown nud = Controls.OfType<NumericUpDown>().FirstOrDefault();
                         if (nud == null) break;
                         decimal d;
-                        nud.Value = Decimal.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out d) ? d : 0;
+                        nud.Value = decimal.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out d) ? d : 0;
                         break;
                     case CompileParameterType.Choice:
                         ComboBox combo = Controls.OfType<ComboBox>().FirstOrDefault();
                         List<string> list = Parameter.Options.Count == Parameter.OptionValues.Count ? Parameter.OptionValues : Parameter.Options;
-                        if (combo != null) combo.SelectedIndex = Math.Max(0, list.FindIndex(x => String.Equals(x, val, StringComparison.InvariantCultureIgnoreCase)));
+                        if (combo != null) combo.SelectedIndex = Math.Max(0, list.FindIndex(x => string.Equals(x, val, StringComparison.InvariantCultureIgnoreCase)));
                         break;
                     case CompileParameterType.File:
-                        TextBox file = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "File"));
+                        TextBox file = Controls.OfType<TextBox>().FirstOrDefault(x => string.Equals(x.Tag as string, "File"));
                         if (file != null) file.Text = val;
                         break;
                     case CompileParameterType.Folder:
-                        TextBox folder = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "Folder"));
+                        TextBox folder = Controls.OfType<TextBox>().FirstOrDefault(x => string.Equals(x.Tag as string, "Folder"));
                         if (folder != null) folder.Text = val;
                         break;
                     case CompileParameterType.Colour:
@@ -379,7 +379,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             public string GetValue()
             {
                 string ex = ExtractValue();
-                return Parameter.Flag + (String.IsNullOrWhiteSpace(ex) ? "" : " " + ex);
+                return Parameter.Flag + (string.IsNullOrWhiteSpace(ex) ? "" : " " + ex);
             }
 
             public bool TrySetValue(List<string> data)

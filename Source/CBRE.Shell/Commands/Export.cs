@@ -44,9 +44,9 @@ namespace CBRE.Shell.Commands
             {
                 List<IDocumentLoader> loaders = _loaders.Select(x => x.Value).Where(x => x.CanSave(doc)).ToList();
 
-                List<string> filter = loaders.SelectMany(x => x.SupportedFileExtensions).Select(x => x.Description + "|" + String.Join(";", x.Extensions.Select(e => "*" + e))).ToList();
+                List<string> filter = loaders.SelectMany(x => x.SupportedFileExtensions).Select(x => x.Description + "|" + string.Join(";", x.Extensions.Select(e => "*" + e))).ToList();
 
-                using (SaveFileDialog sfd = new SaveFileDialog { Filter = String.Join("|", filter) })
+                using (SaveFileDialog sfd = new SaveFileDialog { Filter = string.Join("|", filter) })
                 {
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {

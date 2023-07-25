@@ -119,9 +119,9 @@ namespace CBRE.BspEditor.Rendering.Viewport
             if (str.StartsWith("NumPad") || str.StartsWith("D"))
             {
                 char last = str.Last();
-                if (Char.IsDigit(last))
+                if (char.IsDigit(last))
                 {
-                    int press = (int) Char.GetNumericValue(last);
+                    int press = (int)char.GetNumericValue(last);
                     if (press >= 0 && press <= 9)
                     {
                         if (press == 0) press = 10;

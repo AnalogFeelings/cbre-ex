@@ -46,7 +46,7 @@ namespace CBRE.Common.Translations
                 if (!Languages.ContainsKey(language)) break;
                 Language lang = Languages[language];
                 if (lang.Collection.Strings.ContainsKey(key)) return lang.Collection.Strings[key];
-                if (String.IsNullOrWhiteSpace(lang.Inherit)) break;
+                if (string.IsNullOrWhiteSpace(lang.Inherit)) break;
                 language = lang.Inherit;
             }
             return null;
@@ -60,7 +60,7 @@ namespace CBRE.Common.Translations
                 if (!Languages.ContainsKey(language)) break;
                 Language lang = Languages[language];
                 if (lang.Collection.Settings.ContainsKey(key)) return lang.Collection.Settings[key];
-                if (String.IsNullOrWhiteSpace(lang.Inherit)) break;
+                if (string.IsNullOrWhiteSpace(lang.Inherit)) break;
                 language = lang.Inherit;
             }
             return null;
@@ -111,7 +111,7 @@ namespace CBRE.Common.Translations
 
             foreach (KeyValuePair<string, string> kv in data.Collection.Settings)
             {
-                if (!String.IsNullOrWhiteSpace(kv.Value)) language.Collection.Settings[kv.Key] = kv.Value;
+                if (!string.IsNullOrWhiteSpace(kv.Value)) language.Collection.Settings[kv.Key] = kv.Value;
 #if DEBUG
                 if (data.Code == "en") Languages["debug_doubler"].Collection.Settings[kv.Key] = kv.Value + " | " + kv.Value;
                 Languages["debug_blank"].Collection.Settings[kv.Key] = "--";
@@ -122,7 +122,7 @@ namespace CBRE.Common.Translations
 
             foreach (KeyValuePair<string, string> kv in data.Collection.Strings)
             {
-                if (!String.IsNullOrWhiteSpace(kv.Value)) language.Collection.Strings[kv.Key] = kv.Value;
+                if (!string.IsNullOrWhiteSpace(kv.Value)) language.Collection.Strings[kv.Key] = kv.Value;
 #if DEBUG
                 if (data.Code == "en") Languages["debug_doubler"].Collection.Strings[kv.Key] = kv.Value + " | " + kv.Value;
                 Languages["debug_blank"].Collection.Strings[kv.Key] = "--";
@@ -143,10 +143,10 @@ namespace CBRE.Common.Translations
             if (meta == null) return null;
 
             string lang = Convert.ToString(meta["Language"]);
-            if (String.IsNullOrWhiteSpace(lang)) return null;
+            if (string.IsNullOrWhiteSpace(lang)) return null;
 
             string basePath = Convert.ToString(meta["Base"]) ?? "";
-            if (!String.IsNullOrWhiteSpace(basePath)) basePath += ".";
+            if (!string.IsNullOrWhiteSpace(basePath)) basePath += ".";
 
             Language language = new Language(lang);
 
@@ -195,7 +195,7 @@ namespace CBRE.Common.Translations
                 token = token.Parent;
             }
             l.Reverse();
-            return String.Join(".", l);
+            return string.Join(".", l);
         }
 
         private static string FixedPath(JToken tok)
@@ -208,7 +208,7 @@ namespace CBRE.Common.Translations
                 par = par.Parent;
             }
             l.Reverse();
-            return String.Join(".", l);
+            return string.Join(".", l);
         }
     }
 }

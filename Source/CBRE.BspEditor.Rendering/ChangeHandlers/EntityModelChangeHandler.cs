@@ -52,7 +52,7 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
                 // This doesn't cause unnecessary load as if the model is already loaded then
                 // nothing will happen, and otherwise we need to load the model anyway.
                 IModel model = null;
-                if (!String.IsNullOrWhiteSpace(modelName))
+                if (!string.IsNullOrWhiteSpace(modelName))
                 {
                     model = await _resourceCollection.Value.GetModel(change.Document.Environment, modelName);
                     if (model == null) modelName = null;
@@ -106,25 +106,25 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
         private bool ModelDataMatches(EntityModel model, ModelDetails details)
         {
             string name = details?.Name;
-            return String.IsNullOrWhiteSpace(name)
+            return string.IsNullOrWhiteSpace(name)
                 ? model == null
                 : string.Equals(model?.Name, name, StringComparison.InvariantCultureIgnoreCase) && model?.Renderable != null;
         }
 
         private static ModelDetails GetModelDetails(Entity entity, GameData gd)
         {
-            if (entity.Hierarchy.HasChildren || String.IsNullOrWhiteSpace(entity.EntityData.Name)) return null;
+            if (entity.Hierarchy.HasChildren || string.IsNullOrWhiteSpace(entity.EntityData.Name)) return null;
             GameDataObject cls = gd?.GetClass(entity.EntityData.Name);
             if (cls == null) return null;
 
-            Behaviour studio = cls.Behaviours.FirstOrDefault(x => String.Equals(x.Name, "studio", StringComparison.InvariantCultureIgnoreCase))
-                         ?? cls.Behaviours.FirstOrDefault(x => String.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase));
+            Behaviour studio = cls.Behaviours.FirstOrDefault(x => string.Equals(x.Name, "studio", StringComparison.InvariantCultureIgnoreCase))
+                         ?? cls.Behaviours.FirstOrDefault(x => string.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase));
             if (studio == null) return null;
 
             ModelDetails details = new ModelDetails();
 
             // First see if the studio behaviour forces a model...
-            if (studio.Values.Count == 1 && !String.IsNullOrWhiteSpace(studio.Values[0]))
+            if (studio.Values.Count == 1 && !string.IsNullOrWhiteSpace(studio.Values[0]))
             {
                 details.Name = studio.Values[0].Trim();
             }
@@ -132,17 +132,17 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
             {
                 // Find the first property that is a studio type, or has a name of "model"...
                 Property prop = cls.Properties.FirstOrDefault(x => x.VariableType == VariableType.Studio) ??
-                           cls.Properties.FirstOrDefault(x => String.Equals(x.Name, "model", StringComparison.InvariantCultureIgnoreCase));
+                           cls.Properties.FirstOrDefault(x => string.Equals(x.Name, "model", StringComparison.InvariantCultureIgnoreCase));
                 if (prop != null)
                 {
                     string val = entity.EntityData.Get(prop.Name, prop.DefaultValue);
-                    if (!String.IsNullOrWhiteSpace(val)) details.Name = val;
+                    if (!string.IsNullOrWhiteSpace(val)) details.Name = val;
                 }
             }
 
             if (details.Name != null)
             {
-                Property seqProp = cls.Properties.FirstOrDefault(x => String.Equals(x.Name, "sequence", StringComparison.InvariantCultureIgnoreCase));
+                Property seqProp = cls.Properties.FirstOrDefault(x => string.Equals(x.Name, "sequence", StringComparison.InvariantCultureIgnoreCase));
                 string seqVal = entity.EntityData.Get("sequence", seqProp?.DefaultValue);
                 if (!string.IsNullOrWhiteSpace(seqVal) && int.TryParse(seqVal, out int v)) details.Sequence = v;
 

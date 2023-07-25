@@ -56,7 +56,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
         public void ShowMergeResult(int mergedVertices, int removedFaces)
         {
             if (mergedVertices + removedFaces <= 0) return;
-            MergeResultsLabel.Text = String.Format(MergeResults, mergedVertices, removedFaces);
+            MergeResultsLabel.Text = string.Format(MergeResults, mergedVertices, removedFaces);
             MergeResultsLabel.Trigger();
         }
 

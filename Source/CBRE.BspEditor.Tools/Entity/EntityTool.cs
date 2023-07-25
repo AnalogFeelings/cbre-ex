@@ -151,7 +151,7 @@ namespace CBRE.BspEditor.Tools.Entity
             yield return Oy.Subscribe<RightClickMenuBuilder>("MapViewport:RightClick", b =>
             {
                 b.Clear();
-                b.AddCallback(String.Format(CreateObject, _activeEntity), () => CreateEntity(_location));
+                b.AddCallback(string.Format(CreateObject, _activeEntity), () => CreateEntity(_location));
 
                 if (_menu == null || _menu.Length <= 0) return;
 
@@ -244,7 +244,7 @@ namespace CBRE.BspEditor.Tools.Entity
             GameData data = await document.Environment.GetGameData();
             if (data != null)
             {
-                GameDataObject cls = data.Classes.FirstOrDefault(x => String.Equals(x.Name, gd, StringComparison.InvariantCultureIgnoreCase));
+                GameDataObject cls = data.Classes.FirstOrDefault(x => string.Equals(x.Name, gd, StringComparison.InvariantCultureIgnoreCase));
                 if (cls != null)
                 {
                     Behaviour[] col = cls.Behaviours.Where(x => x.Name == "color").ToArray();

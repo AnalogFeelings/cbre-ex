@@ -144,9 +144,9 @@ namespace CBRE.BspEditor.Editing.Components
             EntityData ed = obj.Data.GetOne<EntityData>();
             if (ed != null)
             {
-                if (!String.IsNullOrWhiteSpace(ed.Name)) text += " - " + ed.Name;
+                if (!string.IsNullOrWhiteSpace(ed.Name)) text += " - " + ed.Name;
                 string tn = ed.Get<string>("targetname") ?? ed.Get<string>("name");
-                if (!String.IsNullOrWhiteSpace(tn)) text += " - " + tn;
+                if (!string.IsNullOrWhiteSpace(tn)) text += " - " + tn;
             }
 
             return text;

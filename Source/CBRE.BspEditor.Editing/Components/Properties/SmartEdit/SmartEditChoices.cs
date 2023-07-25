@@ -60,7 +60,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
             {
                 List<Option> options = GetSortedOptions().ToList();
                 _comboBox.Items.AddRange(options.Select(x => x.DisplayText()).OfType<object>().ToArray());
-                int index = options.FindIndex(x => String.Equals(x.Key, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
+                int index = options.FindIndex(x => string.Equals(x.Key, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
                     _comboBox.SelectedIndex = index;

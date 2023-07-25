@@ -52,7 +52,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
                     spl[0] = r.ToString(CultureInfo.InvariantCulture);
                     spl[1] = g.ToString(CultureInfo.InvariantCulture);
                     spl[2] = b.ToString(CultureInfo.InvariantCulture);
-                    _textBox.Text = String.Join(" ", spl);
+                    _textBox.Text = string.Join(" ", spl);
                 }
             }
         }

@@ -92,7 +92,7 @@ namespace CBRE.Shell.Components
 
             // Get the filename and ensure it doesn't exist
             string date = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd-hh-mm-ss");
-            string filename = Path.Combine(directory, String.Format(fs, date));
+            string filename = Path.Combine(directory, string.Format(fs, date));
             if (File.Exists(filename)) File.Delete(filename);
 
             // Delete excessive autosaves
@@ -140,18 +140,18 @@ namespace CBRE.Shell.Components
             if (formatString == null || directory == null) return ret;
 
             // Search for matching files
-            string[] files = Directory.GetFiles(directory, String.Format(formatString, "*"));
+            string[] files = Directory.GetFiles(directory, string.Format(formatString, "*"));
             foreach (string file in files)
             {
                 // Match the date portion with a regex
                 string re = Regex.Escape(formatString.Replace("{0}", ":")).Replace(":", "{0}");
-                string regex = String.Format(re, "(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})");
+                string regex = string.Format(re, "(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})");
                 Match match = Regex.Match(Path.GetFileName(file), regex, RegexOptions.IgnoreCase);
                 if (!match.Success) continue;
 
                 // Parse the date and add it if it is valid
                 bool result = DateTime.TryParse(
-                    String.Format("{0}-{1}-{2}T{3}:{4}:{5}Z",
+                    string.Format("{0}-{1}-{2}T{3}:{4}:{5}Z",
                         match.Groups[1].Value, match.Groups[2].Value,
                         match.Groups[3].Value, match.Groups[4].Value,
                         match.Groups[5].Value, match.Groups[6].Value

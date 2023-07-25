@@ -119,7 +119,7 @@ namespace CBRE.Shell.Registers
             }
 
             IDocumentLoader loader = null;
-            if (!String.IsNullOrWhiteSpace(loaderHint)) loader = _loaders.FirstOrDefault(x => x.GetType().Name == loaderHint);
+            if (!string.IsNullOrWhiteSpace(loaderHint)) loader = _loaders.FirstOrDefault(x => x.GetType().Name == loaderHint);
             if (loader == null) loader = _loaders.FirstOrDefault(x => x.CanLoad(fileName));
             
             if (loader != null)
@@ -161,7 +161,7 @@ namespace CBRE.Shell.Registers
             if (document == null || fileName == null) return false;
 
             IDocumentLoader loader = null;
-            if (!String.IsNullOrWhiteSpace(loaderHint)) loader = _loaders.FirstOrDefault(x => x.GetType().Name == loaderHint);
+            if (!string.IsNullOrWhiteSpace(loaderHint)) loader = _loaders.FirstOrDefault(x => x.GetType().Name == loaderHint);
             if (loader == null) loader = _loaders.FirstOrDefault(x => x.CanSave(document) && x.CanLoad(fileName));
 
             if (loader == null) return false;

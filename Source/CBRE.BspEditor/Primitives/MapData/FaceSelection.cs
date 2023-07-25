@@ -88,7 +88,7 @@ namespace CBRE.BspEditor.Primitives.MapData
                     strs.Add(Convert.ToString(kv.Key.ID, CultureInfo.InvariantCulture) + ":" + Convert.ToString(x, CultureInfo.InvariantCulture));
                 }
             }
-            so.Set("SelectedFaces", String.Join(",", strs));
+            so.Set("SelectedFaces", string.Join(",", strs));
             return so;
         }
 

@@ -133,7 +133,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
                     foreach (string spl in av.Path.Split('/'))
                     {
                         path.Add(spl);
-                        string seg = String.Join("/", path);
+                        string seg = string.Join("/", path);
                         if (!parents.ContainsKey(seg))
                         {
                             VisgroupItem group = new VisgroupItem(_translation.GetString(spl))

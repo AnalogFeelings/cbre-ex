@@ -229,7 +229,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
 
             HashSet<GameDataObject> classes = _tableValues.OriginalClasses.ToHashSet();
             if (classes.Count == 0) cmbClass.Text = "";
-            else if (classes.Count > 1) cmbClass.Text = MultipleClassesText + @" " + String.Join("; ", classes.Select(x => x.Name));
+            else if (classes.Count > 1) cmbClass.Text = MultipleClassesText + @" " + string.Join("; ", classes.Select(x => x.Name));
             else if (classes.Count == 1) cmbClass.Text = classes.First().Name;
 
             cmbClass.EndUpdate();
@@ -355,7 +355,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
                 _currentEditor.NameChanged += NameChanged;
                 _currentEditor.ValueChanged += ValueChanged;
 
-                if (prop != null && !String.IsNullOrWhiteSpace(prop.Description))
+                if (prop != null && !string.IsNullOrWhiteSpace(prop.Description))
                 {
                     txtHelp.Text = prop.Description.Trim();
                 }
@@ -375,7 +375,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
 
             // The key of this item has changed, we need to update the gamedata as well
             tv.GameDataProperty = _tableValues.OriginalClasses.SelectMany(x => x.Properties)
-                                      .FirstOrDefault(x => String.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))
+                                      .FirstOrDefault(x => string.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))
                                   ?? new Property(key, VariableType.String);
 
             RefreshTable();
@@ -512,7 +512,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             public List<GameDataObject> OriginalClasses { get; }
             public GameDataObject NewClass { get; set; }
 
-            public string OriginalClass => String.Join(", ", OriginalClasses.Select(x => x.Name));
+            public string OriginalClass => string.Join(", ", OriginalClasses.Select(x => x.Name));
             public bool ClassChanged => NewClass != null && !string.Equals(NewClass.Name, OriginalClass, StringComparison.InvariantCultureIgnoreCase);
 
             public ClassValues()
@@ -552,7 +552,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
                     if (key == "spawnflags") continue;
 
                     // Get the (first) property for this key
-                    Property prop = OriginalClasses.SelectMany(x => x.Properties).FirstOrDefault(x => String.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))
+                    Property prop = OriginalClasses.SelectMany(x => x.Properties).FirstOrDefault(x => string.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))
                                ?? new Property(key, VariableType.String);
                     TableValue val = new TableValue(prop, key, datas.Select(x => x.Get<string>(key)));
                     Add(val);
@@ -574,18 +574,18 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             public List<string> OriginalValues { get; }
             public string NewValue { get; set; }
 
-            public bool IsModified => NewValue != null && !String.Equals(OriginalValue, NewValue)
-                                   || NewKey != null && !String.Equals(OriginalKey, NewKey);
+            public bool IsModified => NewValue != null && !string.Equals(OriginalValue, NewValue)
+                                   || NewKey != null && !string.Equals(OriginalKey, NewKey);
 
             public bool IsAdded { get; set; }
             public bool IsRemoved { get; set; }
 
             public string Value => NewValue ?? OriginalValue;
-            public string OriginalValue => String.Join(", ", OriginalValues.Where(x => !String.IsNullOrWhiteSpace(x)).Distinct());
+            public string OriginalValue => string.Join(", ", OriginalValues.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct());
 
             public string DisplayText => GameDataProperty?.DisplayText() ?? NewKey;
 
-            public string DisplayValue => String.IsNullOrWhiteSpace(Value)
+            public string DisplayValue => string.IsNullOrWhiteSpace(Value)
                 ? GameDataProperty?.DefaultValue
                 : GameDataProperty?.Options.FirstOrDefault(x => x.Key == Value)?.Description ?? Value;
 

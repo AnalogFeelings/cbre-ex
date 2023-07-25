@@ -277,7 +277,7 @@ namespace CBRE.Shell.Registers
                     // If the current node isn't found, add it in
                     if (!node.Children.ContainsKey(p))
                     {
-                        MenuGroup gr = declaredGroups.FirstOrDefault(x => x.Name == p && x.Path == String.Join("/", currentPath) && x.Section == item.Section);
+                        MenuGroup gr = declaredGroups.FirstOrDefault(x => x.Name == p && x.Path == string.Join("/", currentPath) && x.Section == item.Section);
                         node.AddChild(p, new MenuTreeTextNode(Context, gr?.Description ?? p, gr));
                     }
 

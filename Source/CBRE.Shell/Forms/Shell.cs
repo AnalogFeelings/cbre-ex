@@ -345,7 +345,7 @@ namespace CBRE.Shell.Forms
             IDocument doc = msg.Document;
             if (doc.HasUnsavedChanges)
             {
-                DialogResult r = MessageBox.Show(this, String.Format(SaveChangesToFile, doc.Name), UnsavedChanges, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult r = MessageBox.Show(this, string.Format(SaveChangesToFile, doc.Name), UnsavedChanges, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (r == DialogResult.Cancel)
                 {
                     msg.Cancel();
@@ -369,13 +369,13 @@ namespace CBRE.Shell.Forms
         {
             string filename = doc.FileName;
 
-            if (String.IsNullOrWhiteSpace(filename) || !Directory.Exists(Path.GetDirectoryName(filename)))
+            if (string.IsNullOrWhiteSpace(filename) || !Directory.Exists(Path.GetDirectoryName(filename)))
             {
                 List<string> filter = _documentRegister.Value.GetSupportedFileExtensions(doc)
-                    .Select(x => x.Description + "|" + String.Join(";", x.Extensions.Select(ex => "*" + ex)))
+                    .Select(x => x.Description + "|" + string.Join(";", x.Extensions.Select(ex => "*" + ex)))
                     .ToList();
 
-                using (SaveFileDialog sfd = new SaveFileDialog {Filter = String.Join("|", filter)})
+                using (SaveFileDialog sfd = new SaveFileDialog {Filter = string.Join("|", filter)})
                 {
                     if (sfd.ShowDialog() != DialogResult.OK) return false;
                     filename = sfd.FileName;

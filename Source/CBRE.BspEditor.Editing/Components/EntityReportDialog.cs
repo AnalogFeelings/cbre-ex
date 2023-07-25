@@ -43,7 +43,7 @@ namespace CBRE.BspEditor.Editing.Components
             {
                 ListViewItem i1 = (ListViewItem)x;
                 ListViewItem i2 = (ListViewItem)y;
-                int compare = String.CompareOrdinal(i1.SubItems[Column].Text, i2.SubItems[Column].Text);
+                int compare = string.CompareOrdinal(i1.SubItems[Column].Text, i2.SubItems[Column].Text);
                 return SortOrder == SortOrder.Descending ? -compare : compare;
             }
         }
@@ -241,14 +241,14 @@ namespace CBRE.BspEditor.Editing.Components
             string valueFilter = FilterValue.Text.ToUpperInvariant();
             bool exactKeyValue = FilterKeyValueExact.Checked;
 
-            if (!String.IsNullOrWhiteSpace(classFilter))
+            if (!string.IsNullOrWhiteSpace(classFilter))
             {
                 string name = (ent.EntityData.Name ?? "").ToUpperInvariant();
                 if (exactClass && name != classFilter) return false;
                 if (!exactClass && !name.Contains(classFilter)) return false;
             }
 
-            if (!String.IsNullOrWhiteSpace(keyFilter))
+            if (!string.IsNullOrWhiteSpace(keyFilter))
             {
                 if (ent.EntityData.Properties.All(x => x.Key.ToUpperInvariant() != keyFilter)) return false;
                 KeyValuePair<string, string> prop = ent.EntityData.Properties.FirstOrDefault(x => x.Key.ToUpperInvariant() == keyFilter);

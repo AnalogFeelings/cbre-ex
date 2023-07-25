@@ -45,7 +45,7 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
             if (cls != null)
             {
-                if (cls.Properties.Any(x => String.Equals(x.Name, "scale", StringComparison.CurrentCultureIgnoreCase)))
+                if (cls.Properties.Any(x => string.Equals(x.Name, "scale", StringComparison.CurrentCultureIgnoreCase)))
                 {
                     scale = entity.EntityData.Get<float>("scale", 1);
                     if (scale <= 0.1f) scale = 1;
@@ -65,27 +65,27 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
         private static string GetSpriteName(Entity entity, GameData gd)
         {
-            if (entity.Hierarchy.HasChildren || String.IsNullOrWhiteSpace(entity.EntityData.Name)) return null;
+            if (entity.Hierarchy.HasChildren || string.IsNullOrWhiteSpace(entity.EntityData.Name)) return null;
             GameDataObject cls = gd?.GetClass(entity.EntityData.Name);
             if (cls == null) return null;
 
-            Behaviour spr = cls.Behaviours.FirstOrDefault(x => String.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase))
-                      ?? cls.Behaviours.FirstOrDefault(x => String.Equals(x.Name, "iconsprite", StringComparison.InvariantCultureIgnoreCase));
+            Behaviour spr = cls.Behaviours.FirstOrDefault(x => string.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase))
+                      ?? cls.Behaviours.FirstOrDefault(x => string.Equals(x.Name, "iconsprite", StringComparison.InvariantCultureIgnoreCase));
             if (spr == null) return null;
 
             // First see if the studio behaviour forces a model...
-            if (spr.Values.Count == 1 && !String.IsNullOrWhiteSpace(spr.Values[0]))
+            if (spr.Values.Count == 1 && !string.IsNullOrWhiteSpace(spr.Values[0]))
             {
                 return spr.Values[0].Trim();
             }
 
             // Find the first property that is a studio type, or has a name of "sprite"...
             Property prop = cls.Properties.FirstOrDefault(x => x.VariableType == VariableType.Sprite) ??
-                       cls.Properties.FirstOrDefault(x => String.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase));
+                       cls.Properties.FirstOrDefault(x => string.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase));
             if (prop != null)
             {
                 string val = entity.EntityData.Get(prop.Name, prop.DefaultValue);
-                if (!String.IsNullOrWhiteSpace(val)) return val;
+                if (!string.IsNullOrWhiteSpace(val)) return val;
             }
             return null;
         }

@@ -44,7 +44,7 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
             if (sel.Update(change))
             {
                 await Oy.Publish("MapDocument:SelectionChanged", change.Document);
-                await Oy.Publish("Menu:Update", String.Empty);
+                await Oy.Publish("Menu:Update", string.Empty);
             }
             UpdateText(sel);
         }
@@ -93,7 +93,7 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
             }
             else
             {
-                text = String.Format(NumObjectsSelected, parents.Count);
+                text = string.Format(NumObjectsSelected, parents.Count);
             }
 
             Text = text;

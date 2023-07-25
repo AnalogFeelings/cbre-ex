@@ -183,7 +183,7 @@ namespace CBRE.BspEditor.Tools.Texture
             FavouritesTree.SelectedNode = null;
             TreeNode package = PackageTree.SelectedNode;
             string key = package?.Name;
-            if (String.IsNullOrWhiteSpace(key)) key = null;
+            if (string.IsNullOrWhiteSpace(key)) key = null;
             SetMemory("SelectedPackage", key);
             SetMemory("SelectedFavourite", (string) null);
 
@@ -195,7 +195,7 @@ namespace CBRE.BspEditor.Tools.Texture
             PackageTree.SelectedNode = null;
             TreeNode favourite = FavouritesTree.SelectedNode;
             string key = favourite?.Name;
-            if (String.IsNullOrWhiteSpace(key)) key = null;
+            if (string.IsNullOrWhiteSpace(key)) key = null;
             SetMemory("SelectedFavourite", key);
             SetMemory("SelectedPackage", (string)null);
 
@@ -229,7 +229,7 @@ namespace CBRE.BspEditor.Tools.Texture
         {
             TreeNode package = PackageTree.SelectedNode;
             string key = package?.Name;
-            if (String.IsNullOrWhiteSpace(key)) key = null;
+            if (string.IsNullOrWhiteSpace(key)) key = null;
             CBRE.Providers.Texture.TexturePackage p = _textureList.Collection.Packages.FirstOrDefault(x => x.ToString() == key);
             HashSet<string> set = new HashSet<string>(_textures);
             if (p != null) set.IntersectWith(p.Textures);
@@ -254,7 +254,7 @@ namespace CBRE.BspEditor.Tools.Texture
         private async Task UpdateTextureList()
         {
             IEnumerable<string> list = FavouritesTree.SelectedNode != null ? GetFavouriteFolderTextures() : GetPackageTextures();
-            if (!String.IsNullOrEmpty(FilterTextbox.Text))
+            if (!string.IsNullOrEmpty(FilterTextbox.Text))
             {
                 list = list.Where(x => x.ToLower().Contains(FilterTextbox.Text.ToLower()));
             }

@@ -447,7 +447,7 @@ namespace CBRE.BspEditor.Providers
             bw.Write(new byte[4]); // Unused
             bw.Write(data.Flags);
 
-            List<KeyValuePair<string, string>> props = data.Properties.Where(x => !String.IsNullOrWhiteSpace(x.Key) && !ExcludedKeys.Contains(x.Key.ToLower())).ToList();
+            List<KeyValuePair<string, string>> props = data.Properties.Where(x => !string.IsNullOrWhiteSpace(x.Key) && !ExcludedKeys.Contains(x.Key.ToLower())).ToList();
             bw.Write(props.Count);
             foreach (KeyValuePair<string, string> p in props)
             {

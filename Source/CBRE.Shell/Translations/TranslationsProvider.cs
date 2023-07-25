@@ -99,13 +99,13 @@ namespace CBRE.Shell.Translations
 
         public string GetString(params string[] path)
         {
-            string key = String.Join(".", path);
+            string key = string.Join(".", path);
             return _catalog.GetString(Language, key);
         }
 
         public string GetSetting(params string[] path)
         {
-            string key = String.Join(".", path);
+            string key = string.Join(".", path);
             return _catalog.GetSetting(Language, key);
         }
 

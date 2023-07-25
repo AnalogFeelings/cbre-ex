@@ -50,7 +50,7 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
             // Prompt the user for the wall width. If more than 1 solid is selected, show a little warning notice.
             QuickForm qf = new QuickForm(PromptTitle) {UseShortcutKeys = true};
-            if (objects.Count > 1) qf.Label(String.Format(WarningMessage, objects.Count));
+            if (objects.Count > 1) qf.Label(string.Format(WarningMessage, objects.Count));
             qf.NumericUpDown("Width", PromptWallWidth, -1024, 1024, 0, 32);
             qf.OkCancel(OK, Cancel);
 

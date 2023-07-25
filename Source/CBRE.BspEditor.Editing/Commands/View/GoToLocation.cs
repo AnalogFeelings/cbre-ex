@@ -38,9 +38,9 @@ namespace CBRE.BspEditor.Editing.Commands.View
 
                 if (await qf.ShowDialogAsync() != DialogResult.OK) return;
 
-                if (!Decimal.TryParse(qf.String("X"), out decimal x)) return;
-                if (!Decimal.TryParse(qf.String("Y"), out decimal y)) return;
-                if (!Decimal.TryParse(qf.String("Z"), out decimal z)) return;
+                if (!decimal.TryParse(qf.String("X"), out decimal x)) return;
+                if (!decimal.TryParse(qf.String("Y"), out decimal y)) return;
+                if (!decimal.TryParse(qf.String("Z"), out decimal z)) return;
 
                 Vector3 coordinate = new Vector3((float) x, (float) y, (float) z);
 

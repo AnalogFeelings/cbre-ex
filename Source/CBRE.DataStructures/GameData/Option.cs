@@ -14,7 +14,7 @@ namespace CBRE.DataStructures.GameData
 
         public string DisplayText()
         {
-            return String.IsNullOrWhiteSpace(Description) ? Key : Description;
+            return string.IsNullOrWhiteSpace(Description) ? Key : Description;
         }
     }
 }

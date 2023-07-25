@@ -36,7 +36,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
             if (name == null) return null;
 
             // Get the class (must be point)
-            GameDataObject cls = _data.Classes.FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase) && x.ClassType == ClassType.Point);
+            GameDataObject cls = _data.Classes.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase) && x.ClassType == ClassType.Point);
             if (cls == null) return null;
 
             // Default to 16x16

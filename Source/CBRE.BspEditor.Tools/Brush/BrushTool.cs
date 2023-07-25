@@ -106,7 +106,7 @@ namespace CBRE.BspEditor.Tools.Brush
             yield return Oy.Subscribe<RightClickMenuBuilder>("MapViewport:RightClick", x =>
             {
                 x.Clear();
-                x.AddCallback(String.Format(CreateObject, _activeBrush?.Name), () =>
+                x.AddCallback(string.Format(CreateObject, _activeBrush?.Name), () =>
                 {
                     MapDocument doc = GetDocument();
                     if (doc != null) Confirm(doc, x.Viewport);

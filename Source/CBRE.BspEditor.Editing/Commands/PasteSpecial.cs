@@ -180,7 +180,7 @@ namespace CBRE.BspEditor.Editing.Commands
                 string prop = entity.EntityData.Properties["targetname"];
 
                 // Skip unnamed entities
-                if (String.IsNullOrWhiteSpace(prop)) continue;
+                if (string.IsNullOrWhiteSpace(prop)) continue;
 
                 // Add the prefix before the unique check
                 if (prefixEntityNames)

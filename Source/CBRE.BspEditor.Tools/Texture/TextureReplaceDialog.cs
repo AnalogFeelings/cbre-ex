@@ -196,14 +196,14 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private bool MatchTextureName(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) return false;
+            if (string.IsNullOrWhiteSpace(name)) return false;
 
             string match = FindTextbox.Text;
             if (!ActionExact.Checked)
             {
                 return name.ToLowerInvariant().Contains(match.ToLowerInvariant());
             }
-            return String.Equals(name, match, StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(name, match, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private List<TextureReplacement> GetReplacements(IEnumerable<string> names)
@@ -295,7 +295,7 @@ namespace CBRE.BspEditor.Tools.Texture
         private async void UpdateTexture(string text, PictureBox image, Label info)
         {
             MapDocument doc = GetDocument();
-            if (String.IsNullOrWhiteSpace(text) || doc == null)
+            if (string.IsNullOrWhiteSpace(text) || doc == null)
             {
                 image.Image = null;
                 info.Text = "No Image";

@@ -35,7 +35,7 @@ namespace CBRE.BspEditor.Tools.Texture
             if (md == null || md.Selection.IsEmpty) return;
 
             ActiveTexture at = md.Map.Data.GetOne<ActiveTexture>();
-            if (String.IsNullOrWhiteSpace(at?.Name)) return;
+            if (string.IsNullOrWhiteSpace(at?.Name)) return;
 
             Transaction edit = new Transaction();
 

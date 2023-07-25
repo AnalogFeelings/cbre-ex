@@ -84,7 +84,7 @@ namespace CBRE.Packages.Vpk
 
         private void ReadDirectoryEntries(BinaryReader br)
         {
-            String extension, path, filename;
+            string extension, path, filename;
             while ((extension = br.ReadNullTerminatedString()).Length > 0)
             {
                 while ((path = br.ReadNullTerminatedString()).Length > 0)

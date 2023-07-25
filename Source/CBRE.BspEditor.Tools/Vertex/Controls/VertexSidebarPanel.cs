@@ -115,12 +115,12 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
 
         private void DeselectAllButtonClicked(object sender, EventArgs e)
         {
-            Oy.Publish("VertexTool:DeselectAll", String.Empty);
+            Oy.Publish("VertexTool:DeselectAll", string.Empty);
         }
 
         private void ResetButtonClicked(object sender, EventArgs e)
         {
-            Oy.Publish("VertexTool:Reset", String.Empty);
+            Oy.Publish("VertexTool:Reset", string.Empty);
         }
     }
 }

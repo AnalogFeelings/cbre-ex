@@ -123,7 +123,7 @@ namespace CBRE.BspEditor.Providers
         {
             const NumberStyles ns = NumberStyles.Float;
 
-            List<string> parts = line.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
+            List<string> parts = line.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             
             Assert(parts[0] == "(");
             Assert(parts[4] == ")");
@@ -186,7 +186,7 @@ namespace CBRE.BspEditor.Providers
             string line;
             while ((line = CleanLine(rdr.ReadLine())) != null)
             {
-                if (String.IsNullOrWhiteSpace(line)) continue;
+                if (string.IsNullOrWhiteSpace(line)) continue;
                 if (line == "}")
                 {
                     if (!faces.Any()) return null;
@@ -238,7 +238,7 @@ namespace CBRE.BspEditor.Providers
             string[] split = line.Split(new char[] { ' ', '\t' });
             string key = split[0].Trim('"');
 
-            string val = String.Join(" ", split.Skip(1)).Trim('"');
+            string val = string.Join(" ", split.Skip(1)).Trim('"');
 
             if (key == "classname")
             {
@@ -272,7 +272,7 @@ namespace CBRE.BspEditor.Providers
             string line;
             while ((line = CleanLine(rdr.ReadLine())) != null)
             {
-                if (String.IsNullOrWhiteSpace(line)) continue;
+                if (string.IsNullOrWhiteSpace(line)) continue;
                 if (line[0] == '"') ReadProperty(ent, line);
                 else if (line[0] == '{')
                 {
@@ -291,7 +291,7 @@ namespace CBRE.BspEditor.Providers
             string line;
             while ((line = CleanLine(rdr.ReadLine())) != null)
             {
-                if (String.IsNullOrWhiteSpace(line)) continue;
+                if (string.IsNullOrWhiteSpace(line)) continue;
                 if (line == "{") list.Add(ReadEntity(rdr, generator, result));
             }
             return list;
@@ -343,7 +343,7 @@ namespace CBRE.BspEditor.Providers
         {
             // ( -128 64 64 ) ( -64 64 64 ) ( -64 0 64 ) AAATRIGGER [ 1 0 0 0 ] [ 0 -1 0 0 ] 0 1 1
             List<string> strings = face.Vertices.Take(3).Select(x => "( " + FormatVector3(x) + " )").ToList();
-            strings.Add(String.IsNullOrWhiteSpace(face.Texture.Name) ? "AAATRIGGER" : face.Texture.Name);
+            strings.Add(string.IsNullOrWhiteSpace(face.Texture.Name) ? "AAATRIGGER" : face.Texture.Name);
             strings.Add("[");
             strings.Add(FormatVector3(face.Texture.UAxis));
             strings.Add(face.Texture.XShift.ToString("0.000", CultureInfo.InvariantCulture));
@@ -355,7 +355,7 @@ namespace CBRE.BspEditor.Providers
             strings.Add(face.Texture.Rotation.ToString("0.000", CultureInfo.InvariantCulture));
             strings.Add(face.Texture.XScale.ToString("0.000", CultureInfo.InvariantCulture));
             strings.Add(face.Texture.YScale.ToString("0.000", CultureInfo.InvariantCulture));
-            sw.WriteLine(String.Join(" ", strings));
+            sw.WriteLine(string.Join(" ", strings));
         }
 
         private void WriteSolid(StreamWriter sw, Solid solid)

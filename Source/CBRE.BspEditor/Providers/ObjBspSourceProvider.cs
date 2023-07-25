@@ -106,9 +106,9 @@ namespace CBRE.BspEditor.Providers
 
                 line = CleanLine(line);
                 SplitLine(line, out string keyword, out string values);
-                if (String.IsNullOrWhiteSpace(keyword)) continue;
+                if (string.IsNullOrWhiteSpace(keyword)) continue;
 
-                string[] vals = (values ?? "").Split(' ').Where(x => !String.IsNullOrWhiteSpace(x)).ToArray();
+                string[] vals = (values ?? "").Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
                 switch (keyword.ToLower())
                 {
                     // Things I care about

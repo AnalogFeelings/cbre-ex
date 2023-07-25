@@ -286,7 +286,7 @@ namespace CBRE.BspEditor.Editing.Components
             {
                 return Index + ": " +
                        (Name ?? Checker.GetType().Name) +
-                       (String.IsNullOrWhiteSpace(Problem.Text) ? "" : " - " + Problem.Text);
+                       (string.IsNullOrWhiteSpace(Problem.Text) ? "" : " - " + Problem.Text);
             }
         }
     }

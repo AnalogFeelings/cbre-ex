@@ -45,7 +45,7 @@ namespace CBRE.Shell.Settings.Editors
             public string Value { get; set; }
             public LanguageValue(Language lang)
             {
-                Label = String.IsNullOrWhiteSpace(lang.Description) ? lang.Code : lang.Description;
+                Label = string.IsNullOrWhiteSpace(lang.Description) ? lang.Code : lang.Description;
                 Value = lang.Code;
             }
         }

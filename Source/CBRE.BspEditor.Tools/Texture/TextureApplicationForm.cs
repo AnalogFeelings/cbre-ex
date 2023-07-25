@@ -356,7 +356,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
             // If the texture is in the list of selected faces, select the texture in that list
             IEnumerable<string> sl = SelectedTexturesList.GetTextureList();
-            if (sl.Any(x => String.Equals(x, item, StringComparison.InvariantCultureIgnoreCase)))
+            if (sl.Any(x => string.Equals(x, item, StringComparison.InvariantCultureIgnoreCase)))
             {
                 SelectedTexturesList.SetHighlightedTextures(new[] { item });
                 SelectedTexturesList.ScrollToTexture(item);
@@ -390,7 +390,7 @@ namespace CBRE.BspEditor.Tools.Texture
                 Primitives.Texture tex = face.Texture;
 
                 string name = tex.Name;
-                if (textures.Any(x => String.Equals(x, name, StringComparison.InvariantCultureIgnoreCase))) continue;
+                if (textures.Any(x => string.Equals(x, name, StringComparison.InvariantCultureIgnoreCase))) continue;
                 
                 textures.Add(name);
             }
@@ -552,7 +552,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task ApplyTexture(string item)
         {
-            if (String.IsNullOrWhiteSpace(item)) return;
+            if (string.IsNullOrWhiteSpace(item)) return;
 
             await ApplyChanges((mo, f) =>
             {

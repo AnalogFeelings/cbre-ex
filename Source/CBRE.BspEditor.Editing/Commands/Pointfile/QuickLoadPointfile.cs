@@ -70,7 +70,7 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
                 }
                 catch
                 {
-                    MessageBox.Show(String.Format(InvalidPointfile, Path.GetFileName(file)));
+                    MessageBox.Show(string.Format(InvalidPointfile, Path.GetFileName(file)));
                     return;
                 }
 

@@ -136,13 +136,13 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
 
             List<string> classes = datas
                 .Select(x => x.EntityData.Name)
-                .Where(x => !String.IsNullOrWhiteSpace(x))
+                .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Distinct(StringComparer.InvariantCultureIgnoreCase)
                 .ToList();
 
             if (classes.Count == 1)
             {
-                GameDataObject gdo = gameData.Classes.FirstOrDefault(x => x.ClassType != ClassType.Base && String.Equals(x.Name, classes[0], StringComparison.InvariantCultureIgnoreCase));
+                GameDataObject gdo = gameData.Classes.FirstOrDefault(x => x.ClassType != ClassType.Base && string.Equals(x.Name, classes[0], StringComparison.InvariantCultureIgnoreCase));
                 PopulateFlags(gdo, datas.Select(x => x.EntityData.Flags).ToList());
             }
 

@@ -234,7 +234,7 @@ namespace CBRE.Rendering.Cameras
 
         internal string Serialise()
         {
-            return String.Format(CultureInfo.InvariantCulture, "{0}/{1},{2},{3}/{4}",
+            return string.Format(CultureInfo.InvariantCulture, "{0}/{1},{2},{3}/{4}",
                 ViewType, Position.X, Position.Y, Position.Z, Zoom);
         }
     }

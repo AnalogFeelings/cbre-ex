@@ -82,7 +82,7 @@ namespace CBRE.Shell.Forms
 
                 SearchResults.Controls.Clear();
 
-                if (String.IsNullOrWhiteSpace(SearchBox.Text))
+                if (string.IsNullOrWhiteSpace(SearchBox.Text))
                 {
                     SearchResults.Controls.Add(new Label
                     {

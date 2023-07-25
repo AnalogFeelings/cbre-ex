@@ -27,7 +27,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
             get
             {
                 decimal d;
-                return Decimal.TryParse(Value, NumberStyles.Float, CultureInfo.InvariantCulture, out d) ? d : 0;
+                return decimal.TryParse(Value, NumberStyles.Float, CultureInfo.InvariantCulture, out d) ? d : 0;
             }
         }
 
@@ -36,7 +36,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
             get
             {
                 if (!Options.Any()) return null;
-                int idx = Options.FindIndex(x => String.Equals(x, Value, StringComparison.InvariantCultureIgnoreCase));
+                int idx = Options.FindIndex(x => string.Equals(x, Value, StringComparison.InvariantCultureIgnoreCase));
                 return Options[idx < 0 || idx >= Options.Count ? 0 : idx];
             }
         }
@@ -71,8 +71,8 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
                 Enabled = gs.Get("Enabled", true),
                 Value = gs.Get("Value", ""),
                 Type = gs.Get("Type", CompileParameterType.Checkbox),
-                Min = gs.Get("Min", Decimal.MinValue),
-                Max = gs.Get("Max", Decimal.MaxValue),
+                Min = gs.Get("Min", decimal.MinValue),
+                Max = gs.Get("Max", decimal.MaxValue),
                 Precision = gs.Get("Precision", 1),
                 Options = gs.Get("Options", "").Split(',').ToList(),
                 OptionValues = gs.Get("OptionValues", "").Split(',').ToList(),
@@ -85,7 +85,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
         {
             if (!Enabled) return "";
             string arg = Flag;
-            if (!String.IsNullOrWhiteSpace(Value) && Type != CompileParameterType.Checkbox) arg += " " + Value;
+            if (!string.IsNullOrWhiteSpace(Value) && Type != CompileParameterType.Checkbox) arg += " " + Value;
             return arg;
         }
     }

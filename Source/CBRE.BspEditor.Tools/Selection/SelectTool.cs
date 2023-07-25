@@ -123,7 +123,7 @@ namespace CBRE.BspEditor.Tools.Selection
 
             Usage = ToolUsage.Both;
 
-            Oy.Subscribe<String>("SelectTool:TransformationModeChanged", x =>
+            Oy.Subscribe<string>("SelectTool:TransformationModeChanged", x =>
             {
                 if (Enum.TryParse(x, out SelectionBoxDraggableState.TransformationMode mode))
                 {

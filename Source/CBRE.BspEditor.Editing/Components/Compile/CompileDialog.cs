@@ -251,7 +251,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             {
                 if (string.Equals(panel.Tool.Name, "Shared", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    panel.Arguments = String.Join(" ", panels.Select(x => profile.GetArguments(x.Tool.Name)));
+                    panel.Arguments = string.Join(" ", panels.Select(x => profile.GetArguments(x.Tool.Name)));
                 }
                 else
                 {
@@ -269,7 +269,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             if (qf.ShowDialog() != DialogResult.OK) return null;
 
             string n = qf.String("ProfileName");
-            return String.IsNullOrEmpty(n) ? null : n;
+            return string.IsNullOrEmpty(n) ? null : n;
         }
 
         private void RenameProfileButtonClicked(object sender, EventArgs e)
@@ -278,7 +278,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             if (profile.Profile == null) return;
 
             string name = PromptName(profile.GetName());
-            if (String.IsNullOrEmpty(name)) return;
+            if (string.IsNullOrEmpty(name)) return;
 
             profile.Profile.Name = name;
             
@@ -309,7 +309,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         private void SaveProfileAsButtonClicked(object sender, EventArgs e)
         {
             string name = PromptName("");
-            if (String.IsNullOrEmpty(name)) return;
+            if (string.IsNullOrEmpty(name)) return;
 
             BuildProfile profile = new BuildProfile
             {

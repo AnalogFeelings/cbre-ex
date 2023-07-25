@@ -53,7 +53,7 @@ namespace CBRE.BspEditor.Editing.Problems
             string first = tc.GetBrowsableTextures()
                 .OrderBy(t => t, StringComparer.CurrentCultureIgnoreCase)
                 .Where(item => item.Length > 0)
-                .Select(item => new { item, c = Char.ToLower(item[0]) })
+                .Select(item => new { item, c = char.ToLower(item[0]) })
                 .Where(t => t.c >= 'a' && t.c <= 'z')
                 .Select(t => t.item)
                 .FirstOrDefault();

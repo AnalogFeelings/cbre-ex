@@ -34,7 +34,7 @@ namespace CBRE.BspEditor.Tools.Texture
             using (TextureBrowser tb = new TextureBrowser(md))
             {
                 await tb.Initialise(_translation.Value);
-                if (tb.ShowDialog() == DialogResult.OK && !String.IsNullOrWhiteSpace(tb.SelectedTexture))
+                if (tb.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(tb.SelectedTexture))
                 {
                     string tex = tb.SelectedTexture;
                     ActiveTexture at = new ActiveTexture {Name = tex};

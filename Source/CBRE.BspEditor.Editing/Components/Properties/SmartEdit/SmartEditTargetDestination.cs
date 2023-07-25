@@ -42,7 +42,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
         {
             return document.Map.Root.Find(x => x.Data.GetOne<EntityData>() != null)
                 .Select(x => x.Data.GetOne<EntityData>().Get<string>("targetname"))
-                .Where(x => !String.IsNullOrWhiteSpace(x))
+                .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Distinct()
                 .OrderBy(x => x.ToLowerInvariant());
         }
@@ -54,7 +54,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
             {
                 List<string> options = GetSortedTargetNames(document).ToList();
                 _comboBox.Items.AddRange(options.OfType<object>().ToArray());
-                int index = options.FindIndex(x => String.Equals(x, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
+                int index = options.FindIndex(x => string.Equals(x, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
                     _comboBox.SelectedIndex = index;

@@ -103,7 +103,7 @@ namespace CBRE.Editor.Update
                 {
                     string[] str = (await downloader.DownloadStringTaskAsync(url)).Split('\n', '\r');
 
-                    if (str.Length < 2 || String.IsNullOrWhiteSpace(str[0]))
+                    if (str.Length < 2 || string.IsNullOrWhiteSpace(str[0]))
                     {
                         return null;
                     }

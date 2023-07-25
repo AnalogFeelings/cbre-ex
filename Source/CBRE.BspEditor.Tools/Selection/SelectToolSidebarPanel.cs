@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Tools.Selection
         {
             InitializeComponent();
 
-            Oy.Subscribe<String>("SelectTool:TransformationModeChanged", x =>
+            Oy.Subscribe<string>("SelectTool:TransformationModeChanged", x =>
             {
                 if (Enum.TryParse(x, out SelectionBoxDraggableState.TransformationMode mode))
                 {
@@ -30,7 +30,7 @@ namespace CBRE.BspEditor.Tools.Selection
                 }
             });
 
-            Oy.Subscribe<String>("SelectTool:SetShow3DWidgets", x =>
+            Oy.Subscribe<string>("SelectTool:SetShow3DWidgets", x =>
             {
                 Show3DWidgetsCheckbox.Checked = x == "1";
             });

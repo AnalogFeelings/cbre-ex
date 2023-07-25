@@ -58,7 +58,7 @@ namespace CBRE.DataStructures.Geometric
         {
             if (!(value is Vector3)) return null;
             Vector3 v = (Vector3)value;
-            if (destinationType == typeof(string)) return String.Format(culture, "{0} {1} {2}", v.X, v.Y, v.Z);
+            if (destinationType == typeof(string)) return string.Format(culture, "{0} {1} {2}", v.X, v.Y, v.Z);
             if (destinationType == typeof(Vector3)) return new Vector3(v.X, v.Y, v.Z);
             return base.ConvertTo(context, culture, value, destinationType);
         }

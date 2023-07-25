@@ -124,8 +124,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties
             foreach (IObjectPropertyEditorTab add in newVisibleTabs.Except(currentlyVisibleTabs).ToList())
             {
                 // Locate the next or previous tab in the visible tab set so we can insert the new tab before/after it
-                IObjectPropertyEditorTab prevCv = currentlyVisibleTabs.Where(x => String.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) < 0).OrderByDescending(x => x.OrderHint).FirstOrDefault();
-                IObjectPropertyEditorTab nextCv = currentlyVisibleTabs.Where(x => String.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) > 0).OrderBy(x => x.OrderHint).FirstOrDefault();
+                IObjectPropertyEditorTab prevCv = currentlyVisibleTabs.Where(x => string.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) < 0).OrderByDescending(x => x.OrderHint).FirstOrDefault();
+                IObjectPropertyEditorTab nextCv = currentlyVisibleTabs.Where(x => string.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) > 0).OrderBy(x => x.OrderHint).FirstOrDefault();
                 int idx = prevCv != null ? tabPanel.TabPages.IndexOf(_pages[prevCv]) + 1
                         : nextCv != null ? tabPanel.TabPages.IndexOf(_pages[nextCv])
                         : 0;

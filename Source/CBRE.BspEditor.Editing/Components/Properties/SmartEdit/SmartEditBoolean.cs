@@ -37,7 +37,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
         protected override void OnSetProperty(MapDocument document)
         {
             _checkBox.Text = Property.DisplayText();
-            _checkBox.Checked = String.Equals(PropertyValue, "Yes", StringComparison.CurrentCultureIgnoreCase);
+            _checkBox.Checked = string.Equals(PropertyValue, "Yes", StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }
