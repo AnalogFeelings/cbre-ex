@@ -223,16 +223,6 @@ namespace CBRE.BspEditor.Editing.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Menu_LoadPointfile {
-            get {
-                object obj = ResourceManager.GetObject("Menu_LoadPointfile", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Menu_MapProperties {
             get {
                 object obj = ResourceManager.GetObject("Menu_MapProperties", resourceCulture);
@@ -256,16 +246,6 @@ namespace CBRE.BspEditor.Editing.Properties {
         internal static System.Drawing.Bitmap Menu_PasteSpecial {
             get {
                 object obj = ResourceManager.GetObject("Menu_PasteSpecial", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Menu_QuickLoadPointfile {
-            get {
-                object obj = ResourceManager.GetObject("Menu_QuickLoadPointfile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -406,16 +386,6 @@ namespace CBRE.BspEditor.Editing.Properties {
         internal static System.Drawing.Bitmap Menu_Undo {
             get {
                 object obj = ResourceManager.GetObject("Menu_Undo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Menu_UnloadPointfile {
-            get {
-                object obj = ResourceManager.GetObject("Menu_UnloadPointfile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
