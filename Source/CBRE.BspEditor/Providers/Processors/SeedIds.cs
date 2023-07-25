@@ -19,10 +19,10 @@ namespace CBRE.BspEditor.Providers.Processors
         {
             long maxMapObject = 0;
             long maxFace = 0;
-            foreach (var o in document.Map.Root.FindAll())
+            foreach (IMapObject o in document.Map.Root.FindAll())
             {
                 if (o.ID > maxMapObject) maxMapObject = o.ID;
-                foreach (var face in o.Data.OfType<Face>())
+                foreach (Face face in o.Data.OfType<Face>())
                 {
                     if (face.ID > maxFace) maxFace = face.ID;
                 }

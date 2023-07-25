@@ -28,17 +28,17 @@ namespace CBRE.Packages.Vpk
             Entries = new Dictionary<string, VpkEntry>();
             Chunks = new Dictionary<ushort, FileInfo>();
 
-            var nameWithoutExt = Path.GetFileNameWithoutExtension(packageFile.Name);
-            var ext = Path.GetExtension(packageFile.Name);
+            string nameWithoutExt = Path.GetFileNameWithoutExtension(packageFile.Name);
+            string ext = Path.GetExtension(packageFile.Name);
             if (!nameWithoutExt.EndsWith(DirString)) throw new PackageException("This is not a valid VPK directory file.");
-            
-            var baseName = nameWithoutExt.Substring(0, nameWithoutExt.Length - DirString.Length);
+
+            string baseName = nameWithoutExt.Substring(0, nameWithoutExt.Length - DirString.Length);
 
             // Scan and find all chunk files that match this vpk directory
-            var matchingFiles = packageFile.Directory.GetFiles(baseName + "_???" + ext);
-            foreach (var mf in matchingFiles)
+            FileInfo[] matchingFiles = packageFile.Directory.GetFiles(baseName + "_???" + ext);
+            foreach (FileInfo mf in matchingFiles)
             {
-                var index = mf.Name.Substring(baseName.Length + 1, 3);
+                string index = mf.Name.Substring(baseName.Length + 1, 3);
                 ushort num;
                 if (ushort.TryParse(index, out num))
                 {
@@ -48,9 +48,9 @@ namespace CBRE.Packages.Vpk
             Chunks[DirectoryIndex] = PackageFile;
 
             // Read the data from the vpk
-            using (var br = new BinaryReader(OpenFile(packageFile)))
+            using (BinaryReader br = new BinaryReader(OpenFile(packageFile)))
             {
-                var sig = br.ReadUInt32();
+                uint sig = br.ReadUInt32();
                 if (sig != Signature) throw new PackageException("Unknown package signature: Expected 0x" + Signature.ToString("x8") + ", got 0x" + sig.ToString("x8") + ".");
 
                 Version = br.ReadUInt32();
@@ -62,10 +62,10 @@ namespace CBRE.Packages.Vpk
                         break;
                     case 2:
                         HeaderLength = 28;
-                        var dataLength = br.ReadInt32();
-                        var archiveMd5Length = br.ReadUInt32();
-                        var fileMd5Length = br.ReadInt32();
-                        var signatureLength = br.ReadInt32();
+                        int dataLength = br.ReadInt32();
+                        uint archiveMd5Length = br.ReadUInt32();
+                        int fileMd5Length = br.ReadInt32();
+                        int signatureLength = br.ReadInt32();
                         break;
                     default:
                         throw new PackageException("Unknown version number: Expected 1 or 2, got " + Version + ".");
@@ -94,7 +94,7 @@ namespace CBRE.Packages.Vpk
                     while ((filename = br.ReadNullTerminatedString()).Length > 0)
                     {
                         // get me some file information
-                        var entry = ReadEntry(br, path + "/" + filename + "." + extension);
+                        VpkEntry entry = ReadEntry(br, path + "/" + filename + "." + extension);
                         Entries.Add(entry.FullName, entry);
                     }
                 }
@@ -103,15 +103,15 @@ namespace CBRE.Packages.Vpk
 
         private VpkEntry ReadEntry(BinaryReader br, string path)
         {
-            var crc = br.ReadUInt32();
-            var preloadBytes = br.ReadUInt16();
-            var archiveIndex = br.ReadUInt16(); // 0x7fff = directory archive
-            var entryOffset = br.ReadUInt32(); // If archive directory, relative to END of directory structure
-            var entryLength = br.ReadUInt32(); // If 0, preload data contains the entire file
-            var terminator = br.ReadUInt16();
+            uint crc = br.ReadUInt32();
+            ushort preloadBytes = br.ReadUInt16();
+            ushort archiveIndex = br.ReadUInt16(); // 0x7fff = directory archive
+            uint entryOffset = br.ReadUInt32(); // If archive directory, relative to END of directory structure
+            uint entryLength = br.ReadUInt32(); // If 0, preload data contains the entire file
+            ushort terminator = br.ReadUInt16();
             if (terminator != VpkEntry.EntryTerminator) throw new PackageException("Invalid terminator. Expected " + VpkEntry.EntryTerminator.ToString("x8") + ", got " + terminator.ToString("x8") + ".");
 
-            var preloadData = br.ReadBytes(preloadBytes);
+            byte[] preloadData = br.ReadBytes(preloadBytes);
             return new VpkEntry(this, path.ToLowerInvariant(), crc, preloadData, archiveIndex, entryOffset, entryLength);
         }
 
@@ -128,7 +128,7 @@ namespace CBRE.Packages.Vpk
 
         public byte[] ExtractEntry(IPackageEntry entry)
         {
-            using (var sr = new BinaryReader(OpenStream(entry)))
+            using (BinaryReader sr = new BinaryReader(OpenStream(entry)))
             {
                 return sr.ReadBytes((int) sr.BaseStream.Length);
             }
@@ -136,16 +136,16 @@ namespace CBRE.Packages.Vpk
 
         public Stream OpenStream(IPackageEntry entry)
         {
-            var pe = entry as VpkEntry;
+            VpkEntry pe = entry as VpkEntry;
             if (pe == null) throw new ArgumentException("This package is only compatible with VpkEntry objects.");
             return new BufferedStream(new VpkEntryStream(pe, this));
         }
 
         internal Stream OpenChunk(VpkEntry entry)
         {
-            var file = Chunks[entry.ArchiveIndex];
-            var stream = OpenFile(file);
-            var offset = entry.ArchiveIndex == DirectoryIndex ? HeaderLength + TreeLength + entry.EntryOffset : entry.EntryOffset;
+            FileInfo file = Chunks[entry.ArchiveIndex];
+            Stream stream = OpenFile(file);
+            uint offset = entry.ArchiveIndex == DirectoryIndex ? HeaderLength + TreeLength + entry.EntryOffset : entry.EntryOffset;
             stream.Position = offset;
             return stream;
         }
@@ -168,14 +168,14 @@ namespace CBRE.Packages.Vpk
         {
             _folders = new Dictionary<string, HashSet<string>>();
             _files = new Dictionary<string, HashSet<string>>();
-            foreach (var entry in GetEntries())
+            foreach (IPackageEntry entry in GetEntries())
             {
-                var split = entry.FullName.Split('/');
-                var joined = "";
-                for (var i = 0; i < split.Length; i++)
+                string[] split = entry.FullName.Split('/');
+                string joined = "";
+                for (int i = 0; i < split.Length; i++)
                 {
-                    var sub = split[i];
-                    var name = joined.Length == 0 ? sub : joined + '/' + sub;
+                    string sub = split[i];
+                    string name = joined.Length == 0 ? sub : joined + '/' + sub;
                     if (i == split.Length - 1)
                     {
                         // File name
@@ -227,26 +227,26 @@ namespace CBRE.Packages.Vpk
 
         public IEnumerable<string> SearchDirectories(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectDirectories(path) : GetDirectories(path);
+            IEnumerable<string> files = recursive ? CollectDirectories(path) : GetDirectories(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         public IEnumerable<string> SearchFiles(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectFiles(path) : GetFiles(path);
+            IEnumerable<string> files = recursive ? CollectFiles(path) : GetFiles(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         private string GetName(string path)
         {
-            var idx = path.LastIndexOf('/');
+            int idx = path.LastIndexOf('/');
             if (idx < 0) return path;
             return path.Substring(idx + 1);
         }
 
         private IEnumerable<string> CollectDirectories(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].Where(x => x.Length > 0));
@@ -257,7 +257,7 @@ namespace CBRE.Packages.Vpk
 
         private IEnumerable<string> CollectFiles(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].SelectMany(CollectFiles));
@@ -271,7 +271,7 @@ namespace CBRE.Packages.Vpk
 
         public Stream OpenFile(string path)
         {
-            var entry = GetEntry(path);
+            IPackageEntry entry = GetEntry(path);
             if (entry == null) throw new FileNotFoundException();
             return OpenStream(entry);
         }

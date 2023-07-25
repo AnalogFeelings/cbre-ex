@@ -47,7 +47,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             PopulateTabs();
             PopulateProfiles();
 
-            var translate = CBRE.Common.Container.Get<ITranslationStringProvider>();
+            ITranslationStringProvider translate = CBRE.Common.Container.Get<ITranslationStringProvider>();
             translate.Translate(this);
         }
 
@@ -60,7 +60,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -85,10 +85,10 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         {
             get
             {
-                var batch = new List<BatchArgument>();
+                List<BatchArgument> batch = new List<BatchArgument>();
                 if (_preset != null)
                 {
-                    foreach (var t in _specification.Tools)
+                    foreach (CompileTool t in _specification.Tools)
                     {
                         if (_preset.ShouldRunTool(t.Name))
                         {
@@ -98,42 +98,42 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                 }
                 else if (_profile != null)
                 {
-                    var args = _profile.Arguments;
+                    Dictionary<string, string> args = _profile.Arguments;
 
-                    var shared = "";
+                    string shared = "";
                     if (args.ContainsKey("Shared"))
                     {
-                        var sa = args["Shared"];
+                        string sa = args["Shared"];
                         shared = " " + sa;
                     }
 
-                    foreach (var kv in args)
+                    foreach (KeyValuePair<string, string> kv in args)
                     {
                         batch.Add(new BatchArgument {Name = kv.Key, Arguments = kv.Value + shared});
                     }
                 }
                 else
                 {
-                    var args = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                    foreach (var panel in ToolTabs.TabPages.OfType<TabPage>().SelectMany(x => x.Controls.OfType<BuildParametersPanel>()))
+                    Dictionary<string, string> args = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+                    foreach (BuildParametersPanel panel in ToolTabs.TabPages.OfType<TabPage>().SelectMany(x => x.Controls.OfType<BuildParametersPanel>()))
                     {
                         args.Add(panel.Tool.Name, panel.Arguments);
                     }
 
-                    var shared = "";
+                    string shared = "";
                     if (args.ContainsKey("Shared"))
                     {
-                        var sa = args["Shared"];
+                        string sa = args["Shared"];
                         shared = " " + sa;
                     }
 
-                    var shouldRun = new List<string>();
-                    foreach (var step in pnlSteps.Controls.OfType<CheckBox>())
+                    List<string> shouldRun = new List<string>();
+                    foreach (CheckBox step in pnlSteps.Controls.OfType<CheckBox>())
                     {
                         if (step.Checked && step.Tag is CompileTool t) shouldRun.Add(t.Name);
                     }
 
-                    foreach (var kv in args)
+                    foreach (KeyValuePair<string, string> kv in args)
                     {
                         if (shouldRun.Contains(kv.Key))
                         {
@@ -148,23 +148,23 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         private void PopulatePresets()
         {
             PresetTable.Controls.Clear();
-            foreach (var preset in _specification.Presets)
+            foreach (CompilePreset preset in _specification.Presets)
             {
                 PresetTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                var btn = new HeadingButton
+                HeadingButton btn = new HeadingButton
                 {
                     HeadingText = preset.Name,
                     Text = preset.Description,
                     Dock = DockStyle.Top
                 };
-                var pre = preset;
+                CompilePreset pre = preset;
                 btn.Click += (s, e) => UsePreset(pre);
                 PresetTable.Controls.Add(btn);
             }
 
-            foreach (var profile in _buildProfileRegister.GetProfiles(_specification.Name))
+            foreach (BuildProfile profile in _buildProfileRegister.GetProfiles(_specification.Name))
             {
-                var btn = new Button
+                Button btn = new Button
                 {
                     Text = profile.Name,
                     Dock = DockStyle.Top,
@@ -186,16 +186,16 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         private void PopulateTabs()
         {
             pnlSteps.Controls.Clear();
-            foreach (var page in ToolTabs.TabPages.OfType<TabPage>().ToList())
+            foreach (TabPage page in ToolTabs.TabPages.OfType<TabPage>().ToList())
             {
                 if (page != tabSteps) ToolTabs.TabPages.Remove(page);
             }
 
-            foreach (var tool in _specification.Tools.OrderBy(x => x.Order))
+            foreach (CompileTool tool in _specification.Tools.OrderBy(x => x.Order))
             {
                 if (!string.Equals(tool.Name, "Shared", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var cb = new CheckBox
+                    CheckBox cb = new CheckBox
                     {
                         Text = tool.Name,
                         Tag = tool,
@@ -204,12 +204,12 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                     pnlSteps.Controls.Add(cb);
                 }
 
-                var tab = new TabPage(tool.Name)
+                TabPage tab = new TabPage(tool.Name)
                 {
                     Tag = tool
                 };
 
-                var bpp = new BuildParametersPanel
+                BuildParametersPanel bpp = new BuildParametersPanel
                 {
                     Dock = DockStyle.Fill,
                     Tool = tool
@@ -246,8 +246,8 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
         private void UpdateParameters(ProfileWrapper profile)
         {
-            var panels = ToolTabs.TabPages.OfType<TabPage>().SelectMany(x => x.Controls.OfType<BuildParametersPanel>()).ToList();
-            foreach (var panel in panels)
+            List<BuildParametersPanel> panels = ToolTabs.TabPages.OfType<TabPage>().SelectMany(x => x.Controls.OfType<BuildParametersPanel>()).ToList();
+            foreach (BuildParametersPanel panel in panels)
             {
                 if (string.Equals(panel.Tool.Name, "Shared", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -262,13 +262,13 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
         private string PromptName(string name)
         {
-            var qf = new QuickForm(ProfileName) {UseShortcutKeys = true};
+            QuickForm qf = new QuickForm(ProfileName) {UseShortcutKeys = true};
             qf.TextBox("ProfileName", ProfileName, name);
             qf.OkCancel(OK, Cancel);
 
             if (qf.ShowDialog() != DialogResult.OK) return null;
 
-            var n = qf.String("ProfileName");
+            string n = qf.String("ProfileName");
             return String.IsNullOrEmpty(n) ? null : n;
         }
 
@@ -277,7 +277,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             if (!(cmbProfile.SelectedItem is ProfileWrapper profile)) return;
             if (profile.Profile == null) return;
 
-            var name = PromptName(profile.GetName());
+            string name = PromptName(profile.GetName());
             if (String.IsNullOrEmpty(name)) return;
 
             profile.Profile.Name = name;
@@ -308,10 +308,10 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
         private void SaveProfileAsButtonClicked(object sender, EventArgs e)
         {
-            var name = PromptName("");
+            string name = PromptName("");
             if (String.IsNullOrEmpty(name)) return;
-            
-            var profile = new BuildProfile
+
+            BuildProfile profile = new BuildProfile
             {
                 Name = name,
                 SpecificationName = _specification.Name
@@ -325,21 +325,21 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
         private void SetArgumentsFromInterface(BuildProfile profile)
         {
-            var args = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (var panel in ToolTabs.TabPages.OfType<TabPage>().SelectMany(x => x.Controls.OfType<BuildParametersPanel>()))
+            Dictionary<string, string> args = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (BuildParametersPanel panel in ToolTabs.TabPages.OfType<TabPage>().SelectMany(x => x.Controls.OfType<BuildParametersPanel>()))
             {
                 args.Add(panel.Tool.Name, panel.Arguments);
             }
 
-            var shouldRun = new List<string>{ "Shared" };
-            foreach (var step in pnlSteps.Controls.OfType<CheckBox>())
+            List<string> shouldRun = new List<string>{ "Shared" };
+            foreach (CheckBox step in pnlSteps.Controls.OfType<CheckBox>())
             {
                 if (step.Checked && step.Tag is CompileTool t) shouldRun.Add(t.Name);
             }
 
             profile.Arguments.Clear();
 
-            foreach (var kv in args)
+            foreach (KeyValuePair<string, string> kv in args)
             {
                 if (shouldRun.Contains(kv.Key))
                 {

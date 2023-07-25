@@ -61,7 +61,7 @@ namespace CBRE.Providers.Texture.Generic
             if (!textures.Any()) return Array.Empty<TextureItem>();
 
             List<TextureItem> list = new List<TextureItem>();
-            foreach (var name in textures)
+            foreach (string name in textures)
             {
                 IFile entry = _file.TraversePath(name);
                 if (entry == null || !entry.Exists) continue;

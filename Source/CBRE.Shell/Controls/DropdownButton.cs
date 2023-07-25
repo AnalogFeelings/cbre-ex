@@ -15,7 +15,7 @@ namespace CBRE.Shell.Controls
             base.OnMouseDown(mevent);
             if (Menu == null || mevent.Button != MouseButtons.Left) return;
 
-            var menuLocation = new Point(0, Height);
+            Point menuLocation = new Point(0, Height);
             Menu.Show(this, menuLocation);
         }
 
@@ -25,10 +25,10 @@ namespace CBRE.Shell.Controls
 
             if (Menu == null) return;
 
-            var arrowX = ClientRectangle.Width - 14;
-            var arrowY = ClientRectangle.Height / 2 - 1;
+            int arrowX = ClientRectangle.Width - 14;
+            int arrowY = ClientRectangle.Height / 2 - 1;
 
-            var brush = Enabled ? SystemBrushes.ControlText : SystemBrushes.ButtonShadow;
+            Brush brush = Enabled ? SystemBrushes.ControlText : SystemBrushes.ButtonShadow;
             Point[] arrows = { new Point(arrowX, arrowY), new Point(arrowX + 7, arrowY), new Point(arrowX + 3, arrowY + 4) };
             pevent.Graphics.FillPolygon(brush, arrows);
         }

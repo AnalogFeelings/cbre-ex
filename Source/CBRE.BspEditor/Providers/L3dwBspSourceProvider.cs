@@ -564,7 +564,7 @@ namespace CBRE.BspEditor.Providers
 
         private IEnumerable<Vector3[]> GetTriangles(Face face)
         {
-            for (var i = 1; i < face.Vertices.Count - 1; i++)
+            for (int i = 1; i < face.Vertices.Count - 1; i++)
             {
                 yield return new[]
                 {
@@ -583,7 +583,7 @@ namespace CBRE.BspEditor.Providers
 
             Vector3 center = face.Vertices.Aggregate(Vector3.Zero, (sum, v) => sum + v) / face.Vertices.Count;
             Vector3 offset = center - face.Plane.Normal * 5;
-            for (var i = 0; i < face.Vertices.Count; i++)
+            for (int i = 0; i < face.Vertices.Count; i++)
             {
                 Vector3 v1 = face.Vertices[i];
                 Vector3 v2 = face.Vertices[(i + 1) % face.Vertices.Count];

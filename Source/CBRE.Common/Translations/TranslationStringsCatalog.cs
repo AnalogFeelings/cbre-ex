@@ -41,10 +41,10 @@ namespace CBRE.Common.Translations
         public string GetString(string language, string key)
         {
             // Basic loop prevention
-            for (var i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (!Languages.ContainsKey(language)) break;
-                var lang = Languages[language];
+                Language lang = Languages[language];
                 if (lang.Collection.Strings.ContainsKey(key)) return lang.Collection.Strings[key];
                 if (String.IsNullOrWhiteSpace(lang.Inherit)) break;
                 language = lang.Inherit;
@@ -55,10 +55,10 @@ namespace CBRE.Common.Translations
         public string GetSetting(string language, string key)
         {
             // Basic loop prevention
-            for (var i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (!Languages.ContainsKey(language)) break;
-                var lang = Languages[language];
+                Language lang = Languages[language];
                 if (lang.Collection.Settings.ContainsKey(key)) return lang.Collection.Settings[key];
                 if (String.IsNullOrWhiteSpace(lang.Inherit)) break;
                 language = lang.Inherit;
@@ -68,17 +68,17 @@ namespace CBRE.Common.Translations
 
         public void Load(Type type)
         {
-            var loc = type.Assembly.Location ?? "";
+            string loc = type.Assembly.Location ?? "";
             if (_loaded.Contains(loc)) return;
             _loaded.Add(loc);
 
             // Load from the translations sub-directory of the assembly's directory first
             if (File.Exists(loc))
             {
-                var dir = Path.Combine(Path.GetDirectoryName(loc) ?? "", "Translations");
+                string dir = Path.Combine(Path.GetDirectoryName(loc) ?? "", "Translations");
                 if (Directory.Exists(dir))
                 {
-                    foreach (var file in Directory.GetFiles(dir, "*.json", SearchOption.TopDirectoryOnly))
+                    foreach (string file in Directory.GetFiles(dir, "*.json", SearchOption.TopDirectoryOnly))
                     {
                         LoadFile(file);
                     }
@@ -86,10 +86,10 @@ namespace CBRE.Common.Translations
             }
 
             // Override these values with translations from the appdata directory
-            var appdataTranslations = _appInfo?.GetApplicationSettingsFolder("Translations");
+            string appdataTranslations = _appInfo?.GetApplicationSettingsFolder("Translations");
             if (appdataTranslations != null && Directory.Exists(appdataTranslations))
             {
-                foreach (var file in Directory.GetFiles(appdataTranslations, "*.json", SearchOption.TopDirectoryOnly))
+                foreach (string file in Directory.GetFiles(appdataTranslations, "*.json", SearchOption.TopDirectoryOnly))
                 {
                     LoadFile(file);
                 }
@@ -98,7 +98,7 @@ namespace CBRE.Common.Translations
 
         private void LoadFile(string file)
         {
-            var data = LoadLanguageFromFile(file);
+            Language data = LoadLanguageFromFile(file);
             if (data == null) return;
 
             if (!Languages.ContainsKey(data.Code))
@@ -107,9 +107,9 @@ namespace CBRE.Common.Translations
                 return;
             }
 
-            var language = Languages[data.Code];
+            Language language = Languages[data.Code];
 
-            foreach (var kv in data.Collection.Settings)
+            foreach (KeyValuePair<string, string> kv in data.Collection.Settings)
             {
                 if (!String.IsNullOrWhiteSpace(kv.Value)) language.Collection.Settings[kv.Key] = kv.Value;
 #if DEBUG
@@ -120,7 +120,7 @@ namespace CBRE.Common.Translations
 #endif
             }
 
-            foreach (var kv in data.Collection.Strings)
+            foreach (KeyValuePair<string, string> kv in data.Collection.Strings)
             {
                 if (!String.IsNullOrWhiteSpace(kv.Value)) language.Collection.Strings[kv.Key] = kv.Value;
 #if DEBUG
@@ -136,42 +136,42 @@ namespace CBRE.Common.Translations
         {
             if (!File.Exists(file)) return null;
 
-            var text = File.ReadAllText(file, Encoding.UTF8);
-            var obj = JObject.Parse(text);
+            string text = File.ReadAllText(file, Encoding.UTF8);
+            JObject obj = JObject.Parse(text);
 
-            var meta = obj["@Meta"];
+            JToken meta = obj["@Meta"];
             if (meta == null) return null;
 
-            var lang = Convert.ToString(meta["Language"]);
+            string lang = Convert.ToString(meta["Language"]);
             if (String.IsNullOrWhiteSpace(lang)) return null;
 
-            var basePath = Convert.ToString(meta["Base"]) ?? "";
+            string basePath = Convert.ToString(meta["Base"]) ?? "";
             if (!String.IsNullOrWhiteSpace(basePath)) basePath += ".";
-            
-            var language = new Language(lang);
-            
-            var langDesc = Convert.ToString(meta["LanguageDescription"]);
+
+            Language language = new Language(lang);
+
+            string langDesc = Convert.ToString(meta["LanguageDescription"]);
             if (!string.IsNullOrWhiteSpace(langDesc) && string.IsNullOrWhiteSpace(language.Description)) language.Description = langDesc;
 
-            var inherit = Convert.ToString(meta["Inherit"]);
+            string inherit = Convert.ToString(meta["Inherit"]);
             if (!string.IsNullOrWhiteSpace(inherit) && string.IsNullOrWhiteSpace(language.Inherit)) language.Inherit = inherit;
 
-            var strings = obj.Descendants()
+            IEnumerable<JProperty> strings = obj.Descendants()
                 .OfType<JProperty>()
                 .Where(x => x.Path[0] != '@')
                 .Where(x => x.Value.Type == JTokenType.String);
 
-            foreach (var st in strings)
+            foreach (JProperty st in strings)
             {
                 language.Collection.Strings[basePath + FixedPath(st)] = st.Value?.ToString();
             }
 
             if (obj["@Settings"] is JObject settingsNode)
             {
-                var settings = settingsNode.Descendants()
+                IEnumerable<JProperty> settings = settingsNode.Descendants()
                     .OfType<JProperty>()
                     .Where(x => x.Value.Type == JTokenType.String);
-                foreach (var se in settings)
+                foreach (JProperty se in settings)
                 {
                     if (se.Name.StartsWith("@")) language.Collection.Settings[se.Name] = se.Value?.ToString();
                     else language.Collection.Settings[basePath + GetSettingPath(se)] = se.Value?.ToString();
@@ -183,12 +183,12 @@ namespace CBRE.Common.Translations
 
         private static string GetSettingPath(JToken token)
         {
-            var l = new List<string>();
+            List<string> l = new List<string>();
             while (token != null)
             {
                 if (token is JProperty)
                 {
-                    var name = ((JProperty) token).Name;
+                    string name = ((JProperty) token).Name;
                     if (name.StartsWith("@")) break;
                     l.Add(name);
                 }
@@ -200,8 +200,8 @@ namespace CBRE.Common.Translations
 
         private static string FixedPath(JToken tok)
         {
-            var l = new List<string>();
-            var par = tok;
+            List<string> l = new List<string>();
+            JToken par = tok;
             while (par != null)
             {
                 if (par is JProperty p) l.Add(p.Name);

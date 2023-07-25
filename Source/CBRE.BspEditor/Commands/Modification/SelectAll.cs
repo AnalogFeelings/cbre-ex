@@ -26,7 +26,7 @@ namespace CBRE.BspEditor.Commands.Modification
 
         protected override Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var op = new Select(document.Map.Root.FindAll().Where(x => x.Hierarchy.Parent != null));
+            Select op = new Select(document.Map.Root.FindAll().Where(x => x.Hierarchy.Parent != null));
             return MapDocumentOperation.Perform(document, op);
         }
     }

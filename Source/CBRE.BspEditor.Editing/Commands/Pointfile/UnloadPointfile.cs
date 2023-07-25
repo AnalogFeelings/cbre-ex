@@ -23,7 +23,7 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var pf = document.Map.Data.GetOne<Pointfile>();
+            Pointfile pf = document.Map.Data.GetOne<Pointfile>();
             if (pf == null) return;
 
             await MapDocumentOperation.Perform(document, new TrivialOperation(

@@ -24,7 +24,7 @@ namespace CBRE.BspEditor.Editing.History
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var stack = document.Map.Data.GetOne<HistoryStack>();
+            HistoryStack stack = document.Map.Data.GetOne<HistoryStack>();
             if (stack == null) return;
             if (stack.CanRedo()) await MapDocumentOperation.Perform(document, stack.RedoOperation());
         }

@@ -26,12 +26,12 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var list = new List<Problem>();
+            List<Problem> list = new List<Problem>();
 
-            var solids = document.Map.Root.Find(x => x is Solid).OfType<Solid>().Where(x => filter(x));
-            foreach (var solid in solids)
+            IEnumerable<Solid> solids = document.Map.Root.Find(x => x is Solid).OfType<Solid>().Where(x => filter(x));
+            foreach (Solid solid in solids)
             {
-                var perps = (
+                List<Face> perps = (
                     from face in solid.Faces
                     let normal = face.Texture.GetNormal()
                     where Math.Abs(Vector3.Dot(face.Plane.Normal, normal)) <= 0.0001
@@ -45,12 +45,12 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task Fix(MapDocument document, Problem problem)
         {
-            var edit = new Transaction();
+            Transaction edit = new Transaction();
 
-            var obj = problem.Objects[0];
-            foreach (var face in problem.ObjectData.OfType<Face>())
+            IMapObject obj = problem.Objects[0];
+            foreach (Face face in problem.ObjectData.OfType<Face>())
             {
-                var clone = (Face) face.Clone();
+                Face clone = (Face) face.Clone();
                 clone.Texture.AlignToNormal(face.Plane.Normal);
 
                 edit.Add(new RemoveMapObjectData(obj.ID, face));

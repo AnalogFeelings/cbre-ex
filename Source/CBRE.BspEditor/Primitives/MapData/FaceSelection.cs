@@ -64,8 +64,8 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public IMapElement Clone()
         {
-            var c = new FaceSelection();
-            foreach (var kv in _selectedFaces)
+            FaceSelection c = new FaceSelection();
+            foreach (KeyValuePair<IMapObject, HashSet<long>> kv in _selectedFaces)
             {
                 c._selectedFaces.Add(kv.Key, new HashSet<long>(kv.Value));
             }
@@ -79,11 +79,11 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("FaceSelection");
-            var strs = new List<string>();
-            foreach (var kv in _selectedFaces)
+            SerialisedObject so = new SerialisedObject("FaceSelection");
+            List<string> strs = new List<string>();
+            foreach (KeyValuePair<IMapObject, HashSet<long>> kv in _selectedFaces)
             {
-                foreach (var x in kv.Value)
+                foreach (long x in kv.Value)
                 {
                     strs.Add(Convert.ToString(kv.Key.ID, CultureInfo.InvariantCulture) + ":" + Convert.ToString(x, CultureInfo.InvariantCulture));
                 }

@@ -101,7 +101,7 @@ namespace CBRE.BspEditor.Editing.Components
 
         private Task CalculateStats()
         {
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
 
             if (doc == null)
             {
@@ -117,16 +117,16 @@ namespace CBRE.BspEditor.Editing.Components
                 });
             }
 
-            var all = doc.Map.Root.FindAll();
-            var solids = all.OfType<Solid>().ToList();
-            var faces = solids.SelectMany(x => x.Faces).ToList();
-            var entities = all.OfType<Entity>().ToList();
-            var numSolids = solids.Count;
-            var numFaces = faces.Count;
-            var numPointEnts = entities.Count(x => !x.Hierarchy.HasChildren);
-            var numSolidEnts = entities.Count(x => x.Hierarchy.HasChildren);
-            var uniqueTextures = new HashSet<string>(faces.Select(x => x.Texture.Name));
-            var numUniqueTextures = uniqueTextures.Count;
+            List<IMapObject> all = doc.Map.Root.FindAll();
+            List<Solid> solids = all.OfType<Solid>().ToList();
+            List<Primitives.MapObjectData.Face> faces = solids.SelectMany(x => x.Faces).ToList();
+            List<Entity> entities = all.OfType<Entity>().ToList();
+            int numSolids = solids.Count;
+            int numFaces = faces.Count;
+            int numPointEnts = entities.Count(x => !x.Hierarchy.HasChildren);
+            int numSolidEnts = entities.Count(x => x.Hierarchy.HasChildren);
+            HashSet<string> uniqueTextures = new HashSet<string>(faces.Select(x => x.Texture.Name));
+            int numUniqueTextures = uniqueTextures.Count;
 
             return this.InvokeLaterAsync(() =>
             {
@@ -138,26 +138,26 @@ namespace CBRE.BspEditor.Editing.Components
                 TextureMemoryValue.Text = CalculatingTextureMemoryUsage;
             }).ContinueWith(async _ =>
             {
-                var tc = await doc.Environment.GetTextureCollection();
-                var usedPackages = tc.Packages.Where(x => x.Textures.Overlaps(uniqueTextures));
+                Environment.TextureCollection tc = await doc.Environment.GetTextureCollection();
+                IEnumerable<CBRE.Providers.Texture.TexturePackage> usedPackages = tc.Packages.Where(x => x.Textures.Overlaps(uniqueTextures));
 
                 this.InvokeLater(() =>
                 {
                     TexturePackages.Items.Clear();
-                    foreach (var tp in usedPackages)
+                    foreach (CBRE.Providers.Texture.TexturePackage tp in usedPackages)
                     {
                         TexturePackages.Items.Add(tp);
                     }
                 });
 
                 long texUsage = 0;
-                foreach (var ut in uniqueTextures)
+                foreach (string ut in uniqueTextures)
                 {
-                    var tex = await tc.GetTextureItem(ut);
+                    CBRE.Providers.Texture.TextureItem tex = await tc.GetTextureItem(ut);
                     // todo BETA: Other engines: the texture size operation will need to be outsourced to the provider to properly calculate usage for non-24-bit textures
                     texUsage += tex.Width * tex.Height * 3; // 3 bytes per pixel
                 }
-                var textureMemoryMb = texUsage / (1024m * 1024m);
+                decimal textureMemoryMb = texUsage / (1024m * 1024m);
                 this.InvokeLater(() =>
                 {
                     TextureMemoryValue.Text = $@"{textureMemoryMb:0.00} MB";

@@ -20,10 +20,10 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var obj = document.Map.Root.FindByID(_id);
-            var data = obj?.Data.GetOne<EntityData>();
+            IMapObject obj = document.Map.Root.FindByID(_id);
+            EntityData data = obj?.Data.GetOne<EntityData>();
             if (data != null)
             {
                 _oldFlags = data.Flags;
@@ -36,10 +36,10 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Reverse(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var obj = document.Map.Root.FindByID(_id);
-            var data = obj?.Data.GetOne<EntityData>();
+            IMapObject obj = document.Map.Root.FindByID(_id);
+            EntityData data = obj?.Data.GetOne<EntityData>();
             if (data != null)
             {
                 data.Flags = _oldFlags;

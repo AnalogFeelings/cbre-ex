@@ -16,14 +16,14 @@ namespace CBRE.Editor.Update
 
         public UpdateReleaseDetails(string jsonString)
         {
-            var obj = JsonConvert.DeserializeObject(jsonString) as JArray;
+            JArray obj = JsonConvert.DeserializeObject(jsonString) as JArray;
             if (obj == null || obj.Count < 1) return;
 
-            var rel = obj[0] as JObject;
-            var assets = rel?.GetValue("assets") as JArray;
+            JObject rel = obj[0] as JObject;
+            JArray assets = rel?.GetValue("assets") as JArray;
             if (assets == null || assets.Count < 1) return;
 
-            var exeAsset = assets.FirstOrDefault(x => x is JObject o && o.GetValue("name").ToString().EndsWith(".exe")) as JObject;
+            JObject exeAsset = assets.FirstOrDefault(x => x is JObject o && o.GetValue("name").ToString().EndsWith(".exe")) as JObject;
             if (exeAsset == null) return;
 
             Tag = rel.GetValue("tag_name").ToString();

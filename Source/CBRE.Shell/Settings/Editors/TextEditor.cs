@@ -63,7 +63,7 @@ namespace CBRE.Shell.Settings.Editors
 
         private void BrowseDirectory()
         {
-            using (var bfd = new FolderBrowserDialog())
+            using (FolderBrowserDialog bfd = new FolderBrowserDialog())
             {
                 bfd.SelectedPath = Textbox.Text;
                 if (bfd.ShowDialog() == DialogResult.OK) Textbox.Text = bfd.SelectedPath;
@@ -72,7 +72,7 @@ namespace CBRE.Shell.Settings.Editors
 
         private void BrowseFile()
         {
-            using (var ofd = new OpenFileDialog())
+            using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.FileName = Textbox.Text;
                 if (ofd.ShowDialog() == DialogResult.OK) Textbox.Text = ofd.FileName;

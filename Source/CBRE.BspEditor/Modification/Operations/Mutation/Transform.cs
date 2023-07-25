@@ -29,11 +29,11 @@ namespace CBRE.BspEditor.Modification.Operations.Mutation
 
         public Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var objects = _idsToTransform.Select(x => document.Map.Root.FindByID(x)).Where(x => x != null).ToList();
+            List<IMapObject> objects = _idsToTransform.Select(x => document.Map.Root.FindByID(x)).Where(x => x != null).ToList();
 
-            foreach (var o in objects)
+            foreach (IMapObject o in objects)
             {
                 o.Transform(_matrix);
                 ch.UpdateRange(o.FindAll());
@@ -44,12 +44,12 @@ namespace CBRE.BspEditor.Modification.Operations.Mutation
 
         public Task<Change> Reverse(MapDocument document)
         {
-            if (!Matrix4x4.Invert(_matrix, out var inv)) throw new Exception("Unable to reverse this operation.");
-            var ch = new Change(document);
+            if (!Matrix4x4.Invert(_matrix, out Matrix4x4 inv)) throw new Exception("Unable to reverse this operation.");
+            Change ch = new Change(document);
 
-            var objects = _idsToTransform.Select(x => document.Map.Root.FindByID(x)).Where(x => x != null).ToList();
+            List<IMapObject> objects = _idsToTransform.Select(x => document.Map.Root.FindByID(x)).Where(x => x != null).ToList();
 
-            foreach (var o in objects)
+            foreach (IMapObject o in objects)
             {
                 o.Transform(inv);
                 ch.UpdateRange(o.FindAll());

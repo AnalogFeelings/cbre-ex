@@ -81,8 +81,8 @@ namespace CBRE.Rendering.Resources
             if (_inBuffer) return;
 
             // Cater for allocations that are larger than the buffer size
-            var vSize = Math.Max(_vertexBufferSize, vsize);
-            var iSize = Math.Max(_indexBufferSize, isize);
+            uint vSize = Math.Max(_vertexBufferSize, vsize);
+            uint iSize = Math.Max(_indexBufferSize, isize);
 
             _currentVertexBuffer = _device.ResourceFactory.CreateBuffer(new BufferDescription(vSize, BufferUsage.Dynamic | BufferUsage.VertexBuffer));
             _currentIndexBuffer = _device.ResourceFactory.CreateBuffer(new BufferDescription(iSize, BufferUsage.Dynamic | BufferUsage.IndexBuffer));
@@ -99,8 +99,8 @@ namespace CBRE.Rendering.Resources
             _device.Unmap(_currentVertexBuffer);
             _device.Unmap(_currentIndexBuffer);
 
-            var numInd = _currentIndirectArguments.Count;
-            var indSize = Unsafe.SizeOf<IndirectDrawIndexedArguments>();
+            int numInd = _currentIndirectArguments.Count;
+            int indSize = Unsafe.SizeOf<IndirectDrawIndexedArguments>();
 
             if (numInd == 0)
             {
@@ -116,29 +116,29 @@ namespace CBRE.Rendering.Resources
                 return;
             }
 
-            var bufferGroups = new List<BufferGroup>();
-            var indirectBuffer = new IndirectIndirectBuffer(_device, numInd * indSize);
+            List<BufferGroup> bufferGroups = new List<BufferGroup>();
+            IndirectIndirectBuffer indirectBuffer = new IndirectIndirectBuffer(_device, numInd * indSize);
             uint indirOffset = 0;
             foreach (var g in _currentIndirectArguments.GroupBy(x => new { x.Pipeline, x.Camera, x.HasTransparency, x.Binding }))
             {
                 if (g.Key.HasTransparency)
                 {
-                    foreach (var ia in g)
+                    foreach (IndirectArgument ia in g)
                     {
                         indirectBuffer.Update(indirOffset * indSize, ia.Arguments);
-                        var bg = new BufferGroup(ia.Pipeline, ia.Camera, ia.Location, ia.Binding, indirOffset, 1);
+                        BufferGroup bg = new BufferGroup(ia.Pipeline, ia.Camera, ia.Location, ia.Binding, indirOffset, 1);
                         bufferGroups.Add(bg);
                         indirOffset += 1;
                     }
                 }
                 else
                 {
-                    var indir = g.Select(x => x.Arguments).ToArray();
-                    var indirCount = (uint) indir.Length;
+                    IndirectDrawIndexedArguments[] indir = g.Select(x => x.Arguments).ToArray();
+                    uint indirCount = (uint) indir.Length;
 
                     indirectBuffer.Update(indirOffset * indSize, indir);
 
-                    var bg = new BufferGroup(g.Key.Pipeline, g.Key.Camera, g.Key.Binding, indirOffset, indirCount);
+                    BufferGroup bg = new BufferGroup(g.Key.Pipeline, g.Key.Camera, g.Key.Binding, indirOffset, indirCount);
                     bufferGroups.Add(bg);
 
                     indirOffset += indirCount;
@@ -163,20 +163,20 @@ namespace CBRE.Rendering.Resources
 
         public void Append<T>(IEnumerable<T> vertices, IEnumerable<uint> indices, IEnumerable<BufferGroup> groups) where T : struct
         {
-            var verts = vertices.ToArray();
-            var index = indices.ToArray();
+            T[] verts = vertices.ToArray();
+            uint[] index = indices.ToArray();
 
-            var structSize = Unsafe.SizeOf<T>();
+            int structSize = Unsafe.SizeOf<T>();
 
-            var vsize = (uint)(verts.Length * structSize);
-            var isize = (uint)index.Length * sizeof(uint);
+            uint vsize = (uint)(verts.Length * structSize);
+            uint isize = (uint)index.Length * sizeof(uint);
 
             AllocateBuffer(vsize, isize);
 
             CopyToBuffer(_currentVertexMap, _currentVertexOffset, verts, vsize);
             CopyToBuffer(_currentIndexMap, _currentIndexOffset, index, isize);
 
-            foreach (var bg in groups)
+            foreach (BufferGroup bg in groups)
             {
                 _currentIndirectArguments.Add(new IndirectArgument(
                     bg.Pipeline, bg.Camera, bg.HasTransparency, bg.Location, bg.Binding,
@@ -205,11 +205,11 @@ namespace CBRE.Rendering.Resources
 
         private void CopyToBuffer(MappedResource map, uint offset, Array data, uint size)
         {
-            var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             try
             {
-                var source = handle.AddrOfPinnedObject();
-                var destination = IntPtr.Add(map.Data, (int) offset);
+                IntPtr source = handle.AddrOfPinnedObject();
+                IntPtr destination = IntPtr.Add(map.Data, (int) offset);
                 CopyMemory(destination, source, size);
             }
             finally

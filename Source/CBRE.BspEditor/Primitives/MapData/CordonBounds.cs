@@ -23,8 +23,8 @@ namespace CBRE.BspEditor.Primitives.MapData
         public CordonBounds(SerialisedObject obj)
         {
             Enabled = obj.Get<bool>("Enabled");
-            var start = obj.Get<Vector3>("Start");
-            var end = obj.Get<Vector3>("End");
+            Vector3 start = obj.Get<Vector3>("Start");
+            Vector3 end = obj.Get<Vector3>("End");
             Box = new Box(start, end);
         }
 
@@ -52,7 +52,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("CordonBounds");
+            SerialisedObject so = new SerialisedObject("CordonBounds");
             so.Set("Enabled", Enabled);
             so.Set("Start", Box.Start);
             so.Set("End", Box.End);

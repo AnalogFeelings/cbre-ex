@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var dupes = document.Map.Root.FindAll()
+            List<Problem> dupes = document.Map.Root.FindAll()
                 .Where(x => filter(x))
                 .GroupBy(x => x.ID)
                 .Where(x => x.Count() > 1)
@@ -34,11 +34,11 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task Fix(MapDocument document, Problem problem)
         {
-            var edit = new Transaction();
+            Transaction edit = new Transaction();
 
-            foreach (var obj in problem.Objects)
+            foreach (IMapObject obj in problem.Objects)
             {
-                var copy = (IMapObject) obj.Copy(document.Map.NumberGenerator);
+                IMapObject copy = (IMapObject) obj.Copy(document.Map.NumberGenerator);
 
                 edit.Add(new Detatch(obj.Hierarchy.Parent.ID, obj));
                 edit.Add(new Attach(obj.Hierarchy.Parent.ID, copy));

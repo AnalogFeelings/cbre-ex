@@ -21,13 +21,13 @@ namespace CBRE.BspEditor.Primitives
 
         public IMapElement Deserialise(SerialisedObject obj)
         {
-            var elem = _imports.Select(x => x.Value).FirstOrDefault(x => x.IsSupported(obj))?.Deserialise(obj);
+            IMapElement elem = _imports.Select(x => x.Value).FirstOrDefault(x => x.IsSupported(obj))?.Deserialise(obj);
 
             if (elem is IMapObject mo)
             {
-                foreach (var so in obj.Children)
+                foreach (SerialisedObject so in obj.Children)
                 {
-                    var data = Deserialise(so);
+                    IMapElement data = Deserialise(so);
                     if (data is IMapObject o) o.Hierarchy.Parent = mo;
                     else if (data is IMapObjectData od) mo.Data.Add(od);
                 }

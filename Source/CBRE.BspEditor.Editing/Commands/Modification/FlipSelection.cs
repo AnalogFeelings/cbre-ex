@@ -31,17 +31,17 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var selBox = document.Selection.GetSelectionBoundingBox();
+            DataStructures.Geometric.Box selBox = document.Selection.GetSelectionBoundingBox();
 
-            var tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+            TransformationFlags tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
 
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            var tform = Matrix4x4.CreateTranslation(-selBox.Center)
+            Matrix4x4 tform = Matrix4x4.CreateTranslation(-selBox.Center)
                         * Matrix4x4.CreateScale(GetScale())
                         * Matrix4x4.CreateTranslation(selBox.Center);
 
-            var transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, document.Selection.GetSelectedParents());
+            BspEditor.Modification.Operations.Mutation.Transform transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, document.Selection.GetSelectedParents());
             transaction.Add(transformOperation);
 
             transaction.Add(new FlipFaces(document.Selection));
@@ -65,13 +65,13 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
             public Task<Change> Perform(MapDocument document)
             {
-                var ch = new Change(document);
+                Change ch = new Change(document);
 
-                var objects = _idsToTransform.Select(x => document.Map.Root.FindByID(x)).Where(x => x != null).ToList();
+                List<IMapObject> objects = _idsToTransform.Select(x => document.Map.Root.FindByID(x)).Where(x => x != null).ToList();
 
-                foreach (var o in objects)
+                foreach (IMapObject o in objects)
                 {
-                    foreach (var it in o.Data.OfType<Face>())
+                    foreach (Face it in o.Data.OfType<Face>())
                     {
                         it.Vertices.Flip();
                         ch.Update(o);

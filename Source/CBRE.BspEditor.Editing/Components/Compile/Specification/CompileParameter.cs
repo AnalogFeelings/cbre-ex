@@ -36,7 +36,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
             get
             {
                 if (!Options.Any()) return null;
-                var idx = Options.FindIndex(x => String.Equals(x, Value, StringComparison.InvariantCultureIgnoreCase));
+                int idx = Options.FindIndex(x => String.Equals(x, Value, StringComparison.InvariantCultureIgnoreCase));
                 return Options[idx < 0 || idx >= Options.Count ? 0 : idx];
             }
         }
@@ -45,7 +45,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
         {
             get
             {
-                var spl = (Value ?? "").Split(' ');
+                string[] spl = (Value ?? "").Split(' ');
                 float r, g, b;
                 if (spl.Length == 3 && float.TryParse(spl[0], out r) && float.TryParse(spl[1], out g) && float.TryParse(spl[2], out b))
                 {
@@ -63,7 +63,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public static CompileParameter Parse(SerialisedObject gs)
         {
-            var param = new CompileParameter
+            CompileParameter param = new CompileParameter
             {
                 Name = gs.Get("Name", ""),
                 Flag = gs.Get("Flag", ""),
@@ -84,7 +84,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
         public string GetDefaultArgumentString()
         {
             if (!Enabled) return "";
-            var arg = Flag;
+            string arg = Flag;
             if (!String.IsNullOrWhiteSpace(Value) && Type != CompileParameterType.Checkbox) arg += " " + Value;
             return arg;
         }

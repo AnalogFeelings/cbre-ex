@@ -29,7 +29,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var md = context.Get<MapDocument>("ActiveDocument");
+            MapDocument md = context.Get<MapDocument>("ActiveDocument");
             if (md == null) return;
 
             await Oy.Publish("Context:Add", new ContextInfo("BspEditor:TextureReplace"));

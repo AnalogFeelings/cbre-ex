@@ -69,11 +69,11 @@ namespace CBRE.Rendering.Overlay
             ImGui.SetCurrentContext(Context);
 
             ImGui.GetIO().Fonts.AddFontDefault();
-            
-            var arial = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
-            var arialbd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arialbd.ttf");
 
-            var cfg = new ImFontConfig
+            string arial = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
+            string arialbd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arialbd.ttf");
+
+            ImFontConfig cfg = new ImFontConfig
             {
                 FontDataOwnedByAtlas = 1,
                 OversampleH = 5,
@@ -110,7 +110,7 @@ namespace CBRE.Rendering.Overlay
                 BoldFont = null;
             }
 
-            var style = ImGui.GetStyle();
+            ImGuiStylePtr style = ImGui.GetStyle();
 
             style.WindowRounding = 0;
             style.WindowPadding = Vector2.Zero;

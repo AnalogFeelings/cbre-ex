@@ -30,10 +30,10 @@ namespace CBRE.BspEditor.Environment
 
         public IEnvironment GetEnvironment(string id)
         {
-            var env = _environments.FirstOrDefault(x => x.ID == id);
+            SerialisedEnvironment env = _environments.FirstOrDefault(x => x.ID == id);
             if (env == null) return null;
 
-            var fac = _factories.FirstOrDefault(x => x.Value.TypeName == env.Type);
+            Lazy<IEnvironmentFactory> fac = _factories.FirstOrDefault(x => x.Value.TypeName == env.Type);
             if (fac == null) return null;
 
             return fac.Value.Deserialise(env);

@@ -59,9 +59,9 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
             Oy.Subscribe<Batch>("Compile:Finished", async b =>
             {
-                var msg = b.Successful ? CompileCompletedSuccessfully : CompileFailed;
-                var col = b.Successful ? Color.Green : Color.Red;
-                var flowerbox = new string('*', msg.Length + 4);
+                string msg = b.Successful ? CompileCompletedSuccessfully : CompileFailed;
+                Color col = b.Successful ? Color.Green : Color.Red;
+                string flowerbox = new string('*', msg.Length + 4);
                 Append(col, $"{flowerbox}\r\n* {msg} *\r\n{flowerbox}\r\n");
             });
             
@@ -76,7 +76,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             _control.SuspendLayout();
 
             _control.Clear();
-            foreach (var output in _buffer)
+            foreach (Output output in _buffer)
             {
                 _control.Select(_control.TextLength, 0);
                 _control.SelectionColor = output.Color;

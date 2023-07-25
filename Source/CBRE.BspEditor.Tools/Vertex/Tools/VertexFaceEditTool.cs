@@ -52,7 +52,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         
         private void Poke(int num)
         {
-            foreach (var solidFace in _selectedFaces)
+            foreach (SolidFace solidFace in _selectedFaces)
             {
                 PokeFace(solidFace, num);
             }
@@ -61,7 +61,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         private void Bevel(int num)
         {
-            foreach (var solidFace in _selectedFaces)
+            foreach (SolidFace solidFace in _selectedFaces)
             {
                 BevelFace(solidFace, num);
             }
@@ -83,45 +83,45 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         private void PokeFace(SolidFace solidFace, int num)
         {
-            var face = solidFace.Face;
-            var solid = solidFace.Solid.Copy;
+            MutableFace face = solidFace.Face;
+            MutableSolid solid = solidFace.Solid.Copy;
 
             // Remove the face
             solid.Faces.Remove(face);
 
-            var center = face.Origin + face.Plane.Normal * num;
-            foreach (var edge in face.GetEdges())
+            Vector3 center = face.Origin + face.Plane.Normal * num;
+            foreach (Line edge in face.GetEdges())
             {
-                var v1 = face.Vertices.First(x => x.Position.EquivalentTo(edge.Start));
-                var v2 = face.Vertices.First(x => x.Position.EquivalentTo(edge.End));
-                var verts = new[] { v1.Position, v2.Position, center };
-                var f = new MutableFace(verts, face.Texture.Clone());
+                MutableVertex v1 = face.Vertices.First(x => x.Position.EquivalentTo(edge.Start));
+                MutableVertex v2 = face.Vertices.First(x => x.Position.EquivalentTo(edge.End));
+                Vector3[] verts = new[] { v1.Position, v2.Position, center };
+                MutableFace f = new MutableFace(verts, face.Texture.Clone());
                 solid.Faces.Add(f);
             }
         }
 
         private void BevelFace(SolidFace solidFace, int num)
         {
-            var face = solidFace.Face;
-            var solid = solidFace.Solid.Copy;
+            MutableFace face = solidFace.Face;
+            MutableSolid solid = solidFace.Solid.Copy;
 
             // Remember the original positions
-            var vertexPositions = face.Vertices.Select(x => x.Position).ToList();
+            List<Vector3> vertexPositions = face.Vertices.Select(x => x.Position).ToList();
 
             // Scale the face a bit and move it away by the bevel distance
-            var origin = face.Origin;
+            Vector3 origin = face.Origin;
             face.Transform(Matrix4x4.CreateScale(Vector3.One * 0.9f, origin));
             face.Transform(Matrix4x4.CreateTranslation(face.Plane.Normal * num));
 
-            var vertList = face.Vertices.ToList();
+            List<MutableVertex> vertList = face.Vertices.ToList();
 
             // Create a face for each new edge -> old edge
-            foreach (var edge in face.GetEdges())
+            foreach (Line edge in face.GetEdges())
             {
-                var startIndex = vertList.FindIndex(x => x.Position.EquivalentTo(edge.Start));
-                var endIndex = vertList.FindIndex(x => x.Position.EquivalentTo(edge.End));
-                var verts = new[] { vertexPositions[startIndex], vertexPositions[endIndex], edge.End, edge.Start };
-                var f = new MutableFace(verts, face.Texture.Clone());
+                int startIndex = vertList.FindIndex(x => x.Position.EquivalentTo(edge.Start));
+                int endIndex = vertList.FindIndex(x => x.Position.EquivalentTo(edge.End));
+                Vector3[] verts = new[] { vertexPositions[startIndex], vertexPositions[endIndex], edge.End, edge.Start };
+                MutableFace f = new MutableFace(verts, face.Texture.Clone());
                 solid.Faces.Add(f);
             }
         }
@@ -143,11 +143,11 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
             e.Handled = true;
 
             // First, get the ray that is cast from the clicked point along the viewport frustrum
-            var (start, end) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
-            var ray = new Line(start, end);
+            (Vector3 start, Vector3 end) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
+            Line ray = new Line(start, end);
 
             // Grab all the elements that intersect with the ray
-            var hits = Selection.Where(x => x.Copy.BoundingBox.IntersectsWith(ray));
+            IEnumerable<VertexSolid> hits = Selection.Where(x => x.Copy.BoundingBox.IntersectsWith(ray));
 
             // Sort the list of intersecting elements by distance from ray origin
             var clickedFace = hits
@@ -157,9 +157,9 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
                 .OrderBy(x => (x.Intersection.Value - ray.Start).Length())
                 .Select(x => x.Item)
                 .FirstOrDefault();
-            
 
-            var faces = new List<SolidFace>();
+
+            List<SolidFace> faces = new List<SolidFace>();
             if (clickedFace != null)
             {
                 if (KeyboardState.Shift) faces.AddRange(clickedFace.Solid.Copy.Faces.Select(x => new SolidFace(clickedFace.Solid, x)));
@@ -200,7 +200,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         {
             if (!solids.Any()) return;
 
-            foreach (var solid in solids)
+            foreach (VertexSolid solid in solids)
             {
                 solid.IsDirty = true;
             }
@@ -212,17 +212,17 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         {
             base.Render(document, builder, resourceCollector);
 
-            var verts = new List<VertexStandard>();
-            var indices = new List<int>();
-            var groups = new List<BufferGroup>();
+            List<VertexStandard> verts = new List<VertexStandard>();
+            List<int> indices = new List<int>();
+            List<BufferGroup> groups = new List<BufferGroup>();
 
-            var col = Vector4.One;
-            var tintCol = Color.FromArgb(128, Color.OrangeRed).ToVector4();
+            Vector4 col = Vector4.One;
+            Vector4 tintCol = Color.FromArgb(128, Color.OrangeRed).ToVector4();
 
-            foreach (var face in _selectedFaces)
+            foreach (SolidFace face in _selectedFaces)
             {
-                var vo = verts.Count;
-                var io = indices.Count;
+                int vo = verts.Count;
+                int io = indices.Count;
 
                 verts.AddRange(face.Face.Vertices.Select(x => new VertexStandard
                 {
@@ -232,7 +232,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
                     Flags = VertexFlags.FlatColour
                 }));
 
-                for (var i = 2; i < face.Face.Vertices.Count; i++)
+                for (int i = 2; i < face.Face.Vertices.Count; i++)
                 {
                     indices.Add(vo);
                     indices.Add(vo + i - 1);

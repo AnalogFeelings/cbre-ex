@@ -28,7 +28,7 @@ namespace CBRE.Shell.Registers
         public Task OnStartup()
         {
             // Register exported commands
-            foreach (var export in _importedCommands)
+            foreach (Lazy<ICommand> export in _importedCommands)
             {
                 Add(export.Value);
             }
@@ -50,7 +50,7 @@ namespace CBRE.Shell.Registers
         /// <returns>Task that will complete after the command runs</returns>
         private async Task Run(CommandMessage message)
         {
-            var cmd = Get(message.CommandID);
+            ICommand cmd = Get(message.CommandID);
             if (cmd != null && cmd.IsInContext(_context))
             {
                 await Oy.Publish("Command:Intercept", message);
@@ -68,7 +68,7 @@ namespace CBRE.Shell.Registers
 
         public IEnumerable<IActivator> SearchActivators(string keywords)
         {
-            var filter = (keywords ?? "").Trim().Split(' ');
+            string[] filter = (keywords ?? "").Trim().Split(' ');
             return _commands.Values.Where(x => filter.All(f => x.Name.IndexOf(f, StringComparison.Ordinal) >= 0)).Select(x => new CommandActivator(x));
         }
 

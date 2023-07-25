@@ -31,9 +31,9 @@ namespace CBRE.BspEditor.Tools.Draggable
         protected (Vector3, Vector3) GetWorldPositionAndScreenOffset(ICamera camera)
         {
             const int distance = 6;
-            var start = camera.Flatten(BoxState.Start);
-            var end = camera.Flatten(BoxState.End);
-            var mid = (start + end) / 2;
+            Vector3 start = camera.Flatten(BoxState.Start);
+            Vector3 end = camera.Flatten(BoxState.End);
+            Vector3 mid = (start + end) / 2;
             Vector3 center;
             Vector3 offset;
             switch (Handle)
@@ -100,8 +100,8 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         protected virtual Vector3 GetResizeOrigin(MapViewport viewport, OrthographicCamera camera, Vector3 position)
         {
-            var st = camera.Flatten(BoxState.Start);
-            var ed = camera.Flatten(BoxState.End);
+            Vector3 st = camera.Flatten(BoxState.Start);
+            Vector3 ed = camera.Flatten(BoxState.End);
             return (st + ed) / 2;
         }
 
@@ -122,9 +122,9 @@ namespace CBRE.BspEditor.Tools.Draggable
         public override bool CanDrag(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e, Vector3 position)
         {
             const int width = 8;
-            var pos = GetWorldPositionAndScreenOffset(viewport.Viewport.Camera);
-            var screenPosition = camera.WorldToScreen(pos.Item1) + pos.Item2;
-            var diff = Vector3.Abs(e.Location - screenPosition);
+            (Vector3, Vector3) pos = GetWorldPositionAndScreenOffset(viewport.Viewport.Camera);
+            Vector3 screenPosition = camera.WorldToScreen(pos.Item1) + pos.Item2;
+            Vector3 diff = Vector3.Abs(e.Location - screenPosition);
             return diff.X < width && diff.Y < width;
         }
 
@@ -142,16 +142,16 @@ namespace CBRE.BspEditor.Tools.Draggable
         {
             if (Handle == ResizeHandle.Center)
             {
-                var delta = position - lastPosition;
-                var newOrigin = MoveOrigin + delta;
-                var snapped = State.Tool.SnapIfNeeded(newOrigin.Value);
+                Vector3 delta = position - lastPosition;
+                Vector3? newOrigin = MoveOrigin + delta;
+                Vector3 snapped = State.Tool.SnapIfNeeded(newOrigin.Value);
                 BoxState.Move(camera, snapped - SnappedMoveOrigin.Value);
                 SnappedMoveOrigin = snapped;
                 MoveOrigin = newOrigin;
             }
             else
             {
-                var snapped = State.Tool.SnapIfNeeded(position);
+                Vector3 snapped = State.Tool.SnapIfNeeded(position);
                 BoxState.Resize(Handle, viewport, camera, snapped);
             }
             base.Drag(document, viewport, camera, e, lastPosition, position);
@@ -174,8 +174,8 @@ namespace CBRE.BspEditor.Tools.Draggable
         {
             if (State.State.Action != BoxAction.Drawn) return;
 
-            var (wpos, soff) = GetWorldPositionAndScreenOffset(camera);
-            var spos = camera.WorldToScreen(wpos) + soff;
+            (Vector3 wpos, Vector3 soff) = GetWorldPositionAndScreenOffset(camera);
+            Vector3 spos = camera.WorldToScreen(wpos) + soff;
 
             const int size = 4;
             

@@ -43,36 +43,36 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         public IEnumerable<IMapObject> Create(UniqueNumberGenerator generator, Box box, string texture, int roundDecimals)
         {
-            var numSides = (int) _numSides.GetValue();
+            int numSides = (int) _numSides.GetValue();
             if (numSides < 3) yield break;
 
             // Cylinders can be elliptical so use both major and minor rather than just the radius
             // NOTE: when a low number (< 10ish) of faces are selected this will cause the cylinder to not touch all the edges of the box.
-            var width = box.Width;
-            var length = box.Length;
-            var height = box.Height;
-            var major = width / 2;
-            var minor = length / 2;
-            var angle = 2 * (float) Math.PI / numSides;
+            float width = box.Width;
+            float length = box.Length;
+            float height = box.Height;
+            float major = width / 2;
+            float minor = length / 2;
+            float angle = 2 * (float) Math.PI / numSides;
 
             // Calculate the X and Y points for the ellipse
-            var points = new Vector3[numSides];
-            for (var i = 0; i < numSides; i++)
+            Vector3[] points = new Vector3[numSides];
+            for (int i = 0; i < numSides; i++)
             {
-                var a = i * angle;
-                var xval = box.Center.X + major * (float) Math.Cos(a);
-                var yval = box.Center.Y + minor * (float) Math.Sin(a);
-                var zval = box.Start.Z;
+                float a = i * angle;
+                float xval = box.Center.X + major * (float) Math.Cos(a);
+                float yval = box.Center.Y + minor * (float) Math.Sin(a);
+                float zval = box.Start.Z;
                 points[i] = new Vector3(xval, yval, zval).Round(roundDecimals);
             }
 
-            var faces = new List<Vector3[]>();
+            List<Vector3[]> faces = new List<Vector3[]>();
 
             // Add the vertical faces
-            var z = new Vector3(0, 0, height).Round(roundDecimals);
-            for (var i = 0; i < numSides; i++)
+            Vector3 z = new Vector3(0, 0, height).Round(roundDecimals);
+            for (int i = 0; i < numSides; i++)
             {
-                var next = (i + 1) % numSides;
+                int next = (i + 1) % numSides;
                 faces.Add(new[] {points[i], points[i] + z, points[next] + z, points[next]});
             }
 
@@ -81,12 +81,12 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
             faces.Add(points.Select(x => x + z).Reverse().ToArray());
 
             // Nothing new here, move along
-            var solid = new Solid(generator.Next("MapObject"));
+            Solid solid = new Solid(generator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
 
-            foreach (var arr in faces)
+            foreach (Vector3[] arr in faces)
             {
-                var face = new Face(generator.Next("Face"))
+                Face face = new Face(generator.Next("Face"))
                 {
                     Plane = new Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = texture }

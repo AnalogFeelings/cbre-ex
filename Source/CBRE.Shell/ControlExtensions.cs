@@ -27,7 +27,7 @@ namespace CBRE.Shell
         /// <returns>The task that will resolve once the delegate is complete</returns>
         public static async Task InvokeAsync(this Control control, Action action)
         {
-            var asr = control.BeginInvoke(action);
+            IAsyncResult asr = control.BeginInvoke(action);
             await Task.Factory.FromAsync(asr, control.EndInvoke);
         }
         
@@ -46,7 +46,7 @@ namespace CBRE.Shell
         public static Task InvokeLaterAsync(this Control control, Action action)
         {
             if (!control.IsHandleCreated) return Task.FromResult(0);
-            var tcs = new TaskCompletionSource<int>();
+            TaskCompletionSource<int> tcs = new TaskCompletionSource<int>();
             control.BeginInvoke((MethodInvoker)(() =>
             {
                 try

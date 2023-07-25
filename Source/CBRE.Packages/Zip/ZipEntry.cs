@@ -28,14 +28,14 @@ namespace CBRE.Packages.Zip
 
         private string GetName()
         {
-            var idx = Path.LastIndexOf('/');
+            int idx = Path.LastIndexOf('/');
             if (idx < 0) return Path;
             return Path.Substring(idx + 1);
         }
 
         private string GetParent()
         {
-            var idx = Path.LastIndexOf('/');
+            int idx = Path.LastIndexOf('/');
             if (idx < 0) return "";
             return Path.Substring(0, idx);
         }

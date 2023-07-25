@@ -23,13 +23,13 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
 
         public async Task Clear(MapDocument document)
         {
-            var tran = new Transaction();
+            Transaction tran = new Transaction();
 
             lock (_lock)
             {
                 if (_selectedSolids.Any())
                 {
-                    var toDeselect = _selectedSolids.ToList();
+                    List<VertexSolid> toDeselect = _selectedSolids.ToList();
                     tran.Add(new TrivialOperation(
                         d => toDeselect.ForEach(x => x.Real.Data.Remove(o => o is VertexHidden)),
                         c => c.UpdateRange(toDeselect.Select(x => x.Real))
@@ -45,14 +45,14 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
         public async Task Update(MapDocument document)
         {
             if (document == null) return;
-            
-            var tran = new Transaction();
+
+            Transaction tran = new Transaction();
 
             lock (_lock)
             {
-                var selection = new HashSet<Solid>(document.Selection.OfType<Solid>());
-                var toSelect = selection.Except(_selectedSolids.Select(x => x.Real)).ToList();
-                var toDeselect = _selectedSolids.Select(x => x.Real).Except(selection).ToList();
+                HashSet<Solid> selection = new HashSet<Solid>(document.Selection.OfType<Solid>());
+                List<Solid> toSelect = selection.Except(_selectedSolids.Select(x => x.Real)).ToList();
+                List<Solid> toDeselect = _selectedSolids.Select(x => x.Real).Except(selection).ToList();
 
                 if (toSelect.Any())
                 {
@@ -70,7 +70,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
                     ));
                 }
 
-                var rem = _selectedSolids.Where(s => toDeselect.Contains(s.Real));
+                IEnumerable<VertexSolid> rem = _selectedSolids.Where(s => toDeselect.Contains(s.Real));
                 _selectedSolids.ExceptWith(rem);
                 _selectedSolids.UnionWith(toSelect.Select(s => new VertexSolid(s)));
             }
@@ -80,11 +80,11 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
 
         public async Task Commit(MapDocument document)
         {
-            var tran = new Transaction();
+            Transaction tran = new Transaction();
 
             lock (_lock)
             {
-                foreach (var solid in _selectedSolids.Where(x => x.IsDirty))
+                foreach (VertexSolid solid in _selectedSolids.Where(x => x.IsDirty))
                 {
                     tran.Add(new RemoveMapObjectData(solid.Real.ID, solid.Real.Faces));
                     tran.Add(new AddMapObjectData(solid.Real.ID, solid.Copy.Faces.Select(x => x.ToFace(document.Map.NumberGenerator))));
@@ -102,7 +102,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
         {
             lock (_lock)
             {
-                foreach (var ss in _selectedSolids)
+                foreach (VertexSolid ss in _selectedSolids)
                 {
                     ss.Reset();
                 }

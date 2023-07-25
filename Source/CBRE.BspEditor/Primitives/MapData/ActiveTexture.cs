@@ -41,7 +41,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("ActiveTexture");
+            SerialisedObject so = new SerialisedObject("ActiveTexture");
             so.Set("Name", Name);
             return so;
         }

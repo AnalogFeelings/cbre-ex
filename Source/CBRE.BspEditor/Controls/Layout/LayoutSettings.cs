@@ -125,23 +125,23 @@ namespace CBRE.BspEditor.Controls.Layout
                 }
             };
             PresetPreviews = new Bitmap[Presets.Length];
-            var sides = new[] { 2, 2, 0, 0 };
-            var blocks = new[] { 12, 5, 4, 3 };
-            var gaps = new[] { 0, 2, 2, 1 };
-            for (var i = 0; i < Presets.Length; i++)
+            int[] sides = new[] { 2, 2, 0, 0 };
+            int[] blocks = new[] { 12, 5, 4, 3 };
+            int[] gaps = new[] { 0, 2, 2, 1 };
+            for (int i = 0; i < Presets.Length; i++)
             {
-                var ps = Presets[i];
-                var img = new Bitmap(16, 16);
-                using (var g = Graphics.FromImage(img))
+                TableSplitConfiguration ps = Presets[i];
+                Bitmap img = new Bitmap(16, 16);
+                using (Graphics g = Graphics.FromImage(img))
                 {
-                    var xi = ps.Columns - 1;
-                    var yi = ps.Rows - 1;
-                    foreach (var rec in ps.Rectangles)
+                    int xi = ps.Columns - 1;
+                    int yi = ps.Rows - 1;
+                    foreach (Rectangle rec in ps.Rectangles)
                     {
-                        var x = sides[xi] + blocks[xi] * rec.X + gaps[xi] * rec.X;
-                        var y = sides[yi] + blocks[yi] * rec.Y + gaps[yi] * rec.Y;
-                        var w = blocks[xi] * rec.Width + gaps[xi] * (rec.Width - 1);
-                        var h = blocks[yi] * rec.Height + gaps[yi] * (rec.Height - 1);
+                        int x = sides[xi] + blocks[xi] * rec.X + gaps[xi] * rec.X;
+                        int y = sides[yi] + blocks[yi] * rec.Y + gaps[yi] * rec.Y;
+                        int w = blocks[xi] * rec.Width + gaps[xi] * (rec.Width - 1);
+                        int h = blocks[yi] * rec.Height + gaps[yi] * (rec.Height - 1);
                         g.FillRectangle(Brushes.Black, x, y, w, h);
                     }
                 }
@@ -151,11 +151,11 @@ namespace CBRE.BspEditor.Controls.Layout
 
         private void LoadPreviews()
         {
-            for (var i = 0; i < Presets.Length; i++)
+            for (int i = 0; i < Presets.Length; i++)
             {
-                var preset = Presets[i];
-                var preview = PresetPreviews[i];
-                var button = new Button
+                TableSplitConfiguration preset = Presets[i];
+                Bitmap preview = PresetPreviews[i];
+                Button button = new Button
                 {
                     Width = 24,
                     Height = 24,
@@ -212,7 +212,7 @@ namespace CBRE.BspEditor.Controls.Layout
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -256,7 +256,7 @@ namespace CBRE.BspEditor.Controls.Layout
 
         private void PanelMouseDown(object sender, MouseEventArgs e)
         {
-            var pos = TableLayout.GetPositionFromControl((Control)sender);
+            TableLayoutPanelCellPosition pos = TableLayout.GetPositionFromControl((Control)sender);
             _dragStart = new Point(pos.Column, pos.Row);
             ColourPanels(_dragStart);
 
@@ -267,8 +267,8 @@ namespace CBRE.BspEditor.Controls.Layout
 
         private void PanelDragEnter(object sender, DragEventArgs e)
         {
-            var pos = TableLayout.GetPositionFromControl((Control)sender);
-            var point = new Point(pos.Column, pos.Row);
+            TableLayoutPanelCellPosition pos = TableLayout.GetPositionFromControl((Control)sender);
+            Point point = new Point(pos.Column, pos.Row);
             if (e.Data.GetDataPresent(typeof(Point))) e.Effect = DragDropEffects.Link;
             ColourPanels(point);
         }
@@ -280,16 +280,16 @@ namespace CBRE.BspEditor.Controls.Layout
 
         private void PanelDragDrop(object sender, DragEventArgs e)
         {
-            var startPoint = (Point) e.Data.GetData(typeof (Point));
-            var pos = TableLayout.GetPositionFromControl((Control)sender);
-            var endPoint = new Point(pos.Column, pos.Row);
+            Point startPoint = (Point) e.Data.GetData(typeof (Point));
+            TableLayoutPanelCellPosition pos = TableLayout.GetPositionFromControl((Control)sender);
+            Point endPoint = new Point(pos.Column, pos.Row);
 
-            var minx = Math.Min(startPoint.X, endPoint.X);
-            var maxx = Math.Max(startPoint.X, endPoint.X);
-            var miny = Math.Min(startPoint.Y, endPoint.Y);
-            var maxy = Math.Max(startPoint.Y, endPoint.Y);
+            int minx = Math.Min(startPoint.X, endPoint.X);
+            int maxx = Math.Max(startPoint.X, endPoint.X);
+            int miny = Math.Min(startPoint.Y, endPoint.Y);
+            int maxy = Math.Max(startPoint.Y, endPoint.Y);
 
-            var rectangle = new Rectangle(minx, miny, maxx - minx + 1, maxy - miny + 1);
+            Rectangle rectangle = new Rectangle(minx, miny, maxx - minx + 1, maxy - miny + 1);
             SelectedConfiguration.Configuration.Rectangles.RemoveAll(x => x.IntersectsWith(rectangle));
             SelectedConfiguration.Configuration.Rectangles.Add(rectangle);
             UpdateTableLayout();
@@ -302,16 +302,16 @@ namespace CBRE.BspEditor.Controls.Layout
             foreach (Control control in TableLayout.Controls) control.BackColor = Color.Black;
             if (point.X == _dragStart.X && point.Y == _dragStart.Y)
             {
-                var ctrl = TableLayout.GetControlFromPosition(point.X, point.Y);
+                Control ctrl = TableLayout.GetControlFromPosition(point.X, point.Y);
                 if (ctrl != null) ctrl.BackColor = Color.Green;
             }
             else
             {
-                for (var i = Math.Min(point.X, _dragStart.X); i <= Math.Max(point.X, _dragStart.X); i++)
+                for (int i = Math.Min(point.X, _dragStart.X); i <= Math.Max(point.X, _dragStart.X); i++)
                 {
-                    for (var j = Math.Min(point.Y, _dragStart.Y); j <= Math.Max(point.Y, _dragStart.Y); j++)
+                    for (int j = Math.Min(point.Y, _dragStart.Y); j <= Math.Max(point.Y, _dragStart.Y); j++)
                     {
-                        var ctrl = TableLayout.GetControlFromPosition(i, j);
+                        Control ctrl = TableLayout.GetControlFromPosition(i, j);
                         if (ctrl != null) ctrl.BackColor = Color.Blue;
                     }
                 }
@@ -326,18 +326,18 @@ namespace CBRE.BspEditor.Controls.Layout
 
             TableLayout.ColumnCount = (int)Columns.Value;
             TableLayout.ColumnStyles.Clear();
-            for (var i = 0; i < TableLayout.ColumnCount; i++) TableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / TableLayout.ColumnCount));
+            for (int i = 0; i < TableLayout.ColumnCount; i++) TableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / TableLayout.ColumnCount));
 
             TableLayout.RowCount = (int)Rows.Value;
             TableLayout.RowStyles.Clear();
-            for (var i = 0; i < TableLayout.RowCount; i++) TableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / TableLayout.RowCount));
+            for (int i = 0; i < TableLayout.RowCount; i++) TableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / TableLayout.RowCount));
 
             foreach (Control panel in TableLayout.Controls) UnregisterPanel(panel);
             TableLayout.Controls.Clear();
 
-            foreach (var rec in SelectedConfiguration.Configuration.Rectangles)
+            foreach (Rectangle rec in SelectedConfiguration.Configuration.Rectangles)
             {
-                var panel = new Panel { BackColor = Color.Black, Dock = DockStyle.Fill };
+                Panel panel = new Panel { BackColor = Color.Black, Dock = DockStyle.Fill };
                 TableLayout.Controls.Add(panel, rec.X, rec.Y);
                 TableLayout.SetColumnSpan(panel, rec.Width);
                 TableLayout.SetRowSpan(panel, rec.Height);
@@ -349,27 +349,27 @@ namespace CBRE.BspEditor.Controls.Layout
 
         private void FixRectangles(TableSplitConfiguration configuration)
         {
-            var cells = new bool[configuration.Rows, configuration.Columns];
-            var list = new List<Rectangle>(configuration.Rectangles);
+            bool[,] cells = new bool[configuration.Rows, configuration.Columns];
+            List<Rectangle> list = new List<Rectangle>(configuration.Rectangles);
             configuration.Rectangles.RemoveAll(x => list.Where(y => y != x).Any(y => y.IntersectsWith(x)));
-            foreach (var r in configuration.Rectangles.ToList())
+            foreach (Rectangle r in configuration.Rectangles.ToList())
             {
                 if (r.X < 0 || r.X + r.Width > configuration.Columns || r.Y < 0 || r.Y + r.Height > configuration.Rows)
                 {
                     configuration.Rectangles.Remove(r);
                     continue;
                 }
-                for (var i = r.X; i < r.X + r.Width; i++)
+                for (int i = r.X; i < r.X + r.Width; i++)
                 {
-                    for (var j = r.Y; j < r.Y + r.Height; j++)
+                    for (int j = r.Y; j < r.Y + r.Height; j++)
                     {
                         cells[j, i] = true;
                     }
                 }
             }
-            for (var i = 0; i < cells.GetLength(0); i++)
+            for (int i = 0; i < cells.GetLength(0); i++)
             {
-                for (var j = 0; j < cells.GetLength(1); j++)
+                for (int j = 0; j < cells.GetLength(1); j++)
                 {
                     if (!cells[i,j]) configuration.Rectangles.Add(new Rectangle(j, i, 1, 1));
                 }

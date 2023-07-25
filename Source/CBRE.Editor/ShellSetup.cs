@@ -33,7 +33,7 @@ namespace CBRE.Editor
                 _shell.Icon = Resources.CBRE;
                 _shell.Text = string.Format(Title, Version);
 
-                var prop = _shell.GetType().GetProperty("Title");
+                PropertyInfo prop = _shell.GetType().GetProperty("Title");
                 if (prop != null)
                 {
                     prop.SetValue(_shell, Title);

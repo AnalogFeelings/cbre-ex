@@ -28,16 +28,16 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         public IEnumerable<IMapObject> Create(UniqueNumberGenerator generator, Box box, string texture, int roundDecimals)
         {
-            var solid = new Solid(generator.Next("MapObject"));
+            Solid solid = new Solid(generator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
 
             // The lower Z plane will be base
-            var c1 = new Vector3(box.Start.X, box.Start.Y, box.Start.Z).Round(roundDecimals);
-            var c2 = new Vector3(box.End.X, box.Start.Y, box.Start.Z).Round(roundDecimals);
-            var c3 = new Vector3(box.End.X, box.End.Y, box.Start.Z).Round(roundDecimals);
-            var c4 = new Vector3(box.Start.X, box.End.Y, box.Start.Z).Round(roundDecimals);
-            var c5 = new Vector3(box.Center.X, box.Center.Y, box.End.Z).Round(roundDecimals);
-            var faces = new[]
+            Vector3 c1 = new Vector3(box.Start.X, box.Start.Y, box.Start.Z).Round(roundDecimals);
+            Vector3 c2 = new Vector3(box.End.X, box.Start.Y, box.Start.Z).Round(roundDecimals);
+            Vector3 c3 = new Vector3(box.End.X, box.End.Y, box.Start.Z).Round(roundDecimals);
+            Vector3 c4 = new Vector3(box.Start.X, box.End.Y, box.Start.Z).Round(roundDecimals);
+            Vector3 c5 = new Vector3(box.Center.X, box.Center.Y, box.End.Z).Round(roundDecimals);
+            Vector3[][] faces = new[]
                             {
                                 new[] { c1, c2, c3, c4 },
                                 new[] { c2, c1, c5 },
@@ -45,9 +45,9 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
                                 new[] { c4, c3, c5 },
                                 new[] { c1, c4, c5 }
                             };
-            foreach (var arr in faces)
+            foreach (Vector3[] arr in faces)
             {
-                var face = new Face(generator.Next("Face"))
+                Face face = new Face(generator.Next("Face"))
                 {
                     Plane = new Plane(arr[0], arr[1], arr[2]),
                     Texture = {Name = texture }

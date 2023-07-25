@@ -72,12 +72,12 @@ namespace CBRE.QuickForms
             {
                 if (e.KeyCode == Keys.Enter)
                 {
-                    var ok = Controls.OfType<Button>().FirstOrDefault(x => x.DialogResult == DialogResult.OK || x.DialogResult == DialogResult.Yes);
+                    Button ok = Controls.OfType<Button>().FirstOrDefault(x => x.DialogResult == DialogResult.OK || x.DialogResult == DialogResult.Yes);
                     ok?.PerformClick();
                 }
                 else if (e.KeyCode == Keys.Escape)
                 {
-                    var cancel = Controls.OfType<Button>().FirstOrDefault(x => x.DialogResult == DialogResult.Cancel || x.DialogResult == DialogResult.No);
+                    Button cancel = Controls.OfType<Button>().FirstOrDefault(x => x.DialogResult == DialogResult.Cancel || x.DialogResult == DialogResult.No);
                     cancel?.PerformClick();
                 }
             }
@@ -86,9 +86,9 @@ namespace CBRE.QuickForms
 		
 		protected override void OnLoad(EventArgs e)
 		{
-		    var ps = _flpLayout.GetPreferredSize(new Size(ClientSize.Width, 100000));
+            Size ps = _flpLayout.GetPreferredSize(new Size(ClientSize.Width, 100000));
             ClientSize = new Size(ClientSize.Width, ps.Height + 10);
-		    var nonlabel = Controls.OfType<Control>().FirstOrDefault(x => !(x is Label));
+            Control nonlabel = Controls.OfType<Control>().FirstOrDefault(x => !(x is Label));
 		    nonlabel?.Focus();
 		    base.OnLoad(e);
 		}
@@ -293,7 +293,7 @@ namespace CBRE.QuickForms
         /// <returns>The string value</returns>
 	    public string String(string name)
 		{
-			var c = GetItem(name);
+            QuickFormItem c = GetItem(name);
 			if (c != null) return c.Text;
 			throw new Exception("Control " + name + " not found!");
 		}
@@ -305,7 +305,7 @@ namespace CBRE.QuickForms
         /// <returns>The decimal value</returns>
 		public decimal Decimal(string name)
 		{
-			var c = GetItem(name);
+            QuickFormItem c = GetItem(name);
 			if (c != null) return (decimal) c.Value;
 			throw new Exception("Control " + name + " not found!");
 		}
@@ -317,7 +317,7 @@ namespace CBRE.QuickForms
         /// <returns>The boolean value</returns>
 		public bool Bool(string name)
 		{
-			var c = GetItem(name);
+            QuickFormItem c = GetItem(name);
 			if (c != null) return (bool) c.Value;
 			throw new Exception("Control " + name + " not found!");
 		}
@@ -329,7 +329,7 @@ namespace CBRE.QuickForms
         /// <returns>The object</returns>
         public object Object(string name)
         {
-            var c = GetItem(name);
+            QuickFormItem c = GetItem(name);
             if (c != null) return c.Value;
             throw new Exception("Control " + name + " not found!");
         }

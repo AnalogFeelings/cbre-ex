@@ -32,10 +32,10 @@
 
             if (parameters == null) return;
 
-            foreach (var prop in parameters.GetType().GetProperties())
+            foreach (System.Reflection.PropertyInfo prop in parameters.GetType().GetProperties())
             {
-                var name = prop.Name;
-                var val = prop.GetValue(parameters);
+                string name = prop.Name;
+                object val = prop.GetValue(parameters);
                 Parameters.Add(name, val);
             }
         }

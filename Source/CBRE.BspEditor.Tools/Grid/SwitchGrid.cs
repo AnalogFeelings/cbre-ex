@@ -36,14 +36,14 @@ namespace CBRE.BspEditor.Tools.Grid
             {
                 if (!_grids.Any()) return;
 
-                var current = doc.Map.Data.GetOne<GridData>()?.Grid;
-                var idx = current == null ? -1 : Array.FindIndex(_grids, x => x.IsInstance(current));
+                IGrid current = doc.Map.Data.GetOne<GridData>()?.Grid;
+                int idx = current == null ? -1 : Array.FindIndex(_grids, x => x.IsInstance(current));
                 idx = (idx + 1) % _grids.Length;
-                
-                var grid = await _grids[idx].Create(doc.Environment);
 
-                var gd = new GridData(grid);
-                var operation = new TrivialOperation(x => doc.Map.Data.Replace(gd), x => x.Update(gd));
+                IGrid grid = await _grids[idx].Create(doc.Environment);
+
+                GridData gd = new GridData(grid);
+                TrivialOperation operation = new TrivialOperation(x => doc.Map.Data.Replace(gd), x => x.Update(gd));
 
                 await MapDocumentOperation.Perform(doc, operation);
             }

@@ -20,8 +20,8 @@ namespace CBRE.BspEditor.Primitives
         {
             lock (_ids)
             {
-                var current = _ids.ContainsKey(type) ? _ids[type] : 0;
-                var next = current + 1;
+                long current = _ids.ContainsKey(type) ? _ids[type] : 0;
+                long next = current + 1;
                 _ids[type] = next;
                 return next;
             }
@@ -33,7 +33,7 @@ namespace CBRE.BspEditor.Primitives
 
             lock (_ids)
             {
-                var current = _ids.ContainsKey(type) ? _ids[type] : 0;
+                long current = _ids.ContainsKey(type) ? _ids[type] : 0;
                 if (id > current) _ids[type] = id;
             }
         }

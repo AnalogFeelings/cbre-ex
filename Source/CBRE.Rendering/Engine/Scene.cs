@@ -32,7 +32,7 @@ namespace CBRE.Rendering.Engine
         public void Update(long frame)
         {
             // We want to be able to update while modifying, if new items don't get the update that's ok
-            for (var u = _updateables.First; u != null; u = u.Next)
+            for (LinkedListNode<IUpdateable> u = _updateables.First; u != null; u = u.Next)
             {
                 u.Value.Update(frame);
             }
@@ -41,7 +41,7 @@ namespace CBRE.Rendering.Engine
         public IEnumerable<IRenderable> GetRenderables(IPipeline pipeline, IViewport target)
         {
             // Since we only addlast/remove from the linked list, we should be able to iterate over it even though it might change in a different thread
-            for (var r = _renderables.First; r != null; r = r?.Next)
+            for (LinkedListNode<IRenderable> r = _renderables.First; r != null; r = r?.Next)
             {
                 if (r.Value.ShouldRender(pipeline, target)) yield return r.Value;
             }
@@ -49,7 +49,7 @@ namespace CBRE.Rendering.Engine
 
         public IEnumerable<IOverlayRenderable> GetOverlayRenderables()
         {
-            for (var r = _overlayRenderables.First; r != null; r = r?.Next)
+            for (LinkedListNode<IOverlayRenderable> r = _overlayRenderables.First; r != null; r = r?.Next)
             {
                 yield return r.Value;
             }

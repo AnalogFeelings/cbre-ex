@@ -85,12 +85,12 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         private Solid MakeSolid(UniqueNumberGenerator generator, IEnumerable<Vector3[]> faces, string texture, Color col)
         {
-            var solid = new Solid(generator.Next("MapObject"));
+            Solid solid = new Solid(generator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
 
-            foreach (var arr in faces)
+            foreach (Vector3[] arr in faces)
             {
-                var face = new Face(generator.Next("Face"))
+                Face face = new Face(generator.Next("Face"))
                 {
                     Plane = new Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = texture}
@@ -107,67 +107,67 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
         {
             roundDecimals = 2; // don't support rounding
 
-            var crossSides = (int)_crossSides.GetValue();
+            int crossSides = (int)_crossSides.GetValue();
             if (crossSides < 3) yield break;
 
-            var crossWidth = (float) _crossRadius.GetValue() * 2;
+            float crossWidth = (float) _crossRadius.GetValue() * 2;
             if (crossWidth < 1) yield break;
 
-            var crossMakeHollow = _crossMakeHollow.GetValue();
-            var crossArc = !crossMakeHollow ? 360 : (float)_crossArc.GetValue();
+            bool crossMakeHollow = _crossMakeHollow.GetValue();
+            float crossArc = !crossMakeHollow ? 360 : (float)_crossArc.GetValue();
             if (crossArc < 1) yield break;
 
-            var crossStartAngle = (float)_crossStartAngle.GetValue();
+            float crossStartAngle = (float)_crossStartAngle.GetValue();
             if (crossStartAngle < 0 || crossStartAngle > 359) yield break;
 
-            var crossWallWidth = (float) _crossWallWidth.GetValue();
+            float crossWallWidth = (float) _crossWallWidth.GetValue();
             if (crossWallWidth < 1) yield break;
 
-            var ringSides = (int)_ringSides.GetValue();
+            int ringSides = (int)_ringSides.GetValue();
             if (ringSides < 3) yield break;
 
-            var ringArc = (float)_ringArc.GetValue();
+            float ringArc = (float)_ringArc.GetValue();
             if (ringArc < 1) yield break;
 
-            var ringStartAngle = (float)_ringStartAngle.GetValue();
+            float ringStartAngle = (float)_ringStartAngle.GetValue();
             if (ringStartAngle < 0 || ringStartAngle > 359) yield break;
 
-            var rotationHeight = (float) _rotationHeight.GetValue();
+            float rotationHeight = (float) _rotationHeight.GetValue();
 
             // Sort of a combination of cylinder and pipe brushes
-            var width = box.Width;
-            var length = box.Length;
-            var height = box.Height;
-            var majorPrimary = (width - crossWidth) / 2; // Primary = donut circle
-            var minorPrimary = (length - crossWidth) / 2;
-            var majorSecondaryOuter = crossWidth / 2; // Secondary = cross section circle
-            var minorSecondaryOuter = height / 2; // Outer = Outer ring
-            var majorSecondaryInner = (crossWidth - crossWallWidth) / 2; // Inner = inner ring (hollow only)
-            var minorSecondaryInner = (height - crossWallWidth) / 2;
+            float width = box.Width;
+            float length = box.Length;
+            float height = box.Height;
+            float majorPrimary = (width - crossWidth) / 2; // Primary = donut circle
+            float minorPrimary = (length - crossWidth) / 2;
+            float majorSecondaryOuter = crossWidth / 2; // Secondary = cross section circle
+            float minorSecondaryOuter = height / 2; // Outer = Outer ring
+            float majorSecondaryInner = (crossWidth - crossWallWidth) / 2; // Inner = inner ring (hollow only)
+            float minorSecondaryInner = (height - crossWallWidth) / 2;
 
-            var ringStart = (float) MathHelper.DegreesToRadians(ringStartAngle);
-            var ringAngle = (float) MathHelper.DegreesToRadians(ringArc) / ringSides;
-            var crossStart = (float) MathHelper.DegreesToRadians(crossStartAngle);
-            var crossAngle = (float) MathHelper.DegreesToRadians(crossArc) / crossSides;
-            var heightAdd = rotationHeight / ringSides;
+            float ringStart = (float) MathHelper.DegreesToRadians(ringStartAngle);
+            float ringAngle = (float) MathHelper.DegreesToRadians(ringArc) / ringSides;
+            float crossStart = (float) MathHelper.DegreesToRadians(crossStartAngle);
+            float crossAngle = (float) MathHelper.DegreesToRadians(crossArc) / crossSides;
+            float heightAdd = rotationHeight / ringSides;
 
             // Rotate around the ring, generating each cross section
-            var ringOuterSections = new List<Vector3[]>();
-            var ringInnerSections = new List<Vector3[]>();
-            for (var i = 0; i < ringSides + 1; i++)
+            List<Vector3[]> ringOuterSections = new List<Vector3[]>();
+            List<Vector3[]> ringInnerSections = new List<Vector3[]>();
+            for (int i = 0; i < ringSides + 1; i++)
             {
-                var ring = ringStart + i * ringAngle;
-                var rxval = box.Center.X + majorPrimary * (float) Math.Cos(ring);
-                var ryval = box.Center.Y + minorPrimary * (float) Math.Sin(ring);
-                var rzval = box.Center.Z;
-                var crossSecOuter = new Vector3[crossSides + 1];
-                var crossSecInner = new Vector3[crossSides + 1];
-                for (var j = 0; j < crossSides + 1; j++)
+                float ring = ringStart + i * ringAngle;
+                float rxval = box.Center.X + majorPrimary * (float) Math.Cos(ring);
+                float ryval = box.Center.Y + minorPrimary * (float) Math.Sin(ring);
+                float rzval = box.Center.Z;
+                Vector3[] crossSecOuter = new Vector3[crossSides + 1];
+                Vector3[] crossSecInner = new Vector3[crossSides + 1];
+                for (int j = 0; j < crossSides + 1; j++)
                 {
-                    var cross = crossStart + j * crossAngle;
-                    var xval = majorSecondaryOuter * (float) Math.Cos(cross) * (float) Math.Cos(ring);
-                    var yval = majorSecondaryOuter * (float) Math.Cos(cross) * (float) Math.Sin(ring);
-                    var zval = minorSecondaryOuter * (float) Math.Sin(cross);
+                    float cross = crossStart + j * crossAngle;
+                    float xval = majorSecondaryOuter * (float) Math.Cos(cross) * (float) Math.Cos(ring);
+                    float yval = majorSecondaryOuter * (float) Math.Cos(cross) * (float) Math.Sin(ring);
+                    float zval = minorSecondaryOuter * (float) Math.Sin(cross);
                     crossSecOuter[j] = new Vector3(xval + rxval, yval + ryval, zval + rzval).Round(roundDecimals);
                     if (!crossMakeHollow) continue;
 
@@ -181,22 +181,22 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
             }
 
             // Create the solids
-            var colour = Colour.GetRandomBrushColour();
-            for (var i = 0; i < ringSides; i++)
+            Color colour = Colour.GetRandomBrushColour();
+            for (int i = 0; i < ringSides; i++)
             {
-                var vertical = Vector3.UnitZ * heightAdd * i;
-                var nexti = i + 1;
+                Vector3 vertical = Vector3.UnitZ * heightAdd * i;
+                int nexti = i + 1;
                 if (crossMakeHollow)
                 {
                     // Use pipe cross sections
-                    var outerPoints = ringOuterSections[i];
-                    var nextOuterPoints = ringOuterSections[nexti];
-                    var innerPoints = ringInnerSections[i];
-                    var nextInnerPoints = ringInnerSections[nexti];
-                    for (var j = 0; j < crossSides; j++)
+                    Vector3[] outerPoints = ringOuterSections[i];
+                    Vector3[] nextOuterPoints = ringOuterSections[nexti];
+                    Vector3[] innerPoints = ringInnerSections[i];
+                    Vector3[] nextInnerPoints = ringInnerSections[nexti];
+                    for (int j = 0; j < crossSides; j++)
                     {
-                        var nextj = j + 1;
-                        var faces = new List<Vector3[]>();
+                        int nextj = j + 1;
+                        List<Vector3[]> faces = new List<Vector3[]>();
                         faces.Add(new[] { outerPoints[j], outerPoints[nextj], nextOuterPoints[nextj], nextOuterPoints[j] }.Select(x => x + vertical).ToArray());
                         faces.Add(new[] { nextInnerPoints[j], nextInnerPoints[nextj], innerPoints[nextj], innerPoints[j] }.Select(x => x + vertical).ToArray());
                         faces.Add(new[] { innerPoints[nextj], nextInnerPoints[nextj], nextOuterPoints[nextj], outerPoints[nextj] }.Select(x => x + vertical).ToArray());
@@ -209,13 +209,13 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
                 else
                 {
                     // Use cylindrical cross sections
-                    var faces = new List<Vector3[]>();
-                    var points = ringOuterSections[i];
-                    var nextPoints = ringOuterSections[nexti];
+                    List<Vector3[]> faces = new List<Vector3[]>();
+                    Vector3[] points = ringOuterSections[i];
+                    Vector3[] nextPoints = ringOuterSections[nexti];
                     // Add the outer faces
-                    for (var j = 0; j < crossSides; j++)
+                    for (int j = 0; j < crossSides; j++)
                     {
-                        var nextj = (j + 1) % crossSides;
+                        int nextj = (j + 1) % crossSides;
                         faces.Add(new[] { points[j], points[nextj], nextPoints[nextj], nextPoints[j] }.Select(x => x + vertical).ToArray());
                     }
                     // Add the cross section faces

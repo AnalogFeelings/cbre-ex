@@ -52,25 +52,25 @@ namespace CBRE.BspEditor.Providers
         {
             return await Task.Factory.StartNew(() =>
             {
-                using (var br = new BinaryReader(stream, Encoding.ASCII, true))
+                using (BinaryReader br = new BinaryReader(stream, Encoding.ASCII, true))
                 {
-                    var result = new BspFileLoadResult();
+                    BspFileLoadResult result = new BspFileLoadResult();
 
                     // Only RMF version 2.2 is supported for the moment.
-                    var version = Math.Round(br.ReadSingle(), 1);
+                    double version = Math.Round(br.ReadSingle(), 1);
                     if (Math.Abs(version - 2.2) > 0.01)
                     {
                         throw new NotSupportedException("Incorrect RMF version number. Expected 2.2, got " + version + ".");
                     }
 
                     // RMF header test
-                    var header = br.ReadFixedLengthString(Encoding.ASCII, 3);
+                    string header = br.ReadFixedLengthString(Encoding.ASCII, 3);
                     if (header != "RMF")
                     {
                         throw new NotSupportedException("Incorrect RMF header. Expected 'RMF', got '" + header + "'.");
                     }
 
-                    var map = new Map();
+                    Map map = new Map();
 
                     ReadVisgroups(map, br);
                     ReadWorldspawn(map, br);
@@ -79,7 +79,7 @@ namespace CBRE.BspEditor.Providers
                     if (stream.Position < stream.Length)
                     {
                         // DOCINFO string check
-                        var docinfo = br.ReadFixedLengthString(Encoding.ASCII, 8);
+                        string docinfo = br.ReadFixedLengthString(Encoding.ASCII, 8);
                         if (docinfo != "DOCINFO")
                         {
                             throw new NotSupportedException("Incorrect RMF format. Expected 'DOCINFO', got '" + docinfo + "'.");
@@ -98,11 +98,11 @@ namespace CBRE.BspEditor.Providers
 
         private void ReadVisgroups(Map map, BinaryReader br)
         {
-            var list = new List<Visgroup>();
-            var numVisgroups = br.ReadInt32();
-            for (var i = 0; i < numVisgroups; i++)
+            List<Visgroup> list = new List<Visgroup>();
+            int numVisgroups = br.ReadInt32();
+            for (int i = 0; i < numVisgroups; i++)
             {
-                var vis = new Visgroup
+                Visgroup vis = new Visgroup
                 {
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 128),
                     Colour = br.ReadRGBAColour(),
@@ -116,7 +116,7 @@ namespace CBRE.BspEditor.Providers
             }
 
             // Get rid of zero groups
-            foreach (var vg in list.Where(x => x.ID == 0))
+            foreach (Visgroup vg in list.Where(x => x.ID == 0))
             {
                 vg.ID = map.NumberGenerator.Next("Visgroup");
             }
@@ -126,13 +126,13 @@ namespace CBRE.BspEditor.Providers
 
         private void ReadWorldspawn(Map map, BinaryReader br)
         {
-            var root = ReadObject(map, br);
+            IMapObject root = ReadObject(map, br);
             map.Root.Unclone(root);
         }
 
         private IMapObject ReadObject(Map map, BinaryReader br)
         {
-            var type = br.ReadCString();
+            string type = br.ReadCString();
             switch (type)
             {
                 case "CMapWorld":
@@ -150,30 +150,30 @@ namespace CBRE.BspEditor.Providers
 
         private void ReadMapBase(Map map, IMapObject obj, BinaryReader br)
         {
-            var visgroupId = br.ReadInt32();
+            int visgroupId = br.ReadInt32();
             if (visgroupId > 0)
             {
                 obj.Data.Add(new VisgroupID(visgroupId));
             }
 
-            var c = br.ReadRGBColour();
+            Color c = br.ReadRGBColour();
             obj.Data.Add(new ObjectColor(c));
 
-            var numChildren = br.ReadInt32();
-            for (var i = 0; i < numChildren; i++)
+            int numChildren = br.ReadInt32();
+            for (int i = 0; i < numChildren; i++)
             {
-                var child = ReadObject(map, br);
+                IMapObject child = ReadObject(map, br);
                 if (child != null) child.Hierarchy.Parent = obj;
             }
         }
 
         private Root ReadRoot(Map map, BinaryReader br)
         {
-            var wld = new Root(map.NumberGenerator.Next("MapObject"));
+            Root wld = new Root(map.NumberGenerator.Next("MapObject"));
             ReadMapBase(map, wld, br);
             wld.Data.Add(ReadEntityData(br));
-            var numPaths = br.ReadInt32();
-            for (var i = 0; i < numPaths; i++)
+            int numPaths = br.ReadInt32();
+            for (int i = 0; i < numPaths; i++)
             {
                 wld.Data.Add(ReadPath(br));
             }
@@ -182,27 +182,27 @@ namespace CBRE.BspEditor.Providers
 
         private Path ReadPath(BinaryReader br)
         {
-            var path = new Path
+            Path path = new Path
             {
                 Name = br.ReadFixedLengthString(Encoding.ASCII, 128),
                 Type = br.ReadFixedLengthString(Encoding.ASCII, 128),
                 Direction = (Path.PathDirection) br.ReadInt32()
             };
-            var numNodes = br.ReadInt32();
-            for (var i = 0; i < numNodes; i++)
+            int numNodes = br.ReadInt32();
+            for (int i = 0; i < numNodes; i++)
             {
-                var node = new Path.PathNode
+                Path.PathNode node = new Path.PathNode
                 {
                     Position = br.ReadVector3(),
                     ID = br.ReadInt32(),
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 128)
                 };
 
-                var numProps = br.ReadInt32();
-                for (var j = 0; j < numProps; j++)
+                int numProps = br.ReadInt32();
+                for (int j = 0; j < numProps; j++)
                 {
-                    var key = br.ReadCString();
-                    var value = br.ReadCString();
+                    string key = br.ReadCString();
+                    string value = br.ReadCString();
                     node.Properties[key] = value;
                 }
                 path.Nodes.Add(node);
@@ -212,19 +212,19 @@ namespace CBRE.BspEditor.Providers
 
         private Group ReadGroup(Map map, BinaryReader br)
         {
-            var grp = new Group(map.NumberGenerator.Next("MapObject"));
+            Group grp = new Group(map.NumberGenerator.Next("MapObject"));
             ReadMapBase(map, grp, br);
             return grp;
         }
 
         private Solid ReadSolid(Map map, BinaryReader br)
         {
-            var sol = new Solid(map.NumberGenerator.Next("MapObject"));
+            Solid sol = new Solid(map.NumberGenerator.Next("MapObject"));
             ReadMapBase(map, sol, br);
-            var numFaces = br.ReadInt32();
-            for (var i = 0; i < numFaces; i++)
+            int numFaces = br.ReadInt32();
+            for (int i = 0; i < numFaces; i++)
             {
-                var face = ReadFace(map, br);
+                Face face = ReadFace(map, br);
                 sol.Data.Add(face);
             }
             return sol;
@@ -232,7 +232,7 @@ namespace CBRE.BspEditor.Providers
 
         private IMapObject ReadEntity(Map map, BinaryReader br)
         {
-            var ent = new Entity(map.NumberGenerator.Next("MapObject"));
+            Entity ent = new Entity(map.NumberGenerator.Next("MapObject"));
             ReadMapBase(map, ent, br);
             ent.Data.Add(ReadEntityData(br));
             br.ReadBytes(2); // Unused
@@ -245,7 +245,7 @@ namespace CBRE.BspEditor.Providers
 
         private EntityData ReadEntityData(BinaryReader br)
         {
-            var data = new EntityData
+            EntityData data = new EntityData
             {
                 Name = br.ReadCString()
             };
@@ -254,11 +254,11 @@ namespace CBRE.BspEditor.Providers
 
             data.Flags = br.ReadInt32();
 
-            var numProperties = br.ReadInt32();
-            for (var i = 0; i < numProperties; i++)
+            int numProperties = br.ReadInt32();
+            for (int i = 0; i < numProperties; i++)
             {
-                var key = br.ReadCString();
-                var value = br.ReadCString();
+                string key = br.ReadCString();
+                string value = br.ReadCString();
                 if (key == null || ExcludedKeys.Contains(key.ToLower())) continue;
                 data.Set(key, value);
             }
@@ -270,8 +270,8 @@ namespace CBRE.BspEditor.Providers
 
         private Face ReadFace(Map map, BinaryReader br)
         {
-            var face = new Face(map.NumberGenerator.Next("Face"));
-            var textureName = br.ReadFixedLengthString(Encoding.ASCII, 256);
+            Face face = new Face(map.NumberGenerator.Next("Face"));
+            string textureName = br.ReadFixedLengthString(Encoding.ASCII, 256);
             br.ReadBytes(4); // Unused
             face.Texture.Name = textureName;
             face.Texture.UAxis = br.ReadVector3();
@@ -282,8 +282,8 @@ namespace CBRE.BspEditor.Providers
             face.Texture.XScale = br.ReadSingle();
             face.Texture.YScale = br.ReadSingle();
             br.ReadBytes(16); // Unused
-            var numVerts = br.ReadInt32();
-            for (var i = 0; i < numVerts; i++)
+            int numVerts = br.ReadInt32();
+            for (int i = 0; i < numVerts; i++)
             {
                 face.Vertices.Add(br.ReadVector3());
             }
@@ -294,10 +294,10 @@ namespace CBRE.BspEditor.Providers
         private void ReadCameras(Map map, BinaryReader br)
         {
             br.ReadSingle(); // Appears to be a version number for camera data. Unused.
-            var activeCamera = br.ReadInt32();
+            int activeCamera = br.ReadInt32();
 
-            var num = br.ReadInt32();
-            for (var i = 0; i < num; i++)
+            int num = br.ReadInt32();
+            for (int i = 0; i < num; i++)
             {
                 map.Data.Add(new Camera
                 {
@@ -314,7 +314,7 @@ namespace CBRE.BspEditor.Providers
         {
             return Task.Factory.StartNew(() =>
             {
-                using (var bw = new BinaryWriter(stream, Encoding.ASCII, true))
+                using (BinaryWriter bw = new BinaryWriter(stream, Encoding.ASCII, true))
                 {
                     // RMF 2.2 header
                     bw.Write(2.2f);
@@ -339,9 +339,9 @@ namespace CBRE.BspEditor.Providers
 
         private void WriteVisgroups(Map map, BinaryWriter bw)
         {
-            var vis = map.Data.Get<Visgroup>().ToList();
+            List<Visgroup> vis = map.Data.Get<Visgroup>().ToList();
             bw.Write(vis.Count);
-            foreach (var visgroup in vis)
+            foreach (Visgroup visgroup in vis)
             {
                 bw.WriteFixedLengthString(Encoding.ASCII, 128, visgroup.Name);
                 bw.WriteRGBAColour(visgroup.Colour);
@@ -358,7 +358,7 @@ namespace CBRE.BspEditor.Providers
 
         private void WriteObject(IMapObject obj, BinaryWriter bw)
         {
-            foreach (var o in obj.Decompose(SupportedTypes))
+            foreach (IMapObject o in obj.Decompose(SupportedTypes))
             {
                 if (o is Root r) WriteRoot(r, bw);
                 else if (o is Group g) WriteGroup(g, bw);
@@ -373,7 +373,7 @@ namespace CBRE.BspEditor.Providers
             bw.Write((int) (obj.Data.OfType<VisgroupID>().FirstOrDefault()?.ID ?? 0));
             bw.WriteRGBColour(obj.Data.GetOne<ObjectColor>()?.Color ?? Color.White);
             bw.Write(obj.Hierarchy.NumChildren);
-            foreach (var child in obj.Hierarchy)
+            foreach (IMapObject child in obj.Hierarchy)
             {
                 WriteObject(child, bw);
             }
@@ -384,9 +384,9 @@ namespace CBRE.BspEditor.Providers
             bw.WriteCString("CMapWorld", MaxVariableStringLength);
             WriteMapBase(root, bw);
             WriteEntityData(root.Data.GetOne<EntityData>(), bw);
-            var paths = root.Data.OfType<Path>().ToList();
+            List<Path> paths = root.Data.OfType<Path>().ToList();
             bw.Write(paths.Count);
-            foreach (var path in paths)
+            foreach (Path path in paths)
             {
                 WritePath(bw, path);
             }
@@ -398,13 +398,13 @@ namespace CBRE.BspEditor.Providers
             bw.WriteFixedLengthString(Encoding.ASCII, 128, path.Type);
             bw.Write((int) path.Direction);
             bw.Write(path.Nodes.Count);
-            foreach (var node in path.Nodes)
+            foreach (Path.PathNode node in path.Nodes)
             {
                 bw.WriteVector3(node.Position);
                 bw.Write(node.ID);
                 bw.WriteFixedLengthString(Encoding.ASCII, 128, node.Name);
                 bw.Write(node.Properties.Count);
-                foreach (var property in node.Properties)
+                foreach (KeyValuePair<string, string> property in node.Properties)
                 {
                     bw.WriteCString(property.Key, MaxVariableStringLength);
                     bw.WriteCString(property.Value, MaxVariableStringLength);
@@ -422,9 +422,9 @@ namespace CBRE.BspEditor.Providers
         {
             bw.WriteCString("CMapSolid", MaxVariableStringLength);
             WriteMapBase(solid, bw);
-            var faces = solid.Faces.ToList();
+            List<Face> faces = solid.Faces.ToList();
             bw.Write(faces.Count);
-            foreach (var face in faces)
+            foreach (Face face in faces)
             {
                 WriteFace(face, bw);
             }
@@ -447,9 +447,9 @@ namespace CBRE.BspEditor.Providers
             bw.Write(new byte[4]); // Unused
             bw.Write(data.Flags);
 
-            var props = data.Properties.Where(x => !String.IsNullOrWhiteSpace(x.Key) && !ExcludedKeys.Contains(x.Key.ToLower())).ToList();
+            List<KeyValuePair<string, string>> props = data.Properties.Where(x => !String.IsNullOrWhiteSpace(x.Key) && !ExcludedKeys.Contains(x.Key.ToLower())).ToList();
             bw.Write(props.Count);
-            foreach (var p in props)
+            foreach (KeyValuePair<string, string> p in props)
             {
                 bw.WriteCString(p.Key, MaxVariableStringLength);
                 bw.WriteCString(p.Value, MaxVariableStringLength);
@@ -470,7 +470,7 @@ namespace CBRE.BspEditor.Providers
             bw.Write(face.Texture.YScale);
             bw.Write(new byte[16]);
             bw.Write(face.Vertices.Count);
-            foreach (var vertex in face.Vertices)
+            foreach (System.Numerics.Vector3 vertex in face.Vertices)
             {
                 bw.WriteVector3(vertex);
             }
@@ -481,12 +481,12 @@ namespace CBRE.BspEditor.Providers
         {
             bw.Write(0.2f); // Unused
 
-            var cams = map.Data.Get<Camera>().ToList();
-            var active = Math.Max(0, cams.FindIndex(x => x.IsActive));
+            List<Camera> cams = map.Data.Get<Camera>().ToList();
+            int active = Math.Max(0, cams.FindIndex(x => x.IsActive));
 
             bw.Write(active);
             bw.Write(cams.Count);
-            foreach (var cam in cams)
+            foreach (Camera cam in cams)
             {
                 bw.WriteVector3(cam.EyePosition);
                 bw.WriteVector3(cam.LookPosition);

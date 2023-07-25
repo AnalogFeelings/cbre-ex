@@ -28,11 +28,11 @@ namespace CBRE.BspEditor.Providers.Processors
         {
             if (!document.Map.Data.Any(x => x is GridData))
             {
-                var grid = await _squareGridFactory.Create(document.Environment);
+                IGrid grid = await _squareGridFactory.Create(document.Environment);
                 document.Map.Data.Add(new GridData(grid));
             }
 
-            var gd = await document.Environment.GetGameData();
+            DataStructures.GameData.GameData gd = await document.Environment.GetGameData();
             document.Map.Root.Data.Replace(new PointEntityGameDataBoundingBoxProvider(gd));
             document.Map.Root.Invalidate();
         }

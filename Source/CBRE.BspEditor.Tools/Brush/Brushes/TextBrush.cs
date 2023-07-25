@@ -58,32 +58,32 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         public IEnumerable<IMapObject> Create(UniqueNumberGenerator generator, Box box, string texture, int roundfloats)
         {
-            var length = Math.Max(1, Math.Abs((int) box.Length));
-            var height = box.Height;
-            var flatten = (float) _flattenFactor.Value;
-            var text = _text.GetValue();
+            int length = Math.Max(1, Math.Abs((int) box.Length));
+            float height = box.Height;
+            float flatten = (float) _flattenFactor.Value;
+            string text = _text.GetValue();
 
-            var family = _fontChooser.GetFontFamily();
-            var style = Enum.GetValues(typeof (FontStyle)).OfType<FontStyle>().FirstOrDefault(fs => family.IsStyleAvailable(fs));
+            FontFamily family = _fontChooser.GetFontFamily();
+            FontStyle style = Enum.GetValues(typeof (FontStyle)).OfType<FontStyle>().FirstOrDefault(fs => family.IsStyleAvailable(fs));
             if (!family.IsStyleAvailable(style)) family = FontFamily.GenericSansSerif;
 
-            var set = new List<Polygon>();
+            List<Polygon> set = new List<Polygon>();
 
-            var sizes = new List<RectangleF>();
-            using (var bmp = new Bitmap(1,1))
+            List<RectangleF> sizes = new List<RectangleF>();
+            using (Bitmap bmp = new Bitmap(1,1))
             {
-                using (var g = Graphics.FromImage(bmp))
+                using (Graphics g = Graphics.FromImage(bmp))
                 {
-                    using (var font = new Font(family, length, style, GraphicsUnit.Pixel))
+                    using (Font font = new Font(family, length, style, GraphicsUnit.Pixel))
                     {
-                        for (var i = 0; i < text.Length; i += 32)
+                        for (int i = 0; i < text.Length; i += 32)
                         {
-                            using (var sf = new StringFormat(StringFormat.GenericTypographic))
+                            using (StringFormat sf = new StringFormat(StringFormat.GenericTypographic))
                             {
-                                var rem = Math.Min(text.Length, i + 32) - i;
-                                var range = Enumerable.Range(0, rem).Select(x => new CharacterRange(x, 1)).ToArray();
+                                int rem = Math.Min(text.Length, i + 32) - i;
+                                CharacterRange[] range = Enumerable.Range(0, rem).Select(x => new CharacterRange(x, 1)).ToArray();
                                 sf.SetMeasurableCharacterRanges(range);
-                                var reg = g.MeasureCharacterRanges(text.Substring(i, rem), font, new RectangleF(0, 0, float.MaxValue, float.MaxValue), sf);
+                                Region[] reg = g.MeasureCharacterRanges(text.Substring(i, rem), font, new RectangleF(0, 0, float.MaxValue, float.MaxValue), sf);
                                 sizes.AddRange(reg.Select(x => x.GetBounds(g)));
                             }
                         }
@@ -91,25 +91,25 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
                 }
             }
 
-            var xOffset = box.Start.X;
-            var yOffset = box.End.Y;
+            float xOffset = box.Start.X;
+            float yOffset = box.End.Y;
 
-            for (var ci = 0; ci < text.Length; ci++)
+            for (int ci = 0; ci < text.Length; ci++)
             {
-                var c = text[ci];
-                var size = sizes[ci];
+                char c = text[ci];
+                RectangleF size = sizes[ci];
 
-                var gp = new GraphicsPath();
+                GraphicsPath gp = new GraphicsPath();
                 gp.AddString(c.ToString(CultureInfo.InvariantCulture), family, (int)style, length, new PointF(0, 0), StringFormat.GenericTypographic);
                 gp.Flatten(new System.Drawing.Drawing2D.Matrix(), flatten);
 
-                var polygons = new List<Polygon>();
-                var poly = new List<PolygonPoint>();
+                List<Polygon> polygons = new List<Polygon>();
+                List<PolygonPoint> poly = new List<PolygonPoint>();
 
-                for (var i = 0; i < gp.PointCount; i++)
+                for (int i = 0; i < gp.PointCount; i++)
                 {
-                    var type = gp.PathTypes[i];
-                    var point = gp.PathPoints[i];
+                    byte type = gp.PathTypes[i];
+                    PointF point = gp.PathPoints[i];
 
                     poly.Add(new PolygonPoint(point.X + xOffset, -point.Y + yOffset));
 
@@ -120,9 +120,9 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
                     }
                 }
 
-                var tri = new List<Polygon>();
+                List<Polygon> tri = new List<Polygon>();
                 Polygon polygon = null;
-                foreach (var p in polygons)
+                foreach (Polygon p in polygons)
                 {
                     if (polygon == null)
                     {
@@ -140,7 +140,7 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
                     }
                 }
 
-                foreach (var pp in tri)
+                foreach (Polygon pp in tri)
                 {
                     try
                     {
@@ -156,21 +156,21 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
                 xOffset += size.Width;
             }
 
-            var zOffset = box.Start.Z;
+            float zOffset = box.Start.Z;
 
-            foreach (var polygon in set)
+            foreach (Polygon polygon in set)
             {
-                foreach (var t in polygon.Triangles)
+                foreach (Poly2Tri.Triangulation.Delaunay.DelaunayTriangle t in polygon.Triangles)
                 {
-                    var points = t.Points.Select(x => new Vector3((float) x.X, (float) x.Y, zOffset).Round(roundfloats)).ToList();
+                    List<Vector3> points = t.Points.Select(x => new Vector3((float) x.X, (float) x.Y, zOffset).Round(roundfloats)).ToList();
 
-                    var faces = new List<Vector3[]>();
+                    List<Vector3[]> faces = new List<Vector3[]>();
 
                     // Add the vertical faces
-                    var z = new Vector3(0, 0, height).Round(roundfloats);
-                    for (var j = 0; j < points.Count; j++)
+                    Vector3 z = new Vector3(0, 0, height).Round(roundfloats);
+                    for (int j = 0; j < points.Count; j++)
                     {
-                        var next = (j + 1) % points.Count;
+                        int next = (j + 1) % points.Count;
                         faces.Add(new[] {points[j], points[j] + z, points[next] + z, points[next]});
                     }
                     // Add the top and bottom faces
@@ -178,12 +178,12 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
                     faces.Add(points.Select(x => x + z).Reverse().ToArray());
 
                     // Nothing new here, move along
-                    var solid = new Solid(generator.Next("MapObject"));
+                    Solid solid = new Solid(generator.Next("MapObject"));
                     solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
 
-                    foreach (var arr in faces)
+                    foreach (Vector3[] arr in faces)
                     {
-                        var face = new Face(generator.Next("Face"))
+                        Face face = new Face(generator.Next("Face"))
                         {
                             Plane = new Plane(arr[0], arr[1], arr[2]),
                             Texture = { Name = texture }

@@ -55,7 +55,7 @@ namespace CBRE.QuickForms.Items
 
         private void ShowBrowseDialog()
         {
-            using (var ofd = new OpenFileDialog {Filter = _filter, FileName = _textBox.Text})
+            using (OpenFileDialog ofd = new OpenFileDialog {Filter = _filter, FileName = _textBox.Text})
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {

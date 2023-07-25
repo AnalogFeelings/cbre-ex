@@ -66,14 +66,14 @@ namespace CBRE.BspEditor.Rendering.Converters
         {
             if (!_drawCenterHandles) return Task.CompletedTask;
 
-            var objs = (
+            List<IMapObject> objs = (
                 from mo in objects
                 where mo is Solid || (mo is Entity && !mo.Hierarchy.HasChildren)
                 where !mo.Data.OfType<IObjectVisibility>().Any(x => x.IsHidden)
                 select mo
             ).ToList();
 
-            var verts = (
+            List<VertexStandard> verts = (
                 // Current centers
                 from mo in objs
                 let color = mo.IsSelected ? Color.Red : mo.Data.GetOne<ObjectColor>()?.Color ?? Color.White
@@ -118,15 +118,15 @@ namespace CBRE.BspEditor.Rendering.Converters
 
             public CenterHandleTextureDataSource()
             {
-                using (var img = new Bitmap(Width, Height))
+                using (Bitmap img = new Bitmap(Width, Height))
                 {
-                    using (var g = Graphics.FromImage(img))
+                    using (Graphics g = Graphics.FromImage(img))
                     {
                         g.FillRectangle(Brushes.Transparent, 0, 0, img.Width, img.Height);
                         g.DrawLine(Pens.White, 1, 1, img.Width - 2, img.Height - 2);
                         g.DrawLine(Pens.White, img.Width - 2, 1, 1, img.Height - 2);
                     }
-                    var lb = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                    BitmapData lb = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                     Data = new byte[lb.Stride * lb.Height];
                     Marshal.Copy(lb.Scan0, Data, 0, Data.Length);
                     img.UnlockBits(lb);

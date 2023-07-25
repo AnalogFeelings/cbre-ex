@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Compile
         {
             await Oy.Publish("Compile:Started", this);
 
-            foreach (var step in Steps)
+            foreach (BatchStep step in Steps)
             {
                 try
                 {

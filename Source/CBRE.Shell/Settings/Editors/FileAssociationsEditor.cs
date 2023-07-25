@@ -38,9 +38,9 @@ namespace CBRE.Shell.Settings.Editors
             
             if (_bindings == null) return;
 
-            foreach (var b in _bindings)
+            foreach (System.Collections.Generic.KeyValuePair<string, bool> b in _bindings)
             {
-                var checkbox = new CheckBox
+                CheckBox checkbox = new CheckBox
                 {
                     Text = b.Key,
                     Checked = b.Value,
@@ -54,7 +54,7 @@ namespace CBRE.Shell.Settings.Editors
 
         private void SetAssociation(object sender, EventArgs e)
         {
-            var assoc = (sender as CheckBox)?.Checked ?? false;
+            bool assoc = (sender as CheckBox)?.Checked ?? false;
             _bindings[(sender as CheckBox)?.Tag as string ?? ""] = assoc;
             OnValueChanged?.Invoke(this, Key);
         }

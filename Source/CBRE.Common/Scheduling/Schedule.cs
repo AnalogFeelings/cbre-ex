@@ -99,8 +99,8 @@ namespace CBRE.Common.Scheduling
         /// <returns>Next run time or null if the schedule won't run again</returns>
         public DateTime? NextScheduleTime()
         {
-            var now = DateTime.Now;
-            var today = now.Date.Add(TimeToRun);
+            DateTime now = DateTime.Now;
+            DateTime today = now.Date.Add(TimeToRun);
             switch (Type)
             {
                 case ScheduleType.Once:
@@ -109,16 +109,16 @@ namespace CBRE.Common.Scheduling
                 case ScheduleType.Interval:
                     if (now < ScheduleTime) return ScheduleTime;
                     if (LastRun != null) return LastRun.Value.Add(TimeInterval);
-                    var t = ScheduleTime;
+                    DateTime t = ScheduleTime;
                     while (t <= now) t = t.Add(TimeInterval.TotalSeconds < 10 ? TimeSpan.FromSeconds(10) : TimeInterval);
                     return t;
                 case ScheduleType.Daily:
                     return now > today ? today.AddDays(1) : today;
                 case ScheduleType.Weekly:
-                    var nwd = NextWeeklyDate(now > today ? now.Date.AddDays(1) : now.Date);
+                    DateTime? nwd = NextWeeklyDate(now > today ? now.Date.AddDays(1) : now.Date);
                     return nwd?.Add(TimeToRun);
                 case ScheduleType.Monthly:
-                    var nmd = NextMonthlyDate(now > today ? now.Date.AddDays(1) : now.Date);
+                    DateTime? nmd = NextMonthlyDate(now > today ? now.Date.AddDays(1) : now.Date);
                     return nmd?.Add(TimeToRun);
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -127,9 +127,9 @@ namespace CBRE.Common.Scheduling
 
         private DateTime? NextWeeklyDate(DateTime fromDate)
         {
-            for (var i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
-                var dt = fromDate.Date.AddDays(i);
+                DateTime dt = fromDate.Date.AddDays(i);
                 if (WeekDaysToRun.Contains(dt.DayOfWeek)) return dt;
             }
             return null;
@@ -137,10 +137,10 @@ namespace CBRE.Common.Scheduling
 
         private DateTime? NextMonthlyDate(DateTime fromDate)
         {
-            var last = MonthDaysToRun.Contains(-1);
-            for (var i = 0; i < 32; i++)
+            bool last = MonthDaysToRun.Contains(-1);
+            for (int i = 0; i < 32; i++)
             {
-                var dt = fromDate.Date.AddDays(i);
+                DateTime dt = fromDate.Date.AddDays(i);
                 if (last && dt.Day == 1 && i > 0) return dt.AddDays(-1);
                 if (MonthDaysToRun.Contains(dt.Day)) return dt;
             }

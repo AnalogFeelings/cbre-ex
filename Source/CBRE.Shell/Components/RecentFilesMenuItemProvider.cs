@@ -42,7 +42,7 @@ namespace CBRE.Shell.Components
 
         public IEnumerable<IMenuItem> GetMenuItems()
         {
-            for (var i = 0; i < _recentFiles.Count; i++)
+            for (int i = 0; i < _recentFiles.Count; i++)
             {
                 yield return new RecentFilesMenuItem(_recentFiles.Count - i - 1, _recentFiles[i]);
             }
@@ -56,7 +56,7 @@ namespace CBRE.Shell.Components
 
         public void LoadValues(ISettingsStore store)
         {
-            var list = store.Get("Files", new List<RecentFile>());
+            List<RecentFile> list = store.Get("Files", new List<RecentFile>());
             _recentFiles.Clear();
             _recentFiles.AddRange(list);
             MenuItemsChanged?.Invoke(this, EventArgs.Empty);
@@ -80,11 +80,11 @@ namespace CBRE.Shell.Components
             {
                 if (!Icons.ContainsKey(num))
                 {
-                    var ico = new Bitmap(16, 16);
-                    using (var g = Graphics.FromImage(ico))
+                    Bitmap ico = new Bitmap(16, 16);
+                    using (Graphics g = Graphics.FromImage(ico))
                     {
-                        var str = Convert.ToString(num, CultureInfo.InvariantCulture);
-                        var sz = g.MeasureString(str, SystemFonts.DefaultFont);
+                        string str = Convert.ToString(num, CultureInfo.InvariantCulture);
+                        SizeF sz = g.MeasureString(str, SystemFonts.DefaultFont);
 
                         g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
                         g.SmoothingMode = SmoothingMode.HighQuality;

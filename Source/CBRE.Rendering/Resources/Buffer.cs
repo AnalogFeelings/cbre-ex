@@ -32,13 +32,13 @@ namespace CBRE.Rendering.Resources
         
         public void Update<T>(IEnumerable<T> vertices, IEnumerable<uint> indices) where T : unmanaged
         {
-            var verts = vertices.ToArray();
-            var index = indices.ToArray();
+            T[] verts = vertices.ToArray();
+            uint[] index = indices.ToArray();
 
             if (verts.Length == 0 || index.Length == 0) return;
 
-            var vsize = (uint) (verts.Length * Unsafe.SizeOf<T>());
-            var isize = (uint) index.Length * sizeof(uint);
+            uint vsize = (uint) (verts.Length * Unsafe.SizeOf<T>());
+            uint isize = (uint) index.Length * sizeof(uint);
 
             if (VertexBuffer == null || VertexBuffer.SizeInBytes < vsize)
             {

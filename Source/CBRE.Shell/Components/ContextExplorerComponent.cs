@@ -40,11 +40,11 @@ namespace CBRE.Shell.Components
                 _control.BeginUpdate();
                 _control.Items.Clear();
 
-                foreach (var key in context.GetAll())
+                foreach (string key in context.GetAll())
                 {
                     object p;
                     if (!context.TryGet(key, out p)) p = null;
-                    var str = key;
+                    string str = key;
                     if (p != null) str += ": " + GetDisplayName(p);
                     _control.Items.Add(str);
                 }
@@ -61,17 +61,17 @@ namespace CBRE.Shell.Components
         private string GetDisplayName(object obj)
         {
             if (obj == null) return "";
-            var ty = obj.GetType();
+            Type ty = obj.GetType();
 
             // Try and find an uninherited ToString() method
-            var toStringMethod = ty.GetMethod("ToString", BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, Type.EmptyTypes, null);
+            MethodInfo toStringMethod = ty.GetMethod("ToString", BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, Type.EmptyTypes, null);
             if (toStringMethod != null)
             {
                 return obj.ToString();
             }
 
             // Look for description-sounding text fields
-            var prop = ty.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
+            PropertyInfo prop = ty.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
                 .Where(x => x.PropertyType == typeof(string))
                 .FirstOrDefault(x => x.Name == "Name" || x.Name == "Title" || x.Name == "Description" || x.Name == "Details");
             if (prop != null)

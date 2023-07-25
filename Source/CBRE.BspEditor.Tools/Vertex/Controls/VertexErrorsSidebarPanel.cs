@@ -41,7 +41,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
         private void UpdateErrorList(VertexSelection selection)
         {
             this.InvokeLater(() => {
-                var errors = _errorChecks.SelectMany(ec => selection.SelectMany(s => ec.Value.GetErrors(s)));
+                IEnumerable<VertexError> errors = _errorChecks.SelectMany(ec => selection.SelectMany(s => ec.Value.GetErrors(s)));
                 ErrorList.Items.Clear();
                 ErrorList.Items.AddRange(errors.Select(e => new ErrorWrapper(_translator.Value.GetString(e.Key) ?? e.Key, e)).OfType<object>().ToArray());
             });
@@ -54,7 +54,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
 
         private void ErrorListSelectionChanged(object sender, EventArgs e)
         {
-            var error = ErrorList.SelectedItem as ErrorWrapper;
+            ErrorWrapper error = ErrorList.SelectedItem as ErrorWrapper;
             OnSelectError(error?.Error);
         }
 

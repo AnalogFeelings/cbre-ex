@@ -76,12 +76,12 @@ namespace CBRE.BspEditor.Editing.Components
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
 
-                var src = strings.GetString(prefix, "Source");
+                string src = strings.GetString(prefix, "Source");
                 SourceValueXButton.Text = src;
                 SourceValueYButton.Text = src;
                 SourceValueZButton.Text = src;
@@ -97,22 +97,22 @@ namespace CBRE.BspEditor.Editing.Components
 
         public Matrix4x4 GetTransformation(Box selectionBox)
         {
-            var value = TransformValue;
+            Vector3 value = TransformValue;
             switch (Type)
             {
                 case TransformType.Rotate:
-                    var rads = value * (float) Math.PI / 180;
-                    var rMov = Matrix4x4.CreateTranslation(selectionBox.Center);
-                    var rRot = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(rads.Y, rads.X, rads.Z));
-                    var rFin = Matrix4x4.CreateTranslation(-selectionBox.Center);
+                    Vector3 rads = value * (float) Math.PI / 180;
+                    Matrix4x4 rMov = Matrix4x4.CreateTranslation(selectionBox.Center);
+                    Matrix4x4 rRot = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(rads.Y, rads.X, rads.Z));
+                    Matrix4x4 rFin = Matrix4x4.CreateTranslation(-selectionBox.Center);
                     return rFin * rRot * rMov;
                 case TransformType.Translate:
                     return Matrix4x4.CreateTranslation(value);
                 case TransformType.Scale:
                     if (Math.Abs(value.X) < 0.001 || Math.Abs(value.Y) < 0.001 || Math.Abs(value.Z) < 0.001) throw new CannotScaleByZeroException();
-                    var sMov = Matrix4x4.CreateTranslation(-selectionBox.Center);
-                    var sScl = Matrix4x4.CreateScale(value);
-                    var sFin = Matrix4x4.CreateTranslation(selectionBox.Center);
+                    Matrix4x4 sMov = Matrix4x4.CreateTranslation(-selectionBox.Center);
+                    Matrix4x4 sScl = Matrix4x4.CreateScale(value);
+                    Matrix4x4 sFin = Matrix4x4.CreateTranslation(selectionBox.Center);
                     return sFin * sScl * sMov;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -48,8 +48,8 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
             SizeF size = new SizeF(64, 64);
 
-            var origin = obj.Data.GetOne<Origin>()?.Location ?? Vector3.Zero;
-            var half = new Vector3(size.Width, size.Width, size.Height) * Scale / 2;
+            Vector3 origin = obj.Data.GetOne<Origin>()?.Location ?? Vector3.Zero;
+            Vector3 half = new Vector3(size.Width, size.Width, size.Height) * Scale / 2;
 
             return new Box(origin - half, origin + half);
         }
@@ -66,7 +66,7 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject(nameof(EntitySprite));
+            SerialisedObject so = new SerialisedObject(nameof(EntitySprite));
 
             so.Set(nameof(Name), Name);
             so.Set(nameof(Scale), Scale);

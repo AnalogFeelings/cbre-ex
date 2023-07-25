@@ -40,18 +40,18 @@ namespace CBRE.BspEditor.Primitives.MapObjects
 
         private Box MakeBoundingBox()
         {
-            foreach (var p in Data.Get<IBoundingBoxProvider>())
+            foreach (IBoundingBoxProvider p in Data.Get<IBoundingBoxProvider>())
             {
-                var box = p.GetBoundingBox(this);
+                Box box = p.GetBoundingBox(this);
                 if (box != null) return box;
             }
 
-            var root = this.GetRoot();
+            IMapObject root = this.GetRoot();
             if (root != null)
             {
-                foreach (var p in root.Data.Get<IBoundingBoxProvider>())
+                foreach (IBoundingBoxProvider p in root.Data.Get<IBoundingBoxProvider>())
                 {
-                    var box = p.GetBoundingBox(this);
+                    Box box = p.GetBoundingBox(this);
                     if (box != null) return box;
                 }
             }

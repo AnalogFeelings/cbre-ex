@@ -101,7 +101,7 @@ namespace CBRE.FileSystem
         public byte[] Read(long offset, long count)
         {
             // Just read the whole damn file because I'm lazy
-            var barr = new byte[count];
+            byte[] barr = new byte[count];
             Array.Copy(ReadAll(), offset, barr, 0, count);
             return barr;
         }
@@ -109,7 +109,7 @@ namespace CBRE.FileSystem
         public IEnumerable<IFile> GetRelatedFiles()
         {
             if (IsContainer || Parent == null) return new List<IFile>();
-            var thisName = NameWithoutExtension.ToLower();
+            string thisName = NameWithoutExtension.ToLower();
             return Parent.GetFiles().Where(file => file.Name.Split('.')[0].ToLower() == thisName);
         }
 
@@ -121,9 +121,9 @@ namespace CBRE.FileSystem
         private void LoadPackages()
         {
             if (_packages != null) return;
-            var paks = DirectoryInfo.GetFiles("*.pak").Select(x => new InlinePackageFile(x.FullName)).ToList();
-            var pk3s = DirectoryInfo.GetFiles("*.pk3").Select(x => new InlinePackageFile(x.FullName)).ToList();
-            var vpks = DirectoryInfo.GetFiles("*_dir.vpk").Select(x => new InlinePackageFile(x.FullName)).ToList();
+            List<InlinePackageFile> paks = DirectoryInfo.GetFiles("*.pak").Select(x => new InlinePackageFile(x.FullName)).ToList();
+            List<InlinePackageFile> pk3s = DirectoryInfo.GetFiles("*.pk3").Select(x => new InlinePackageFile(x.FullName)).ToList();
+            List<InlinePackageFile> vpks = DirectoryInfo.GetFiles("*_dir.vpk").Select(x => new InlinePackageFile(x.FullName)).ToList();
             _packages = paks.Union(pk3s).Union(vpks).ToList();
         }
 
@@ -136,11 +136,11 @@ namespace CBRE.FileSystem
         {
             if (!IsContainer) return new List<IFile>();
             LoadPackages();
-            var children = _packages.SelectMany(x => x.GetChildren()).ToList();
-            var dirs = DirectoryInfo.GetDirectories().Select<DirectoryInfo, IFile>(x =>
+            List<IFile> children = _packages.SelectMany(x => x.GetChildren()).ToList();
+            List<IFile> dirs = DirectoryInfo.GetDirectories().Select<DirectoryInfo, IFile>(x =>
             {
-                var nf = new NativeFile(x);
-                var paks = children.Where(p => String.Equals(x.Name, p.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                NativeFile nf = new NativeFile(x);
+                List<IFile> paks = children.Where(p => String.Equals(x.Name, p.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 if (paks.Any())
                 {
                     paks.Insert(0, nf);
@@ -148,7 +148,7 @@ namespace CBRE.FileSystem
                 }
                 return nf;
             }).ToList();
-            foreach (var d in children)
+            foreach (IFile d in children)
             {
                 if (!dirs.Any(x => String.Equals(x.Name, d.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
@@ -172,8 +172,8 @@ namespace CBRE.FileSystem
         {
             if (!IsContainer) return new List<IFile>();
             LoadPackages();
-            var files = DirectoryInfo.GetFiles().Select(fileInfo => new NativeFile(fileInfo)).ToList<IFile>();
-            foreach (var f in _packages.SelectMany(x => x.GetFiles()))
+            List<IFile> files = DirectoryInfo.GetFiles().Select(fileInfo => new NativeFile(fileInfo)).ToList<IFile>();
+            foreach (IFile f in _packages.SelectMany(x => x.GetFiles()))
             {
                 if (!files.Any(x => String.Equals(x.Name, f.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {

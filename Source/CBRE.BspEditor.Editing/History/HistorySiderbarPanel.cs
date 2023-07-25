@@ -46,7 +46,7 @@ namespace CBRE.BspEditor.Editing.History
 
         private async Task DocumentActivated(IDocument document)
         {
-            var doc = document as MapDocument;
+            MapDocument doc = document as MapDocument;
             _activeDocument = new WeakReference<MapDocument>(doc);
             this.InvokeLater(Rebuild);
         }
@@ -59,11 +59,11 @@ namespace CBRE.BspEditor.Editing.History
             HistoryView.Nodes.Clear();
             if (_activeDocument.TryGetTarget(out MapDocument md))
             {
-                var nodes = HistoryView.Nodes;
-                var stack = md.Map.Data.GetOne<HistoryStack>();
+                TreeNodeCollection nodes = HistoryView.Nodes;
+                HistoryStack stack = md.Map.Data.GetOne<HistoryStack>();
                 if (stack != null)
                 {
-                    foreach (var item in stack.GetOperations())
+                    foreach (Modification.IOperation item in stack.GetOperations())
                     {
                         lastNode = nodes.Add(item.GetType().Name);
                     }

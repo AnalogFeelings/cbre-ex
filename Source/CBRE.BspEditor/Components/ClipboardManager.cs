@@ -68,8 +68,8 @@ namespace CBRE.BspEditor.Components
             // Remove extra entries if required
             while (Ring.Count > SizeOfClipboardRing - 1) Ring.RemoveAt(0);
 
-            var list = copiedObjects.ToList();
-            var contents = CreateCopyStream(list);
+            List<IMapObject> list = copiedObjects.ToList();
+            string contents = CreateCopyStream(list);
             Ring.Add(new ClipboardEntry(GetDescription(list), contents));
 
             System.Windows.Forms.Clipboard.SetText(contents);
@@ -103,17 +103,17 @@ namespace CBRE.BspEditor.Components
         {
             if (!System.Windows.Forms.Clipboard.ContainsText()) return null;
 
-            var str = System.Windows.Forms.Clipboard.GetText();
+            string str = System.Windows.Forms.Clipboard.GetText();
             if (!str.StartsWith(SerialisedName)) return null;
 
-            var ecc = ExtractCopyStream(str);
+            IEnumerable<IMapObject> ecc = ExtractCopyStream(str);
             return ReIndex(ecc, document, existingIdTransform);
         }
 
         private IEnumerable<IMapObject> ReIndex(IEnumerable<IMapObject> objects, MapDocument document, Func<MapDocument, IMapObject, IMapObject> existingIdTransform)
         {
-            var rand = new Random();
-            foreach (var o in objects)
+            Random rand = new Random();
+            foreach (IMapObject o in objects)
             {
                 if (document.Map.Root.Hierarchy.HasDescendant(o.ID))
                 {
@@ -134,23 +134,23 @@ namespace CBRE.BspEditor.Components
         public bool CanPaste()
         {
             if (!System.Windows.Forms.Clipboard.ContainsText()) return false;
-            var str = System.Windows.Forms.Clipboard.GetText();
+            string str = System.Windows.Forms.Clipboard.GetText();
             return str.StartsWith(SerialisedName);
         }
 
         private string CreateCopyStream(IEnumerable<IMapObject> copiedObjects)
         {
-            var clip = new SerialisedObject(SerialisedName);
-            foreach (var obj in copiedObjects)
+            SerialisedObject clip = new SerialisedObject(SerialisedName);
+            foreach (IMapObject obj in copiedObjects)
             {
-                var so = _factory.Serialise(obj);
+                SerialisedObject so = _factory.Serialise(obj);
                 clip.Children.Add(so);
             }
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 _formatter.Serialize(ms, clip);
                 ms.Position = 0;
-                using (var sr = new StreamReader(ms))
+                using (StreamReader sr = new StreamReader(ms))
                 {
                     return sr.ReadToEnd();
                 }
@@ -159,11 +159,11 @@ namespace CBRE.BspEditor.Components
 
         private IEnumerable<IMapObject> ExtractCopyStream(string str)
         {
-            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(str)))
+            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(str)))
             {
                 try
                 {
-                    var clip = _formatter.Deserialize(ms).First(x => x.Name == SerialisedName);
+                    SerialisedObject clip = _formatter.Deserialize(ms).First(x => x.Name == SerialisedName);
                     return clip.Children.Select(x => _factory.Deserialise(x)).OfType<IMapObject>();
                 }
                 catch

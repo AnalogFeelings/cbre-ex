@@ -32,19 +32,19 @@ namespace CBRE.BspEditor.Editing.Commands.View
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            using (var qf = new QuickForm(Title) { UseShortcutKeys = true }.TextBox("X", "X", "0").TextBox("Y", "Y", "0").TextBox("Z", "Z", "0").OkCancel(OK, Cancel))
+            using (QuickForm qf = new QuickForm(Title) { UseShortcutKeys = true }.TextBox("X", "X", "0").TextBox("Y", "Y", "0").TextBox("Z", "Z", "0").OkCancel(OK, Cancel))
             {
                 qf.ClientSize = new Size(180, qf.ClientSize.Height);
 
                 if (await qf.ShowDialogAsync() != DialogResult.OK) return;
 
-                if (!Decimal.TryParse(qf.String("X"), out var x)) return;
-                if (!Decimal.TryParse(qf.String("Y"), out var y)) return;
-                if (!Decimal.TryParse(qf.String("Z"), out var z)) return;
+                if (!Decimal.TryParse(qf.String("X"), out decimal x)) return;
+                if (!Decimal.TryParse(qf.String("Y"), out decimal y)) return;
+                if (!Decimal.TryParse(qf.String("Z"), out decimal z)) return;
 
-                var coordinate = new Vector3((float) x, (float) y, (float) z);
-                
-                var box = new Box(coordinate - (Vector3.One * 10), coordinate + (Vector3.One * 10));
+                Vector3 coordinate = new Vector3((float) x, (float) y, (float) z);
+
+                Box box = new Box(coordinate - (Vector3.One * 10), coordinate + (Vector3.One * 10));
 
                 await Task.WhenAll(
                     Oy.Publish("MapDocument:Viewport:Focus3D", box),

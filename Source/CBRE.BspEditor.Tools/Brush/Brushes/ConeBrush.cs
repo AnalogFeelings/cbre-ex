@@ -43,41 +43,41 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         public IEnumerable<IMapObject> Create(UniqueNumberGenerator generator, Box box, string texture, int roundDecimals)
         {
-            var numSides = (int) _numSides.GetValue();
+            int numSides = (int) _numSides.GetValue();
             if (numSides < 3) yield break;
 
             // This is all very similar to the cylinder brush.
-            var width = box.Width;
-            var length = box.Length;
-            var major = width / 2;
-            var minor = length / 2;
-            var angle = 2 * Math.PI / numSides;
+            float width = box.Width;
+            float length = box.Length;
+            float major = width / 2;
+            float minor = length / 2;
+            double angle = 2 * Math.PI / numSides;
 
-            var points = new Vector3[numSides];
-            for (var i = 0; i < numSides; i++)
+            Vector3[] points = new Vector3[numSides];
+            for (int i = 0; i < numSides; i++)
             {
-                var a = i * angle;
-                var xval = box.Center.X + major * (float) Math.Cos(a);
-                var yval = box.Center.Y + minor * (float) Math.Sin(a);
-                var zval = box.Start.Z;
+                double a = i * angle;
+                float xval = box.Center.X + major * (float) Math.Cos(a);
+                float yval = box.Center.Y + minor * (float) Math.Sin(a);
+                float zval = box.Start.Z;
                 points[i] = new Vector3(xval, yval, zval).Round(roundDecimals);
             }
 
-            var faces = new List<Vector3[]>();
+            List<Vector3[]> faces = new List<Vector3[]>();
 
-            var point = new Vector3(box.Center.X, box.Center.Y, box.End.Z).Round(roundDecimals);
-            for (var i = 0; i < numSides; i++)
+            Vector3 point = new Vector3(box.Center.X, box.Center.Y, box.End.Z).Round(roundDecimals);
+            for (int i = 0; i < numSides; i++)
             {
-                var next = (i + 1) % numSides;
+                int next = (i + 1) % numSides;
                 faces.Add(new[] {points[i], point, points[next]});
             }
             faces.Add(points.ToArray());
 
-            var solid = new Solid(generator.Next("MapObject"));
+            Solid solid = new Solid(generator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
-            foreach (var arr in faces)
+            foreach (Vector3[] arr in faces)
             {
-                var face = new Face(generator.Next("Face"))
+                Face face = new Face(generator.Next("Face"))
                 {
                     Plane = new Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = texture }

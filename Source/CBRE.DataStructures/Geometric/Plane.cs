@@ -20,8 +20,8 @@ namespace CBRE.DataStructures.Geometric
         
         public Plane(Vector3 p1, Vector3 p2, Vector3 p3)
         {
-            var ab = p2 - p1;
-            var ac = p3 - p1;
+            Vector3 ab = p2 - p1;
+            Vector3 ac = p3 - p1;
 
             Normal = ac.Cross(ab).Normalise();
             DistanceFromOrigin = Normal.Dot(p1);
@@ -82,7 +82,7 @@ namespace CBRE.DataStructures.Geometric
             //if s > 0 then point is "above" the plane (same side as normal)
             //if s < 0 then it lies on the opposite side
             //if s = 0 then the point (x,y,z) lies on the plane
-            var res = EvalAtPoint(co);
+            float res = EvalAtPoint(co);
             if (Math.Abs(res) < epsilon) return 0;
             if (res < 0) return -1;
             return 1;
@@ -102,11 +102,11 @@ namespace CBRE.DataStructures.Geometric
             // http://softsurfer.com/Archive/algorithm_0104/algorithm_0104B.htm#Line%20Intersections
             // http://paulbourke.net/geometry/planeline/
 
-            var dir = line.End - line.Start;
-            var denominator = -Normal.Dot(dir);
-            var numerator = Normal.Dot(line.Start - Normal * DistanceFromOrigin);
+            Vector3 dir = line.End - line.Start;
+            float denominator = -Normal.Dot(dir);
+            float numerator = Normal.Dot(line.Start - Normal * DistanceFromOrigin);
             if (Math.Abs(denominator) < 0.00001f || (!ignoreDirection && denominator < 0)) return null;
-            var u = numerator / denominator;
+            float u = numerator / denominator;
             if (!ignoreSegment && (u < 0 || u > 1)) return null;
             return line.Start + u * dir;
         }
@@ -136,7 +136,7 @@ namespace CBRE.DataStructures.Geometric
         public Vector3 GetClosestAxisToNormal()
         {
             // VHE prioritises the axes in order of X, Y, Z.
-            var norm = Normal.Absolute();
+            Vector3 norm = Normal.Absolute();
 
             if (norm.X >= norm.Y && norm.X >= norm.Z) return Vector3.UnitX;
             if (norm.Y >= norm.Z) return Vector3.UnitY;
@@ -156,14 +156,14 @@ namespace CBRE.DataStructures.Geometric
         {
             // http://paulbourke.net/geometry/3planes/
 
-            var c1 = p2.Normal.Cross(p3.Normal);
-            var c2 = p3.Normal.Cross(p1.Normal);
-            var c3 = p1.Normal.Cross(p2.Normal);
+            Vector3 c1 = p2.Normal.Cross(p3.Normal);
+            Vector3 c2 = p3.Normal.Cross(p1.Normal);
+            Vector3 c3 = p1.Normal.Cross(p2.Normal);
 
-            var denom = p1.Normal.Dot(c1);
+            float denom = p1.Normal.Dot(c1);
             if (denom < 0.00001f) return null; // No intersection, planes must be parallel
 
-            var numer = (-p1.D * c1) + (-p2.D * c2) + (-p3.D * c3);
+            Vector3 numer = (-p1.D * c1) + (-p2.D * c2) + (-p3.D * c3);
             return numer / denom;
         }
 

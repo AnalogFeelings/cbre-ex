@@ -19,19 +19,19 @@ namespace CBRE.BspEditor.Providers.Processors
 
         public Task AfterLoad(MapDocument document)
         {
-            var allObjects = document.Map.Root.FindAll();
+            List<IMapObject> allObjects = document.Map.Root.FindAll();
 
             // add objects in each group to the visgroup list
-            var visgroups = document.Map.Data.Get<Visgroup>().ToDictionary(x => x.ID, x => x);
-            foreach (var obj in allObjects)
+            Dictionary<long, Visgroup> visgroups = document.Map.Data.Get<Visgroup>().ToDictionary(x => x.ID, x => x);
+            foreach (IMapObject obj in allObjects)
             {
-                var ids = obj.Data.Get<VisgroupID>().ToList();
-                var visible = true;
-                foreach (var id in ids)
+                List<VisgroupID> ids = obj.Data.Get<VisgroupID>().ToList();
+                bool visible = true;
+                foreach (VisgroupID id in ids)
                 {
                     if (!visgroups.ContainsKey(id.ID)) continue;
 
-                    var vis = visgroups[id.ID];
+                    Visgroup vis = visgroups[id.ID];
                     vis.Objects.Add(obj);
                     visible = vis.Visible;
                 }
@@ -41,12 +41,12 @@ namespace CBRE.BspEditor.Providers.Processors
             }
 
             // set up auto visgroups
-            var autoVis = document.Environment?.GetAutomaticVisgroups()?.ToList() ?? new List<AutomaticVisgroup>();
+            List<AutomaticVisgroup> autoVis = document.Environment?.GetAutomaticVisgroups()?.ToList() ?? new List<AutomaticVisgroup>();
 
-            foreach (var av in autoVis)
+            foreach (AutomaticVisgroup av in autoVis)
             {
                 document.Map.Data.Add(av);
-                foreach (var obj in allObjects)
+                foreach (IMapObject obj in allObjects)
                 {
                     if (av.IsMatch(obj))
                     {

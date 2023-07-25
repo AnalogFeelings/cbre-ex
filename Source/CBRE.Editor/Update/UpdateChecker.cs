@@ -58,8 +58,8 @@ namespace CBRE.Editor.Update
 
             if (_updateFileToInstall == null || !File.Exists(_updateFileToInstall)) return;
 
-            var loc = Path.GetDirectoryName(typeof(Program).Assembly.Location);
-            var arguments = "/S" + (loc != null ? " /D=" + loc : "");
+            string loc = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            string arguments = "/S" + (loc != null ? " /D=" + loc : "");
 #if DEBUG
             arguments = "";
 #endif
@@ -72,7 +72,7 @@ namespace CBRE.Editor.Update
             {
                 if (!File.Exists(file)) return;
 
-                var res = MessageBox.Show(UpdateDownloadedMessage, UpdateDownloadedTitle, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                DialogResult res = MessageBox.Show(UpdateDownloadedMessage, UpdateDownloadedTitle, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (res == DialogResult.Cancel) return;
 
                 _updateFileToInstall = file;

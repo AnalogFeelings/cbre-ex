@@ -13,7 +13,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Errors
 
         public IEnumerable<VertexError> GetErrors(VertexSolid solid)
         {
-            foreach (var face in solid.Copy.Faces.Where(x => !IsConvex(x)))
+            foreach (MutableFace face in solid.Copy.Faces.Where(x => !IsConvex(x)))
             {
                 yield return new VertexError(Key, solid).Add(face);
             }

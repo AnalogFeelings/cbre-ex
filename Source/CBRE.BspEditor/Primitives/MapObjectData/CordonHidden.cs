@@ -36,7 +36,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("CordonHidden");
+            SerialisedObject so = new SerialisedObject("CordonHidden");
             return so;
         }
     }

@@ -21,16 +21,16 @@ namespace CBRE.Packages.Vpk
             _streams = new Dictionary<ushort, Stream>();
             _folders = new Dictionary<string, HashSet<string>>();
             _files = new Dictionary<string, HashSet<string>>();
-            foreach (var entry in directory.GetEntries().OfType<VpkEntry>())
+            foreach (VpkEntry entry in directory.GetEntries().OfType<VpkEntry>())
             {
-                var fn = entry.FullName;
+                string fn = entry.FullName;
                 _entries.Add(fn, entry);
-                var split = fn.Split('/');
-                var joined = "";
-                for (var i = 0; i < split.Length; i++)
+                string[] split = fn.Split('/');
+                string joined = "";
+                for (int i = 0; i < split.Length; i++)
                 {
-                    var sub = split[i];
-                    var name = joined.Length == 0 ? sub : joined + '/' + sub;
+                    string sub = split[i];
+                    string name = joined.Length == 0 ? sub : joined + '/' + sub;
                     if (i == split.Length - 1)
                     {
                         // File name
@@ -50,14 +50,14 @@ namespace CBRE.Packages.Vpk
 
         private string GetName(string path)
         {
-            var idx = path.LastIndexOf('/');
+            int idx = path.LastIndexOf('/');
             if (idx < 0) return path;
             return path.Substring(idx + 1);
         }
 
         private string GetParent(string path)
         {
-            var idx = path.LastIndexOf('/');
+            int idx = path.LastIndexOf('/');
             if (idx < 0) return "";
             return path.Substring(0, idx);
         }
@@ -70,8 +70,8 @@ namespace CBRE.Packages.Vpk
         public bool HasFile(string path)
         {
             path = path.ToLowerInvariant();
-            var idx = path.LastIndexOf('/');
-            var fol = idx >= 0 ? path.Substring(0, idx) : "";
+            int idx = path.LastIndexOf('/');
+            string fol = idx >= 0 ? path.Substring(0, idx) : "";
             return _files.ContainsKey(fol) && _files[fol].Contains(path);
         }
 
@@ -99,19 +99,19 @@ namespace CBRE.Packages.Vpk
 
         public IEnumerable<string> SearchDirectories(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectDirectories(path) : GetDirectories(path);
+            IEnumerable<string> files = recursive ? CollectDirectories(path) : GetDirectories(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         public IEnumerable<string> SearchFiles(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectFiles(path) : GetFiles(path);
+            IEnumerable<string> files = recursive ? CollectFiles(path) : GetFiles(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         private IEnumerable<string> CollectDirectories(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].Where(x => x.Length > 0));
@@ -122,7 +122,7 @@ namespace CBRE.Packages.Vpk
 
         private IEnumerable<string> CollectFiles(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].SelectMany(CollectFiles));
@@ -142,27 +142,27 @@ namespace CBRE.Packages.Vpk
 
         public Stream OpenFile(string path)
         {
-            var entry = GetEntry(path);
+            VpkEntry entry = GetEntry(path);
             if (entry == null) throw new FileNotFoundException();
 
             lock (this)
             {
                 if (!_streams.ContainsKey(entry.ArchiveIndex))
                 {
-                    var file = _directory.Chunks[entry.ArchiveIndex];
-                    var stream = _directory.OpenFile(file);
+                    FileInfo file = _directory.Chunks[entry.ArchiveIndex];
+                    Stream stream = _directory.OpenFile(file);
                     _streams.Add(entry.ArchiveIndex, stream);
                 }
             }
 
-            var offset = entry.ArchiveIndex == VpkDirectory.DirectoryIndex ? _directory.HeaderLength + _directory.TreeLength + entry.EntryOffset : entry.EntryOffset;
-            var sub = new SubStream(_streams[entry.ArchiveIndex], offset, entry.EntryLength);
+            uint offset = entry.ArchiveIndex == VpkDirectory.DirectoryIndex ? _directory.HeaderLength + _directory.TreeLength + entry.EntryOffset : entry.EntryOffset;
+            SubStream sub = new SubStream(_streams[entry.ArchiveIndex], offset, entry.EntryLength);
             return new BufferedStream(new VpkEntryStream(entry, sub));
         }
 
         public void Dispose()
         {
-            foreach (var stream in _streams)
+            foreach (KeyValuePair<ushort, Stream> stream in _streams)
             {
                 stream.Value.Dispose();
             }

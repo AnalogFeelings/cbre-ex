@@ -38,11 +38,11 @@ namespace CBRE.BspEditor.Providers
         {
             return Task.Run(() =>
             {
-                using (var reader = new StreamReader(stream, Encoding.ASCII, true, 1024, false))
+                using (StreamReader reader = new StreamReader(stream, Encoding.ASCII, true, 1024, false))
                 {
-                    var result = new BspFileLoadResult();
+                    BspFileLoadResult result = new BspFileLoadResult();
 
-                    var map = new Map();
+                    Map map = new Map();
 
                     Read(map, reader);
 
@@ -56,7 +56,7 @@ namespace CBRE.BspEditor.Providers
         {
             return Task.Run(() =>
             {
-                using (var writer = new StreamWriter(stream, Encoding.ASCII, 1024, true))
+                using (StreamWriter writer = new StreamWriter(stream, Encoding.ASCII, 1024, true))
                 {
                     Write(map, writer);
                 }
@@ -87,33 +87,33 @@ namespace CBRE.BspEditor.Providers
         {
             const NumberStyles ns = NumberStyles.Float;
 
-            var points = new List<Vector3>();
-            var faces = new List<ObjFace>();
-            var currentGroup = "default";
-            var scale = 100f;
+            List<Vector3> points = new List<Vector3>();
+            List<ObjFace> faces = new List<ObjFace>();
+            string currentGroup = "default";
+            float scale = 100f;
 
             string line;
             while ((line = reader.ReadLine()) != null)
             {
                 if (line.StartsWith("# Scale: "))
                 {
-                    var num = line.Substring(9);
-                    if (float.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out var s))
+                    string num = line.Substring(9);
+                    if (float.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out float s))
                     {
                         scale = s;
                     }
                 }
 
                 line = CleanLine(line);
-                SplitLine(line, out var keyword, out var values);
+                SplitLine(line, out string keyword, out string values);
                 if (String.IsNullOrWhiteSpace(keyword)) continue;
 
-                var vals = (values ?? "").Split(' ').Where(x => !String.IsNullOrWhiteSpace(x)).ToArray();
+                string[] vals = (values ?? "").Split(' ').Where(x => !String.IsNullOrWhiteSpace(x)).ToArray();
                 switch (keyword.ToLower())
                 {
                     // Things I care about
                     case "v": // geometric vertices
-                        var vec = NumericsExtensions.Parse(vals[0], vals[1], vals[2], ns, CultureInfo.InvariantCulture);
+                        Vector3 vec = NumericsExtensions.Parse(vals[0], vals[1], vals[2], ns, CultureInfo.InvariantCulture);
                         points.Add(vec * scale);
                         break;
                     case "f": // face
@@ -194,17 +194,17 @@ namespace CBRE.BspEditor.Providers
                 }
             }
 
-            var solids = new List<Solid>();
+            List<Solid> solids = new List<Solid>();
 
             // Try and see if we have a valid solid per-group
-            foreach (var g in faces.GroupBy(x => x.Group))
+            foreach (IGrouping<string, ObjFace> g in faces.GroupBy(x => x.Group))
             {
                 solids.AddRange(CreateSolids(map, points, g));
             }
 
-            foreach (var solid in solids)
+            foreach (Solid solid in solids)
             {
-                foreach (var face in solid.Faces)
+                foreach (Face face in solid.Faces)
                 {
                     face.Texture.AlignToNormal(face.Plane.Normal);
                 }
@@ -217,16 +217,16 @@ namespace CBRE.BspEditor.Providers
 
         private IEnumerable<Solid> CreateSolids(Map map, List<Vector3> points, IEnumerable<ObjFace> objFaces)
         {
-            var faces = objFaces.Select(x => CreateFace(map, points, x)).ToList();
+            List<Face> faces = objFaces.Select(x => CreateFace(map, points, x)).ToList();
 
             // See if the solid is valid
-            var solid = new Solid(map.NumberGenerator.Next("MapObject"));
+            Solid solid = new Solid(map.NumberGenerator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
             solid.Data.AddRange(faces);
             if (solid.IsValid())
             {
                 // Do an additional check to ensure that all edges are shared
-                var edges = solid.Faces.SelectMany(x => x.GetEdges()).ToList();
+                List<Line> edges = solid.Faces.SelectMany(x => x.GetEdges()).ToList();
                 if (edges.All(x => edges.Count(y => x.EquivalentTo(y)) == 2))
                 {
                     // Valid! let's get out of here!
@@ -236,15 +236,15 @@ namespace CBRE.BspEditor.Providers
             }
 
             // Not a valid solid, decompose into tetrahedrons/etc
-            foreach (var face in faces)
+            foreach (Face face in faces)
             {
-                var polygon = face.ToPolygon();
+                Polygon polygon = face.ToPolygon();
                 if (!polygon.IsValid() || !polygon.IsConvex())
                 {
                     // tetrahedrons
-                    foreach (var triangle in GetTriangles(face))
+                    foreach (Vector3[] triangle in GetTriangles(face))
                     {
-                        var tf = new Face(map.NumberGenerator.Next("Face"))
+                        Face tf = new Face(map.NumberGenerator.Next("Face"))
                         {
                             Plane = new Plane(triangle[0], triangle[1], triangle[2])
                         };
@@ -262,7 +262,7 @@ namespace CBRE.BspEditor.Providers
 
         private IEnumerable<Vector3[]> GetTriangles(Face face)
         {
-            for (var i = 1; i < face.Vertices.Count - 1; i++)
+            for (int i = 1; i < face.Vertices.Count - 1; i++)
             {
                 yield return new[]
                 {
@@ -275,18 +275,18 @@ namespace CBRE.BspEditor.Providers
 
         private Solid SolidifyFace(Map map, Face face)
         {
-            var solid = new Solid(map.NumberGenerator.Next("MapObject"));
+            Solid solid = new Solid(map.NumberGenerator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
             solid.Data.Add(face);
 
-            var center = face.Vertices.Aggregate(Vector3.Zero, (sum, v) => sum + v) / face.Vertices.Count;
-            var offset = center - face.Plane.Normal * 5;
-            for (var i = 0; i < face.Vertices.Count; i++)
+            Vector3 center = face.Vertices.Aggregate(Vector3.Zero, (sum, v) => sum + v) / face.Vertices.Count;
+            Vector3 offset = center - face.Plane.Normal * 5;
+            for (int i = 0; i < face.Vertices.Count; i++)
             {
-                var v1 = face.Vertices[i];
-                var v2 = face.Vertices[(i + 1) % face.Vertices.Count];
+                Vector3 v1 = face.Vertices[i];
+                Vector3 v2 = face.Vertices[(i + 1) % face.Vertices.Count];
 
-                var f = new Face(map.NumberGenerator.Next("Face"))
+                Face f = new Face(map.NumberGenerator.Next("Face"))
                 {
                     Plane = new Plane(v1, offset, v2)
                 };
@@ -305,9 +305,9 @@ namespace CBRE.BspEditor.Providers
 
         private Face CreateFace(Map map, List<Vector3> points, ObjFace objFace)
         {
-            var verts = objFace.Vertices.Select(x => points[x]).ToList();
+            List<Vector3> verts = objFace.Vertices.Select(x => points[x]).ToList();
 
-            var f = new Face(map.NumberGenerator.Next("Face"))
+            Face f = new Face(map.NumberGenerator.Next("Face"))
             {
                 Plane = new Plane(verts[2], verts[1], verts[0])
             };
@@ -321,7 +321,7 @@ namespace CBRE.BspEditor.Providers
         private int ParseFaceIndex(List<Vector3> list, string index)
         {
             if (index.Contains('/')) index = index.Substring(0, index.IndexOf('/'));
-            var idx = int.Parse(index);
+            int idx = int.Parse(index);
 
             if (idx < 0)
             {
@@ -337,7 +337,7 @@ namespace CBRE.BspEditor.Providers
 
         private static void SplitLine(string line, out string keyword, out string arguments)
         {
-            var idx = line.IndexOf(' ');
+            int idx = line.IndexOf(' ');
             if (idx < 0)
             {
                 keyword = line;
@@ -359,15 +359,15 @@ namespace CBRE.BspEditor.Providers
             writer.WriteLine("# Scale: 1");
             writer.WriteLine();
 
-            foreach (var solid in map.Root.Find(x => x is Solid).OfType<Solid>())
+            foreach (Solid solid in map.Root.Find(x => x is Solid).OfType<Solid>())
             {
                 writer.Write("g solid_");
                 writer.Write(solid.ID);
                 writer.WriteLine();
 
-                foreach (var face in solid.Faces)
+                foreach (Face face in solid.Faces)
                 {
-                    foreach (var v in face.Vertices)
+                    foreach (Vector3 v in face.Vertices)
                     {
                         writer.Write("v ");
                         writer.Write(v.X.ToString("0.0000", CultureInfo.InvariantCulture));
@@ -379,7 +379,7 @@ namespace CBRE.BspEditor.Providers
                     }
 
                     writer.Write("f ");
-                    for (var i = 1; i <= face.Vertices.Count; i++)
+                    for (int i = 1; i <= face.Vertices.Count; i++)
                     {
                         writer.Write(-i);
                         writer.Write(' ');

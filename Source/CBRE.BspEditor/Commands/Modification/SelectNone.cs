@@ -25,7 +25,7 @@ namespace CBRE.BspEditor.Commands.Modification
 
         protected override Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var op = new Deselect(document.Map.Root.FindAll());
+            Deselect op = new Deselect(document.Map.Root.FindAll());
             return MapDocumentOperation.Perform(document, op);
         }
     }

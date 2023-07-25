@@ -44,12 +44,12 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         private Solid MakeSolid(UniqueNumberGenerator generator, IEnumerable<Vector3[]> faces, string texture, Color col)
         {
-            var solid = new Solid(generator.Next("MapObject"));
+            Solid solid = new Solid(generator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
 
-            foreach (var arr in faces)
+            foreach (Vector3[] arr in faces)
             {
-                var face = new Face(generator.Next("Face"))
+                Face face = new Face(generator.Next("Face"))
                 {
                     Plane = new Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = texture  }
@@ -63,47 +63,47 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         public IEnumerable<IMapObject> Create(UniqueNumberGenerator generator, Box box, string texture, int roundDecimals)
         {
-            var numSides = (int)_numSides.GetValue();
+            int numSides = (int)_numSides.GetValue();
             if (numSides < 3) yield break;
 
             roundDecimals = 2; // don't support rounding
 
-            var width = box.Width;
-            var length = box.Length;
-            var height = box.Height;
-            var major = width / 2;
-            var minor = length / 2;
-            var heightRadius = height / 2;
+            float width = box.Width;
+            float length = box.Length;
+            float height = box.Height;
+            float major = width / 2;
+            float minor = length / 2;
+            float heightRadius = height / 2;
 
-            var angleV = (float) MathHelper.DegreesToRadians(180f) / numSides;
-            var angleH = (float) MathHelper.DegreesToRadians(360f) / numSides;
+            float angleV = (float) MathHelper.DegreesToRadians(180f) / numSides;
+            float angleH = (float) MathHelper.DegreesToRadians(360f) / numSides;
+
+            List<Vector3[]> faces = new List<Vector3[]>();
+            Vector3 bottom = new Vector3(box.Center.X, box.Center.Y, box.Start.Z).Round(roundDecimals);
+            Vector3 top = new Vector3(box.Center.X, box.Center.Y, box.End.Z).Round(roundDecimals);
             
-            var faces = new List<Vector3[]>();
-            var bottom = new Vector3(box.Center.X, box.Center.Y, box.Start.Z).Round(roundDecimals);
-            var top = new Vector3(box.Center.X, box.Center.Y, box.End.Z).Round(roundDecimals);
-            
-            for (var i = 0; i < numSides; i++)
+            for (int i = 0; i < numSides; i++)
             {
                 // Top -> bottom
-                var zAngleStart = angleV * i;
-                var zAngleEnd = angleV * (i + 1);
-                var zStart = heightRadius * (float) Math.Cos(zAngleStart);
-                var zEnd = heightRadius * (float) Math.Cos(zAngleEnd);
-                var zMultStart = (float) Math.Sin(zAngleStart);
-                var zMultEnd = (float) Math.Sin(zAngleEnd);
-                for (var j = 0; j < numSides; j++)
+                float zAngleStart = angleV * i;
+                float zAngleEnd = angleV * (i + 1);
+                float zStart = heightRadius * (float) Math.Cos(zAngleStart);
+                float zEnd = heightRadius * (float) Math.Cos(zAngleEnd);
+                float zMultStart = (float) Math.Sin(zAngleStart);
+                float zMultEnd = (float) Math.Sin(zAngleEnd);
+                for (int j = 0; j < numSides; j++)
                 {
                     // Go around the circle in X/Y
-                    var xyAngleStart = angleH * j;
-                    var xyAngleEnd = angleH * ((j + 1) % numSides);
-                    var xyStartX = major * (float) Math.Cos(xyAngleStart);
-                    var xyStartY = minor * (float) Math.Sin(xyAngleStart);
-                    var xyEndX = major * (float) Math.Cos(xyAngleEnd);
-                    var xyEndY = minor * (float) Math.Sin(xyAngleEnd);
-                    var one = (new Vector3(xyStartX * zMultStart, xyStartY * zMultStart, zStart) + box.Center).Round(roundDecimals);
-                    var two = (new Vector3(xyEndX * zMultStart, xyEndY * zMultStart, zStart) + box.Center).Round(roundDecimals);
-                    var three = (new Vector3(xyEndX * zMultEnd, xyEndY * zMultEnd, zEnd) + box.Center).Round(roundDecimals);
-                    var four = (new Vector3(xyStartX * zMultEnd, xyStartY * zMultEnd, zEnd) + box.Center).Round(roundDecimals);
+                    float xyAngleStart = angleH * j;
+                    float xyAngleEnd = angleH * ((j + 1) % numSides);
+                    float xyStartX = major * (float) Math.Cos(xyAngleStart);
+                    float xyStartY = minor * (float) Math.Sin(xyAngleStart);
+                    float xyEndX = major * (float) Math.Cos(xyAngleEnd);
+                    float xyEndY = minor * (float) Math.Sin(xyAngleEnd);
+                    Vector3 one = (new Vector3(xyStartX * zMultStart, xyStartY * zMultStart, zStart) + box.Center).Round(roundDecimals);
+                    Vector3 two = (new Vector3(xyEndX * zMultStart, xyEndY * zMultStart, zStart) + box.Center).Round(roundDecimals);
+                    Vector3 three = (new Vector3(xyEndX * zMultEnd, xyEndY * zMultEnd, zEnd) + box.Center).Round(roundDecimals);
+                    Vector3 four = (new Vector3(xyStartX * zMultEnd, xyStartY * zMultEnd, zEnd) + box.Center).Round(roundDecimals);
                     if (i == 0)
                     {
                         // Top faces are triangles

@@ -31,20 +31,20 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
         public Box GetBoundingBox(IMapObject obj)
         {
             // Try and get a bounding box for point entities
-            var name = obj.Data.GetOne<EntityData>()?.Name;
-            var origin = obj.Data.GetOne<Origin>()?.Location ?? Vector3.Zero;
+            string name = obj.Data.GetOne<EntityData>()?.Name;
+            Vector3 origin = obj.Data.GetOne<Origin>()?.Location ?? Vector3.Zero;
             if (name == null) return null;
 
             // Get the class (must be point)
-            var cls = _data.Classes.FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase) && x.ClassType == ClassType.Point);
+            GameDataObject cls = _data.Classes.FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase) && x.ClassType == ClassType.Point);
             if (cls == null) return null;
 
             // Default to 16x16
-            var sub = new Vector3(-8, -8, -8);
-            var add = new Vector3(8, 8, 8);
+            Vector3 sub = new Vector3(-8, -8, -8);
+            Vector3 add = new Vector3(8, 8, 8);
 
             // Get the size behaviour
-            var behav = cls.Behaviours.SingleOrDefault(x => x.Name == "size");
+            Behaviour behav = cls.Behaviours.SingleOrDefault(x => x.Name == "size");
             if (behav != null && behav.Values.Count >= 6)
             {
                 sub = behav.GetVector3(0) ?? Vector3.Zero;
@@ -66,7 +66,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject(nameof(PointEntityGameDataBoundingBoxProvider));
+            SerialisedObject so = new SerialisedObject(nameof(PointEntityGameDataBoundingBoxProvider));
             return so;
         }
     }

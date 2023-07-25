@@ -19,7 +19,7 @@ namespace CBRE.Shell.Forms
             InitializeComponent();
             DialogResult = DialogResult.Cancel;
 
-            foreach (var document in unsaved)
+            foreach (IDocument document in unsaved)
             {
                 DocumentList.Items.Add(document.Name + " *");
             }

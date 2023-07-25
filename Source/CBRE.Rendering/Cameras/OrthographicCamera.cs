@@ -83,7 +83,7 @@ namespace CBRE.Rendering.Cameras
 
         internal OrthographicCamera(string serialised) : this(OrthographicType.Top)
         {
-            var tags = (serialised ?? "").Split(',', '/');
+            string[] tags = (serialised ?? "").Split(',', '/');
             if (tags.Length < 1) return;
 
             if (Enum.TryParse(tags[0], true, out OrthographicType t)) ViewType = t;
@@ -108,8 +108,8 @@ namespace CBRE.Rendering.Cameras
 
         private Matrix4x4 GetCameraMatrix()
         {
-            var translate = Matrix4x4.CreateTranslation(-Position.X, -Position.Y, 0);
-            var scale = Matrix4x4.CreateScale(new Vector3(Zoom, Zoom, Zoom));
+            Matrix4x4 translate = Matrix4x4.CreateTranslation(-Position.X, -Position.Y, 0);
+            Matrix4x4 scale = Matrix4x4.CreateScale(new Vector3(Zoom, Zoom, Zoom));
             return GetMatrixFor(ViewType) * translate * scale;
         }
 
@@ -125,16 +125,16 @@ namespace CBRE.Rendering.Cameras
         public Vector3 ScreenToWorld(Vector3 screen)
         {
             screen = new Vector3(screen.X, Height - screen.Y, screen.Z);
-            var cs = new Vector3(Width / 2f, Height / 2f, 0);
-            var flat = Position + ((screen - cs) / Zoom);
+            Vector3 cs = new Vector3(Width / 2f, Height / 2f, 0);
+            Vector3 flat = Position + ((screen - cs) / Zoom);
             return Expand(flat);
         }
 
         public Vector3 WorldToScreen(Vector3 world)
         {
-            var flat = Flatten(world);
-            var cs = new Vector3(Width / 2f, Height / 2f, 0);
-            var screen = cs + ((flat - Position) * Zoom);
+            Vector3 flat = Flatten(world);
+            Vector3 cs = new Vector3(Width / 2f, Height / 2f, 0);
+            Vector3 screen = cs + ((flat - Position) * Zoom);
             return new Vector3(screen.X, Height - screen.Y, screen.Z);
         }
 

@@ -27,8 +27,8 @@ namespace CBRE.BspEditor.Tools.Texture
             InitialiseTextureList();
 
             // Setup memory & other controls
-            var sz = GetMemory("SizeMode", 1);
-            var so = GetMemory("SortBy", 0);
+            int sz = GetMemory("SizeMode", 1);
+            int so = GetMemory("SortBy", 0);
 
             SortOrderCombo.Items.Clear();
             SortOrderCombo.Items.Add("Name");
@@ -72,7 +72,7 @@ namespace CBRE.BspEditor.Tools.Texture
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -117,11 +117,11 @@ namespace CBRE.BspEditor.Tools.Texture
             TextureNameLabel.Text = "";
             TextureSizeLabel.Text = "";
 
-            var list = selection.ToList();
+            List<string> list = selection.ToList();
             
             if (list.Count == 1 && _document != null)
             {
-                var t = list[0];
+                string t = list[0];
                 TextureNameLabel.Text = t;
                 _document.Environment.GetTextureCollection().ContinueWith(tc =>
                 {
@@ -181,8 +181,8 @@ namespace CBRE.BspEditor.Tools.Texture
         private void SelectedPackageChanged(object sender, TreeViewEventArgs e)
         {
             FavouritesTree.SelectedNode = null;
-            var package = PackageTree.SelectedNode;
-            var key = package?.Name;
+            TreeNode package = PackageTree.SelectedNode;
+            string key = package?.Name;
             if (String.IsNullOrWhiteSpace(key)) key = null;
             SetMemory("SelectedPackage", key);
             SetMemory("SelectedFavourite", (string) null);
@@ -193,8 +193,8 @@ namespace CBRE.BspEditor.Tools.Texture
         private void SelectedFavouriteChanged(object sender, TreeViewEventArgs e)
         {
             PackageTree.SelectedNode = null;
-            var favourite = FavouritesTree.SelectedNode;
-            var key = favourite?.Name;
+            TreeNode favourite = FavouritesTree.SelectedNode;
+            string key = favourite?.Name;
             if (String.IsNullOrWhiteSpace(key)) key = null;
             SetMemory("SelectedFavourite", key);
             SetMemory("SelectedPackage", (string)null);
@@ -210,15 +210,15 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void UpdatePackageList()
         {
-            var selected = PackageTree.SelectedNode;
-            var selectedKey = selected == null ? GetMemory<string>("SelectedPackage") : selected.Name;
-            var packages = _textureList.Collection.Packages.Where(p => _textures.Any(p.HasTexture));
+            TreeNode selected = PackageTree.SelectedNode;
+            string selectedKey = selected == null ? GetMemory<string>("SelectedPackage") : selected.Name;
+            IEnumerable<CBRE.Providers.Texture.TexturePackage> packages = _textureList.Collection.Packages.Where(p => _textures.Any(p.HasTexture));
             PackageTree.Nodes.Clear();
-            var parent = PackageTree.Nodes.Add("", "All Packages");
+            TreeNode parent = PackageTree.Nodes.Add("", "All Packages");
             TreeNode reselect = null;
-            foreach (var tp in packages.OrderBy(x => x.ToString()))
+            foreach (CBRE.Providers.Texture.TexturePackage tp in packages.OrderBy(x => x.ToString()))
             {
-                var node = parent.Nodes.Add(tp.ToString(), tp + " (" + tp.Textures.Count + ")");
+                TreeNode node = parent.Nodes.Add(tp.ToString(), tp + " (" + tp.Textures.Count + ")");
                 if (selectedKey == node.Name) reselect = node;
             }
             PackageTree.SelectedNode = reselect;
@@ -227,11 +227,11 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private IEnumerable<string> GetPackageTextures()
         {
-            var package = PackageTree.SelectedNode;
-            var key = package?.Name;
+            TreeNode package = PackageTree.SelectedNode;
+            string key = package?.Name;
             if (String.IsNullOrWhiteSpace(key)) key = null;
-            var p = _textureList.Collection.Packages.FirstOrDefault(x => x.ToString() == key);
-            var set = new HashSet<string>(_textures);
+            CBRE.Providers.Texture.TexturePackage p = _textureList.Collection.Packages.FirstOrDefault(x => x.ToString() == key);
+            HashSet<string> set = new HashSet<string>(_textures);
             if (p != null) set.IntersectWith(p.Textures);
             return set;
         }
@@ -253,20 +253,20 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task UpdateTextureList()
         {
-            var list = FavouritesTree.SelectedNode != null ? GetFavouriteFolderTextures() : GetPackageTextures();
+            IEnumerable<string> list = FavouritesTree.SelectedNode != null ? GetFavouriteFolderTextures() : GetPackageTextures();
             if (!String.IsNullOrEmpty(FilterTextbox.Text))
             {
                 list = list.Where(x => x.ToLower().Contains(FilterTextbox.Text.ToLower()));
             }
             if (UsedTexturesOnlyBox.Checked && _document != null)
             {
-                var textureNames = new HashSet<string>(_document.Map.Root.FindAll().SelectMany(x => x.Data.OfType<ITextured>()).Select(x => x.Texture.Name).Distinct());
+                HashSet<string> textureNames = new HashSet<string>(_document.Map.Root.FindAll().SelectMany(x => x.Data.OfType<ITextured>()).Select(x => x.Texture.Name).Distinct());
                 list = list.Where(x => textureNames.Contains(x, StringComparer.InvariantCultureIgnoreCase));
             }
-            var l = list.ToList();
+            List<string> l = list.ToList();
             await _textureList.SetTextureList(l);
 
-            var sel = _document?.Map.Data.GetOne<ActiveTexture>()?.Name;
+            string sel = _document?.Map.Data.GetOne<ActiveTexture>()?.Name;
             if (sel != null)
             {
                 _textureList.SetHighlightedTextures(new[] { sel });
@@ -281,7 +281,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private IEnumerable<string> GetFavouriteFolderTextures()
         {
-            var folder = FavouritesTree.SelectedNode;
+            TreeNode folder = FavouritesTree.SelectedNode;
             return _textures;
             //var node = folder == null ? null : folder.Tag as FavouriteTextureFolder;
             //var nodes = new List<FavouriteTextureFolder>();
@@ -372,13 +372,13 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void SelectButtonClicked(object sender, EventArgs e)
         {
-            var textures = _textureList.GetHighlightedTextures().ToHashSet(StringComparer.InvariantCultureIgnoreCase);
+            HashSet<string> textures = _textureList.GetHighlightedTextures().ToHashSet(StringComparer.InvariantCultureIgnoreCase);
             if (!textures.Any()) return;
 
-            var sel = _document.Map.Root.Find(x => x.Data.OfType<ITextured>().Any(t => textures.Contains(t.Texture.Name))).ToList();
-            var des = _document.Selection.Except(sel).ToList();
+            List<IMapObject> sel = _document.Map.Root.Find(x => x.Data.OfType<ITextured>().Any(t => textures.Contains(t.Texture.Name))).ToList();
+            List<IMapObject> des = _document.Selection.Except(sel).ToList();
 
-            var transaction = new Transaction(new Select(sel), new Deselect(des));
+            Transaction transaction = new Transaction(new Select(sel), new Deselect(des));
             MapDocumentOperation.Perform(_document, transaction);
 
             Close();
@@ -533,7 +533,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
             public T Get<T>(string name, T def = default(T))
             {
-                if (!Values.TryGetValue(GetType().Name + '.' + name, out var v)) return def;
+                if (!Values.TryGetValue(GetType().Name + '.' + name, out object v)) return def;
 
                 try
                 {
@@ -549,17 +549,17 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void SetMemory<T>(string name, T value)
         {
-            var id = _document?.Environment?.ID;
+            string id = _document?.Environment?.ID;
             if (id == null) return;
-            if (!_memory.TryGetValue(id, out var m)) _memory[id] = m = new Memory();
+            if (!_memory.TryGetValue(id, out Memory m)) _memory[id] = m = new Memory();
             m.Set(name, value);
         }
 
         private T GetMemory<T>(string name, T def = default(T))
         {
-            var id = _document?.Environment?.ID;
+            string id = _document?.Environment?.ID;
             if (id == null) return def;
-            if (_memory.TryGetValue(id, out var m)) return m.Get(name, def);
+            if (_memory.TryGetValue(id, out Memory m)) return m.Get(name, def);
             return def;
         }
     }

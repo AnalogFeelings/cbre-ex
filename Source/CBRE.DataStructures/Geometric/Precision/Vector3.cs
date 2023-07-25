@@ -30,9 +30,9 @@ namespace CBRE.DataStructures.Geometric.Precision
 
         public bool EquivalentTo(Vector3 test, double delta = 0.0001d)
         {
-            var xd = Math.Abs(X - test.X);
-            var yd = Math.Abs(Y - test.Y);
-            var zd = Math.Abs(Z - test.Z);
+            double xd = Math.Abs(X - test.X);
+            double yd = Math.Abs(Y - test.Y);
+            double zd = Math.Abs(Z - test.Z);
             return (xd < delta) && (yd < delta) && (zd < delta);
         }
 
@@ -43,9 +43,9 @@ namespace CBRE.DataStructures.Geometric.Precision
 
         public Vector3 Cross(Vector3 that)
         {
-            var xv = Y * that.Z - Z * that.Y;
-            var yv = Z * that.X - X * that.Z;
-            var zv = X * that.Y - Y * that.X;
+            double xv = Y * that.Z - Z * that.Y;
+            double yv = Z * that.X - X * that.Z;
+            double zv = X * that.Y - Y * that.X;
             return new Vector3(xv, yv, zv);
         }
 
@@ -75,7 +75,7 @@ namespace CBRE.DataStructures.Geometric.Precision
 
         public Vector3 Normalise()
         {
-            var len = Length();
+            double len = Length();
             return Math.Abs(len) < 0.0001 ? new Vector3(0, 0, 0) : new Vector3(X / len, Y / len, Z / len);
         }
 
@@ -139,7 +139,7 @@ namespace CBRE.DataStructures.Geometric.Precision
         {
             unchecked
             {
-                var hashCode = X.GetHashCode();
+                int hashCode = X.GetHashCode();
                 hashCode = (hashCode * 397) ^ Y.GetHashCode();
                 hashCode = (hashCode * 397) ^ Z.GetHashCode();
                 return hashCode;

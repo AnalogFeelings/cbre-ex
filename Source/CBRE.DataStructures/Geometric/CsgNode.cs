@@ -29,12 +29,12 @@ namespace CBRE.DataStructures.Geometric
         private List<Polygon> ClipPolygons(IEnumerable<Polygon> polygons)
         {
             if (Plane == null) return polygons.ToList();
-            var pp = Plane.ToPrecisionPlane();
-            var front = new List<Polygon>();
-            var back = new List<Polygon>();
-            foreach (var polygon in polygons.Select(x => x.ToPrecisionPolygon()))
+            Precision.Plane pp = Plane.ToPrecisionPlane();
+            List<Polygon> front = new List<Polygon>();
+            List<Polygon> back = new List<Polygon>();
+            foreach (Precision.Polygon polygon in polygons.Select(x => x.ToPrecisionPolygon()))
             {
-                polygon.Split(pp, out var b, out var f, out var cb, out var cf);
+                polygon.Split(pp, out Precision.Polygon b, out Precision.Polygon f, out Precision.Polygon cb, out Precision.Polygon cf);
                 if (f != null) front.Add(f.ToStandardPolygon());
                 if (b != null) back.Add(b.ToStandardPolygon());
                 if (cf != null) front.Add(cf.ToStandardPolygon());
@@ -58,14 +58,14 @@ namespace CBRE.DataStructures.Geometric
             Plane = new Plane(-Plane.Normal, Plane.PointOnPlane);
             if (Front != null) Front.Invert();
             if (Back != null) Back.Invert();
-            var temp = Front;
+            CsgNode temp = Front;
             Front = Back;
             Back = temp;
         }
 
         public List<Polygon> AllPolygons()
         {
-            var polygons = Polygons.ToList();
+            List<Polygon> polygons = Polygons.ToList();
             if (Front != null) polygons.AddRange(Front.AllPolygons());
             if (Back != null) polygons.AddRange(Back.AllPolygons());
             return polygons;
@@ -75,12 +75,12 @@ namespace CBRE.DataStructures.Geometric
         {
             if (polygons.Count == 0) return;
             if (Plane == null) Plane = polygons[0].Plane.Clone();
-            var pp = Plane.ToPrecisionPlane();
-            var front = new List<Polygon>();
-            var back = new List<Polygon>();
-            foreach (var polygon in polygons.Select(x => x.ToPrecisionPolygon()))
+            Precision.Plane pp = Plane.ToPrecisionPlane();
+            List<Polygon> front = new List<Polygon>();
+            List<Polygon> back = new List<Polygon>();
+            foreach (Precision.Polygon polygon in polygons.Select(x => x.ToPrecisionPolygon()))
             {
-                polygon.Split(pp, out var b, out var f, out var cb, out var cf);
+                polygon.Split(pp, out Precision.Polygon b, out Precision.Polygon f, out Precision.Polygon cb, out Precision.Polygon cf);
                 if (f != null) front.Add(f.ToStandardPolygon());
                 if (b != null) back.Add(b.ToStandardPolygon());
                 if (cf != null) front.Add(cf.ToStandardPolygon());

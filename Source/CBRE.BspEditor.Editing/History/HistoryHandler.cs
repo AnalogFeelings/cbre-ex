@@ -31,7 +31,7 @@ namespace CBRE.BspEditor.Editing.History
         {
             if (operation.Operation.Trivial) return;
 
-            var stack = operation.Document.Map.Data.GetOne<HistoryStack>();
+            HistoryStack stack = operation.Document.Map.Data.GetOne<HistoryStack>();
             stack?.Add(operation.Operation);
 
             Oy.Publish("MapDocument:HistoryChanged", operation.Document);
@@ -39,7 +39,7 @@ namespace CBRE.BspEditor.Editing.History
 
         private async Task Reversed(MapDocumentOperation operation)
         {
-            var stack = operation.Document.Map.Data.GetOne<HistoryStack>();
+            HistoryStack stack = operation.Document.Map.Data.GetOne<HistoryStack>();
             stack?.Remove(operation.Operation);
 
             Oy.Publish("MapDocument:HistoryChanged", operation.Document);

@@ -19,33 +19,33 @@ namespace CBRE.BspEditor.Rendering.Overlay
             if (camera.Zoom < 1) return;
 
             // Escape hatch in case there's too many entities on screen
-            var ents = objects.OfType<Entity>().Where(x => x.EntityData != null).Where(x => !x.Data.OfType<IObjectVisibility>().Any(v => v.IsHidden)).ToList();
+            List<Entity> ents = objects.OfType<Entity>().Where(x => x.EntityData != null).Where(x => !x.Data.OfType<IObjectVisibility>().Any(v => v.IsHidden)).ToList();
             if (ents.Count <= 0 || ents.Count > 1000) return;
 
-            var renderNames = camera.Zoom > 2 && ents.Count < 50;
+            bool renderNames = camera.Zoom > 2 && ents.Count < 50;
 
-            foreach (var ed in ents)
+            foreach (Entity ed in ents)
             {
-                var c = ed.Color?.Color ?? Color.White;
+                Color c = ed.Color?.Color ?? Color.White;
 
-                var loc = camera.WorldToScreen(ed.BoundingBox.Center);
+                Vector3 loc = camera.WorldToScreen(ed.BoundingBox.Center);
 
-                var box = ed.BoundingBox;
-                var dim = camera.Flatten(box.Dimensions / 2);
+                DataStructures.Geometric.Box box = ed.BoundingBox;
+                Vector3 dim = camera.Flatten(box.Dimensions / 2);
                 loc.Y -= camera.UnitsToPixels(dim.Y);
 
-                var str = ed.EntityData.Name;
-                var targetname = ed.EntityData.Get<string>("targetname")?.Trim() ?? "";
+                string str = ed.EntityData.Name;
+                string targetname = ed.EntityData.Get<string>("targetname")?.Trim() ?? "";
 
-                var size = im.CalcTextSize(FontType.Normal, str);
+                Vector2 size = im.CalcTextSize(FontType.Normal, str);
 
-                var pos = new Vector2(loc.X - size.X / 2, loc.Y - size.Y - 2);
+                Vector2 pos = new Vector2(loc.X - size.X / 2, loc.Y - size.Y - 2);
 
                 im.AddText(pos, c, FontType.Normal, str);
 
                 if (renderNames && targetname.Length > 0)
                 {
-                    var nmms = im.CalcTextSize(FontType.Bold, targetname);
+                    Vector2 nmms = im.CalcTextSize(FontType.Bold, targetname);
                     im.AddText(new Vector2(loc.X - nmms.X / 2, loc.Y + 2), c, FontType.Bold, targetname);
                 }
             }

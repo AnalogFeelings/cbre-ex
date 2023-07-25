@@ -36,9 +36,9 @@ namespace CBRE.Shell.Commands
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var doc = parameters.Get<IDocument>("Document");
-            var path = parameters.Get<string>("Path");
-            var hint = parameters.Get("LoaderHint", "");
+            IDocument doc = parameters.Get<IDocument>("Document");
+            string path = parameters.Get<string>("Path");
+            string hint = parameters.Get("LoaderHint", "");
 
             await _documentRegister.Value.ExportDocument(doc, path, hint);
         }

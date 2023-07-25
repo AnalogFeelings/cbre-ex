@@ -20,7 +20,7 @@ namespace CBRE.BspEditor.Tools
     public class ActiveToolRenderable : IOverlayRenderable, IDynamicRenderable, IStartupHook
     {
         private readonly WeakReference<BaseTool> _activeTool = new WeakReference<BaseTool>(null);
-        private BaseTool ActiveTool => _activeTool.TryGetTarget(out var t) ? t : null;
+        private BaseTool ActiveTool => _activeTool.TryGetTarget(out BaseTool t) ? t : null;
 
         public Task OnStartup()
         {

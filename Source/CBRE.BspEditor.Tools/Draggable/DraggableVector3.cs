@@ -32,9 +32,9 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         public override bool CanDrag(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e, Vector3 position)
         {
-            var width = Width;
-            var screenPosition = camera.WorldToScreen(Position);
-            var diff = Vector3.Abs(e.Location - screenPosition);
+            int width = Width;
+            Vector3 screenPosition = camera.WorldToScreen(Position);
+            Vector3 diff = Vector3.Abs(e.Location - screenPosition);
             return diff.X < width && diff.Y < width;
         }
 
@@ -68,11 +68,11 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         public override void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
-            var spos = camera.WorldToScreen(Position);
+            Vector3 spos = camera.WorldToScreen(Position);
 
             const int size = 4;
 
-            var col = Highlighted ? Color.Red : Color.Green;
+            Color col = Highlighted ? Color.Red : Color.Green;
             im.AddRectOutlineOpaque(spos.ToVector2() - new Vector2(size, size), spos.ToVector2() + new Vector2(size, size), Color.Black, col);
         }
 

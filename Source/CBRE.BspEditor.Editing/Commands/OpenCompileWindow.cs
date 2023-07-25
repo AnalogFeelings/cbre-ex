@@ -44,15 +44,15 @@ namespace CBRE.BspEditor.Editing.Commands
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var spec = _compileSpecificationRegister.Value.GetCompileSpecificationsForEngine(document.Environment.Engine).FirstOrDefault();
+            CompileSpecification spec = _compileSpecificationRegister.Value.GetCompileSpecificationsForEngine(document.Environment.Engine).FirstOrDefault();
             if (spec == null) return;
 
-            using (var cd = new CompileDialog(spec, _buildProfileRegister.Value))
+            using (CompileDialog cd = new CompileDialog(spec, _buildProfileRegister.Value))
             {
                 if (await cd.ShowDialogAsync() == DialogResult.OK)
                 {
-                    var arguments = cd.SelectedBatchArguments;
-                    var batch = await document.Environment.CreateBatch(arguments, new BatchOptions());
+                    System.Collections.Generic.IEnumerable<BatchArgument> arguments = cd.SelectedBatchArguments;
+                    Batch batch = await document.Environment.CreateBatch(arguments, new BatchOptions());
                     if (batch == null) return;
                     
                     await batch.Run(document);

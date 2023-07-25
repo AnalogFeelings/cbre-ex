@@ -26,7 +26,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
         {
             Name = "";
             Properties = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (var prop in obj.Properties)
+            foreach (KeyValuePair<string, string> prop in obj.Properties)
             {
                 if (prop.Key == "Name") Name = prop.Value;
                 else if (prop.Key == "Flags") Flags = Convert.ToInt32(prop.Value, CultureInfo.InvariantCulture);
@@ -46,12 +46,12 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
         {
             if (!Properties.ContainsKey(key)) return null;
 
-            var spl = (Properties[key] ?? "").Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] spl = (Properties[key] ?? "").Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (spl.Length < 3) return null;
 
-            if (float.TryParse(spl[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
-                && float.TryParse(spl[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y)
-                && float.TryParse(spl[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var z))
+            if (float.TryParse(spl[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float x)
+                && float.TryParse(spl[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float y)
+                && float.TryParse(spl[2], NumberStyles.Float, CultureInfo.InvariantCulture, out float z))
             {
                 return new Vector3(x, y, z);
             }
@@ -63,8 +63,8 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
             if (!Properties.ContainsKey(key)) return defaultValue;
             try
             {
-                var val = Properties[key];
-                var conv = TypeDescriptor.GetConverter(typeof(T));
+                string val = Properties[key];
+                TypeConverter conv = TypeDescriptor.GetConverter(typeof(T));
                 return (T)conv.ConvertFromString(null, CultureInfo.InvariantCulture, val);
             }
             catch
@@ -75,8 +75,8 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public void Set<T>(string key, T value)
         {
-            var conv = TypeDescriptor.GetConverter(typeof(T));
-            var v = conv.ConvertToString(null, CultureInfo.InvariantCulture, value);
+            TypeConverter conv = TypeDescriptor.GetConverter(typeof(T));
+            string v = conv.ConvertToString(null, CultureInfo.InvariantCulture, value);
             Properties[key] = v;
         }
 
@@ -87,7 +87,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public IMapElement Clone()
         {
-            var ed = new EntityData();
+            EntityData ed = new EntityData();
             ed.Name = Name;
             ed.Flags = Flags;
             ed.Properties = new Dictionary<string, string>(Properties);
@@ -101,8 +101,8 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("EntityData");
-            foreach (var p in Properties)
+            SerialisedObject so = new SerialisedObject("EntityData");
+            foreach (KeyValuePair<string, string> p in Properties)
             {
                 so.Set(p.Key, p.Value);
             }

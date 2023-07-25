@@ -35,15 +35,15 @@ namespace CBRE.BspEditor.Rendering.Overlay
         public void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
             if (!_overlays.Any()) return;
-            if (!_document.TryGetTarget(out var doc)) return;
+            if (!_document.TryGetTarget(out MapDocument doc)) return;
 
             // Determine which objects are visible
-            var padding = Vector3.One * 100;
-            var box = new Box(worldMin - padding, worldMax + padding);
-            var objects = doc.Map.Root.Find(x => x.BoundingBox.IntersectsWith(box)).ToList();
+            Vector3 padding = Vector3.One * 100;
+            Box box = new Box(worldMin - padding, worldMax + padding);
+            List<IMapObject> objects = doc.Map.Root.Find(x => x.BoundingBox.IntersectsWith(box)).ToList();
 
             // Render the overlay for each object
-            foreach (var overlay in _overlays)
+            foreach (Lazy<IMapObject2DOverlay> overlay in _overlays)
             {
                 overlay.Value.Render(viewport, objects, camera, worldMin, worldMax, im);
             }

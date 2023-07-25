@@ -83,11 +83,11 @@ namespace CBRE.BspEditor.Tools.Widgets
 
         public override void SelectionChanged()
         {
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document != null && document.Selection.IsEmpty) _autoPivot = true;
             if (!_autoPivot) return;
 
-            var bb = document?.Selection.GetSelectionBoundingBox();
+            Box bb = document?.Selection.GetSelectionBoundingBox();
             _pivotPoint = bb?.Center ?? Vector3.Zero;
         }
 
@@ -95,13 +95,13 @@ namespace CBRE.BspEditor.Tools.Widgets
 
         private void AddLine(CircleType type, Vector3 start, Vector3 end, Plane test, CachedLines cache)
         {
-            var line = new Line(start, end);
-            var cls = line.ClassifyAgainstPlane(test);
+            Line line = new Line(start, end);
+            PlaneClassification cls = line.ClassifyAgainstPlane(test);
             if (cls == PlaneClassification.Back) return;
             if (cls == PlaneClassification.Spanning)
             {
-                var isect = test.GetIntersectionPoint(line, true);
-                var first = test.OnPlane(line.Start) > 0 ? line.Start : line.End;
+                Vector3? isect = test.GetIntersectionPoint(line, true);
+                Vector3 first = test.OnPlane(line.Start) > 0 ? line.Start : line.End;
                 if (isect.HasValue) line = new Line(first, isect.Value);
             }
             cache.Cache[type].Add(new Line(cache.Viewport.Camera.WorldToScreen(line.Start), cache.Viewport.Camera.WorldToScreen(line.End)));
@@ -109,10 +109,10 @@ namespace CBRE.BspEditor.Tools.Widgets
 
         private void UpdateCache(IViewport viewport, PerspectiveCamera camera)
         {
-            var ccl = camera.EyeLocation;
-            var ccla = camera.Position + camera.Direction;
+            Vector3 ccl = camera.EyeLocation;
+            Vector3 ccla = camera.Position + camera.Direction;
 
-            var cache = _cachedLines.FirstOrDefault(x => x.Viewport == viewport);
+            CachedLines cache = _cachedLines.FirstOrDefault(x => x.Viewport == viewport);
             if (cache == null)
             {
                 cache = new CachedLines(viewport);
@@ -120,8 +120,8 @@ namespace CBRE.BspEditor.Tools.Widgets
             }
             if (ccl == cache.CameraLocation && ccla == cache.CameraLookAt && cache.PivotPoint == _pivotPoint && cache.Width == viewport.Width && cache.Height == viewport.Height) return;
 
-            var origin = _pivotPoint;
-            var distance = (ccl - origin).Length();
+            Vector3 origin = _pivotPoint;
+            float distance = (ccl - origin).Length();
 
             if (distance <= 1) return;
 
@@ -131,28 +131,28 @@ namespace CBRE.BspEditor.Tools.Widgets
             cache.Width = viewport.Width;
             cache.Height = viewport.Height;
 
-            var normal = (ccl - origin).Normalise();
-            var right = normal.Cross(Vector3.UnitZ).Normalise();
-            var up = normal.Cross(right).Normalise();
+            Vector3 normal = (ccl - origin).Normalise();
+            Vector3 right = normal.Cross(Vector3.UnitZ).Normalise();
+            Vector3 up = normal.Cross(right).Normalise();
 
-            var plane = new Plane(normal, origin.Dot(normal));
+            Plane plane = new Plane(normal, origin.Dot(normal));
 
             const float sides = 32;
-            var diff = (2 * Math.PI) / sides;
+            double diff = (2 * Math.PI) / sides;
 
-            var radius = 0.15f * distance;
+            float radius = 0.15f * distance;
 
             cache.Cache[CircleType.Outer].Clear();
             cache.Cache[CircleType.X].Clear();
             cache.Cache[CircleType.Y].Clear();
             cache.Cache[CircleType.Z].Clear();
 
-            for (var i = 0; i < sides; i++)
+            for (int i = 0; i < sides; i++)
             {
-                var cos1 = (float) Math.Cos(diff * i);
-                var sin1 = (float) Math.Sin(diff * i);
-                var cos2 = (float) Math.Cos(diff * (i + 1));
-                var sin2 = (float) Math.Sin(diff * (i + 1));
+                float cos1 = (float) Math.Cos(diff * i);
+                float sin1 = (float) Math.Sin(diff * i);
+                float cos2 = (float) Math.Cos(diff * (i + 1));
+                float sin2 = (float) Math.Sin(diff * (i + 1));
 
                 // outer circle
                 AddLine(CircleType.Outer,
@@ -191,24 +191,24 @@ namespace CBRE.BspEditor.Tools.Widgets
         {
             if (_mouseMovePoint == null || _mouseDownPoint == null) return null;
 
-            var originPoint = viewport.Viewport.Camera.WorldToScreen(_pivotPoint);
-            var origv = Vector3.Normalize(_mouseDownPoint.Value - originPoint);
-            var newv = Vector3.Normalize(_mouseMovePoint.Value - originPoint);
-            var angle = Math.Acos(Math.Max(-1, Math.Min(1, origv.Dot(newv))));
+            Vector3 originPoint = viewport.Viewport.Camera.WorldToScreen(_pivotPoint);
+            Vector3 origv = Vector3.Normalize(_mouseDownPoint.Value - originPoint);
+            Vector3 newv = Vector3.Normalize(_mouseMovePoint.Value - originPoint);
+            double angle = Math.Acos(Math.Max(-1, Math.Min(1, origv.Dot(newv))));
             if ((origv.Cross(newv).Z < 0)) angle = 2 * Math.PI - angle;
 
-            var shf = KeyboardState.Shift;
+            bool shf = KeyboardState.Shift;
             // var def = Select.RotationStyle;
-            var snap = true; // (def == RotationStyle.SnapOnShift && shf) || (def == RotationStyle.SnapOffShift && !shf);
+            bool snap = true; // (def == RotationStyle.SnapOnShift && shf) || (def == RotationStyle.SnapOffShift && !shf);
             if (snap)
             {
-                var deg = angle * (180 / Math.PI);
-                var rnd = Math.Round(deg / 15) * 15;
+                double deg = angle * (180 / Math.PI);
+                double rnd = Math.Round(deg / 15) * 15;
                 angle = rnd * (Math.PI / 180);
             }
 
             Vector3 axis;
-            var dir = Vector3.Normalize(viewport.Viewport.Camera.Location - _pivotPoint);
+            Vector3 dir = Vector3.Normalize(viewport.Viewport.Camera.Location - _pivotPoint);
             switch (_mouseDown)
             {
                 case CircleType.Outer:
@@ -226,22 +226,22 @@ namespace CBRE.BspEditor.Tools.Widgets
                 default:
                     return null;
             }
-            var dirAng = Math.Acos(Vector3.Dot(dir, axis)) * 180 / Math.PI;
+            double dirAng = Math.Acos(Vector3.Dot(dir, axis)) * 180 / Math.PI;
             if (dirAng > 90) angle = -angle;
 
-            var rotm = Matrix4x4.CreateFromAxisAngle(axis, (float) -angle);
-            var mov = Matrix4x4.CreateTranslation(-_pivotPoint);
-            var rot = Matrix4x4.Multiply(mov, rotm);
-            var inv = Matrix4x4.Invert(mov, out var i) ? i : Matrix4x4.Identity;
+            Matrix4x4 rotm = Matrix4x4.CreateFromAxisAngle(axis, (float) -angle);
+            Matrix4x4 mov = Matrix4x4.CreateTranslation(-_pivotPoint);
+            Matrix4x4 rot = Matrix4x4.Multiply(mov, rotm);
+            Matrix4x4 inv = Matrix4x4.Invert(mov, out Matrix4x4 i) ? i : Matrix4x4.Identity;
             return Matrix4x4.Multiply(rot, inv);
         }
 
         private bool MouseOver(CircleType type, ViewportEvent ev, MapViewport viewport)
         {
-            var cache = _cachedLines.FirstOrDefault(x => x.Viewport == viewport.Viewport);
+            CachedLines cache = _cachedLines.FirstOrDefault(x => x.Viewport == viewport.Viewport);
             if (cache == null) return false;
-            var lines = cache.Cache[type];
-            var point = new Vector3(ev.X, ev.Y, 0);
+            List<Line> lines = cache.Cache[type];
+            Vector3 point = new Vector3(ev.X, ev.Y, 0);
             return lines.Any(x => (x.ClosestPoint(point) - point).Length() <= 8);
         }
 
@@ -260,7 +260,7 @@ namespace CBRE.BspEditor.Tools.Widgets
             {
                 _mouseMovePoint = new Vector3(e.X, e.Y, 0);
                 e.Handled = true;
-                var tform = GetTransformationMatrix(viewport);
+                Matrix4x4? tform = GetTransformationMatrix(viewport);
                 OnTransforming(tform);
             }
             else
@@ -293,7 +293,7 @@ namespace CBRE.BspEditor.Tools.Widgets
 
             if (_mouseDown != CircleType.None && _mouseMovePoint != null) e.Handled = true;
 
-            var transformation = GetTransformationMatrix(viewport);
+            Matrix4x4? transformation = GetTransformationMatrix(viewport);
             OnTransformed(transformation);
             _mouseDown = CircleType.None;
             _mouseMovePoint = null;
@@ -310,8 +310,8 @@ namespace CBRE.BspEditor.Tools.Widgets
         {
             if (_mouseMovePoint.HasValue && _mouseDown != CircleType.None)
             {
-                var axis = Vector3.One;
-                var c = Color.White;
+                Vector3 axis = Vector3.One;
+                Color c = Color.White;
 
                 switch (_mouseDown)
                 {
@@ -334,10 +334,10 @@ namespace CBRE.BspEditor.Tools.Widgets
                         break;
                 }
 
-                var start = _pivotPoint - axis * 1024 * 1024;
-                var end = _pivotPoint + axis * 1024 * 1024;
+                Vector3 start = _pivotPoint - axis * 1024 * 1024;
+                Vector3 end = _pivotPoint + axis * 1024 * 1024;
 
-                var col = new Vector4(c.R, c.G, c.B, c.A) / 255;
+                Vector4 col = new Vector4(c.R, c.G, c.B, c.A) / 255;
 
                 builder.Append(
                     new[]
@@ -380,8 +380,8 @@ namespace CBRE.BspEditor.Tools.Widgets
         {
             if (ActiveViewport.Viewport != viewport || !_mouseDownPoint.HasValue || !_mouseMovePoint.HasValue) return;
 
-            var st = camera.WorldToScreen(_pivotPoint);
-            var en = _mouseDownPoint.Value;
+            Vector3 st = camera.WorldToScreen(_pivotPoint);
+            Vector3 en = _mouseDownPoint.Value;
             im.AddLine(st.ToVector2(), en.ToVector2(), Color.Gray);
 
             en = _mouseMovePoint.Value;
@@ -390,41 +390,41 @@ namespace CBRE.BspEditor.Tools.Widgets
 
         private void RenderCircleTypeNone(PerspectiveCamera camera, I2DRenderer im)
         {
-            var center = _pivotPoint;
-            var origin = new Vector3(center.X, center.Y, center.Z);
+            Vector3 center = _pivotPoint;
+            Vector3 origin = new Vector3(center.X, center.Y, center.Z);
 
-            var distance = (camera.EyeLocation - origin).Length();
+            float distance = (camera.EyeLocation - origin).Length();
             if (distance <= 1) return;
 
             // Ensure points that can't be projected properly don't get rendered
-            var screenOrigin = camera.WorldToScreen(origin);
-            var sop = new PointF(screenOrigin.X, screenOrigin.Y);
-            var rec = new RectangleF(-200, -200, camera.Width + 400, camera.Height + 400);
+            Vector3 screenOrigin = camera.WorldToScreen(origin);
+            PointF sop = new PointF(screenOrigin.X, screenOrigin.Y);
+            RectangleF rec = new RectangleF(-200, -200, camera.Width + 400, camera.Height + 400);
             if (!rec.Contains(sop)) return;
 
-            var radius = 0.15f * distance;
+            float radius = 0.15f * distance;
 
-            var normal = Vector3.Normalize(Vector3.Subtract(camera.EyeLocation, origin));
-            var right = Vector3.Normalize(Vector3.Cross(normal, Vector3.UnitZ));
-            var up = Vector3.Normalize(Vector3.Cross(normal, right));
+            Vector3 normal = Vector3.Normalize(Vector3.Subtract(camera.EyeLocation, origin));
+            Vector3 right = Vector3.Normalize(Vector3.Cross(normal, Vector3.UnitZ));
+            Vector3 up = Vector3.Normalize(Vector3.Cross(normal, right));
 
             const int sides = 32;
             const float diff = (float)(2 * Math.PI) / sides;
 
-            for (var i = 0; i < sides; i++)
+            for (int i = 0; i < sides; i++)
             {
-                var cos1 = (float)Math.Cos(diff * i);
-                var sin1 = (float)Math.Sin(diff * i);
-                var cos2 = (float)Math.Cos(diff * (i + 1));
-                var sin2 = (float)Math.Sin(diff * (i + 1));
+                float cos1 = (float)Math.Cos(diff * i);
+                float sin1 = (float)Math.Sin(diff * i);
+                float cos2 = (float)Math.Cos(diff * (i + 1));
+                float sin2 = (float)Math.Sin(diff * (i + 1));
 
-                var line = new Line(
+                Line line = new Line(
                     origin + right * cos1 * radius + up * sin1 * radius,
                     origin + right * cos2 * radius + up * sin2 * radius
                 );
 
-                var st = camera.WorldToScreen(line.Start);
-                var en = camera.WorldToScreen(line.End);
+                Vector3 st = camera.WorldToScreen(line.Start);
+                Vector3 en = camera.WorldToScreen(line.End);
 
                 im.AddLine(st.ToVector2(), en.ToVector2(), Color.DarkGray);
 
@@ -436,18 +436,18 @@ namespace CBRE.BspEditor.Tools.Widgets
                 st = camera.WorldToScreen(line.Start);
                 en = camera.WorldToScreen(line.End);
 
-                var c = _mouseOver == CircleType.Outer ? Color.White : Color.LightGray;
+                Color c = _mouseOver == CircleType.Outer ? Color.White : Color.LightGray;
                 im.AddLine(st.ToVector2(), en.ToVector2(), c);
             }
 
-            var plane = new Plane(normal, Vector3.Dot(origin, normal));
+            Plane plane = new Plane(normal, Vector3.Dot(origin, normal));
 
-            for (var i = 0; i < sides; i++)
+            for (int i = 0; i < sides; i++)
             {
-                var cos1 = (float)Math.Cos(diff * i) * radius;
-                var sin1 = (float)Math.Sin(diff * i) * radius;
-                var cos2 = (float)Math.Cos(diff * (i + 1)) * radius;
-                var sin2 = (float)Math.Sin(diff * (i + 1)) * radius;
+                float cos1 = (float)Math.Cos(diff * i) * radius;
+                float sin1 = (float)Math.Sin(diff * i) * radius;
+                float cos2 = (float)Math.Cos(diff * (i + 1)) * radius;
+                float sin2 = (float)Math.Sin(diff * (i + 1)) * radius;
 
                 RenderLine(
                     (origin + Vector3.UnitX * cos1 + Vector3.UnitY * sin1),
@@ -474,19 +474,19 @@ namespace CBRE.BspEditor.Tools.Widgets
 
         private void RenderLine(Vector3 start, Vector3 end, Plane plane, Color color, ICamera camera, I2DRenderer im)
         {
-            var line = new Line(start, end);
-            var cls = line.ClassifyAgainstPlane(plane);
+            Line line = new Line(start, end);
+            PlaneClassification cls = line.ClassifyAgainstPlane(plane);
             if (cls == PlaneClassification.Back) return;
             if (cls == PlaneClassification.Spanning)
             {
-                var isect = plane.GetIntersectionPoint(line, true);
-                var first = plane.OnPlane(line.Start) > 0 ? line.Start : line.End;
+                Vector3? isect = plane.GetIntersectionPoint(line, true);
+                Vector3 first = plane.OnPlane(line.Start) > 0 ? line.Start : line.End;
                 if (!isect.HasValue) return;
                 line = new Line(first, isect.Value);
             }
 
-            var st = camera.WorldToScreen(line.Start);
-            var en = camera.WorldToScreen(line.End);
+            Vector3 st = camera.WorldToScreen(line.Start);
+            Vector3 en = camera.WorldToScreen(line.End);
 
             im.AddLine(st.ToVector2(), en.ToVector2(), color, 2);
         }

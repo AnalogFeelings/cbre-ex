@@ -65,14 +65,14 @@ namespace CBRE.Shell.Registers
         public Task OnStartup()
         {
             // Register all commands as hotkeys
-            foreach (var export in _commands)
+            foreach (Lazy<ICommand> export in _commands)
             {
-                var ty = export.Value.GetType();
-                var dha = ty.GetCustomAttributes(typeof(DefaultHotkeyAttribute), false).OfType<DefaultHotkeyAttribute>().FirstOrDefault();
+                Type ty = export.Value.GetType();
+                DefaultHotkeyAttribute dha = ty.GetCustomAttributes(typeof(DefaultHotkeyAttribute), false).OfType<DefaultHotkeyAttribute>().FirstOrDefault();
                 Add(new CommandHotkey(export.Value, defaultHotkey: dha?.Hotkey));
             }
 
-            foreach (var hotkey in _hotkeyProviders.SelectMany(x => x.Value.GetHotkeys()))
+            foreach (IHotkey hotkey in _hotkeyProviders.SelectMany(x => x.Value.GetHotkeys()))
             {
                 Add(hotkey);
             }
@@ -118,7 +118,7 @@ namespace CBRE.Shell.Registers
         public string GetHotkeyString(IHotkey hotkey)
         {
             if (hotkey == null) return null;
-            var keys = _registeredHotkeys.Where(x => x.Value == hotkey).Select(x => x.Key).ToList();
+            List<string> keys = _registeredHotkeys.Where(x => x.Value == hotkey).Select(x => x.Key).ToList();
             if (keys.Count == 0) return null;
 
             return keys.Contains(hotkey.DefaultHotkey) ? hotkey.DefaultHotkey : keys.FirstOrDefault();
@@ -131,13 +131,13 @@ namespace CBRE.Shell.Registers
         /// <returns>True if the key was registered and was in context</returns>
         internal bool Fire(Keys keyData)
         {
-            var cmd = KeyboardState.KeysToString(keyData);
-            var keys = (int) keyData;
+            string cmd = KeyboardState.KeysToString(keyData);
+            int keys = (int) keyData;
             if (_registeredFilters.OrderBy(x => x.OrderHint).Any(f => f.Filter(cmd, keys))) return false;
 
             if (_registeredHotkeys.ContainsKey(cmd))
             {
-                var hk = _registeredHotkeys[cmd];
+                IHotkey hk = _registeredHotkeys[cmd];
                 if (hk.IsInContext(_context))
                 {
                     _registeredHotkeys[cmd].Invoke();
@@ -163,10 +163,10 @@ namespace CBRE.Shell.Registers
             _registeredHotkeys.Clear();
             if (store.Contains("Bindings"))
             {
-                var bindings = store.Get("Bindings", new HotkeyBindings());
-                foreach (var val in _hotkeys.Keys)
+                HotkeyBindings bindings = store.Get("Bindings", new HotkeyBindings());
+                foreach (string val in _hotkeys.Keys)
                 {
-                    var hk = bindings.ContainsKey(val) && bindings[val] != null ? bindings[val] : _hotkeys[val].DefaultHotkey;
+                    string hk = bindings.ContainsKey(val) && bindings[val] != null ? bindings[val] : _hotkeys[val].DefaultHotkey;
                     if (hk != null && !_registeredHotkeys.ContainsKey(hk)) _registeredHotkeys.Add(hk, _hotkeys[val]);
                 }
             }
@@ -174,12 +174,12 @@ namespace CBRE.Shell.Registers
 
         public void StoreValues(ISettingsStore store)
         {
-            var bindings = new HotkeyBindings();
-            foreach (var rh in _registeredHotkeys)
+            HotkeyBindings bindings = new HotkeyBindings();
+            foreach (KeyValuePair<string, IHotkey> rh in _registeredHotkeys)
             {
                 bindings.Add(rh.Value.ID, rh.Key);
             }
-            foreach (var hk in _hotkeys)
+            foreach (KeyValuePair<string, IHotkey> hk in _hotkeys)
             {
                 if (!bindings.ContainsKey(hk.Key)) bindings[hk.Key] = hk.Value.DefaultHotkey;
             }
@@ -190,8 +190,8 @@ namespace CBRE.Shell.Registers
         {
             public HotkeyBindings Clone()
             {
-                var b = new HotkeyBindings();
-                foreach (var kv in this) b[kv.Key] = kv.Value;
+                HotkeyBindings b = new HotkeyBindings();
+                foreach (KeyValuePair<string, string> kv in this) b[kv.Key] = kv.Value;
                 return b;
             }
         }

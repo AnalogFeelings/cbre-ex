@@ -43,29 +43,29 @@ namespace CBRE.BspEditor.Providers
         {
             return await Task.Factory.StartNew(() =>
             {
-                using (var reader = new StreamReader(stream, Encoding.ASCII, true, 1024, false))
+                using (StreamReader reader = new StreamReader(stream, Encoding.ASCII, true, 1024, false))
                 {
-                    var result = new BspFileLoadResult();
+                    BspFileLoadResult result = new BspFileLoadResult();
 
-                    var map = new Map();
-                    var entities = ReadAllEntities(reader, map.NumberGenerator, result);
+                    Map map = new Map();
+                    List<Entity> entities = ReadAllEntities(reader, map.NumberGenerator, result);
 
-                    var worldspawn = entities.FirstOrDefault(x => x.EntityData?.Name == "worldspawn")
+                    Entity worldspawn = entities.FirstOrDefault(x => x.EntityData?.Name == "worldspawn")
                                      ?? new Entity(0) { Data = { new EntityData { Name = "worldspawn" } } };
                     entities.Remove(worldspawn);
 
                     map.Root.Data.Replace(worldspawn.EntityData);
-                    foreach (var ch in worldspawn.Hierarchy.ToList())
+                    foreach (IMapObject ch in worldspawn.Hierarchy.ToList())
                     {
                         ch.Hierarchy.Parent = map.Root;
                     }
 
-                    foreach (var entity in entities)
+                    foreach (Entity entity in entities)
                     {
                         entity.Hierarchy.Parent = map.Root;
                     }
 
-                    foreach (var obj in worldspawn.Hierarchy.ToList())
+                    foreach (IMapObject obj in worldspawn.Hierarchy.ToList())
                     {
                         obj.Hierarchy.Parent = map.Root;
                     }
@@ -83,7 +83,7 @@ namespace CBRE.BspEditor.Providers
         private static string CleanLine(string line)
         {
             if (line == null) return null;
-            var ret = line;
+            string ret = line;
             if (ret.Contains("//")) ret = ret.Substring(0, ret.IndexOf("//", StringComparison.Ordinal)); // Comments
             return ret.Trim();
         }
@@ -100,7 +100,7 @@ namespace CBRE.BspEditor.Providers
         /// <returns>Vector3.UnitX, Vector3.UnitY, or Vector3.UnitZ depending on the plane's normal</returns>
         private static Vector3 QuakeEdClosestAxisToNormal(Plane plane)
         {
-            var norm = plane.Normal.Absolute();
+            Vector3 norm = plane.Normal.Absolute();
 
             if (norm.Z >= norm.X && norm.Z >= norm.Y) return Vector3.UnitZ;
             if (norm.X >= norm.Y) return Vector3.UnitX;
@@ -114,7 +114,7 @@ namespace CBRE.BspEditor.Providers
         /// <param name="face">Face to set Texture.UAxis and Texture.VAxis to their default values for the old-style .MAP format</param>
         private static void QuakeEdAlignTextureToWorld(Face face)
         {
-            var direction = QuakeEdClosestAxisToNormal(face.Plane);
+            Vector3 direction = QuakeEdClosestAxisToNormal(face.Plane);
             face.Texture.UAxis = direction == Vector3.UnitX ? Vector3.UnitY : Vector3.UnitX;
             face.Texture.VAxis = direction == Vector3.UnitZ ? -Vector3.UnitY : -Vector3.UnitZ;
         }
@@ -123,7 +123,7 @@ namespace CBRE.BspEditor.Providers
         {
             const NumberStyles ns = NumberStyles.Float;
 
-            var parts = line.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
+            List<string> parts = line.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
             
             Assert(parts[0] == "(");
             Assert(parts[4] == ")");
@@ -132,7 +132,7 @@ namespace CBRE.BspEditor.Providers
             Assert(parts[10] == "(");
             Assert(parts[14] == ")");
 
-            var face = new Face(generator.Next("Face"))
+            Face face = new Face(generator.Next("Face"))
             {
                 Plane = new Plane(
                     NumericsExtensions.Parse(parts[1], parts[2], parts[3], ns, CultureInfo.InvariantCulture),
@@ -148,11 +148,11 @@ namespace CBRE.BspEditor.Providers
             {
                 QuakeEdAlignTextureToWorld(face);
 
-                var xshift = float.Parse(parts[16], ns, CultureInfo.InvariantCulture);
-                var yshift = float.Parse(parts[17], ns, CultureInfo.InvariantCulture);
-                var rotate = float.Parse(parts[18], ns, CultureInfo.InvariantCulture);
-                var xscale = float.Parse(parts[19], ns, CultureInfo.InvariantCulture);
-                var yscale = float.Parse(parts[20], ns, CultureInfo.InvariantCulture);
+                float xshift = float.Parse(parts[16], ns, CultureInfo.InvariantCulture);
+                float yshift = float.Parse(parts[17], ns, CultureInfo.InvariantCulture);
+                float rotate = float.Parse(parts[18], ns, CultureInfo.InvariantCulture);
+                float xscale = float.Parse(parts[19], ns, CultureInfo.InvariantCulture);
+                float yscale = float.Parse(parts[20], ns, CultureInfo.InvariantCulture);
 
                 face.Texture.Rotation = -rotate;
                 face.Texture.Rotation = rotate;
@@ -182,7 +182,7 @@ namespace CBRE.BspEditor.Providers
 
         private Solid ReadSolid(StreamReader rdr, UniqueNumberGenerator generator, BspFileLoadResult result)
         {
-            var faces = new List<Face>();
+            List<Face> faces = new List<Face>();
             string line;
             while ((line = CleanLine(rdr.ReadLine())) != null)
             {
@@ -191,13 +191,13 @@ namespace CBRE.BspEditor.Providers
                 {
                     if (!faces.Any()) return null;
 
-                    var poly = new Polyhedron(faces.Select(x => x.Plane));
-                    var ret = new Solid(generator.Next("MapObject"));
+                    Polyhedron poly = new Polyhedron(faces.Select(x => x.Plane));
+                    Solid ret = new Solid(generator.Next("MapObject"));
                     ret.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
 
-                    foreach (var face in faces)
+                    foreach (Face face in faces)
                     {
-                        var pg = poly.Polygons.FirstOrDefault(x => x.Plane.Normal.EquivalentTo(face.Plane.Normal, 0.0075f)); // Magic number that seems to match VHE
+                        Polygon pg = poly.Polygons.FirstOrDefault(x => x.Plane.Normal.EquivalentTo(face.Plane.Normal, 0.0075f)); // Magic number that seems to match VHE
                         if (pg == null)
                         {
                             result.InvalidObjects.Add(poly);
@@ -235,10 +235,10 @@ namespace CBRE.BspEditor.Providers
         private static void ReadProperty(Entity ent, string line)
         {
             // Quake id1 map sources use tabs between keys and values
-            var split = line.Split(new char[] { ' ', '\t' });
-            var key = split[0].Trim('"');
+            string[] split = line.Split(new char[] { ' ', '\t' });
+            string key = split[0].Trim('"');
 
-            var val = String.Join(" ", split.Skip(1)).Trim('"');
+            string val = String.Join(" ", split.Skip(1)).Trim('"');
 
             if (key == "classname")
             {
@@ -250,7 +250,7 @@ namespace CBRE.BspEditor.Providers
             }
             else if (key == "origin")
             {
-                var osp = val.Split(' ');
+                string[] osp = val.Split(' ');
                 ent.Origin = NumericsExtensions.Parse(osp[0], osp[1], osp[2], NumberStyles.Float, CultureInfo.InvariantCulture);
             }
             else if (!ExcludedKeys.Contains(key.ToLower()))
@@ -261,7 +261,7 @@ namespace CBRE.BspEditor.Providers
 
         private Entity ReadEntity(StreamReader rdr, UniqueNumberGenerator generator, BspFileLoadResult result)
         {
-            var ent = new Entity(generator.Next("Face"))
+            Entity ent = new Entity(generator.Next("Face"))
             {
                 Data =
                 {
@@ -276,7 +276,7 @@ namespace CBRE.BspEditor.Providers
                 if (line[0] == '"') ReadProperty(ent, line);
                 else if (line[0] == '{')
                 {
-                    var s = ReadSolid(rdr, generator, result);
+                    Solid s = ReadSolid(rdr, generator, result);
                     if (s != null) s.Hierarchy.Parent = ent;
                 }
                 else if (line[0] == '}') break;
@@ -287,7 +287,7 @@ namespace CBRE.BspEditor.Providers
 
         private List<Entity> ReadAllEntities(StreamReader rdr, UniqueNumberGenerator generator, BspFileLoadResult result)
         {
-            var list = new List<Entity>();
+            List<Entity> list = new List<Entity>();
             string line;
             while ((line = CleanLine(rdr.ReadLine())) != null)
             {
@@ -304,7 +304,7 @@ namespace CBRE.BspEditor.Providers
         {
             return Task.Factory.StartNew(() =>
             {
-                using (var writer = new StreamWriter(stream, Encoding.ASCII, 1024, true))
+                using (StreamWriter writer = new StreamWriter(stream, Encoding.ASCII, 1024, true))
                 {
                     WriteWorld(writer, map.Root);
                 }
@@ -323,7 +323,7 @@ namespace CBRE.BspEditor.Providers
 
         private void CollectSolids(List<Solid> solids, IMapObject parent)
         {
-            foreach (var obj in parent.Hierarchy.SelectMany(x => x.Decompose(SupportedTypes)))
+            foreach (IMapObject obj in parent.Hierarchy.SelectMany(x => x.Decompose(SupportedTypes)))
             {
                 if (obj is Solid s) solids.Add(s);
                 else if (obj is Group) CollectSolids(solids, obj);
@@ -332,7 +332,7 @@ namespace CBRE.BspEditor.Providers
 
         private void CollectEntities(List<Entity> entities, IMapObject parent)
         {
-            foreach (var obj in parent.Hierarchy.SelectMany(x => x.Decompose(SupportedTypes)))
+            foreach (IMapObject obj in parent.Hierarchy.SelectMany(x => x.Decompose(SupportedTypes)))
             {
                 if (obj is Entity e) entities.Add(e);
                 else if (obj is Group) CollectEntities(entities, obj);
@@ -342,7 +342,7 @@ namespace CBRE.BspEditor.Providers
         private void WriteFace(StreamWriter sw, Face face)
         {
             // ( -128 64 64 ) ( -64 64 64 ) ( -64 0 64 ) AAATRIGGER [ 1 0 0 0 ] [ 0 -1 0 0 ] 0 1 1
-            var strings = face.Vertices.Take(3).Select(x => "( " + FormatVector3(x) + " )").ToList();
+            List<string> strings = face.Vertices.Take(3).Select(x => "( " + FormatVector3(x) + " )").ToList();
             strings.Add(String.IsNullOrWhiteSpace(face.Texture.Name) ? "AAATRIGGER" : face.Texture.Name);
             strings.Add("[");
             strings.Add(FormatVector3(face.Texture.UAxis));
@@ -361,7 +361,7 @@ namespace CBRE.BspEditor.Providers
         private void WriteSolid(StreamWriter sw, Solid solid)
         {
             sw.WriteLine("{");
-            foreach (var face in solid.Faces)
+            foreach (Face face in solid.Faces)
             {
                 WriteFace(sw, face);
             }
@@ -375,7 +375,7 @@ namespace CBRE.BspEditor.Providers
 
         private void WriteEntity(StreamWriter sw, Entity ent)
         {
-            var solids = new List<Solid>();
+            List<Solid> solids = new List<Solid>();
             CollectSolids(solids, ent);
 
             sw.WriteLine("{");
@@ -386,7 +386,7 @@ namespace CBRE.BspEditor.Providers
                 // VHE doesn't write the spawnflags when they are zero
                 WriteProperty(sw, "spawnflags", ent.EntityData.Flags.ToString(CultureInfo.InvariantCulture));
             }
-            foreach (var prop in ent.EntityData.Properties)
+            foreach (KeyValuePair<string, string> prop in ent.EntityData.Properties)
             {
                 if (prop.Key == "classname" || prop.Key == "spawnflags" || prop.Key == "origin") continue;
 
@@ -411,19 +411,19 @@ namespace CBRE.BspEditor.Providers
 
         private void WriteWorld(StreamWriter sw, Root world)
         {
-            var solids = new List<Solid>();
-            var entities = new List<Entity>();
+            List<Solid> solids = new List<Solid>();
+            List<Entity> entities = new List<Entity>();
             CollectSolids(solids, world);
             CollectEntities(entities, world);
 
             sw.WriteLine("{");
 
-            var ed = world.Data.GetOne<EntityData>() ?? new EntityData();
+            EntityData ed = world.Data.GetOne<EntityData>() ?? new EntityData();
 
             WriteProperty(sw, "classname", ed.Name);
             WriteProperty(sw, "spawnflags", ed.Flags.ToString(CultureInfo.InvariantCulture));
             WriteProperty(sw, "mapversion", "220");
-            foreach (var prop in ed.Properties)
+            foreach (KeyValuePair<string, string> prop in ed.Properties)
             {
                 if (prop.Key == "classname" || prop.Key == "spawnflags" || prop.Key == "mapversion") continue;
                 WriteProperty(sw, prop.Key, prop.Value);
@@ -432,7 +432,7 @@ namespace CBRE.BspEditor.Providers
 
             sw.WriteLine("}");
 
-            foreach (var entity in entities)
+            foreach (Entity entity in entities)
             {
                 WriteEntity(sw, entity);
             }

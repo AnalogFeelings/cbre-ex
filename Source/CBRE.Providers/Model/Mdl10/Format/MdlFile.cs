@@ -35,7 +35,7 @@ namespace CBRE.Providers.Model.Mdl10.Format
             BodyParts = new List<BodyPart>();
             Attachments = new List<Attachment>();
 
-            var readers = streams.Select(x => new BinaryReader(x, Encoding.ASCII)).ToList();
+            List<BinaryReader> readers = streams.Select(x => new BinaryReader(x, Encoding.ASCII)).ToList();
             try
             {
                 Read(readers);
@@ -48,18 +48,18 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
         public static MdlFile FromFile(string filename)
         {
-            var dir = Path.GetDirectoryName(filename);
-            var fname = Path.GetFileNameWithoutExtension(filename);
+            string dir = Path.GetDirectoryName(filename);
+            string fname = Path.GetFileNameWithoutExtension(filename);
 
-            var streams = new List<Stream>();
+            List<Stream> streams = new List<Stream>();
             try
             {
                 streams.Add(File.OpenRead(filename));
-                var tfile = Path.Combine(dir, fname + "t.mdl");
+                string tfile = Path.Combine(dir, fname + "t.mdl");
                 if (File.Exists(tfile)) streams.Add(File.OpenRead(tfile));
-                for (var i = 1; i < 32; i++)
+                for (int i = 1; i < 32; i++)
                 {
-                    var sfile = Path.Combine(dir, fname + i.ToString("00") + ".mdl");
+                    string sfile = Path.Combine(dir, fname + i.ToString("00") + ".mdl");
                     if (File.Exists(sfile)) streams.Add(File.OpenRead(sfile));
                     else break;
                 }
@@ -68,24 +68,24 @@ namespace CBRE.Providers.Model.Mdl10.Format
             }
             finally
             {
-                foreach (var s in streams) s.Dispose();
+                foreach (Stream s in streams) s.Dispose();
             }
         }
 
         public static MdlFile FromFile(IFile file)
         {
-            var dir = file.Parent;
-            var fname = file.NameWithoutExtension;
+            IFile dir = file.Parent;
+            string fname = file.NameWithoutExtension;
 
-            var streams = new List<Stream>();
+            List<Stream> streams = new List<Stream>();
             try
             {
                 streams.Add(file.Open());
-                var tfile = dir.GetFile(fname + "t.mdl");
+                IFile tfile = dir.GetFile(fname + "t.mdl");
                 if (tfile?.Exists == true) streams.Add(tfile.Open());
-                for (var i = 1; i < 32; i++)
+                for (int i = 1; i < 32; i++)
                 {
-                    var sfile = dir.GetFile(fname + i.ToString("00") + ".mdl");
+                    IFile sfile = dir.GetFile(fname + i.ToString("00") + ".mdl");
                     if (sfile?.Exists == true) streams.Add(sfile.Open());
                     else break;
                 }
@@ -94,7 +94,7 @@ namespace CBRE.Providers.Model.Mdl10.Format
             }
             finally
             {
-                foreach (var s in streams) s.Dispose();
+                foreach (Stream s in streams) s.Dispose();
             }
         }
 
@@ -106,12 +106,12 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
             try
             {
-                using (var s = file.Open())
+                using (Stream s = file.Open())
                 {
-                    using (var br = new BinaryReader(s))
+                    using (BinaryReader br = new BinaryReader(s))
                     {
-                        var id = (ID) br.ReadInt32();
-                        var version = (Version) br.ReadInt32();
+                        ID id = (ID) br.ReadInt32();
+                        Version version = (Version) br.ReadInt32();
                         return id == ID.Idst && KnownVersions.Contains(version);
                     }
                 }
@@ -125,13 +125,13 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
         private void Read(IEnumerable<BinaryReader> readers)
         {
-            var main = new List<BinaryReader>();
-            var sequenceGroups = new Dictionary<string, BinaryReader>();
+            List<BinaryReader> main = new List<BinaryReader>();
+            Dictionary<string, BinaryReader> sequenceGroups = new Dictionary<string, BinaryReader>();
 
-            foreach (var br in readers)
+            foreach (BinaryReader br in readers)
             {
-                var id = (ID)br.ReadInt32();
-                var version = (Version)br.ReadInt32();
+                ID id = (ID)br.ReadInt32();
+                Version version = (Version)br.ReadInt32();
 
                 if (version != Version.Goldsource)
                 {
@@ -149,12 +149,12 @@ namespace CBRE.Providers.Model.Mdl10.Format
                 }
                 else
                 {
-                    var name = br.ReadFixedLengthString(Encoding.ASCII, 64);
+                    string name = br.ReadFixedLengthString(Encoding.ASCII, 64);
                     sequenceGroups[name] = br;
                 }
             }
 
-            foreach (var br in main)
+            foreach (BinaryReader br in main)
             {
                 Read(br, sequenceGroups);
             }
@@ -179,28 +179,28 @@ namespace CBRE.Providers.Model.Mdl10.Format
             };
 
             // Read all the nums/offsets from the header
-            var sections = new int[(int)Section.NumSections][];
-            for (var i = 0; i < (int) Section.NumSections; i++)
+            int[][] sections = new int[(int)Section.NumSections][];
+            for (int i = 0; i < (int) Section.NumSections; i++)
             {
-                var sec = (Section) i;
+                Section sec = (Section) i;
 
                 int indexNum;
                 if (sec == Section.Texture || sec == Section.Skin) indexNum = 3;
                 else indexNum = 2;
 
                 sections[i] = new int[indexNum];
-                for (var j = 0; j < indexNum; j++)
+                for (int j = 0; j < indexNum; j++)
                 {
                     sections[i][j] = br.ReadInt32();
                 }
             }
 
             // Bones
-            var num = SeekToSection(br, Section.Bone, sections);
-            var numBones = num;
-            for (var i = 0; i < num; i++)
+            int num = SeekToSection(br, Section.Bone, sections);
+            int numBones = num;
+            for (int i = 0; i < num; i++)
             {
-                var bone = new Bone
+                Bone bone = new Bone
                 {
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 32),
                     Parent = br.ReadInt32(),
@@ -216,9 +216,9 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
             // Bone controllers
             num = SeekToSection(br, Section.BoneController, sections);
-            for (var i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
             {
-                var boneController = new BoneController
+                BoneController boneController = new BoneController
                 {
                     Bone = br.ReadInt32(),
                     Type = br.ReadInt32(),
@@ -232,9 +232,9 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
             // Hitboxes
             num = SeekToSection(br, Section.Hitbox, sections);
-            for (var i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
             {
-                var hitbox = new Hitbox
+                Hitbox hitbox = new Hitbox
                 {
                     Bone = br.ReadInt32(),
                     Group = br.ReadInt32(),
@@ -246,9 +246,9 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
             // Sequence groups
             num = SeekToSection(br, Section.SequenceGroup, sections);
-            for (var i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
             {
-                var group = new SequenceGroup
+                SequenceGroup group = new SequenceGroup
                 {
                     Label = br.ReadFixedLengthString(Encoding.ASCII, 32),
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 64)
@@ -259,9 +259,9 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
             // Sequences
             num = SeekToSection(br, Section.Sequence, sections);
-            for (var i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
             {
-                var sequence = new Sequence
+                Sequence sequence = new Sequence
                 {
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 32),
                     Framerate = br.ReadSingle(),
@@ -293,18 +293,18 @@ namespace CBRE.Providers.Model.Mdl10.Format
                     NextSequence = br.ReadInt32()
                 };
 
-                var seqGroup = SequenceGroups[sequence.SequenceGroup];
+                SequenceGroup seqGroup = SequenceGroups[sequence.SequenceGroup];
 
                 // Only load seqence group 0 for now (others are in other files)
                 if (sequence.SequenceGroup == 0)
                 {
-                    var pos = br.BaseStream.Position;
+                    long pos = br.BaseStream.Position;
                     sequence.Blends = LoadAnimationBlends(br, sequence, numBones);
                     br.BaseStream.Position = pos;
                 }
                 else if (sequenceGroups.ContainsKey(seqGroup.Name))
                 {
-                    var reader = sequenceGroups[seqGroup.Name];
+                    BinaryReader reader = sequenceGroups[seqGroup.Name];
                     sequence.Blends = LoadAnimationBlends(reader, sequence, numBones);
                 }
 
@@ -313,10 +313,10 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
             // Textures
             num = SeekToSection(br, Section.Texture, sections);
-            var firstTextureIndex = Textures.Count;
-            for (var i = 0; i < num; i++)
+            int firstTextureIndex = Textures.Count;
+            for (int i = 0; i < num; i++)
             {
-                var texture = new Texture
+                Texture texture = new Texture
                 {
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 64),
                     Flags = (TextureFlags) br.ReadInt32(),
@@ -328,9 +328,9 @@ namespace CBRE.Providers.Model.Mdl10.Format
             }
 
             // Texture data
-            for (var i = firstTextureIndex; i < firstTextureIndex + num; i++)
+            for (int i = firstTextureIndex; i < firstTextureIndex + num; i++)
             {
-                var t = Textures[i];
+                Texture t = Textures[i];
                 br.BaseStream.Position = t.Index;
                 t.Data = br.ReadBytes(t.Width * t.Height);
                 t.Palette = br.ReadBytes(256 * 3);
@@ -338,13 +338,13 @@ namespace CBRE.Providers.Model.Mdl10.Format
             }
 
             // Skins
-            var skinSection = sections[(int)Section.Skin];
-            var numSkinRefs = skinSection[0];
-            var numSkinFamilies = skinSection[1];
+            int[] skinSection = sections[(int)Section.Skin];
+            int numSkinRefs = skinSection[0];
+            int numSkinFamilies = skinSection[1];
             br.BaseStream.Seek(skinSection[2], SeekOrigin.Begin);
-            for (var i = 0; i < numSkinFamilies; i++)
+            for (int i = 0; i < numSkinFamilies; i++)
             {
-                var skin = new SkinFamily
+                SkinFamily skin = new SkinFamily
                 {
                     Textures = br.ReadShortArray(numSkinRefs)
                 };
@@ -353,16 +353,16 @@ namespace CBRE.Providers.Model.Mdl10.Format
             
             // Body parts
             num = SeekToSection(br, Section.BodyPart, sections);
-            for (var i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
             {
-                var part = new BodyPart
+                BodyPart part = new BodyPart
                 {
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 64),
                     NumModels = br.ReadInt32(),
                     Base = br.ReadInt32(),
                     ModelIndex = br.ReadInt32()
                 };
-                var pos = br.BaseStream.Position;
+                long pos = br.BaseStream.Position;
                 part.Models = LoadModels(br, part);
                 br.BaseStream.Position = pos;
                 BodyParts.Add(part);
@@ -370,9 +370,9 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
             // Attachments
             num = SeekToSection(br, Section.Attachment, sections);
-            for (var i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
             {
-                var attachment = new Attachment
+                Attachment attachment = new Attachment
                 {
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 32),
                     Type = br.ReadInt32(),
@@ -390,7 +390,7 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
         private static int SeekToSection(BinaryReader br, Section section, int[][] sections)
         {
-            var s = sections[(int)section];
+            int[] s = sections[(int)section];
             br.BaseStream.Seek(s[1], SeekOrigin.Begin);
             return s[0];
         }
@@ -401,19 +401,19 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
         private static Blend[] LoadAnimationBlends(BinaryReader br, Sequence sequence, int numBones)
         {
-            var blends = new Blend[sequence.NumBlends];
-            var blendLength = 6 * numBones;
+            Blend[] blends = new Blend[sequence.NumBlends];
+            int blendLength = 6 * numBones;
 
             br.BaseStream.Seek(sequence.AnimationIndex, SeekOrigin.Begin);
 
-            var animPosition = br.BaseStream.Position;
-            var offsets = br.ReadUshortArray(blendLength * sequence.NumBlends);
-            for (var i = 0; i < sequence.NumBlends; i++)
+            long animPosition = br.BaseStream.Position;
+            ushort[] offsets = br.ReadUshortArray(blendLength * sequence.NumBlends);
+            for (int i = 0; i < sequence.NumBlends; i++)
             {
-                var blendOffsets = new ushort[blendLength];
+                ushort[] blendOffsets = new ushort[blendLength];
                 Array.Copy(offsets, blendLength * i, blendOffsets, 0, blendLength);
 
-                var startPosition = animPosition + i * blendLength * 2;
+                long startPosition = animPosition + i * blendLength * 2;
                 blends[i].Frames = LoadAnimationFrames(br, sequence, numBones, startPosition, blendOffsets);
             }
 
@@ -422,19 +422,19 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
         private static AnimationFrame[] LoadAnimationFrames(BinaryReader br, Sequence sequence, int numBones, long startPosition, ushort[] boneOffsets)
         {
-            var frames = new AnimationFrame[sequence.NumFrames];
-            for (var i = 0; i < frames.Length; i++)
+            AnimationFrame[] frames = new AnimationFrame[sequence.NumFrames];
+            for (int i = 0; i < frames.Length; i++)
             {
                 frames[i].Positions = new Vector3[numBones];
                 frames[i].Rotations = new Vector3[numBones];
             }
             
-            for (var i = 0; i < numBones; i++)
+            for (int i = 0; i < numBones; i++)
             {
-                var boneValues = new short[6][];
-                for (var j = 0; j < 6; j++)
+                short[][] boneValues = new short[6][];
+                for (int j = 0; j < 6; j++)
                 {
-                    var offset = boneOffsets[i * 6 + j];
+                    ushort offset = boneOffsets[i * 6 + j];
                     if (offset <= 0)
                     {
                         boneValues[j] = new short[sequence.NumFrames];
@@ -445,7 +445,7 @@ namespace CBRE.Providers.Model.Mdl10.Format
                     boneValues[j] = ReadAnimationFrameValues(br, sequence.NumFrames);
                 }
 
-                for (var j = 0; j < sequence.NumFrames; j++)
+                for (int j = 0; j < sequence.NumFrames; j++)
                 {
                     frames[j].Positions[i] = new Vector3(boneValues[0][j], boneValues[1][j], boneValues[2][j]);
                     frames[j].Rotations[i] = new Vector3(boneValues[3][j], boneValues[4][j], boneValues[5][j]);
@@ -463,15 +463,15 @@ namespace CBRE.Providers.Model.Mdl10.Format
              * byte uncompressed_length - uncompressed number of values in run
              * short values[compressed_length] - values in the run, the last value is repeated to reach the uncompressed length
              */
-            var values = new short[count];
+            short[] values = new short[count];
 
-            for (var i = 0; i < count; /* i = i */)
+            for (int i = 0; i < count; /* i = i */)
             {
-                var run = br.ReadBytes(2); // read the compressed and uncompressed lengths
-                var vals = br.ReadShortArray(run[0]); // read the compressed data
-                for (var j = 0; j < run[1] && i < count; i++, j++)
+                byte[] run = br.ReadBytes(2); // read the compressed and uncompressed lengths
+                short[] vals = br.ReadShortArray(run[0]); // read the compressed data
+                for (int j = 0; j < run[1] && i < count; i++, j++)
                 {
-                    var idx = Math.Min(run[0] - 1, j); // value in the data or the last value if we're past the end
+                    int idx = Math.Min(run[0] - 1, j); // value in the data or the last value if we're past the end
                     values[i] = vals[idx];
                 }
             }
@@ -487,10 +487,10 @@ namespace CBRE.Providers.Model.Mdl10.Format
         {
             br.BaseStream.Seek(part.ModelIndex, SeekOrigin.Begin);
 
-            var models = new Model[part.NumModels];
-            for (var i = 0; i < part.NumModels; i++)
+            Model[] models = new Model[part.NumModels];
+            for (int i = 0; i < part.NumModels; i++)
             {
-                var model = new Model
+                Model model = new Model
                 {
                     Name = br.ReadFixedLengthString(Encoding.ASCII, 64),
                     Type = br.ReadInt32(),
@@ -507,7 +507,7 @@ namespace CBRE.Providers.Model.Mdl10.Format
                     GroupIndex = br.ReadInt32()
                 };
 
-                var pos = br.BaseStream.Position;
+                long pos = br.BaseStream.Position;
                 model.Meshes = ReadMeshes(br, model);
                 br.BaseStream.Position = pos;
 
@@ -519,26 +519,26 @@ namespace CBRE.Providers.Model.Mdl10.Format
 
         private static Mesh[] ReadMeshes(BinaryReader br, Model model)
         {
-            var meshes = new Mesh[model.NumMesh];
+            Mesh[] meshes = new Mesh[model.NumMesh];
 
             // Read all the vertex data
             br.BaseStream.Position = model.VertInfoIndex;
-            var vertexBones = br.ReadBytes(model.NumVerts);
+            byte[] vertexBones = br.ReadBytes(model.NumVerts);
 
             br.BaseStream.Position = model.NormalInfoIndex;
-            var normalBones = br.ReadBytes(model.NumNormals);
+            byte[] normalBones = br.ReadBytes(model.NumNormals);
 
             br.BaseStream.Position = model.VertIndex;
-            var vertices = br.ReadVector3Array(model.NumVerts);
+            Vector3[] vertices = br.ReadVector3Array(model.NumVerts);
 
             br.BaseStream.Position = model.NormalIndex;
-            var normals = br.ReadVector3Array(model.NumNormals);
+            Vector3[] normals = br.ReadVector3Array(model.NumNormals);
 
             // Read the meshes
             br.BaseStream.Position = model.MeshIndex;
-            for (var i = 0; i < model.NumMesh; i++)
+            for (int i = 0; i < model.NumMesh; i++)
             {
-                var mesh = new Mesh
+                Mesh mesh = new Mesh
                 {
                     NumTriangles = br.ReadInt32(),
                     TriangleIndex = br.ReadInt32(),
@@ -550,7 +550,7 @@ namespace CBRE.Providers.Model.Mdl10.Format
             }
 
             // Read the triangle data
-            for (var i = 0; i < model.NumMesh; i++)
+            for (int i = 0; i < model.NumMesh; i++)
             {
                 meshes[i].Vertices = ReadTriangles(br, meshes[i], vertices, vertexBones, normals, normalBones);
             }
@@ -571,27 +571,27 @@ namespace CBRE.Providers.Model.Mdl10.Format
              * short u, short v - texture coordinates
              */
 
-            var meshVerts = new MeshVertex[mesh.NumTriangles * 3];
-            var vi = 0;
+            MeshVertex[] meshVerts = new MeshVertex[mesh.NumTriangles * 3];
+            int vi = 0;
 
             br.BaseStream.Position = mesh.TriangleIndex;
 
             short type;
             while ((type = br.ReadInt16()) != 0)
             {
-                var fan = type < 0;
-                var length = Math.Abs(type);
-                var pointData = br.ReadShortArray(4 * length);
-                for (var i = 0; i < length - 2; i++)
+                bool fan = type < 0;
+                short length = Math.Abs(type);
+                short[] pointData = br.ReadShortArray(4 * length);
+                for (int i = 0; i < length - 2; i++)
                 {
                     //                    | TRIANGLE FAN    |                       | TRIANGLE STRIP (ODD) |         | TRIANGLE STRIP (EVEN) |
-                    var add = fan ? new[] { 0, i + 1, i + 2 } : (i % 2 == 1 ? new[] { i + 1, i, i + 2      } : new[] { i, i + 1, i + 2       });
-                    foreach (var idx in add)
+                    int[] add = fan ? new[] { 0, i + 1, i + 2 } : (i % 2 == 1 ? new[] { i + 1, i, i + 2      } : new[] { i, i + 1, i + 2       });
+                    foreach (int idx in add)
                     {
-                        var vert = pointData[idx * 4 + 0];
-                        var norm = pointData[idx * 4 + 1];
-                        var s = pointData[idx * 4 + 2];
-                        var t = pointData[idx * 4 + 3];
+                        short vert = pointData[idx * 4 + 0];
+                        short norm = pointData[idx * 4 + 1];
+                        short s = pointData[idx * 4 + 2];
+                        short t = pointData[idx * 4 + 3];
                         
                         meshVerts[vi++] = new MeshVertex
                         {
@@ -619,40 +619,40 @@ namespace CBRE.Providers.Model.Mdl10.Format
         /// <param name="transforms">The array of transforms to set values into. Must be at least the size of the <see cref="Bones"/> array.</param>
         public void GetTransforms(int sequence, int frame, float subframe, ref Matrix4x4[] transforms)
         {
-            var seq = Sequences[sequence];
-            var blend = seq.Blends[0];
-            var cFrame = blend.Frames[frame % seq.NumFrames];
-            var nFrame = blend.Frames[(frame + 1) % seq.NumFrames];
+            Sequence seq = Sequences[sequence];
+            Blend blend = seq.Blends[0];
+            AnimationFrame cFrame = blend.Frames[frame % seq.NumFrames];
+            AnimationFrame nFrame = blend.Frames[(frame + 1) % seq.NumFrames];
 
-            var indivTransforms = new Matrix4x4[128];
-            for (var i = 0; i < Bones.Count; i++)
+            Matrix4x4[] indivTransforms = new Matrix4x4[128];
+            for (int i = 0; i < Bones.Count; i++)
             {
-                var bone = Bones[i];
-                var cPos = bone.Position + cFrame.Positions[i] * bone.PositionScale;
-                var nPos = bone.Position + nFrame.Positions[i] * bone.PositionScale;
-                var cRot = bone.Rotation + cFrame.Rotations[i] * bone.RotationScale;
-                var nRot = bone.Rotation + nFrame.Rotations[i] * bone.RotationScale;
+                Bone bone = Bones[i];
+                Vector3 cPos = bone.Position + cFrame.Positions[i] * bone.PositionScale;
+                Vector3 nPos = bone.Position + nFrame.Positions[i] * bone.PositionScale;
+                Vector3 cRot = bone.Rotation + cFrame.Rotations[i] * bone.RotationScale;
+                Vector3 nRot = bone.Rotation + nFrame.Rotations[i] * bone.RotationScale;
 
-                var cQtn = Quaternion.CreateFromYawPitchRoll(cRot.X, cRot.Y, cRot.Z);
-                var nQtn = Quaternion.CreateFromYawPitchRoll(nRot.X, nRot.Y, nRot.Z);
+                Quaternion cQtn = Quaternion.CreateFromYawPitchRoll(cRot.X, cRot.Y, cRot.Z);
+                Quaternion nQtn = Quaternion.CreateFromYawPitchRoll(nRot.X, nRot.Y, nRot.Z);
 
                 // MDL angles have Y as the up direction
                 cQtn = new Quaternion(cQtn.Y, cQtn.X, cQtn.Z, cQtn.W);
                 nQtn = new Quaternion(nQtn.Y, nQtn.X, nQtn.Z, nQtn.W);
 
-                var mat = Matrix4x4.CreateFromQuaternion(Quaternion.Slerp(cQtn, nQtn, subframe));
+                Matrix4x4 mat = Matrix4x4.CreateFromQuaternion(Quaternion.Slerp(cQtn, nQtn, subframe));
                 mat.Translation = cPos * (1 - subframe) + nPos * subframe;
 
                 indivTransforms[i] = mat;
             }
 
-            for (var i = 0; i < Bones.Count; i++)
+            for (int i = 0; i < Bones.Count; i++)
             {
-                var mat = indivTransforms[i];
-                var parent = Bones[i].Parent;
+                Matrix4x4 mat = indivTransforms[i];
+                int parent = Bones[i].Parent;
                 while (parent >= 0)
                 {
-                    var parMat = indivTransforms[parent];
+                    Matrix4x4 parMat = indivTransforms[parent];
                     mat = mat * parMat;
                     parent = Bones[parent].Parent;
                 }
@@ -666,35 +666,35 @@ namespace CBRE.Providers.Model.Mdl10.Format
         /// </summary>
         public void WriteFakePrecalculatedChromeCoordinates()
         {
-            var transforms = new Matrix4x4[Bones.Count];
+            Matrix4x4[] transforms = new Matrix4x4[Bones.Count];
             GetTransforms(0, 0, 0, ref transforms);
-            for (var bp = 0; bp < BodyParts.Count; bp++)
+            for (int bp = 0; bp < BodyParts.Count; bp++)
             {
-                var part = BodyParts[bp];
-                for (var m = 0; m < part.Models.Length; m++)
+                BodyPart part = BodyParts[bp];
+                for (int m = 0; m < part.Models.Length; m++)
                 {
-                    var model = part.Models[m];
-                    for (var me = 0; me < model.Meshes.Length; me++)
+                    Model model = part.Models[m];
+                    for (int me = 0; me < model.Meshes.Length; me++)
                     {
-                        var mesh = model.Meshes[me];
-                        var skin = Textures[mesh.SkinRef];
+                        Mesh mesh = model.Meshes[me];
+                        Texture skin = Textures[mesh.SkinRef];
                         if (!skin.Flags.HasFlag(TextureFlags.Chrome)) continue;
 
-                        for (var vi = 0; vi < mesh.Vertices.Length; vi++)
+                        for (int vi = 0; vi < mesh.Vertices.Length; vi++)
                         {
-                            var v = mesh.Vertices[vi];
-                            var transform = transforms[v.VertexBone];
+                            MeshVertex v = mesh.Vertices[vi];
+                            Matrix4x4 transform = transforms[v.VertexBone];
 
                             // Borrowed from HLMV's StudioModel::Chrome function
-                            var tmp = Vector3.Normalize(transform.Translation);
+                            Vector3 tmp = Vector3.Normalize(transform.Translation);
 
                             // Using unitx for the "player right" vector
-                            var up = Vector3.Normalize(Vector3.Cross(tmp, Vector3.UnitX));
-                            var right = Vector3.Normalize(Vector3.Cross(tmp, up));
+                            Vector3 up = Vector3.Normalize(Vector3.Cross(tmp, Vector3.UnitX));
+                            Vector3 right = Vector3.Normalize(Vector3.Cross(tmp, up));
 
                             // HLMV is doing an inverse rotate (no translation),
                             // so we set the shift values to zero after inverting
-                            var inv = Matrix4x4.Invert(transform, out var i) ? i : transform;
+                            Matrix4x4 inv = Matrix4x4.Invert(transform, out Matrix4x4 i) ? i : transform;
                             inv.Translation = Vector3.Zero;
                             up = Vector3.Transform(up, inv);
                             right = Vector3.Transform(right, inv);

@@ -52,9 +52,9 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
             _comboBox.Items.Clear();
             if (Property != null)
             {
-                var options = GetSortedTargetNames(document).ToList();
+                List<string> options = GetSortedTargetNames(document).ToList();
                 _comboBox.Items.AddRange(options.OfType<object>().ToArray());
-                var index = options.FindIndex(x => String.Equals(x, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
+                int index = options.FindIndex(x => String.Equals(x, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
                     _comboBox.SelectedIndex = index;

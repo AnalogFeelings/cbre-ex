@@ -42,63 +42,63 @@ namespace CBRE.BspEditor.Tools
 
         public Vector3 SnapIfNeeded(Vector3 c)
         {
-            var gridData = GetDocument()?.Map.Data.GetOne<GridData>();
-            var snap = !KeyboardState.Alt && gridData?.SnapToGrid == true;
-            var grid = gridData?.Grid;
+            GridData gridData = GetDocument()?.Map.Data.GetOne<GridData>();
+            bool snap = !KeyboardState.Alt && gridData?.SnapToGrid == true;
+            BspEditor.Grid.IGrid grid = gridData?.Grid;
             return snap && grid != null ? grid.Snap(c) : c.Snap(1);
         }
 
         public Vector3 SnapToSelection(Vector3 c, OrthographicCamera camera)
         {
-            var doc = GetDocument();
-            var gridData = doc?.Map.Data.GetOne<GridData>();
-            var snap = !KeyboardState.Alt && gridData?.SnapToGrid == true;
+            MapDocument doc = GetDocument();
+            GridData gridData = doc?.Map.Data.GetOne<GridData>();
+            bool snap = !KeyboardState.Alt && gridData?.SnapToGrid == true;
             if (doc == null || !snap) return c.Snap(1);
 
-            var snapped = gridData.Grid?.Snap(c) ?? c.Snap(1);
+            Vector3 snapped = gridData.Grid?.Snap(c) ?? c.Snap(1);
             if (doc.Selection.IsEmpty) return snapped;
 
             // Try and snap the the selection box center
-            var selBox = doc.Selection.GetSelectionBoundingBox();
-            var selCenter = camera.Flatten(selBox.Center);
+            Box selBox = doc.Selection.GetSelectionBoundingBox();
+            Vector3 selCenter = camera.Flatten(selBox.Center);
             if (Math.Abs(selCenter.X - c.X) < selBox.Width / 10 && Math.Abs(selCenter.Y - c.Y) < selBox.Height / 10) return selCenter;
 
-            var objects = doc.Selection.ToList();
+            List<IMapObject> objects = doc.Selection.ToList();
 
             // Try and snap to an object center
-            foreach (var mo in objects)
+            foreach (IMapObject mo in objects)
             {
                 if (mo is Group || mo is Root) continue;
-                var center = camera.Flatten(mo.BoundingBox.Center);
+                Vector3 center = camera.Flatten(mo.BoundingBox.Center);
                 if (Math.Abs(center.X - c.X) >= mo.BoundingBox.Width / 10f) continue;
                 if (Math.Abs(center.Y - c.Y) >= mo.BoundingBox.Height / 10f) continue;
                 return center;
             }
 
             // Get all the edges of the selected objects
-            var lines = objects
+            List<Line> lines = objects
                 .SelectMany(x => x.GetPolygons())
                 .SelectMany(x => x.GetLines())
                 .Select(x => new Line(camera.Flatten(x.Start), camera.Flatten(x.End)))
                 .ToList();
 
             // Try and snap to an edge
-            var closest = snapped;
-            foreach (var line in lines)
+            Vector3 closest = snapped;
+            foreach (Line line in lines)
             {
                 // if the line and the grid are in the same spot, return the snapped point
                 if (line.ClosestPoint(snapped).EquivalentTo(snapped)) return snapped;
 
                 // Test for corners and midpoints within a 10% tolerance
-                var pointTolerance = (line.End - line.Start).Length() / 10;
+                float pointTolerance = (line.End - line.Start).Length() / 10;
                 if ((line.Start - c).Length() < pointTolerance) return line.Start;
                 if ((line.End - c).Length() < pointTolerance) return line.End;
 
-                var center = (line.Start + line.End) / 2;
+                Vector3 center = (line.Start + line.End) / 2;
                 if ((center - c).Length() < pointTolerance) return center;
 
                 // If the line is closer to the grid point, return the line
-                var lineSnap = line.ClosestPoint(c);
+                Vector3 lineSnap = line.ClosestPoint(c);
                 if ((closest - c).Length() > (lineSnap - c).Length()) closest = lineSnap;
             }
             return closest;
@@ -106,10 +106,10 @@ namespace CBRE.BspEditor.Tools
 
         protected Vector3? GetNudgeValue(Keys k)
         {
-            var gridData = GetDocument()?.Map.Data.GetOne<GridData>();
-            var useGrid = !KeyboardState.Ctrl && gridData?.SnapToGrid != false;
-            var grid = gridData?.Grid;
-            var val = grid != null && !useGrid ? grid.AddStep(Vector3.Zero, Vector3.One) : Vector3.One;
+            GridData gridData = GetDocument()?.Map.Data.GetOne<GridData>();
+            bool useGrid = !KeyboardState.Ctrl && gridData?.SnapToGrid != false;
+            BspEditor.Grid.IGrid grid = gridData?.Grid;
+            Vector3 val = grid != null && !useGrid ? grid.AddStep(Vector3.Zero, Vector3.One) : Vector3.One;
             switch (k)
             {
                 case Keys.Left:
@@ -125,7 +125,7 @@ namespace CBRE.BspEditor.Tools
         }
         
         private readonly WeakReference<MapDocument> _document;
-        public MapDocument GetDocument() => _document.TryGetTarget(out var doc) ? doc : null;
+        public MapDocument GetDocument() => _document.TryGetTarget(out MapDocument doc) ? doc : null;
         
         public ToolUsage Usage { get; protected set; }
         public bool Active { get; set; }
@@ -154,7 +154,7 @@ namespace CBRE.BspEditor.Tools
         protected void SetDocument(MapDocument document)
         {
             _document.SetTarget(document);
-            foreach (var t in Children) t.SetDocument(document);
+            foreach (BaseTool t in Children) t.SetDocument(document);
             DocumentChanged();
         }
         
@@ -186,7 +186,7 @@ namespace CBRE.BspEditor.Tools
 
         private bool ChildAction(Action<BaseTool, MapViewport, ViewportEvent> action, MapViewport viewport, ViewportEvent ev)
         {
-            foreach (var child in Children.Where(x => x.Active))
+            foreach (BaseTool child in Children.Where(x => x.Active))
             {
                 action(child, viewport, ev);
                 if (ev != null && ev.Handled) return true;
@@ -196,7 +196,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseEnter(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -208,7 +208,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseLeave(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -220,7 +220,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseDown(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -232,7 +232,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseClick(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -243,7 +243,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseDoubleClick(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -255,7 +255,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseUp(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -267,7 +267,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseWheel(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -279,7 +279,7 @@ namespace CBRE.BspEditor.Tools
 
         public void MouseMove(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -291,7 +291,7 @@ namespace CBRE.BspEditor.Tools
 
         public void DragStart(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -303,7 +303,7 @@ namespace CBRE.BspEditor.Tools
 
         public void DragMove(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -315,7 +315,7 @@ namespace CBRE.BspEditor.Tools
 
         public void DragEnd(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -327,7 +327,7 @@ namespace CBRE.BspEditor.Tools
 
         public void KeyPress(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -339,7 +339,7 @@ namespace CBRE.BspEditor.Tools
 
         public void KeyDown(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -351,7 +351,7 @@ namespace CBRE.BspEditor.Tools
 
         public void KeyUp(MapViewport viewport, ViewportEvent e)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -363,11 +363,11 @@ namespace CBRE.BspEditor.Tools
 
         public void UpdateFrame(MapViewport viewport, long frame)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
-            foreach (var child in Children) child.UpdateFrame(viewport, frame);
+            foreach (BaseTool child in Children) child.UpdateFrame(viewport, frame);
 
             if (viewport.Is2D) UpdateFrame(document, viewport, viewport.Viewport.Camera as OrthographicCamera, frame);
             if (viewport.Is3D) UpdateFrame(document, viewport, viewport.Viewport.Camera as PerspectiveCamera, frame);
@@ -375,11 +375,11 @@ namespace CBRE.BspEditor.Tools
 
         public bool FilterHotkey(MapViewport viewport, string hotkey, Keys keys)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return false;
 
             if (!Active) return false;
-            foreach (var child in Children)
+            foreach (BaseTool child in Children)
             {
                 if (child.FilterHotkey(viewport, hotkey, keys)) return true;
             }
@@ -428,7 +428,7 @@ namespace CBRE.BspEditor.Tools
 
         public void Render(BufferBuilder builder, ResourceCollector resourceCollector)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -438,7 +438,7 @@ namespace CBRE.BspEditor.Tools
 
         public void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -448,7 +448,7 @@ namespace CBRE.BspEditor.Tools
 
         public void Render(IViewport viewport, PerspectiveCamera camera, I2DRenderer im)
         {
-            var document = _document.TryGetTarget(out var doc) ? doc : null;
+            MapDocument document = _document.TryGetTarget(out MapDocument doc) ? doc : null;
             if (document == null) return;
 
             if (!Active) return;
@@ -458,7 +458,7 @@ namespace CBRE.BspEditor.Tools
 
         protected virtual void Render(MapDocument document, BufferBuilder builder, ResourceCollector resourceCollector)
         {
-            foreach (var c in Children.Where(x => x.Active))
+            foreach (BaseTool c in Children.Where(x => x.Active))
             {
                 c.Render(document, builder, resourceCollector);
             }
@@ -466,7 +466,7 @@ namespace CBRE.BspEditor.Tools
 
         protected virtual void Render(MapDocument document, IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
-            foreach (var c in Children.Where(x => x.Active))
+            foreach (BaseTool c in Children.Where(x => x.Active))
             {
                 c.Render(document, viewport, camera, worldMin, worldMax, im);
             }
@@ -474,7 +474,7 @@ namespace CBRE.BspEditor.Tools
 
         protected virtual void Render(MapDocument document, IViewport viewport, PerspectiveCamera camera, I2DRenderer im)
         {
-            foreach (var c in Children.Where(x => x.Active))
+            foreach (BaseTool c in Children.Where(x => x.Active))
             {
                 c.Render(document, viewport, camera, im);
             }

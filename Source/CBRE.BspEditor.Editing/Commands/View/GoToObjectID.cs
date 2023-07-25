@@ -33,25 +33,25 @@ namespace CBRE.BspEditor.Editing.Commands.View
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            using (var qf = new QuickForm(Title) { UseShortcutKeys = true }.TextBox("ObjectID", ObjectID).OkCancel(OK, Cancel))
+            using (QuickForm qf = new QuickForm(Title) { UseShortcutKeys = true }.TextBox("ObjectID", ObjectID).OkCancel(OK, Cancel))
             {
                 qf.ClientSize = new Size(230, qf.ClientSize.Height);
 
                 if (await qf.ShowDialogAsync() != DialogResult.OK) return;
 
-                if (!long.TryParse(qf.String("ObjectID"), out var id)) return;
+                if (!long.TryParse(qf.String("ObjectID"), out long id)) return;
 
-                var obj = document.Map.Root.FindByID(id);
+                IMapObject obj = document.Map.Root.FindByID(id);
                 if (obj == null) return;
 
-                var tran = new Transaction(
+                Transaction tran = new Transaction(
                     new Deselect(document.Selection),
                     new Select(obj)
                 );
 
                 await MapDocumentOperation.Perform(document, tran);
 
-                var box = obj.BoundingBox;
+                DataStructures.Geometric.Box box = obj.BoundingBox;
 
                 await Task.WhenAll(
                     Oy.Publish("MapDocument:Viewport:Focus3D", box),

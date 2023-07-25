@@ -51,18 +51,18 @@ namespace CBRE.BspEditor.Editing.Commands
         {
             if (_clipboard.Value.CanPaste())
             {
-                var content = _clipboard.Value.GetPastedContent(document).ToList();
+                List<IMapObject> content = _clipboard.Value.GetPastedContent(document).ToList();
                 if (!content.Any()) return;
 
-                using (var psd = new PasteSpecialDialog(new Box(content.Select(x => x.BoundingBox))))
+                using (PasteSpecialDialog psd = new PasteSpecialDialog(new Box(content.Select(x => x.BoundingBox))))
                 {
                     _translator.Value.Translate(psd);
                     if (psd.ShowDialog() == DialogResult.OK)
                     {
-                        var objs = GetPastedContent(document, content, psd);
+                        List<IMapObject> objs = GetPastedContent(document, content, psd);
                         if (objs.Any())
                         {
-                            var op = new Attach(document.Map.Root.ID, objs);
+                            Attach op = new Attach(document.Map.Root.ID, objs);
                             await MapDocumentOperation.Perform(document, op);
                         }
                     }
@@ -72,13 +72,13 @@ namespace CBRE.BspEditor.Editing.Commands
 
         private List<IMapObject> GetPastedContent(MapDocument document, List<IMapObject> objectsToPaste, PasteSpecialDialog dialog)
         {
-            var origin = GetPasteOrigin(document, dialog.StartPoint, objectsToPaste);
-            var objects = new List<IMapObject>();
-            var grouping = dialog.Grouping;
-            var makeEntitesUnique = dialog.MakeEntitiesUnique;
-            var numCopies = dialog.NumberOfCopies;
-            var offset = dialog.AccumulativeOffset;
-            var rotation = dialog.AccumulativeRotation;
+            Vector3 origin = GetPasteOrigin(document, dialog.StartPoint, objectsToPaste);
+            List<IMapObject> objects = new List<IMapObject>();
+            PasteSpecialDialog.PasteSpecialGrouping grouping = dialog.Grouping;
+            bool makeEntitesUnique = dialog.MakeEntitiesUnique;
+            int numCopies = dialog.NumberOfCopies;
+            Vector3 offset = dialog.AccumulativeOffset;
+            Vector3 rotation = dialog.AccumulativeRotation;
 
             if (objectsToPaste.Count == 1)
             {
@@ -96,7 +96,7 @@ namespace CBRE.BspEditor.Editing.Commands
             }
 
             // Get a list of all entity names if needed
-            var names = new List<string>();
+            List<string> names = new List<string>();
             if (makeEntitesUnique)
             {
                 names = document.Map.Root.Find(x => x is Entity)
@@ -107,12 +107,12 @@ namespace CBRE.BspEditor.Editing.Commands
             }
 
             // Start at i = 1 so the original isn't duped with no offets
-            for (var i = 1; i <= numCopies; i++)
+            for (int i = 1; i <= numCopies; i++)
             {
-                var copyOrigin = origin + (offset * i);
-                var copyRotation = rotation * i;
-                var copy = CreateCopy(document.Map.NumberGenerator, copyOrigin, copyRotation, names, objectsToPaste, makeEntitesUnique, dialog.PrefixEntityNames, dialog.EntityNamePrefix).ToList();
-                var grouped = GroupCopy(document.Map.NumberGenerator, allGroup, copy, grouping);
+                Vector3 copyOrigin = origin + (offset * i);
+                Vector3 copyRotation = rotation * i;
+                List<IMapObject> copy = CreateCopy(document.Map.NumberGenerator, copyOrigin, copyRotation, names, objectsToPaste, makeEntitesUnique, dialog.PrefixEntityNames, dialog.EntityNamePrefix).ToList();
+                IEnumerable<IMapObject> grouped = GroupCopy(document.Map.NumberGenerator, allGroup, copy, grouping);
                 objects.AddRange(grouped);
             }
 
@@ -127,7 +127,7 @@ namespace CBRE.BspEditor.Editing.Commands
             {
                 case PasteSpecialDialog.PasteSpecialStartPoint.CenterOriginal:
                     // Use the original origin
-                    var box = new Box(objectsToPaste.Select(x => x.BoundingBox));
+                    Box box = new Box(objectsToPaste.Select(x => x.BoundingBox));
                     origin = box.Center;
                     break;
                 case PasteSpecialDialog.PasteSpecialStartPoint.CenterSelection:
@@ -144,24 +144,24 @@ namespace CBRE.BspEditor.Editing.Commands
 
         private IEnumerable<IMapObject> CreateCopy(UniqueNumberGenerator gen, Vector3 origin, Vector3 rotation, List<string> names, List<IMapObject> objectsToPaste, bool makeEntitesUnique, bool prefixEntityNames, string entityNamePrefix)
         {
-            var box = new Box(objectsToPaste.Select(x => x.BoundingBox));
-            
-            var rads = rotation * (float) Math.PI / 180;
-            var mov = Matrix4x4.CreateTranslation(-box.Center); // Move to zero
-            var rot = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(rads.Y, rads.X, rads.Z)); // Do rotation
-            var fin = Matrix4x4.CreateTranslation(origin); // Move to final origin
-            var transform = mov * rot * fin;
+            Box box = new Box(objectsToPaste.Select(x => x.BoundingBox));
 
-            foreach (var mo in objectsToPaste)
+            Vector3 rads = rotation * (float) Math.PI / 180;
+            Matrix4x4 mov = Matrix4x4.CreateTranslation(-box.Center); // Move to zero
+            Matrix4x4 rot = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(rads.Y, rads.X, rads.Z)); // Do rotation
+            Matrix4x4 fin = Matrix4x4.CreateTranslation(origin); // Move to final origin
+            Matrix4x4 transform = mov * rot * fin;
+
+            foreach (IMapObject mo in objectsToPaste)
             {
                 // Copy, transform and fix entity names
-                var copy = (IMapObject) mo.Copy(gen);
+                IMapObject copy = (IMapObject) mo.Copy(gen);
 
                 // Transform the object
                 copy.Transform(transform);
 
                 // Paste special will always texture lock (always uniform too, only translation and rotation possible)
-                foreach (var t in copy.Data.OfType<ITextured>()) t.Texture.TransformUniform(transform);
+                foreach (ITextured t in copy.Data.OfType<ITextured>()) t.Texture.TransformUniform(transform);
 
                 FixEntityNames(copy, names, makeEntitesUnique, prefixEntityNames, entityNamePrefix);
                 yield return copy;
@@ -172,12 +172,12 @@ namespace CBRE.BspEditor.Editing.Commands
         {
             if (!makeEntitesUnique && !prefixEntityNames) return;
 
-            var ents = obj.Find(x => x is Entity).OfType<Entity>().Where(x => x.EntityData != null);
-            foreach (var entity in ents)
+            IEnumerable<Entity> ents = obj.Find(x => x is Entity).OfType<Entity>().Where(x => x.EntityData != null);
+            foreach (Entity entity in ents)
             {
                 // Find the targetname property
                 if (!entity.EntityData.Properties.ContainsKey("targetname")) continue;
-                var prop = entity.EntityData.Properties["targetname"];
+                string prop = entity.EntityData.Properties["targetname"];
 
                 // Skip unnamed entities
                 if (String.IsNullOrWhiteSpace(prop)) continue;
@@ -191,11 +191,11 @@ namespace CBRE.BspEditor.Editing.Commands
                 // Make the name unique
                 if (makeEntitesUnique)
                 {
-                    var name = prop;
+                    string name = prop;
 
                     // Find a unique new name for the entity
-                    var newName = name;
-                    var counter = 1;
+                    string newName = name;
+                    int counter = 1;
                     while (names.Contains(newName))
                     {
                         newName = name + "_" + counter;
@@ -218,7 +218,7 @@ namespace CBRE.BspEditor.Editing.Commands
                     return copy;
                 case PasteSpecialDialog.PasteSpecialGrouping.Individual:
                     // Use one group per copy
-                    var group = new Group(gen.Next("MapObject"));
+                    Group group = new Group(gen.Next("MapObject"));
                     copy.ForEach(x => x.Hierarchy.Parent = group);
                     return new List<IMapObject> { group };
                 case PasteSpecialDialog.PasteSpecialGrouping.All:

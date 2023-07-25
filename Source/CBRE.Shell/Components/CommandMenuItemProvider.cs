@@ -27,17 +27,17 @@ namespace CBRE.Shell.Components
 
         public IEnumerable<IMenuItem> GetMenuItems()
         {
-            foreach (var export in _commands)
+            foreach (Lazy<ICommand> export in _commands)
             {
-                var ty = export.Value.GetType();
-                var mia = ty.GetCustomAttributes(typeof(MenuItemAttribute), false).OfType<MenuItemAttribute>().FirstOrDefault();
+                Type ty = export.Value.GetType();
+                MenuItemAttribute mia = ty.GetCustomAttributes(typeof(MenuItemAttribute), false).OfType<MenuItemAttribute>().FirstOrDefault();
                 if (mia == null) continue;
-                var icon = ty.GetCustomAttributes(typeof(MenuImageAttribute), false).OfType<MenuImageAttribute>().FirstOrDefault();
+                MenuImageAttribute icon = ty.GetCustomAttributes(typeof(MenuImageAttribute), false).OfType<MenuImageAttribute>().FirstOrDefault();
 
-                var hotkey = _hotkeys.GetHotkey("Command:" + export.Value.GetID());
-                var shortcut = _hotkeys.GetHotkeyString(hotkey);
+                Common.Shell.Hotkeys.IHotkey hotkey = _hotkeys.GetHotkey("Command:" + export.Value.GetID());
+                string shortcut = _hotkeys.GetHotkeyString(hotkey);
 
-                var allow = ty.GetCustomAttributes(typeof(AllowToolbarAttribute), false).OfType<AllowToolbarAttribute>().FirstOrDefault();
+                AllowToolbarAttribute allow = ty.GetCustomAttributes(typeof(AllowToolbarAttribute), false).OfType<AllowToolbarAttribute>().FirstOrDefault();
 
                 yield return new CommandMenuItem(export.Value, mia.Section, mia.Path, mia.Group, mia.OrderHint, icon?.Image, shortcut ?? "", allow?.Allowed != false);
             }

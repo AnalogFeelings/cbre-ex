@@ -39,7 +39,7 @@ namespace CBRE.BspEditor.Tools.Selection
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Title = strings.GetString(prefix, "Title");

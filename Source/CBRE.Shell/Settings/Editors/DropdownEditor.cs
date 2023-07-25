@@ -46,7 +46,7 @@ namespace CBRE.Shell.Settings.Editors
 
         private void SetHint(string hint)
         {
-            var spl = (hint ?? "").Split(',');
+            string[] spl = (hint ?? "").Split(',');
             Combobox.Items.AddRange(spl.Select(x => new DropdownValue(x)).OfType<object>().ToArray());
         }
 

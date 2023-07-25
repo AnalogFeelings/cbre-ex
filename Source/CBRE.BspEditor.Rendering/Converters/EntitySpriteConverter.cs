@@ -33,32 +33,32 @@ namespace CBRE.BspEditor.Rendering.Converters
 
         private EntitySprite GetSpriteData(Entity e)
         {
-            var es = e.Data.GetOne<EntitySprite>();
+            EntitySprite es = e.Data.GetOne<EntitySprite>();
             return es != null && es.ContentsReplaced ? es : null;
         }
 
         public async Task Convert(BufferBuilder builder, MapDocument document, IMapObject obj, ResourceCollector resourceCollector)
         {
-            var entity = (Entity) obj;
-            var tc = await document.Environment.GetTextureCollection();
+            Entity entity = (Entity) obj;
+            Environment.TextureCollection tc = await document.Environment.GetTextureCollection();
 
-            var sd = GetSpriteData(entity);
+            EntitySprite sd = GetSpriteData(entity);
             if (sd == null || !sd.ContentsReplaced) return;
 
-            var name = sd.Name;
-            var scale = sd.Scale;
+            string name = sd.Name;
+            float scale = sd.Scale;
 
-            var width = entity.BoundingBox.Width;
-            var height = entity.BoundingBox.Height;
+            float width = entity.BoundingBox.Width;
+            float height = entity.BoundingBox.Height;
 
-            var t = await tc.GetTextureItem(name);
+            CBRE.Providers.Texture.TextureItem t = await tc.GetTextureItem(name);
 
-            var texture = $"{document.Environment.ID}::{name}";
+            string texture = $"{document.Environment.ID}::{name}";
             if (t != null) resourceCollector.RequireTexture(t.Name);
 
-            var tint = sd.Color.ToVector4();
+            Vector4 tint = sd.Color.ToVector4();
 
-            var flags = VertexFlags.None;
+            VertexFlags flags = VertexFlags.None;
             if (entity.IsSelected) flags |= VertexFlags.SelectiveTransformed;
 
             builder.Append(

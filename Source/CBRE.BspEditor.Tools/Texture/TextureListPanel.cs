@@ -94,7 +94,7 @@ namespace CBRE.BspEditor.Tools.Texture
                 _allowMultipleHighlighting = value;
                 if (!_allowMultipleHighlighting && _selection.Count > 0)
                 {
-                    var first = _selection.First();
+                    string first = _selection.First();
                     _selection.Clear();
                     _selection.Add(first);
                     Invalidate();
@@ -113,7 +113,7 @@ namespace CBRE.BspEditor.Tools.Texture
             set
             {
                 _imageSize = value;
-                foreach (var kv in _controls.Values.ToList()) kv.ImageSize = ImageSize;
+                foreach (TextureControl kv in _controls.Values.ToList()) kv.ImageSize = ImageSize;
                 ControlInvalidated();
             }
         }
@@ -192,12 +192,12 @@ namespace CBRE.BspEditor.Tools.Texture
             base.OnMouseDoubleClick(e);
             if (KeyboardState.Ctrl || KeyboardState.Shift || _selection.Count != 1) return;
 
-            var x = e.X;
-            var y = _scrollBar.Value + e.Y;
+            int x = e.X;
+            int y = _scrollBar.Value + e.Y;
 
-            var clickedIndex = GetIndexAt(x, y);
+            int clickedIndex = GetIndexAt(x, y);
 
-            var item = _textures.ElementAt(clickedIndex);
+            string item = _textures.ElementAt(clickedIndex);
             if (_selection.Contains(item)) TextureSelected?.Invoke(this, item);
         }
 
@@ -217,12 +217,12 @@ namespace CBRE.BspEditor.Tools.Texture
                 _downPoint = e.Location;
             }
 
-            var x = e.X;
-            var y = _scrollBar.Value + e.Y;
+            int x = e.X;
+            int y = _scrollBar.Value + e.Y;
 
-            var clickedIndex = GetIndexAt(x, y);
+            int clickedIndex = GetIndexAt(x, y);
 
-            var item = clickedIndex >= 0 && clickedIndex < _textures.Count
+            string item = clickedIndex >= 0 && clickedIndex < _textures.Count
                 ? _textures.ElementAt(clickedIndex)
                 : null;
 
@@ -237,9 +237,9 @@ namespace CBRE.BspEditor.Tools.Texture
             }
             else if (AllowMultipleHighlighting && KeyboardState.Shift && _lastSelectedItem != null)
             {
-                var bef = _textures.ToList().IndexOf(_lastSelectedItem);
-                var start = Math.Min(bef, clickedIndex);
-                var count = Math.Abs(clickedIndex - bef) + 1;
+                int bef = _textures.ToList().IndexOf(_lastSelectedItem);
+                int start = Math.Min(bef, clickedIndex);
+                int count = Math.Abs(clickedIndex - bef) + 1;
                 _selection.UnionWith(_textures.GetRange(start, count).Where(i => !_selection.Contains(i)));
             }
             else
@@ -271,13 +271,13 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private int GetIndexAt(int x, int y)
         {
-            for (var i = 0; i < _textures.Count; i++)
+            for (int i = 0; i < _textures.Count; i++)
             {
-                var tex = _textures[i];
+                string tex = _textures[i];
 
-                if (!_controls.TryGetValue(tex, out var con)) continue;
+                if (!_controls.TryGetValue(tex, out TextureControl con)) continue;
 
-                var rec = new Rectangle(con.Point, con.Size);
+                Rectangle rec = new Rectangle(con.Point, con.Size);
                 if (rec.Contains(x, y)) return i;
             }
             return -1;
@@ -295,7 +295,7 @@ namespace CBRE.BspEditor.Tools.Texture
         /// <param name="descending">True to sort in descending order</param>
         public void SortTextureList<T>(Func<string, T> sortFunc, bool descending)
         {
-            var newList = descending
+            List<string> newList = descending
                 ? _textures.OrderByDescending(sortFunc).ToList()
                 : _textures.OrderBy(sortFunc).ToList();
 
@@ -374,7 +374,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void ScrollByAmount(int value)
         {
-            var newValue = _scrollBar.Value + value;
+            int newValue = _scrollBar.Value + value;
             _scrollBar.Value = newValue < 0
                 ? 0
                 : Math.Min(newValue, Math.Max(0, _scrollBar.Maximum - ClientRectangle.Height));
@@ -433,14 +433,14 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void UpdateTextureList()
         {
-            foreach (var rem in _controls.Keys.Except(_textures).ToList())
+            foreach (string rem in _controls.Keys.Except(_textures).ToList())
             {
-                if (_controls.TryRemove(rem, out var r)) r.Dispose();
+                if (_controls.TryRemove(rem, out TextureControl r)) r.Dispose();
             }
 
-            foreach (var add in _textures.Except(_controls.Keys).ToList())
+            foreach (string add in _textures.Except(_controls.Keys).ToList())
             {
-                var ctrl = new TextureControl(add, GetTextureBitmap, Invalidate)
+                TextureControl ctrl = new TextureControl(add, GetTextureBitmap, Invalidate)
                 {
                     ImageSize = ImageSize
                 };
@@ -455,12 +455,12 @@ namespace CBRE.BspEditor.Tools.Texture
                 currentY = 0,
                 maxHeight = 0;
 
-            foreach (var tex in _textures)
+            foreach (string tex in _textures)
             {
-                if (!_controls.TryGetValue(tex, out var con)) continue;
+                if (!_controls.TryGetValue(tex, out TextureControl con)) continue;
 
-                var cw = con.Size.Width;
-                var ch = con.Size.Height;
+                int cw = con.Size.Width;
+                int ch = con.Size.Height;
 
                 if (currentX > 0 && currentX + cw > viewportWidth)
                 {
@@ -481,7 +481,7 @@ namespace CBRE.BspEditor.Tools.Texture
             _scrollBar.LargeChange = ClientRectangle.Height;
             if (_scrollToItem != null)
             {
-                if (_controls.TryGetValue(_scrollToItem, out var con))
+                if (_controls.TryGetValue(_scrollToItem, out TextureControl con))
                 {
                     _scrollBar.Value = Math.Max(0, Math.Min(con.Point.Y, _scrollBar.Maximum - ClientRectangle.Height));
                 }
@@ -506,17 +506,17 @@ namespace CBRE.BspEditor.Tools.Texture
         private void RenderTextures(Graphics g)
         {
             if (_textures.Count == 0 || _streamSource == null) return;
-            
-            var y = _scrollBar.Value;
-            var height = ClientRectangle.Height;
 
-            var done = false;
-            foreach (var tex in _textures)
+            int y = _scrollBar.Value;
+            int height = ClientRectangle.Height;
+
+            bool done = false;
+            foreach (string tex in _textures)
             {
-                if (!_controls.TryGetValue(tex, out var con)) continue;
+                if (!_controls.TryGetValue(tex, out TextureControl con)) continue;
                 if (!con.Positioned) continue;
 
-                var rec = new Rectangle(con.Point, con.Size);
+                Rectangle rec = new Rectangle(con.Point, con.Size);
                 if (rec.Top > y + height)
                 {
                     done = true;
@@ -638,7 +638,7 @@ namespace CBRE.BspEditor.Tools.Texture
                 // Draw the image (if it's loaded)
                 if (_bitmapTask != null && _bitmapTask.IsCompleted)
                 {
-                    var img = _bitmapTask.Result;
+                    Bitmap img = _bitmapTask.Result;
                     if (img != null)
                     {
                         DrawImage(g, img, x + Padding, y + Padding, Size.Width - Padding * 2, Size.Height - Padding * 2 - FontHeight);
@@ -650,8 +650,8 @@ namespace CBRE.BspEditor.Tools.Texture
             {
                 if (bmp == null) return;
 
-                var iw = bmp.Width;
-                var ih = bmp.Height;
+                int iw = bmp.Width;
+                int ih = bmp.Height;
                 if (iw > w && iw >= ih)
                 {
                     ih = (int)Math.Floor(h * (ih / (float)iw));

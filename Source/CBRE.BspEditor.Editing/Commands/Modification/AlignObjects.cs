@@ -30,21 +30,21 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var selBox = document.Selection.GetSelectionBoundingBox();
+            Box selBox = document.Selection.GetSelectionBoundingBox();
 
-            var tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+            TransformationFlags tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
 
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var mo in document.Selection.GetSelectedParents().ToList())
+            foreach (IMapObject mo in document.Selection.GetSelectedParents().ToList())
             {
-                var objBox = mo.BoundingBox;
-                var translation = GetTranslation(selBox, objBox);
+                Box objBox = mo.BoundingBox;
+                Vector3 translation = GetTranslation(selBox, objBox);
                 if (translation == Vector3.Zero) continue;
 
-                var tform = Matrix4x4.CreateTranslation(translation);
+                Matrix4x4 tform = Matrix4x4.CreateTranslation(translation);
 
-                var transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, mo);
+                BspEditor.Modification.Operations.Mutation.Transform transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, mo);
                 transaction.Add(transformOperation);
 
                 // Check for texture transform

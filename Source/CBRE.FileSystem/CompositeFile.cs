@@ -41,7 +41,7 @@ namespace CBRE.FileSystem
 
         private T First<T>(Func<IFile, T> func)
         {
-            var f = Files.FirstOrDefault(x => x.Exists) ?? Files.First();
+            IFile f = Files.FirstOrDefault(x => x.Exists) ?? Files.First();
             return func(f);
         }
 
@@ -119,7 +119,7 @@ namespace CBRE.FileSystem
 
         public IFile GetChild(string name)
         {
-            var children = Files.Select(x => x.GetChild(name)).Where(x => x != null).ToList();
+            List<IFile> children = Files.Select(x => x.GetChild(name)).Where(x => x != null).ToList();
             return !children.Any() ? null : new CompositeFile(this, children);
         }
 
@@ -135,7 +135,7 @@ namespace CBRE.FileSystem
 
         public IFile GetFile(string name)
         {
-            var files = Files.Select(x => x.GetFile(name)).Where(x => x != null).ToList();
+            List<IFile> files = Files.Select(x => x.GetFile(name)).Where(x => x != null).ToList();
             return !files.Any() ? null : new CompositeFile(this, files);
         }
 

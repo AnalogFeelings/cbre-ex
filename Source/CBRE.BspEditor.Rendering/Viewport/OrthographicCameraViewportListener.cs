@@ -32,29 +32,29 @@ namespace CBRE.BspEditor.Rendering.Viewport
             {
                 if (Viewport.Viewport.IsFocused && _mouseDown != null && Control.MouseButtons.HasFlag(MouseButtons.Left) && !KeyboardState.IsKeyDown(Keys.Space))
                 {
-                    var pt = Viewport.Control.PointToClient(Control.MousePosition);
-                    var pos = Camera.Position;
+                    System.Drawing.Point pt = Viewport.Control.PointToClient(Control.MousePosition);
+                    Vector3 pos = Camera.Position;
                     if (pt.X < ScrollPadding)
                     {
-                        var mx = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, ScrollPadding - pt.X);
+                        float mx = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, ScrollPadding - pt.X);
                         mx = mx * mx + ScrollStart;
                         pos.X -= mx / Camera.Zoom;
                     }
                     else if (pt.X > Viewport.Width - ScrollPadding)
                     {
-                        var mx = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, pt.X - (Viewport.Width - ScrollPadding));
+                        float mx = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, pt.X - (Viewport.Width - ScrollPadding));
                         mx = mx * mx + ScrollStart;
                         pos.X += mx / Camera.Zoom;
                     }
                     if (pt.Y < ScrollPadding)
                     {
-                        var my = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, ScrollPadding - pt.Y);
+                        float my = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, ScrollPadding - pt.Y);
                         my = my * my + ScrollStart;
                         pos.Y += my / Camera.Zoom;
                     }
                     else if (pt.Y > Viewport.Height - ScrollPadding)
                     {
-                        var my = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, pt.Y - (Viewport.Height - ScrollPadding));
+                        float my = ScrollStart + ScrollIncrement * Math.Min(ScrollMaximum, pt.Y - (Viewport.Height - ScrollPadding));
                         my = my * my + ScrollStart;
                         pos.Y -= my / Camera.Zoom;
                     }
@@ -86,7 +86,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
                 if (!CameraNavigationViewportSettings.Camera2DPanRequiresMouseClick)
                 {
                     Viewport.Control.Capture = true;
-                    var p = e.Sender.Control.PointToClient(Cursor.Position);
+                    System.Drawing.Point p = e.Sender.Control.PointToClient(Cursor.Position);
                     _mouseDown = new Vector3(p.X, Viewport.Height - p.Y, 0);
                 }
                 e.Handled = true;
@@ -94,7 +94,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
             
             if (KeyboardState.Shift)
             {
-                var shift = new Vector3(0, 0, 0);
+                Vector3 shift = new Vector3(0, 0, 0);
 
                 switch (e.KeyCode)
                 {
@@ -115,19 +115,19 @@ namespace CBRE.BspEditor.Rendering.Viewport
                 Camera.Position += shift;
             }
 
-            var str = e.KeyCode.ToString();
+            string str = e.KeyCode.ToString();
             if (str.StartsWith("NumPad") || str.StartsWith("D"))
             {
-                var last = str.Last();
+                char last = str.Last();
                 if (Char.IsDigit(last))
                 {
-                    var press = (int) Char.GetNumericValue(last);
+                    int press = (int) Char.GetNumericValue(last);
                     if (press >= 0 && press <= 9)
                     {
                         if (press == 0) press = 10;
-                        var num = Math.Max(press - 6, 6 - press);
-                        var pow = (float) Math.Pow(2, num);
-                        var zoom = press < 6 ? 1 / pow : pow;
+                        int num = Math.Max(press - 6, 6 - press);
+                        float pow = (float) Math.Pow(2, num);
+                        float zoom = press < 6 ? 1 / pow : pow;
                         Camera.Zoom = zoom;
                         Oy.Publish("MapDocument:ViewportZoomStatus:UpdateValue", Camera.Zoom);
                     }
@@ -137,18 +137,18 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         public void MouseMove(ViewportEvent e)
         {
-            var lmouse = Control.MouseButtons.HasFlag(MouseButtons.Left);
-            var mmouse = Control.MouseButtons.HasFlag(MouseButtons.Middle);
-            var space = KeyboardState.IsKeyDown(Keys.Space);
+            bool lmouse = Control.MouseButtons.HasFlag(MouseButtons.Left);
+            bool mmouse = Control.MouseButtons.HasFlag(MouseButtons.Middle);
+            bool space = KeyboardState.IsKeyDown(Keys.Space);
             if (space || mmouse)
             {
                 Viewport.Control.Cursor = Cursors.SizeAll;
                 if (lmouse || mmouse || !CameraNavigationViewportSettings.Camera2DPanRequiresMouseClick)
                 {
-                    var point = new Vector3(e.X, Viewport.Height - e.Y, 0);
+                    Vector3 point = new Vector3(e.X, Viewport.Height - e.Y, 0);
                     if (_mouseDown != null)
                     {
-                        var difference = _mouseDown.Value - point;
+                        Vector3 difference = _mouseDown.Value - point;
                         Camera.Position += (difference / Camera.Zoom);
                     }
                     _mouseDown = point;
@@ -161,9 +161,9 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         public void MouseWheel(ViewportEvent e)
         {
-            var before = Camera.Flatten(Camera.ScreenToWorld(new Vector3(e.X, e.Y, 0)));
+            Vector3 before = Camera.Flatten(Camera.ScreenToWorld(new Vector3(e.X, e.Y, 0)));
             Camera.Zoom *= (float) Math.Pow((double) CameraNavigationViewportSettings.MouseWheelZoomMultiplier, (e.Delta < 0 ? -1 : 1));
-            var after = Camera.Flatten(Camera.ScreenToWorld(new Vector3(e.X, e.Y, 0)));
+            Vector3 after = Camera.Flatten(Camera.ScreenToWorld(new Vector3(e.X, e.Y, 0)));
             Camera.Position -= (after - before);
 
             Oy.Publish("MapDocument:ViewportZoomStatus:UpdateValue", Camera.Zoom);
@@ -175,8 +175,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         public void MouseUp(ViewportEvent e)
         {
-            var space = KeyboardState.IsKeyDown(Keys.Space);
-            var req = CameraNavigationViewportSettings.Camera2DPanRequiresMouseClick;
+            bool space = KeyboardState.IsKeyDown(Keys.Space);
+            bool req = CameraNavigationViewportSettings.Camera2DPanRequiresMouseClick;
             if (space && (!req || e.Button == MouseButtons.Left))
             {
                 e.Handled = true;
@@ -192,8 +192,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         public void MouseDown(ViewportEvent e)
         {
-            var space = KeyboardState.IsKeyDown(Keys.Space);
-            var req = CameraNavigationViewportSettings.Camera2DPanRequiresMouseClick;
+            bool space = KeyboardState.IsKeyDown(Keys.Space);
+            bool req = CameraNavigationViewportSettings.Camera2DPanRequiresMouseClick;
             if (space && (!req || e.Button == MouseButtons.Left))
             {
                 e.Handled = true;

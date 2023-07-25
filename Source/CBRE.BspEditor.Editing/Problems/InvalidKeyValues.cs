@@ -24,7 +24,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public async Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var gamedata = await document.Environment.GetGameData();
+            GameData gamedata = await document.Environment.GetGameData();
             return document.Map.Root.FindAll()
                 .Where(x => filter(x))
                 .Select(x => new { Object = x, EntityData = x.Data.GetOne<EntityData>() })
@@ -38,7 +38,7 @@ namespace CBRE.BspEditor.Editing.Problems
             // Multimanagers require invalid key/values to work, exclude them from the search
             if (string.Equals(data.Name, "multi_manager", StringComparison.CurrentCultureIgnoreCase)) return new string[0];
 
-            var cls = gamedata.GetClass(data.Name);
+            GameDataObject cls = gamedata.GetClass(data.Name);
             if (cls == null) return new string[0];
 
             return data.Properties.Select(x => x.Key)
@@ -47,18 +47,18 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public async Task Fix(MapDocument document, Problem problem)
         {
-            var gamedata = await document.Environment.GetGameData();
+            GameData gamedata = await document.Environment.GetGameData();
 
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var obj in problem.Objects)
+            foreach (IMapObject obj in problem.Objects)
             {
-                var data = obj.Data.GetOne<EntityData>();
+                EntityData data = obj.Data.GetOne<EntityData>();
                 if (data == null) continue;
 
-                var vals = new Dictionary<string, string>();
+                Dictionary<string, string> vals = new Dictionary<string, string>();
 
-                foreach (var key in GetInvalidKeys(gamedata, data))
+                foreach (string key in GetInvalidKeys(gamedata, data))
                 {
                     vals[key] = null;
                 }

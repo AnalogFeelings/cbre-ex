@@ -45,18 +45,18 @@ namespace CBRE.BspEditor.Tools.Entity
         {
             if (doc == null) return;
 
-            var sel = GetSelectedEntity()?.Name;
-            var gameData = await doc.Environment.GetGameData();
-            var defaultName = doc.Environment.DefaultPointEntity ?? "";
+            string sel = GetSelectedEntity()?.Name;
+            GameData gameData = await doc.Environment.GetGameData();
+            string defaultName = doc.Environment.DefaultPointEntity ?? "";
             
             EntityTypeLabel.InvokeLater(() =>
             {
                 EntityTypeList.BeginUpdate();
                 EntityTypeList.Items.Clear();
 
-                var def = doc.Environment.DefaultPointEntity;
+                string def = doc.Environment.DefaultPointEntity;
                 GameDataObject reselect = null, redef = null;
-                foreach (var gdo in gameData.Classes.Where(x => x.ClassType == ClassType.Point).OrderBy(x => x.Name.ToLowerInvariant()))
+                foreach (GameDataObject gdo in gameData.Classes.Where(x => x.ClassType == ClassType.Point).OrderBy(x => x.Name.ToLowerInvariant()))
                 {
                     EntityTypeList.Items.Add(gdo);
                     if (String.Equals(sel, gdo.Name, StringComparison.InvariantCultureIgnoreCase)) reselect = gdo;
@@ -79,13 +79,13 @@ namespace CBRE.BspEditor.Tools.Entity
 
         private async Task ResetEntityType(EntityTool tool)
         {
-            var doc = tool.GetDocument();
+            MapDocument doc = tool.GetDocument();
             if (doc == null) return;
 
-            var gameData = await doc.Environment.GetGameData();
-            var defaultName = doc.Environment.DefaultPointEntity ?? "";
+            GameData gameData = await doc.Environment.GetGameData();
+            string defaultName = doc.Environment.DefaultPointEntity ?? "";
 
-            var redef = gameData.Classes
+            GameDataObject redef = gameData.Classes
                 .Where(x => x.ClassType == ClassType.Point)
                 .OrderBy(x => x.Name == defaultName ? 0 : (x.Name.StartsWith("info_player_start") ? 1 : 2))
                 .FirstOrDefault();

@@ -40,7 +40,7 @@ namespace CBRE.Shell.Registers
         public Task OnStartup()
         {
             // Register the exported sidebar components
-            foreach (var export in _bottomTabComponents)
+            foreach (Lazy<IBottomTabComponent> export in _bottomTabComponents)
             {
                 Log.Debug("Bottom tabs", "Loaded: " + export.Value.GetType().FullName);
                 _components.Add(export.Value);
@@ -58,7 +58,7 @@ namespace CBRE.Shell.Registers
         {
             _shell.Value.InvokeLater(() =>
             {
-                foreach (var tab in _shell.Value.BottomTabs.TabPages.OfType<TabPage>())
+                foreach (TabPage tab in _shell.Value.BottomTabs.TabPages.OfType<TabPage>())
                 {
                     if (!(tab.Tag is IBottomTabComponent btc)) continue;
                     tab.Text = btc.Title;
@@ -73,9 +73,9 @@ namespace CBRE.Shell.Registers
             _shell.Value.Invoke((MethodInvoker)delegate
             {
                 _shell.Value.BottomTabs.TabPages.Clear();
-                foreach (var btc in _components)
+                foreach (IBottomTabComponent btc in _components)
                 {
-                    var page = new TabPage(btc.Title) { Tag = btc, Visible = false };
+                    TabPage page = new TabPage(btc.Title) { Tag = btc, Visible = false };
                     page.Controls.Add((Control) btc.Control);
                     _shell.Value.BottomTabs.TabPages.Add(page);
                 }
@@ -87,13 +87,13 @@ namespace CBRE.Shell.Registers
             _shell.Value.Invoke((MethodInvoker) delegate
             {
                 _shell.Value.BottomTabs.SuspendLayout();
-                foreach (var tab in _shell.Value.BottomTabs.TabPages.OfType<TabPage>())
+                foreach (TabPage tab in _shell.Value.BottomTabs.TabPages.OfType<TabPage>())
                 {
-                    var btc = tab.Tag as IBottomTabComponent;
+                    IBottomTabComponent btc = tab.Tag as IBottomTabComponent;
                     if (btc == null) continue;
 
-                    var iic = btc.IsInContext(context);
-                    var vis = tab.Visible;
+                    bool iic = btc.IsInContext(context);
+                    bool vis = tab.Visible;
                     tab.Text = btc.Title;
 
                     if (iic != vis) tab.Visible = iic;

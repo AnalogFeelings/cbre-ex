@@ -35,7 +35,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
         {
             if (Property != null)
             {
-                var opt = Property.Options.FirstOrDefault(x => x.Description == _comboBox.Text);
+                Option opt = Property.Options.FirstOrDefault(x => x.Description == _comboBox.Text);
                 if (opt != null) return opt.Key;
                 opt = Property.Options.FirstOrDefault(x => x.Key == _comboBox.Text);
                 if (opt != null) return opt.Key;
@@ -58,9 +58,9 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
             _comboBox.Items.Clear();
             if (Property != null)
             {
-                var options = GetSortedOptions().ToList();
+                List<Option> options = GetSortedOptions().ToList();
                 _comboBox.Items.AddRange(options.Select(x => x.DisplayText()).OfType<object>().ToArray());
-                var index = options.FindIndex(x => String.Equals(x.Key, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
+                int index = options.FindIndex(x => String.Equals(x.Key, PropertyValue, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
                     _comboBox.SelectedIndex = index;

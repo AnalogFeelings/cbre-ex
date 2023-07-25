@@ -35,11 +35,11 @@ namespace CBRE.BspEditor.Commands.Clipboard
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var sel = document.Selection.GetSelectedParents().ToList();
+            System.Collections.Generic.List<Primitives.MapObjects.IMapObject> sel = document.Selection.GetSelectedParents().ToList();
             if (sel.Any())
             {
                 _clipboard.Value.Push(sel);
-                var t = new Transaction(sel.GroupBy(x => x.Hierarchy.Parent.ID).Select(x => new Detatch(x.Key, x)));
+                Transaction t = new Transaction(sel.GroupBy(x => x.Hierarchy.Parent.ID).Select(x => new Detatch(x.Key, x)));
                 await MapDocumentOperation.Perform(document, t);
             }
         }

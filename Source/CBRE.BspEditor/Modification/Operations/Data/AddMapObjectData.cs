@@ -27,12 +27,12 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var obj = document.Map.Root.FindByID(_id);
+            IMapObject obj = document.Map.Root.FindByID(_id);
             if (obj != null)
             {
-                foreach (var d in _dataToAdd)
+                foreach (IMapObjectData d in _dataToAdd)
                 {
                     obj.Data.Add(d);
                 }
@@ -45,12 +45,12 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Reverse(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var obj = document.Map.Root.FindByID(_id);
+            IMapObject obj = document.Map.Root.FindByID(_id);
             if (obj != null)
             {
-                foreach (var d in _dataToAdd)
+                foreach (IMapObjectData d in _dataToAdd)
                 {
                     obj.Data.Remove(d);
                 }

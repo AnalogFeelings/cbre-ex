@@ -12,13 +12,13 @@ namespace CBRE.BspEditor.Tools.Vertex.Errors
 
         private IEnumerable<MutableFace> GetCoplanarFaces(MutableSolid solid)
         {
-            var faces = solid.Faces.ToList();
+            List<MutableFace> faces = solid.Faces.ToList();
             return faces.Where(f1 => faces.Where(f2 => f2 != f1).Any(f2 => f2.Plane == f1.Plane));
         }
 
         public IEnumerable<VertexError> GetErrors(VertexSolid solid)
         {
-            foreach (var group in GetCoplanarFaces(solid.Copy).GroupBy(x => x.Plane))
+            foreach (IGrouping<DataStructures.Geometric.Plane, MutableFace> group in GetCoplanarFaces(solid.Copy).GroupBy(x => x.Plane))
             {
                 yield return new VertexError(Key, solid).Add(group);
             }

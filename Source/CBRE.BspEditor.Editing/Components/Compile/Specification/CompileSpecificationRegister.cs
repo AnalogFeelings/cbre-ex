@@ -16,7 +16,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
         public async Task OnInitialise()
         {
             _providers = new List<CompileSpecification>();
-            foreach (var sp in _specProviders)
+            foreach (Lazy<ICompileSpecificationProvider> sp in _specProviders)
             {
                 _providers.AddRange(await sp.Value.GetSpecifications());
             }

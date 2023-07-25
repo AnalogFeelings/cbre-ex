@@ -27,30 +27,30 @@ namespace CBRE.BspEditor.Editing.Commands
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            using (var vg = new VisgroupEditForm(document))
+            using (VisgroupEditForm vg = new VisgroupEditForm(document))
             {
                 _translator.Value.Translate(vg);
                 if (vg.ShowDialog() == DialogResult.OK)
                 {
-                    var nv = new List<Visgroup>();
-                    var cv = new List<Visgroup>();
-                    var dv = new List<Visgroup>();
+                    List<Visgroup> nv = new List<Visgroup>();
+                    List<Visgroup> cv = new List<Visgroup>();
+                    List<Visgroup> dv = new List<Visgroup>();
 
                     vg.PopulateChangeLists(document, nv, cv, dv);
 
                     if (nv.Any() || cv.Any() || dv.Any())
                     {
-                        var tns = new Transaction();
+                        Transaction tns = new Transaction();
 
                         if (dv.Any())
                         {
-                            var ids = dv.Select(x => x.ID).ToList();
+                            List<long> ids = dv.Select(x => x.ID).ToList();
                             tns.Add(new RemoveMapData(document.Map.Data.Get<Visgroup>().Where(x => ids.Contains(x.ID))));
                         }
 
                         if (cv.Any())
                         {
-                            var ids = cv.Select(x => x.ID).ToList();
+                            List<long> ids = cv.Select(x => x.ID).ToList();
                             tns.Add(new RemoveMapData(document.Map.Data.Get<Visgroup>().Where(x => ids.Contains(x.ID))));
                             tns.Add(new AddMapData(cv));
                         }

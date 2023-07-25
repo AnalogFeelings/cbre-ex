@@ -25,7 +25,7 @@ namespace CBRE.BspEditor.Tools.Selection
         public override string Details { get; set; } = "Toggle ignore grouping on and off";
         protected override Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var opt = document.Map.Data.GetOne<SelectionOptions>() ?? new SelectionOptions();
+            SelectionOptions opt = document.Map.Data.GetOne<SelectionOptions>() ?? new SelectionOptions();
             opt.IgnoreGrouping = !opt.IgnoreGrouping;
             MapDocumentOperation.Perform(document, new TrivialOperation(x => x.Map.Data.Replace(opt), x => x.Update(opt)));
             return Task.CompletedTask;

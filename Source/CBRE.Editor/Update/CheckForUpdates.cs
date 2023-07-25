@@ -52,12 +52,12 @@ namespace CBRE.Editor.Update
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var silent = parameters.Get("Silent", false);
+            bool silent = parameters.Get("Silent", false);
 
-            var result = await GetUpdateCheckResult(SledgeWebsiteUpdateSource);
+            UpdateCheckResult result = await GetUpdateCheckResult(SledgeWebsiteUpdateSource);
             if (result == null) return;
 
-            var version = GetCurrentVersion();
+            Version version = GetCurrentVersion();
             if (result.Version <= version)
             {
                 if (!silent)
@@ -70,7 +70,7 @@ namespace CBRE.Editor.Update
                 return;
             }
 
-            var details = await GetLatestReleaseDetails();
+            UpdateReleaseDetails details = await GetLatestReleaseDetails();
             if (!details.Exists)
             {
                 if (!silent)
@@ -85,7 +85,7 @@ namespace CBRE.Editor.Update
 
             _shell.InvokeLater(() =>
             {
-                var form = new UpdaterForm(details, _translation);
+                UpdaterForm form = new UpdaterForm(details, _translation);
                 form.Show(_shell);
             });
         }
@@ -99,9 +99,9 @@ namespace CBRE.Editor.Update
         {
             try
             {
-                using (var downloader = new WebClient())
+                using (WebClient downloader = new WebClient())
                 {
-                    var str = (await downloader.DownloadStringTaskAsync(url)).Split('\n', '\r');
+                    string[] str = (await downloader.DownloadStringTaskAsync(url)).Split('\n', '\r');
 
                     if (str.Length < 2 || String.IsNullOrWhiteSpace(str[0]))
                     {
@@ -123,10 +123,10 @@ namespace CBRE.Editor.Update
 
         private async Task<UpdateReleaseDetails> GetLatestReleaseDetails()
         {
-            using (var wc = new WebClient())
+            using (WebClient wc = new WebClient())
             {
                 wc.Headers.Add(HttpRequestHeader.UserAgent, "LogicAndTrick/Sledge-Editor");
-                var str = await wc.DownloadStringTaskAsync(GithubReleasesApiUrl);
+                string str = await wc.DownloadStringTaskAsync(GithubReleasesApiUrl);
                 return new UpdateReleaseDetails(str);
             }
         }

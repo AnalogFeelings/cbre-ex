@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var parents = document.Map.Root.FindAll()
+            List<Problem> parents = document.Map.Root.FindAll()
                 .OfType<Entity>()
                 .Where(x => x.Hierarchy.HasChildren)
                 .Where(x => filter(x))
@@ -35,9 +35,9 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task Fix(MapDocument document, Problem problem)
         {
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var obj in problem.Objects.SelectMany(x => x.Find(f => f is Entity)).Distinct())
+            foreach (IMapObject obj in problem.Objects.SelectMany(x => x.Find(f => f is Entity)).Distinct())
             {
                 transaction.Add(new Detatch(obj.Hierarchy.Parent.ID, obj));
                 transaction.Add(new Attach(document.Map.Root.ID, obj));

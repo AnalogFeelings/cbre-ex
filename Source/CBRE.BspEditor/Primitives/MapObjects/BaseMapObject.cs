@@ -68,7 +68,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <inheritdoc />
         public void Invalidate()
         {
-            foreach (var ch in Hierarchy)
+            foreach (IMapObject ch in Hierarchy)
             {
                 ch.Invalidate();
             }
@@ -98,9 +98,9 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         {
             copy.IsSelected = IsSelected;
             copy.Data = Data.Clone();
-            foreach (var child in Hierarchy)
+            foreach (IMapObject child in Hierarchy)
             {
-                var c = (IMapObject) child.Clone();
+                IMapObject c = (IMapObject) child.Clone();
                 c.Hierarchy.Parent = copy;
             }
             copy.DescendantsChanged();
@@ -110,9 +110,9 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         {
             copy.IsSelected = IsSelected;
             copy.Data = Data.Copy(numberGenerator);
-            foreach (var child in Hierarchy)
+            foreach (IMapObject child in Hierarchy)
             {
-                var c = (IMapObject)child.Copy(numberGenerator);
+                IMapObject c = (IMapObject)child.Copy(numberGenerator);
                 c.Hierarchy.Parent = copy;
             }
             copy.DescendantsChanged();
@@ -123,9 +123,9 @@ namespace CBRE.BspEditor.Primitives.MapObjects
             IsSelected = source.IsSelected;
             Data = source.Data.Clone();
             Hierarchy.Clear();
-            foreach (var obj in source.Hierarchy)
+            foreach (IMapObject obj in source.Hierarchy)
             {
-                var copy = (IMapObject) obj.Clone();
+                IMapObject copy = (IMapObject) obj.Clone();
                 copy.Hierarchy.Parent = this;
             }
             DescendantsChanged();
@@ -140,7 +140,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <inheritdoc />
         public virtual IMapElement Clone()
         {
-            var inst = (BaseMapObject) GetType().GetConstructor(new[] {typeof(long)}).Invoke(new object[] {ID});
+            BaseMapObject inst = (BaseMapObject) GetType().GetConstructor(new[] {typeof(long)}).Invoke(new object[] {ID});
             CloneBase(inst);
             return inst;
         }
@@ -155,7 +155,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <inheritdoc />
         public virtual IMapElement Copy(UniqueNumberGenerator numberGenerator)
         {
-            var inst = (BaseMapObject)GetType().GetConstructor(new[] { typeof(long) }).Invoke(new object[] { numberGenerator.Next("MapObject") });
+            BaseMapObject inst = (BaseMapObject)GetType().GetConstructor(new[] { typeof(long) }).Invoke(new object[] { numberGenerator.Next("MapObject") });
             CopyBase(inst, numberGenerator);
             return inst;
         }
@@ -163,11 +163,11 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <inheritdoc />
         public virtual void Transform(Matrix4x4 matrix)
         {
-            foreach (var t in Data.OfType<ITransformable>())
+            foreach (ITransformable t in Data.OfType<ITransformable>())
             {
                 t.Transform(matrix);
             }
-            foreach (var t in Hierarchy)
+            foreach (IMapObject t in Hierarchy)
             {
                 t.Transform(matrix);
             }
@@ -178,16 +178,16 @@ namespace CBRE.BspEditor.Primitives.MapObjects
 
         public virtual SerialisedObject ToSerialisedObject()
         {
-            var obj = new SerialisedObject(SerialisedName);
+            SerialisedObject obj = new SerialisedObject(SerialisedName);
             obj.Set("ID", ID);
             obj.Set("IsSelected", IsSelected);
             obj.Set("ParentID", Hierarchy.Parent?.ID);
             AddCustomSerialisedData(obj);
-            foreach (var data in Data)
+            foreach (IMapObjectData data in Data)
             {
                 obj.Children.Add(data.ToSerialisedObject());
             }
-            foreach (var child in Hierarchy)
+            foreach (IMapObject child in Hierarchy)
             {
                 obj.Children.Add(child.ToSerialisedObject());
             }

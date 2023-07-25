@@ -47,23 +47,23 @@ namespace CBRE.BspEditor.Rendering.Converters
             const uint numSolidIndices = 36;
             const uint numWireframeIndices = numVertices * 2;
 
-            var points = new VertexStandard[numVertices];
-            var indices = new uint[numSolidIndices + numWireframeIndices];
+            VertexStandard[] points = new VertexStandard[numVertices];
+            uint[] indices = new uint[numSolidIndices + numWireframeIndices];
 
-            var c = obj.IsSelected ? Color.Red : obj.Data.GetOne<ObjectColor>()?.Color ?? Color.Magenta;
-            var colour = new Vector4(c.R, c.G, c.B, c.A) / 255f;
-            
-            var flags = obj.IsSelected ? VertexFlags.SelectiveTransformed : VertexFlags.None;
+            Color c = obj.IsSelected ? Color.Red : obj.Data.GetOne<ObjectColor>()?.Color ?? Color.Magenta;
+            Vector4 colour = new Vector4(c.R, c.G, c.B, c.A) / 255f;
 
-            var vi = 0u;
-            var si = 0u;
-            var wi = numSolidIndices;
-            foreach (var face in box.GetBoxFaces())
+            VertexFlags flags = obj.IsSelected ? VertexFlags.SelectiveTransformed : VertexFlags.None;
+
+            uint vi = 0u;
+            uint si = 0u;
+            uint wi = numSolidIndices;
+            foreach (Vector3[] face in box.GetBoxFaces())
             {
-                var offs = vi;
+                uint offs = vi;
 
-                var normal = new Plane(face[0], face[1], face[2]).Normal;
-                foreach (var v in face)
+                Vector3 normal = new Plane(face[0], face[1], face[2]).Normal;
+                foreach (Vector3 v in face)
                 {
                     points[vi++] = new VertexStandard
                     {
@@ -92,9 +92,9 @@ namespace CBRE.BspEditor.Rendering.Converters
                 }
             }
 
-            var origin = obj.Data.GetOne<Origin>()?.Location ?? box.Center;
+            Vector3 origin = obj.Data.GetOne<Origin>()?.Location ?? box.Center;
 
-            var groups = new List<BufferGroup>();
+            List<BufferGroup> groups = new List<BufferGroup>();
 
             if (!obj.Data.OfType<IContentsReplaced>().Any(x => x.ContentsReplaced))
             {
@@ -108,8 +108,8 @@ namespace CBRE.BspEditor.Rendering.Converters
             // Also push the untransformed wireframe when selected
             if (obj.IsSelected)
             {
-                for (var i = 0; i < points.Length; i++) points[i].Flags = VertexFlags.None;
-                var untransformedIndices = indices.Skip((int)numSolidIndices);
+                for (int i = 0; i < points.Length; i++) points[i].Flags = VertexFlags.None;
+                IEnumerable<uint> untransformedIndices = indices.Skip((int)numSolidIndices);
                 builder.Append(points, untransformedIndices, new[]
                 {
                     new BufferGroup(PipelineType.Wireframe, CameraType.Both, 0, numWireframeIndices)

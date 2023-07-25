@@ -48,7 +48,7 @@ namespace CBRE.BspEditor.Tools.Texture
         {
             this.InvokeLater(() =>
             {
-                var document = GetDocument();
+                MapDocument document = GetDocument();
                 
                 FindTextbox.Text = "";
                 ReplaceTextbox.Text = "";
@@ -62,16 +62,16 @@ namespace CBRE.BspEditor.Tools.Texture
                     ReplaceVisible.Checked = true;
                 }
 
-                var at = document.Map.Data.GetOne<ActiveTexture>()?.Name;
+                string at = document.Map.Data.GetOne<ActiveTexture>()?.Name;
                 if (at != null)
                 {
                     FindTextbox.Text = at;
                 }
                 else if (!document.Selection.IsEmpty)
                 {
-                    var first = document.Selection.FirstOrDefault(x => x is Solid) as Solid;
-                    var face = first?.Faces.FirstOrDefault();
-                    var texture = face?.Texture.Name;
+                    Solid first = document.Selection.FirstOrDefault(x => x is Solid) as Solid;
+                    Face face = first?.Faces.FirstOrDefault();
+                    string texture = face?.Texture.Name;
                     if (texture != null) FindTextbox.Text = texture;
                 }
             });
@@ -80,7 +80,7 @@ namespace CBRE.BspEditor.Tools.Texture
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -183,7 +183,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         public MapDocument GetDocument()
         {
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             return doc;
         }
 
@@ -198,7 +198,7 @@ namespace CBRE.BspEditor.Tools.Texture
         {
             if (String.IsNullOrWhiteSpace(name)) return false;
 
-            var match = FindTextbox.Text;
+            string match = FindTextbox.Text;
             if (!ActionExact.Checked)
             {
                 return name.ToLowerInvariant().Contains(match.ToLowerInvariant());
@@ -208,14 +208,14 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private List<TextureReplacement> GetReplacements(IEnumerable<string> names)
         {
-            var list = new List<TextureReplacement>();
-            var substitute = ActionSubstitute.Checked;
-            var find = FindTextbox.Text.ToLowerInvariant();
-            var replace = ReplaceTextbox.Text.ToLowerInvariant();
+            List<TextureReplacement> list = new List<TextureReplacement>();
+            bool substitute = ActionSubstitute.Checked;
+            string find = FindTextbox.Text.ToLowerInvariant();
+            string replace = ReplaceTextbox.Text.ToLowerInvariant();
 
-            foreach (var name in names.Select(x => x.ToLowerInvariant()).Distinct())
+            foreach (string name in names.Select(x => x.ToLowerInvariant()).Distinct())
             {
-                var n = substitute ? name.Replace(find, replace) : replace;
+                string n = substitute ? name.Replace(find, replace) : replace;
                 list.Add(new TextureReplacement(name, n));
             }
             return list;
@@ -236,25 +236,25 @@ namespace CBRE.BspEditor.Tools.Texture
                 .Where(x => MatchTextureName(x.Face.Texture.Name))
                 .ToList();
 
-            var rescale = RescaleTextures.Checked;
-            var tc = rescale ? await doc.Environment.GetTextureCollection() : null;
-            var replacements = GetReplacements(faces.Select(x => x.Face.Texture.Name));
+            bool rescale = RescaleTextures.Checked;
+            Environment.TextureCollection tc = rescale ? await doc.Environment.GetTextureCollection() : null;
+            List<TextureReplacement> replacements = GetReplacements(faces.Select(x => x.Face.Texture.Name));
 
-            var tran = new Transaction();
+            Transaction tran = new Transaction();
             foreach (var fp in faces)
             {
-                var face = fp.Face;
-                var parent = fp.Parent;
+                Face face = fp.Face;
+                Solid parent = fp.Parent;
 
-                var clone = (Face) face.Clone();
+                Face clone = (Face) face.Clone();
 
-                var repl = replacements.FirstOrDefault(x => x.Find == face.Texture.Name.ToLowerInvariant());
+                TextureReplacement repl = replacements.FirstOrDefault(x => x.Find == face.Texture.Name.ToLowerInvariant());
                 if (repl == null) continue;
 
                 if (rescale && tc != null)
                 {
-                    var find = await tc.GetTextureItem(face.Texture.Name);
-                    var replace = await tc.GetTextureItem(repl.Replace);
+                    CBRE.Providers.Texture.TextureItem find = await tc.GetTextureItem(face.Texture.Name);
+                    CBRE.Providers.Texture.TextureItem replace = await tc.GetTextureItem(repl.Replace);
                     if (find != null && replace != null)
                     {
                         clone.Texture.XScale *= find.Width / (float) replace.Width;
@@ -280,10 +280,10 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async void BrowseTexture(TextBox box)
         {
-            var doc = GetDocument();
+            MapDocument doc = GetDocument();
             if (doc == null) return;
 
-            using (var tb = new TextureBrowser(doc))
+            using (TextureBrowser tb = new TextureBrowser(doc))
             {
                 await tb.Initialise(_translation.Value);
                 if (await tb.ShowDialogAsync() != DialogResult.OK) return;
@@ -294,29 +294,29 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async void UpdateTexture(string text, PictureBox image, Label info)
         {
-            var doc = GetDocument();
+            MapDocument doc = GetDocument();
             if (String.IsNullOrWhiteSpace(text) || doc == null)
             {
                 image.Image = null;
                 info.Text = "No Image";
                 return;
             }
-            
-            var tc = await doc.Environment.GetTextureCollection();
-            var item = await tc.GetTextureItem(text);
+
+            Environment.TextureCollection tc = await doc.Environment.GetTextureCollection();
+            CBRE.Providers.Texture.TextureItem item = await tc.GetTextureItem(text);
 
             if (item != null)
             {
-                using (var tp = tc.GetStreamSource())
+                using (CBRE.Providers.Texture.ITextureStreamSource tp = tc.GetStreamSource())
                 {
-                    var bmp = await tp.GetImage(text, 128, 128);
+                    System.Drawing.Bitmap bmp = await tp.GetImage(text, 128, 128);
                     image.SizeMode = bmp.Width > image.Width || bmp.Height > image.Height
                         ? PictureBoxSizeMode.Zoom
                         : PictureBoxSizeMode.CenterImage;
                     image.Image = bmp;
                 }
 
-                var format = "{0} x {1}";
+                string format = "{0} x {1}";
                 info.Text = string.Format(format, item.Width, item.Height);
             }
             else
@@ -334,10 +334,10 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task ExecuteReplace()
         {
-            var doc = GetDocument();
+            MapDocument doc = GetDocument();
             if (doc == null) return;
 
-            var op = await GetOperation(doc);
+            IOperation op = await GetOperation(doc);
             if (op == null) return;
 
             await MapDocumentOperation.Perform(doc, op);

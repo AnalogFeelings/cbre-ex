@@ -38,10 +38,10 @@ namespace CBRE.Shell.Translations
         public Task OnStartup()
         {
             // Load language setting early, as most settings are loaded on initialise
-            var path = _appInfo?.GetApplicationSettingsFolder("Shell");
+            string path = _appInfo?.GetApplicationSettingsFolder("Shell");
             if (path == null) return Task.CompletedTask;
 
-            var file = Path.Combine(path, Name + ".json");
+            string file = Path.Combine(path, Name + ".json");
 
             Dictionary<string, string> data = null;
             if (File.Exists(file))
@@ -60,7 +60,7 @@ namespace CBRE.Shell.Translations
                 Language = data["Language"] ?? "en";
             }
 
-            foreach (var at in _autoTranslate)
+            foreach (Lazy<object> at in _autoTranslate)
             {
                 try
                 {
@@ -79,7 +79,7 @@ namespace CBRE.Shell.Translations
         {
             if (target == null) return;
 
-            var ty = target.GetType();
+            Type ty = target.GetType();
             _catalog.Load(ty);
 
             if (target is IManualTranslate mt) mt.Translate(this);
@@ -88,24 +88,24 @@ namespace CBRE.Shell.Translations
 
         private void Inject(Type type, object target)
         {
-            var props = type.GetProperties().Where(x => x.PropertyType == typeof(string) && x.CanWrite);
-            foreach (var prop in props)
+            IEnumerable<System.Reflection.PropertyInfo> props = type.GetProperties().Where(x => x.PropertyType == typeof(string) && x.CanWrite);
+            foreach (System.Reflection.PropertyInfo prop in props)
             {
-                var path = type.FullName + '.' + prop.Name;
-                var val = _catalog.GetString(Language, path);
+                string path = type.FullName + '.' + prop.Name;
+                string val = _catalog.GetString(Language, path);
                 if (val != null) prop.SetValue(target, val);
             }
         }
 
         public string GetString(params string[] path)
         {
-            var key = String.Join(".", path);
+            string key = String.Join(".", path);
             return _catalog.GetString(Language, key);
         }
 
         public string GetSetting(params string[] path)
         {
-            var key = String.Join(".", path);
+            string key = String.Join(".", path);
             return _catalog.GetSetting(Language, key);
         }
 

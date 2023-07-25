@@ -57,7 +57,7 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject(nameof(EntityDecal));
+            SerialisedObject so = new SerialisedObject(nameof(EntityDecal));
             so.Set(nameof(Name), Name);
             return so;
         }

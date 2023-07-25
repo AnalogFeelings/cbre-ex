@@ -29,10 +29,10 @@ namespace CBRE.BspEditor.Editing.Commands.Toggles
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var tl = document.Map.Data.GetOne<DisplayFlags>() ?? new DisplayFlags();
+            DisplayFlags tl = document.Map.Data.GetOne<DisplayFlags>() ?? new DisplayFlags();
             tl.HideNullTextures = !tl.HideNullTextures;
 
-            var tc = await document.Environment.GetTextureCollection();
+            Environment.TextureCollection tc = await document.Environment.GetTextureCollection();
 
             await MapDocumentOperation.Perform(document,
                 new TrivialOperation(
@@ -48,7 +48,7 @@ namespace CBRE.BspEditor.Editing.Commands.Toggles
         public bool GetToggleState(IContext context)
         {
             if (!context.TryGet("ActiveDocument", out MapDocument doc)) return false;
-            var tf = doc.Map.Data.GetOne<DisplayFlags>() ?? new DisplayFlags();
+            DisplayFlags tf = doc.Map.Data.GetOne<DisplayFlags>() ?? new DisplayFlags();
             return tf.HideNullTextures;
         }
     }

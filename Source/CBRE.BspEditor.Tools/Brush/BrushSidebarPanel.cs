@@ -43,7 +43,7 @@ namespace CBRE.BspEditor.Tools.Brush
             {
                 BrushTypeList.BeginUpdate();
                 BrushTypeList.Items.Clear();
-                foreach (var brush in _brushes.OrderBy(x => OrderHintAttribute.GetOrderHint(x.Value.GetType())))
+                foreach (Lazy<IBrush> brush in _brushes.OrderBy(x => OrderHintAttribute.GetOrderHint(x.Value.GetType())))
                 {
                     if (_selectedBrush == null) _selectedBrush = brush.Value;
                     BrushTypeList.Items.Add(new BrushWrapper(brush.Value));
@@ -94,9 +94,9 @@ namespace CBRE.BspEditor.Tools.Brush
             RoundCreatedVerticesCheckbox.Enabled = _selectedBrush.CanRound;
 
             _currentControls.AddRange(_selectedBrush.GetControls().Reverse());
-            for (var i = 0; i < _currentControls.Count; i++)
+            for (int i = 0; i < _currentControls.Count; i++)
             {
-                var ctrl = _currentControls[i];
+                BrushControl ctrl = _currentControls[i];
                 ctrl.Dock = DockStyle.Top;
                 ctrl.ValuesChanged += ControlValuesChanged;
                 Controls.Add(ctrl);

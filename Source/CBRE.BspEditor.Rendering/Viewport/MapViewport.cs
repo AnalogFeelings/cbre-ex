@@ -70,12 +70,12 @@ namespace CBRE.BspEditor.Rendering.Viewport
         {
             if (ListenerException != null)
             {
-                var st = new StackTrace();
-                var frames = st.GetFrames() ?? new StackFrame[0];
-                var msg = "Listener exception: " + ex.Message;
-                foreach (var frame in frames)
+                StackTrace st = new StackTrace();
+                StackFrame[] frames = st.GetFrames() ?? new StackFrame[0];
+                string msg = "Listener exception: " + ex.Message;
+                foreach (StackFrame frame in frames)
                 {
-                    var method = frame.GetMethod();
+                    System.Reflection.MethodBase method = frame.GetMethod();
                     msg += "\r\n    " + method.ReflectedType.FullName + "." + method.Name;
                 }
                 ListenerException(this, new Exception(msg, ex));
@@ -84,7 +84,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         private void ListenerDo(Action<IViewportEventListener> action)
         {
-            foreach (var listener in Listeners.Where(x => x.IsActive()).OrderBy(x => x.OrderHint))
+            foreach (IViewportEventListener listener in Listeners.Where(x => x.IsActive()).OrderBy(x => x.OrderHint))
             {
                 try
                 {
@@ -99,7 +99,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         private void ListenerDoEvent(ViewportEvent e, Action<IViewportEventListener, ViewportEvent> action)
         {
-            foreach (var listener in Listeners.Where(x => x.IsActive()).OrderBy(x => x.OrderHint))
+            foreach (IViewportEventListener listener in Listeners.Where(x => x.IsActive()).OrderBy(x => x.OrderHint))
             {
                 try
                 {
@@ -148,7 +148,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
             {
                 _lastMouseLocation = new Point(e.X, e.Y);
             }
-            var ve = new ViewportEvent(this, e)
+            ViewportEvent ve = new ViewportEvent(this, e)
             {
                 Dragging = _dragging,
                 StartX = _mouseDownLocation.X,
@@ -181,7 +181,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
             {
                 _lastMouseLocation = new Point(e.X, e.Y);
             }
-            var ve = new ViewportEvent(this, e)
+            ViewportEvent ve = new ViewportEvent(this, e)
             {
                 Dragging = _dragging,
                 StartX = _mouseDownLocation.X,

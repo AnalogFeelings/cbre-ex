@@ -32,8 +32,8 @@ namespace CBRE.BspEditor.Modification
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
-            foreach (var operation in _operations)
+            Change ch = new Change(document);
+            foreach (IOperation operation in _operations)
             {
                 ch.Merge(await operation.Perform(document));
             }
@@ -42,10 +42,10 @@ namespace CBRE.BspEditor.Modification
 
         public async Task<Change> Reverse(MapDocument document)
         {
-            var ch = new Change(document);
-            for (var i = _operations.Count - 1; i >= 0; i--)
+            Change ch = new Change(document);
+            for (int i = _operations.Count - 1; i >= 0; i--)
             {
-                var operation = _operations[i];
+                IOperation operation = _operations[i];
                 ch.Merge(await operation.Reverse(document));
             }
             return ch;

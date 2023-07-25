@@ -26,11 +26,11 @@ namespace CBRE.DataStructures.GameData
 
         public void CreateDependencies()
         {
-            var resolved = new List<string>();
-            var unresolved = new List<GameDataObject>(Classes);
+            List<string> resolved = new List<string>();
+            List<GameDataObject> unresolved = new List<GameDataObject>(Classes);
             while (unresolved.Any())
             {
-                var resolve = unresolved.Where(x => x.BaseClasses.All(resolved.Contains)).ToList();
+                List<GameDataObject> resolve = unresolved.Where(x => x.BaseClasses.All(resolved.Contains)).ToList();
                 if (!resolve.Any()) throw new Exception("Circular dependencies: " + String.Join(", ", unresolved.Select(x => x.Name)));
                 resolve.ForEach(x => x.Inherit(Classes.Where(y => x.BaseClasses.Contains(y.Name))));
                 unresolved.RemoveAll(resolve.Contains);
@@ -40,9 +40,9 @@ namespace CBRE.DataStructures.GameData
 
         public void RemoveDuplicates()
         {
-            foreach (var g in Classes.Where(x => x.ClassType != ClassType.Base).GroupBy(x => x.Name.ToLowerInvariant()).Where(g => g.Count() > 1).ToList())
+            foreach (IGrouping<string, GameDataObject> g in Classes.Where(x => x.ClassType != ClassType.Base).GroupBy(x => x.Name.ToLowerInvariant()).Where(g => g.Count() > 1).ToList())
             {
-                foreach (var obj in g.Skip(1)) Classes.Remove(obj);
+                foreach (GameDataObject obj in g.Skip(1)) Classes.Remove(obj);
             }
         }
 

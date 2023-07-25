@@ -31,23 +31,23 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var selBox = document.Selection.GetSelectionBoundingBox();
-            var grid = document.Map.Data.GetOne<GridData>();
+            DataStructures.Geometric.Box selBox = document.Selection.GetSelectionBoundingBox();
+            GridData grid = document.Map.Data.GetOne<GridData>();
             if (grid == null) return;
 
-            var start = selBox.Start;
-            var snapped = grid.Grid.Snap(start);
-            var trans = snapped - start;
+            Vector3 start = selBox.Start;
+            Vector3 snapped = grid.Grid.Snap(start);
+            Vector3 trans = snapped - start;
             if (trans == Vector3.Zero) return;
 
-            var tform = Matrix4x4.CreateTranslation(trans);
+            Matrix4x4 tform = Matrix4x4.CreateTranslation(trans);
 
-            var transaction = new Transaction();
-            var transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, document.Selection.GetSelectedParents());
+            Transaction transaction = new Transaction();
+            BspEditor.Modification.Operations.Mutation.Transform transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, document.Selection.GetSelectedParents());
             transaction.Add(transformOperation);
 
             // Check for texture transform
-            var tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+            TransformationFlags tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
             if (tl.TextureLock) transaction.Add(new TransformTexturesUniform(tform, document.Selection));
 
             await MapDocumentOperation.Perform(document, transaction);

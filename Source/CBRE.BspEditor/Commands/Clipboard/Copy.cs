@@ -33,7 +33,7 @@ namespace CBRE.BspEditor.Commands.Clipboard
 
         protected override Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var sel = document.Selection.GetSelectedParents().ToList();
+            System.Collections.Generic.List<Primitives.MapObjects.IMapObject> sel = document.Selection.GetSelectedParents().ToList();
             if (sel.Any()) _clipboard.Value.Push(sel);
             return Task.CompletedTask;
         }

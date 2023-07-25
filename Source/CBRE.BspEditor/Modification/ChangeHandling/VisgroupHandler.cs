@@ -19,20 +19,20 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
 
         public async Task Changed(Change change)
         {
-            var changed = false;
-            var visgroups = change.Document.Map.Data.Get<Visgroup>().ToDictionary(x => x.ID, x => x);
-            var autoVisgroups = change.Document.Map.Data.Get<AutomaticVisgroup>().ToList();
+            bool changed = false;
+            Dictionary<long, Visgroup> visgroups = change.Document.Map.Data.Get<Visgroup>().ToDictionary(x => x.ID, x => x);
+            List<AutomaticVisgroup> autoVisgroups = change.Document.Map.Data.Get<AutomaticVisgroup>().ToList();
 
             // If an object is removed from a visgroup we should force it visible
-            var makeVisible = new HashSet<IMapObject>();
+            HashSet<IMapObject> makeVisible = new HashSet<IMapObject>();
 
-            foreach (var mo in change.Added.Union(change.Updated))
+            foreach (IMapObject mo in change.Added.Union(change.Updated))
             {
-                var bef = new HashSet<long>(visgroups.Values.Where(x => x.Objects.Contains(mo)).Select(x => x.ID));
-                var now = new HashSet<long>(mo.Data.OfType<VisgroupID>().Select(x => x.ID));
+                HashSet<long> bef = new HashSet<long>(visgroups.Values.Where(x => x.Objects.Contains(mo)).Select(x => x.ID));
+                HashSet<long> now = new HashSet<long>(mo.Data.OfType<VisgroupID>().Select(x => x.ID));
 
                 // Remove visgroups the object was in before but isn't now
-                foreach (var id in bef.Except(now))
+                foreach (long id in bef.Except(now))
                 {
                     changed = true;
                     if (visgroups.ContainsKey(id)) visgroups[id].Objects.Remove(mo);
@@ -40,17 +40,17 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
                 }
 
                 // Add visgroups the object is in now but wasn't before
-                foreach (var id in now.Except(bef))
+                foreach (long id in now.Except(bef))
                 {
                     changed = true;
                     if (visgroups.ContainsKey(id)) visgroups[id].Objects.Add(mo);
                 }
 
                 // Handle autovisgroups as well
-                foreach (var av in autoVisgroups)
+                foreach (AutomaticVisgroup av in autoVisgroups)
                 {
-                    var match = av.IsMatch(mo);
-                    var contains = av.Objects.Contains(mo);
+                    bool match = av.IsMatch(mo);
+                    bool contains = av.Objects.Contains(mo);
 
                     if (!match && contains)
                     {
@@ -67,23 +67,23 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
             }
 
             // Remove all deleted objects
-            foreach (var vg in visgroups.Values)
+            foreach (Visgroup vg in visgroups.Values)
             {
-                var c = vg.Objects.Count;
+                int c = vg.Objects.Count;
                 vg.Objects.ExceptWith(change.Removed);
                 changed |= c != vg.Objects.Count;
             }
 
-            foreach (var av in autoVisgroups)
+            foreach (AutomaticVisgroup av in autoVisgroups)
             {
-                var c = av.Objects.Count;
+                int c = av.Objects.Count;
                 av.Objects.ExceptWith(change.Removed);
                 changed |= c != av.Objects.Count;
             }
 
             if (makeVisible.Any())
             {
-                foreach (var mv in makeVisible)
+                foreach (IMapObject mv in makeVisible)
                 {
                     mv.Data.Remove(x => x is VisgroupHidden);
                     change.Update(mv);

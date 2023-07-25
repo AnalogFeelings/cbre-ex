@@ -75,14 +75,14 @@ namespace CBRE.BspEditor.Primitives.MapObjects
 
         private void Add(IMapObject item)
         {
-            var id = item.ID;
+            long id = item.ID;
             _children[id] = item;
 
-            var p = _self;
+            IMapObject p = _self;
             while (p != null)
             {
                 p.Hierarchy._descendants[id] = item;
-                foreach (var kv in item.Hierarchy._descendants) p.Hierarchy._descendants[kv.Key] = kv.Value;
+                foreach (KeyValuePair<long, IMapObject> kv in item.Hierarchy._descendants) p.Hierarchy._descendants[kv.Key] = kv.Value;
                 p = p.Hierarchy._parent;
             }
         }
@@ -91,14 +91,14 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         {
             if (item == null || !_children.ContainsKey(item.ID)) return false;
 
-            var id = item.ID;
+            long id = item.ID;
             _children.TryRemove(id, out _);
 
-            var p = _self;
+            IMapObject p = _self;
             while (p != null)
             {
                 p.Hierarchy._descendants.TryRemove(id, out _);
-                foreach (var kv in item.Hierarchy._descendants) p.Hierarchy._descendants.TryRemove(kv.Key, out _);
+                foreach (KeyValuePair<long, IMapObject> kv in item.Hierarchy._descendants) p.Hierarchy._descendants.TryRemove(kv.Key, out _);
                 p = p.Hierarchy._parent;
             }
             return true;
@@ -106,14 +106,14 @@ namespace CBRE.BspEditor.Primitives.MapObjects
 
         public void Clear()
         {
-            var set = _descendants.Keys.ToList();
-            var p = _parent;
+            List<long> set = _descendants.Keys.ToList();
+            IMapObject p = _parent;
             while (p != null)
             {
-                foreach (var v in set) p.Hierarchy._descendants.TryRemove(v, out _);
+                foreach (long v in set) p.Hierarchy._descendants.TryRemove(v, out _);
                 p = p.Hierarchy._parent;
             }
-            foreach (var mo in _children.Values)
+            foreach (IMapObject mo in _children.Values)
             {
                 mo.Hierarchy._parent = null;
             }

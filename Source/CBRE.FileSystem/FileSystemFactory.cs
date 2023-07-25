@@ -22,7 +22,7 @@ namespace CBRE.FileSystem
 
         public static IFile Create(string path)
         {
-            var provider = Providers.FirstOrDefault(x => x.IsValidFile(path));
+            IFileSystemProvider provider = Providers.FirstOrDefault(x => x.IsValidFile(path));
             return provider == null ? null : provider.Create(path);
         }
     }

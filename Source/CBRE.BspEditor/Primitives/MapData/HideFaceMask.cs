@@ -33,7 +33,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("HideFaceMask");
+            SerialisedObject so = new SerialisedObject("HideFaceMask");
             so.Set("Hidden", Hidden);
             return so;
         }

@@ -52,14 +52,14 @@ namespace CBRE.DataStructures.Geometric
 
         public Box(IEnumerable<Vector3> vectors)
         {
-            var list = vectors.ToList();
+            List<Vector3> list = vectors.ToList();
             if (!list.Any())
             {
                 throw new Exception("Cannot create a bounding box out of zero Vectors.");
             }
-            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            foreach (var vertex in list)
+            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            foreach (Vector3 vertex in list)
             {
                 min.X = Math.Min(vertex.X, min.X);
                 min.Y = Math.Min(vertex.Y, min.Y);
@@ -74,14 +74,14 @@ namespace CBRE.DataStructures.Geometric
 
         public Box(IEnumerable<Box> boxes)
         {
-            var list = boxes.ToList();
+            List<Box> list = boxes.ToList();
             if (!list.Any())
             {
                 throw new Exception("Cannot create a bounding box out of zero other boxes.");
             }
-            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            foreach (var box in list)
+            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            foreach (Box box in list)
             {
                 min.X = Math.Min(box.Start.X, min.X);
                 min.Y = Math.Min(box.Start.Y, min.Y);
@@ -130,9 +130,9 @@ namespace CBRE.DataStructures.Geometric
 
         public Plane[] GetBoxPlanes()
         {
-            var planes = new Plane[6];
-            var faces = GetBoxFaces();
-            for (var i = 0; i < 6; i++)
+            Plane[] planes = new Plane[6];
+            Vector3[][] faces = GetBoxFaces();
+            for (int i = 0; i < 6; i++)
             {
                 planes[i] = new Plane(faces[i][0], faces[i][1], faces[i][2]);
             }
@@ -141,15 +141,15 @@ namespace CBRE.DataStructures.Geometric
 
         public Vector3[][] GetBoxFaces()
         {
-            var topLeftBack = new Vector3(Start.X, End.Y, End.Z);
-            var topRightBack = End;
-            var topLeftFront = new Vector3(Start.X, Start.Y, End.Z);
-            var topRightFront = new Vector3(End.X, Start.Y, End.Z);
+            Vector3 topLeftBack = new Vector3(Start.X, End.Y, End.Z);
+            Vector3 topRightBack = End;
+            Vector3 topLeftFront = new Vector3(Start.X, Start.Y, End.Z);
+            Vector3 topRightFront = new Vector3(End.X, Start.Y, End.Z);
 
-            var bottomLeftBack = new Vector3(Start.X, End.Y, Start.Z);
-            var bottomRightBack = new Vector3(End.X, End.Y, Start.Z);
-            var bottomLeftFront = Start;
-            var bottomRightFront = new Vector3(End.X, Start.Y, Start.Z);
+            Vector3 bottomLeftBack = new Vector3(Start.X, End.Y, Start.Z);
+            Vector3 bottomRightBack = new Vector3(End.X, End.Y, Start.Z);
+            Vector3 bottomLeftFront = Start;
+            Vector3 bottomRightFront = new Vector3(End.X, Start.Y, Start.Z);
             return new[]
                        {
                            new[] {topLeftFront, topRightFront, bottomRightFront, bottomLeftFront},
@@ -163,15 +163,15 @@ namespace CBRE.DataStructures.Geometric
 
         public IEnumerable<Line> GetBoxLines()
         {
-            var topLeftBack = new Vector3(Start.X, End.Y, End.Z);
-            var topRightBack = End;
-            var topLeftFront = new Vector3(Start.X, Start.Y, End.Z);
-            var topRightFront = new Vector3(End.X, Start.Y, End.Z);
+            Vector3 topLeftBack = new Vector3(Start.X, End.Y, End.Z);
+            Vector3 topRightBack = End;
+            Vector3 topLeftFront = new Vector3(Start.X, Start.Y, End.Z);
+            Vector3 topRightFront = new Vector3(End.X, Start.Y, End.Z);
 
-            var bottomLeftBack = new Vector3(Start.X, End.Y, Start.Z);
-            var bottomRightBack = new Vector3(End.X, End.Y, Start.Z);
-            var bottomLeftFront = Start;
-            var bottomRightFront = new Vector3(End.X, Start.Y, Start.Z);
+            Vector3 bottomLeftBack = new Vector3(Start.X, End.Y, Start.Z);
+            Vector3 bottomRightBack = new Vector3(End.X, End.Y, Start.Z);
+            Vector3 bottomLeftFront = Start;
+            Vector3 bottomRightFront = new Vector3(End.X, Start.Y, Start.Z);
 
             yield return new Line(topLeftBack, topRightBack);
             yield return new Line(topLeftFront, topRightFront);
@@ -228,8 +228,8 @@ namespace CBRE.DataStructures.Geometric
         /// </summary>
         public bool IntersectsWith(Line that)
         {
-            var start = that.Start;
-            var finish = that.End;
+            Vector3 start = that.Start;
+            Vector3 finish = that.End;
 
             if (start.X < Start.X && finish.X < Start.X) return false;
             if (start.X > End.X && finish.X > End.X) return false;
@@ -240,16 +240,16 @@ namespace CBRE.DataStructures.Geometric
             if (start.Z < Start.Z && finish.Z < Start.Z) return false;
             if (start.Z > End.Z && finish.Z > End.Z) return false;
 
-            var d = (finish - start) / 2;
-            var e = (End - Start) / 2;
-            var c = start + d - ((Start + End) / 2);
-            var ad = d.Absolute();
+            Vector3 d = (finish - start) / 2;
+            Vector3 e = (End - Start) / 2;
+            Vector3 c = start + d - ((Start + End) / 2);
+            Vector3 ad = d.Absolute();
 
             if (Math.Abs(c.X) > e.X + ad.X) return false;
             if (Math.Abs(c.Y) > e.Y + ad.Y) return false;
             if (Math.Abs(c.Z) > e.Z + ad.Z) return false;
 
-            var dca = d.Cross(c).Absolute();
+            Vector3 dca = d.Cross(c).Absolute();
 
             if (dca.X > e.Y * ad.Z + e.Z * ad.Y) return false;
             if (dca.Y > e.Z * ad.X + e.X * ad.Z) return false;

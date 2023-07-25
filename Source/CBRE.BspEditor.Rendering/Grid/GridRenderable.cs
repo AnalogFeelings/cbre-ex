@@ -89,7 +89,7 @@ namespace CBRE.BspEditor.Rendering.Grid
             if (oc.ViewType != _currentType) return true;
             if (Math.Abs(_currentZoom - oc.Zoom) > 0.001f) return true;
 
-            var newBounds = GetValidatedBounds(oc, 0);
+            RectangleF newBounds = GetValidatedBounds(oc, 0);
             if (!_currentBounds.Contains(newBounds)) return true;
 
             return false;
@@ -100,20 +100,20 @@ namespace CBRE.BspEditor.Rendering.Grid
             if (!(_viewport.Camera is OrthographicCamera oc)) return;
             if (_grid == null) return;
 
-            var newBounds = GetValidatedBounds(oc, 50);
-            var min = oc.Expand(new Vector3(newBounds.Left, newBounds.Top, 0));
-            var max = oc.Expand(new Vector3(newBounds.Right, newBounds.Bottom, 0));
+            RectangleF newBounds = GetValidatedBounds(oc, 50);
+            Vector3 min = oc.Expand(new Vector3(newBounds.Left, newBounds.Top, 0));
+            Vector3 max = oc.Expand(new Vector3(newBounds.Right, newBounds.Bottom, 0));
 
-            var normal = Vector3.One - oc.Expand(new Vector3(1, 1, 0));
-            
-            var points = new List<VertexStandard>();
-            var indices = new List<uint>();
+            Vector3 normal = Vector3.One - oc.Expand(new Vector3(1, 1, 0));
+
+            List<VertexStandard> points = new List<VertexStandard>();
+            List<uint> indices = new List<uint>();
 
             uint idx = 0;
-            foreach (var line in _grid.GetLines(normal, oc.Zoom, min, max).OrderBy(x => (int) x.Type))
+            foreach (GridLine line in _grid.GetLines(normal, oc.Zoom, min, max).OrderBy(x => (int) x.Type))
             {
-                var c = GetColorForGridLineType(line.Type);
-                var col = new Vector4(c.R, c.G, c.B, c.A) / 255f;
+                Color c = GetColorForGridLineType(line.Type);
+                Vector4 col = new Vector4(c.R, c.G, c.B, c.A) / 255f;
                 points.Add(new VertexStandard
                 {
                     Position = line.Line.Start,
@@ -145,8 +145,8 @@ namespace CBRE.BspEditor.Rendering.Grid
 
         private RectangleF GetValidatedBounds(OrthographicCamera camera, int padding)
         {
-            var vmin = camera.Flatten(camera.ScreenToWorld(new Vector3(-padding, camera.Height + padding, 0)));
-            var vmax = camera.Flatten(camera.ScreenToWorld(new Vector3(camera.Width + padding, -padding, 0)));
+            Vector3 vmin = camera.Flatten(camera.ScreenToWorld(new Vector3(-padding, camera.Height + padding, 0)));
+            Vector3 vmax = camera.Flatten(camera.ScreenToWorld(new Vector3(camera.Width + padding, -padding, 0)));
             return new RectangleF(vmin.X, vmin.Y, vmax.X - vmin.X, vmax.Y - vmin.Y);
         }
 

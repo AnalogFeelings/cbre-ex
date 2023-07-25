@@ -18,9 +18,9 @@ namespace CBRE.QuickForms.Items
 		    FlowDirection = FlowDirection.RightToLeft;
 
 		    // Add in reverse since the direction is RTL
-		    foreach (var b in buttons.Reverse())
+		    foreach ((string, DialogResult, Action) b in buttons.Reverse())
 		    {
-		        var btn = new Button
+                Button btn = new Button
 		        {
 		            Text = b.Item1,
 		            MinimumSize = new Size(80, 0),

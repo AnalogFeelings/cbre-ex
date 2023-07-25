@@ -60,10 +60,10 @@ namespace CBRE.Rendering.Resources
         {
             if (UseFallback)
             {
-                var offs = offset / ArgSize;
-                for (var i = 0; i < count; i++)
+                long offs = offset / ArgSize;
+                for (int i = 0; i < count; i++)
                 {
-                    var arg = _arguments[i + offs];
+                    IndirectDrawIndexedArguments arg = _arguments[i + offs];
                     commandList.DrawIndexed(arg.IndexCount, arg.InstanceCount, arg.FirstIndex, arg.VertexOffset, arg.FirstInstance);
                 }
             }

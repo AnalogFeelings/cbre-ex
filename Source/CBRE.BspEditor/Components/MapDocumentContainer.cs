@@ -38,17 +38,17 @@ namespace CBRE.BspEditor.Components
             if (Table.IsFocusing()) Table.Unfocus();
             else
             {
-                var focused = MapDocumentControls.FirstOrDefault(x => x.Control.IsFocused);
+                CellReference focused = MapDocumentControls.FirstOrDefault(x => x.Control.IsFocused);
                 if (focused != null) Table.FocusOn(focused.Control.Control);
             }
         }
 
         public void SetControl(IMapDocumentControl control, int column, int row)
         {
-            var controlAt = Table.GetControlFromPosition(column, row);
+            Control controlAt = Table.GetControlFromPosition(column, row);
             if (controlAt != null) Table.Controls.Remove(controlAt);
 
-            foreach (var rem in MapDocumentControls.Where(x => x.Row == row && x.Column == column).ToList())
+            foreach (CellReference rem in MapDocumentControls.Where(x => x.Row == row && x.Column == column).ToList())
             {
                 rem.Dispose();
                 MapDocumentControls.Remove(rem);

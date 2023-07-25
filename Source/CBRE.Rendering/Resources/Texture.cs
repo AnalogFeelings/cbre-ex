@@ -21,7 +21,7 @@ namespace CBRE.Rendering.Resources
             {
                 numMips = 1;
             }
-            var device = context.Device;
+            GraphicsDevice device = context.Device;
             _texture = device.ResourceFactory.CreateTexture(TextureDescription.Texture2D(
                 w, h, numMips, 1,
                 PixelFormat.B8_G8_R8_A8_UNorm,
@@ -38,7 +38,7 @@ namespace CBRE.Rendering.Resources
             }
             _mipsGenerated = false;
 
-            var sampler = context.ResourceLoader.TextureSampler;
+            Sampler sampler = context.ResourceLoader.TextureSampler;
             if (sampleType == TextureSampleType.Point) sampler = context.ResourceLoader.OverlaySampler;
             
             _view = device.ResourceFactory.CreateTextureView(_texture);

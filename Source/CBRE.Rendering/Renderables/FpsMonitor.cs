@@ -13,7 +13,7 @@ namespace CBRE.Rendering.Renderables
         public void Update(long frame)
         {
             _framesSinceLastSecond++;
-            var diff = frame - _lastSecond;
+            long diff = frame - _lastSecond;
             if (_lastSecond < 0 || diff > 1000)
             {
                 _averageFps = (_averageFps * 0.5f + _framesSinceLastSecond / (float) diff * 1000 * 1.5f) / 2;

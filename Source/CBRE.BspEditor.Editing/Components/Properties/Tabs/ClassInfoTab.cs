@@ -173,15 +173,15 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // Update the class if it has changed (this doesn't touch keyvalues)
             if (_tableValues.ClassChanged)
             {
-                foreach (var o in objects)
+                foreach (IMapObject o in objects)
                 {
                     yield return new EditEntityDataName(o.ID, _tableValues.NewClass.Name);
                 }
             }
 
             // Update the keyvalues if they have changed
-            var values = new Dictionary<string, string>();
-            foreach (var tv in _tableValues)
+            Dictionary<string, string> values = new Dictionary<string, string>();
+            foreach (TableValue tv in _tableValues)
             {
                 // Remove original key if it's changed
                 if (tv.Key != tv.OriginalKey) values[tv.OriginalKey] = null;
@@ -195,7 +195,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             if (values.Count == 0) yield break;
 
             // Only modify objects that already have entity data
-            foreach (var obj in objects.Where(x => x.Data.GetOne<EntityData>() != null))
+            foreach (IMapObject obj in objects.Where(x => x.Data.GetOne<EntityData>() != null))
             {
                 yield return new EditEntityDataProperties(obj.ID, values);
             }
@@ -210,10 +210,10 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // Update the keyvalues
             _tableValues = new ClassValues(_gameData, objects);
 
-            var solidTypes = objects.FindAll(x => x is Entity && x.Hierarchy.HasChildren).Any();
-            var pointTypes = objects.FindAll(x => x is Entity && !x.Hierarchy.HasChildren).Any();
+            bool solidTypes = objects.FindAll(x => x is Entity && x.Hierarchy.HasChildren).Any();
+            bool pointTypes = objects.FindAll(x => x is Entity && !x.Hierarchy.HasChildren).Any();
 
-            var gameDataClasses = _gameData.Classes
+            object[] gameDataClasses = _gameData.Classes
                 .Where(x => x.ClassType != ClassType.Base)
                 .Where(x => solidTypes || x.ClassType != ClassType.Solid)
                 .Where(x => pointTypes || x.ClassType == ClassType.Solid)
@@ -227,7 +227,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             cmbClass.Items.Clear();
             cmbClass.Items.AddRange(gameDataClasses);
 
-            var classes = _tableValues.OriginalClasses.ToHashSet();
+            HashSet<GameDataObject> classes = _tableValues.OriginalClasses.ToHashSet();
             if (classes.Count == 0) cmbClass.Text = "";
             else if (classes.Count > 1) cmbClass.Text = MultipleClassesText + @" " + String.Join("; ", classes.Select(x => x.Name));
             else if (classes.Count == 1) cmbClass.Text = classes.First().Name;
@@ -246,7 +246,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void UpdateTable()
         {
-            var smartEdit = btnSmartEdit.Checked;
+            bool smartEdit = btnSmartEdit.Checked;
 
             lstKeyValues.BeginUpdate();
 
@@ -255,10 +255,10 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             angAngles.Enabled = false;
             angAngles.Angle = 0;
 
-            foreach (var tv in _tableValues.OrderBy(x => x.IsAdded ? 1 : x.IsRemoved ? 2 : 0))
+            foreach (TableValue tv in _tableValues.OrderBy(x => x.IsAdded ? 1 : x.IsRemoved ? 2 : 0))
             {
-                var keyText = tv.Key;
-                var valText = tv.Value;
+                string keyText = tv.Key;
+                string valText = tv.Value;
 
                 if (smartEdit)
                 {
@@ -291,14 +291,14 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void RefreshTable()
         {
-            var smartEdit = btnSmartEdit.Checked;
+            bool smartEdit = btnSmartEdit.Checked;
 
-            foreach (var lv in lstKeyValues.Items.OfType<ListViewItem>())
+            foreach (ListViewItem lv in lstKeyValues.Items.OfType<ListViewItem>())
             {
-                var tv = (TableValue)lv.Tag;
+                TableValue tv = (TableValue)lv.Tag;
 
-                var keyText = tv.Key;
-                var valText = tv.Value;
+                string keyText = tv.Key;
+                string valText = tv.Value;
 
                 if (smartEdit)
                 {
@@ -326,8 +326,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void SelectedPropertyChanged(object sender, EventArgs e)
         {
-            var sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
-            var tv = sel?.Tag as TableValue;
+            ListViewItem sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
+            TableValue tv = sel?.Tag as TableValue;
 
             if (_currentEditor != null)
             {
@@ -341,8 +341,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
 
             if (tv != null)
             {
-                var prop = btnSmartEdit.Checked ? tv.GameDataProperty : null;
-                var type = prop?.VariableType ?? VariableType.Void;
+                Property prop = btnSmartEdit.Checked ? tv.GameDataProperty : null;
+                VariableType type = prop?.VariableType ?? VariableType.Void;
                 _currentEditor = _smartEditControls
                                      .Select(x => x.Value)
                                      .OrderBy(x => x.PriorityHint)
@@ -367,8 +367,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void NameChanged(object sender, string key)
         {
-            var sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
-            var tv = sel?.Tag as TableValue;
+            ListViewItem sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
+            TableValue tv = sel?.Tag as TableValue;
             if (tv == null) return;
 
             tv.NewKey = key;
@@ -387,8 +387,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void ValueChanged(object sender, string value)
         {
-            var sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
-            var tv = sel?.Tag as TableValue;
+            ListViewItem sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
+            TableValue tv = sel?.Tag as TableValue;
             if (tv == null) return;
 
             tv.NewValue = value;
@@ -401,10 +401,10 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void SetAngleValue(object sender, EventArgs e)
         {
-            var angles = _tableValues.FirstOrDefault(x => x.Key == "angles");
+            TableValue angles = _tableValues.FirstOrDefault(x => x.Key == "angles");
             if (angles == null) return;
 
-            var ps = angAngles.AnglePropertyString;
+            string ps = angAngles.AnglePropertyString;
             if (ps == angles.NewValue) return;
 
             angles.NewValue = ps;
@@ -418,20 +418,20 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void ClassChanged(object sender, EventArgs e)
         {
-            var txt = (cmbClass.Text ?? "").ToLower();
+            string txt = (cmbClass.Text ?? "").ToLower();
             if (_tableValues.NewClass == null && string.Equals(txt, _tableValues.OriginalClass.ToLower(), StringComparison.InvariantCultureIgnoreCase)) return;
 
-            var newClass = _gameData.Classes.FirstOrDefault(x => x.ClassType != ClassType.Base && (x.Name ?? "").ToLower() == txt) ?? new GameDataObject(txt, "", ClassType.Any);
+            GameDataObject newClass = _gameData.Classes.FirstOrDefault(x => x.ClassType != ClassType.Base && (x.Name ?? "").ToLower() == txt) ?? new GameDataObject(txt, "", ClassType.Any);
             _tableValues.NewClass = newClass;
 
-            var keys = _tableValues.Select(x => x.NewKey.ToLower()).Union(newClass.Properties.Select(x => (x.Name ?? "").ToLower())).ToList();
-            foreach (var key in keys)
+            List<string> keys = _tableValues.Select(x => x.NewKey.ToLower()).Union(newClass.Properties.Select(x => (x.Name ?? "").ToLower())).ToList();
+            foreach (string key in keys)
             {
                 // Never include spawnflags
                 if (key == "spawnflags") continue;
 
-                var origKey = _tableValues.FirstOrDefault(x => x.NewKey.ToLower() == key);
-                var newKey = newClass.Properties.FirstOrDefault(x => (x.Name ?? "").ToLower() == key);
+                TableValue origKey = _tableValues.FirstOrDefault(x => x.NewKey.ToLower() == key);
+                Property newKey = newClass.Properties.FirstOrDefault(x => (x.Name ?? "").ToLower() == key);
                 
                 if (origKey != null && newKey != null)
                 {
@@ -470,8 +470,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         private void AddKeyClicked(object sender, EventArgs e)
         {
             // Add a new key with an automatically created name
-            var key = "new";
-            var tv = new TableValue(new Property(key, VariableType.String), key, new string[0])
+            string key = "new";
+            TableValue tv = new TableValue(new Property(key, VariableType.String), key, new string[0])
             {
                 IsAdded = true,
                 NewValue = ""
@@ -483,8 +483,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
 
             // Select the new key
             lstKeyValues.SelectedIndices.Clear();
-            var sel = lstKeyValues.Items.OfType<ListViewItem>().FirstOrDefault(x => x.Tag == tv);
-            var idx = lstKeyValues.Items.IndexOf(sel);
+            ListViewItem sel = lstKeyValues.Items.OfType<ListViewItem>().FirstOrDefault(x => x.Tag == tv);
+            int idx = lstKeyValues.Items.IndexOf(sel);
             if (idx >= 0) lstKeyValues.SelectedIndices.Add(idx);
         }
 
@@ -493,8 +493,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private void DeleteKeyClicked(object sender, EventArgs e)
         {
-            var sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
-            var tv = sel?.Tag as TableValue;
+            ListViewItem sel = lstKeyValues.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
+            TableValue tv = sel?.Tag as TableValue;
             if (tv == null) return;
 
             if (tv.IsAdded) _tableValues.Remove(tv);
@@ -523,9 +523,9 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
 
             public ClassValues(GameData gameData, List<IMapObject> objects)
             {
-                var datas = objects.Select(x => x.Data.GetOne<EntityData>()).Where(x => x != null).ToList();
+                List<EntityData> datas = objects.Select(x => x.Data.GetOne<EntityData>()).Where(x => x != null).ToList();
 
-                var gameDataClasses = gameData.Classes
+                Dictionary<string, GameDataObject> gameDataClasses = gameData.Classes
                     .Where(x => x.ClassType != ClassType.Base)
                     .GroupBy(x => (x.Name ?? "").ToLower())
                     .ToDictionary(x => x.Key, x => x.First());
@@ -534,27 +534,27 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
                 OriginalClasses = new List<GameDataObject>();
                 NewClass = null;
 
-                foreach (var d in datas)
+                foreach (EntityData d in datas)
                 {
                     // For unknown classes, create a dummy object to represent them
-                    var n = (d.Name ?? "").ToLower();
-                    var cls = gameDataClasses.ContainsKey(n) ? gameDataClasses[n] : new GameDataObject(n, "", ClassType.Any);
+                    string n = (d.Name ?? "").ToLower();
+                    GameDataObject cls = gameDataClasses.ContainsKey(n) ? gameDataClasses[n] : new GameDataObject(n, "", ClassType.Any);
                     OriginalClasses.Add(cls);
                 }
 
-                var keys = OriginalClasses.SelectMany(x => x.Properties)
+                List<string> keys = OriginalClasses.SelectMany(x => x.Properties)
                     .Select(x => (x.Name ?? "").ToLower())
                     .Union(datas.SelectMany(x => x.Properties.Keys).Select(x => x.ToLower()))
                     .ToList();
-                foreach (var key in keys)
+                foreach (string key in keys)
                 {
                     // Spawnflags are handled by the flags tab
                     if (key == "spawnflags") continue;
 
                     // Get the (first) property for this key
-                    var prop = OriginalClasses.SelectMany(x => x.Properties).FirstOrDefault(x => String.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))
+                    Property prop = OriginalClasses.SelectMany(x => x.Properties).FirstOrDefault(x => String.Equals(x.Name, key, StringComparison.InvariantCultureIgnoreCase))
                                ?? new Property(key, VariableType.String);
-                    var val = new TableValue(prop, key, datas.Select(x => x.Get<string>(key)));
+                    TableValue val = new TableValue(prop, key, datas.Select(x => x.Get<string>(key)));
                     Add(val);
                 }
             }

@@ -35,7 +35,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("TransformationFlags");
+            SerialisedObject so = new SerialisedObject("TransformationFlags");
             so.Set("TextureLock", TextureLock);
             so.Set("TextureScaleLock", TextureScaleLock);
             return so;

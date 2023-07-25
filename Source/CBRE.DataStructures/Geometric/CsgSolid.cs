@@ -22,8 +22,8 @@ namespace CBRE.DataStructures.Geometric
 
         public CsgSolid Union(CsgSolid solid)
         {
-            var a = new CsgNode(this);
-            var b = new CsgNode(solid);
+            CsgNode a = new CsgNode(this);
+            CsgNode b = new CsgNode(solid);
             a.ClipTo(b);
             b.ClipTo(a);
             b.Invert();
@@ -35,8 +35,8 @@ namespace CBRE.DataStructures.Geometric
 
         public CsgSolid Subtract(CsgSolid solid)
         {
-            var a = new CsgNode(this);
-            var b = new CsgNode(solid);
+            CsgNode a = new CsgNode(this);
+            CsgNode b = new CsgNode(solid);
             a.Invert();
             a.ClipTo(b);
             b.ClipTo(a);
@@ -50,8 +50,8 @@ namespace CBRE.DataStructures.Geometric
 
         public CsgSolid Intersect(CsgSolid solid)
         {
-            var a = new CsgNode(this);
-            var b = new CsgNode(solid);
+            CsgNode a = new CsgNode(this);
+            CsgNode b = new CsgNode(solid);
             a.Invert();
             b.ClipTo(a);
             b.Invert();

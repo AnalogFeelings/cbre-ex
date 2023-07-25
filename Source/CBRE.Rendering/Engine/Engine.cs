@@ -88,9 +88,9 @@ namespace CBRE.Rendering.Engine
 
         private void DetectFeatures(GraphicsDevice device)
         {
-            var dev = device.GetType().GetProperty("Device");
-            var dxd = dev?.GetValue(device) as ID3D11Device;
-            var fl = dxd?.FeatureLevel ?? FeatureLevel.Level_11_0; // Just assume it's DX10, whatever
+            System.Reflection.PropertyInfo dev = device.GetType().GetProperty("Device");
+            ID3D11Device dxd = dev?.GetValue(device) as ID3D11Device;
+            FeatureLevel fl = dxd?.FeatureLevel ?? FeatureLevel.Level_11_0; // Just assume it's DX10, whatever
             if (fl < FeatureLevel.Level_11_0)
             {
                 MessageBox.Show($"CBRE-EX requires DirectX 11, but your computer only has version {fl}.", "Unsupported graphics card!");
@@ -177,14 +177,14 @@ namespace CBRE.Rendering.Engine
 
         private void Loop(object o)
         {
-            var token = (CancellationToken) o;
+            CancellationToken token = (CancellationToken) o;
             try
             {
-                var lastFrame = _timer.ElapsedMilliseconds;
+                long lastFrame = _timer.ElapsedMilliseconds;
                 while (!token.IsCancellationRequested)
                 {
-                    var frame = _timer.ElapsedMilliseconds;
-                    var diff = (frame - lastFrame);
+                    long frame = _timer.ElapsedMilliseconds;
+                    long diff = (frame - lastFrame);
                     if (diff < 16 || _paused > 0)
                     {
                         if (_paused > 0) _pauseThreadEvent.Set();
@@ -212,9 +212,9 @@ namespace CBRE.Rendering.Engine
             lock (_lock)
             {
                 Scene.Update(frame);
-                var overlays = Scene.GetOverlayRenderables().ToList();
+                List<Overlay.IOverlayRenderable> overlays = Scene.GetOverlayRenderables().ToList();
 
-                foreach (var rt in _renderTargets)
+                foreach (IViewport rt in _renderTargets)
                 {
                     rt.Update(frame);
                     rt.Overlay.Build(overlays);
@@ -232,7 +232,7 @@ namespace CBRE.Rendering.Engine
             _commandList.SetFramebuffer(renderTarget.Swapchain.Framebuffer);
             _commandList.ClearDepthStencil(1);
 
-            var cc = renderTarget.Camera.Type == CameraType.Perspective
+            RgbaFloat cc = renderTarget.Camera.Type == CameraType.Perspective
                 ? _clearColourPerspective
                 : _clearColourOrthographic;
             _commandList.ClearColorTarget(0, cc);
@@ -262,17 +262,17 @@ namespace CBRE.Rendering.Engine
             //     }
             // }
 
-            foreach (var opaque in _pipelines[PipelineGroup.Opaque])
+            foreach (IPipeline opaque in _pipelines[PipelineGroup.Opaque])
             {
                 opaque.SetupFrame(Context, renderTarget);
                 opaque.Render(Context, renderTarget, _commandList, Scene.GetRenderables(opaque, renderTarget));
             }
 
             {
-                var cameraLocation = renderTarget.Camera.Location;
-                var transparentPipelines = _pipelines[PipelineGroup.Transparent];
+                System.Numerics.Vector3 cameraLocation = renderTarget.Camera.Location;
+                List<IPipeline> transparentPipelines = _pipelines[PipelineGroup.Transparent];
 
-                foreach (var transparent in transparentPipelines)
+                foreach (IPipeline transparent in transparentPipelines)
                 {
                     transparent.SetupFrame(Context, renderTarget);
                 }
@@ -291,7 +291,7 @@ namespace CBRE.Rendering.Engine
                 }
             }
 
-            foreach (var overlay in _pipelines[PipelineGroup.Overlay])
+            foreach (IPipeline overlay in _pipelines[PipelineGroup.Overlay])
             {
                 overlay.SetupFrame(Context, renderTarget);
                 overlay.Render(Context, renderTarget, _commandList, Scene.GetRenderables(overlay, renderTarget));
@@ -312,7 +312,7 @@ namespace CBRE.Rendering.Engine
         {
             lock (_lock)
             {
-                var control = new Viewports.Viewport(Device, _options);
+                Viewports.Viewport control = new Viewports.Viewport(Device, _options);
                 control.Disposed += DestroyViewport;
 
                 if (!_renderTargets.Any()) Start();

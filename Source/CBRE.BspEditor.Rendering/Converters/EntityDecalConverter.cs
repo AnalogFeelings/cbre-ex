@@ -30,10 +30,10 @@ namespace CBRE.BspEditor.Rendering.Converters
 
         public async Task Convert(BufferBuilder builder, MapDocument document, IMapObject obj, ResourceCollector resourceCollector)
         {
-            var faces = obj.Data.Get<EntityDecal>().SelectMany(x => x.Geometry).ToList();
+            System.Collections.Generic.List<Face> faces = obj.Data.Get<EntityDecal>().SelectMany(x => x.Geometry).ToList();
             await DefaultSolidConverter.ConvertFaces(builder, document, obj, faces, resourceCollector);
 
-            var origin = obj.Data.GetOne<Origin>()?.Location ?? obj.BoundingBox.Center;
+            Vector3 origin = obj.Data.GetOne<Origin>()?.Location ?? obj.BoundingBox.Center;
             await DefaultEntityConverter.ConvertBox(builder, obj, new Box(origin - Vector3.One * 4, origin + Vector3.One * 4));
         }
     }

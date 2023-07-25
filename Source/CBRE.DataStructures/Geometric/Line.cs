@@ -41,13 +41,13 @@ namespace CBRE.DataStructures.Geometric
         {
             // http://paulbourke.net/geometry/pointline/
 
-            var delta = End - Start;
-            var den = delta.LengthSquared();
+            Vector3 delta = End - Start;
+            float den = delta.LengthSquared();
             if (Math.Abs(den) < 0.0001f) return Start; // Start and End are the same
 
-            var numPoint = Vector3.Multiply(point - Start, delta);
-            var num = numPoint.X + numPoint.Y + numPoint.Z;
-            var u = num / den;
+            Vector3 numPoint = Vector3.Multiply(point - Start, delta);
+            float num = numPoint.X + numPoint.Y + numPoint.Z;
+            float u = num / den;
 
             if (u < 0) return Start; // Point is before the segment start
             if (u > 1) return End;   // Point is after the segment end
@@ -61,8 +61,8 @@ namespace CBRE.DataStructures.Geometric
         /// <returns>A PlaneClassification value.</returns>
         public PlaneClassification ClassifyAgainstPlane(Plane p)
         {
-            var start = p.OnPlane(Start);
-            var end = p.OnPlane(End);
+            int start = p.OnPlane(Start);
+            int end = p.OnPlane(End);
 
             if (start == 0 && end == 0) return PlaneClassification.OnPlane;
             if (start <= 0 && end <= 0) return PlaneClassification.Back;

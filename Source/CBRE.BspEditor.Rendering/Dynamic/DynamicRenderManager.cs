@@ -39,24 +39,24 @@ namespace CBRE.BspEditor.Rendering.Dynamic
 
         public void Update(long frame)
         {
-            var builder = _engine.Value.CreateBufferBuilder(BufferSize.Small);
-            var renderable = new BufferBuilderRenderable(builder);
+            BufferBuilder builder = _engine.Value.CreateBufferBuilder(BufferSize.Small);
+            BufferBuilderRenderable renderable = new BufferBuilderRenderable(builder);
             
-            if (_activeDocument.TryGetTarget(out var md))
+            if (_activeDocument.TryGetTarget(out MapDocument md))
             {
-                var resourceCollector = new ResourceCollector();
+                ResourceCollector resourceCollector = new ResourceCollector();
 
-                foreach (var dr in _dynamicRenderables)
+                foreach (IDynamicRenderable dr in _dynamicRenderables)
                 {
                     dr.Render(builder, resourceCollector);
                 }
 
-                foreach (var ddr in _documentDynamicRenderables)
+                foreach (IMapObjectDynamicRenderable ddr in _documentDynamicRenderables)
                 {
                     ddr.Render(md, builder, resourceCollector);
                 }
 
-                var env = md.Environment;
+                Environment.IEnvironment env = md.Environment;
                 if (env != null) Task.Run(() => _resourceCollection.Upload(env, resourceCollector)).Wait();
             }
 
@@ -84,7 +84,7 @@ namespace CBRE.BspEditor.Rendering.Dynamic
 
         private Task DocumentClosed(IDocument doc)
         {
-            if (_activeDocument.TryGetTarget(out var md) && md == doc)
+            if (_activeDocument.TryGetTarget(out MapDocument md) && md == doc)
             {
                 _activeDocument.SetTarget(null);
             }

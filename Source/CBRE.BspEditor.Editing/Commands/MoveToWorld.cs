@@ -35,25 +35,25 @@ namespace CBRE.BspEditor.Editing.Commands
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var entities = document.Selection.OfType<Entity>().ToList();
+            List<Entity> entities = document.Selection.OfType<Entity>().ToList();
 
             if (!entities.Any()) return;
 
             // Deselect the entities we're about to delete
-            var ops = new List<IOperation>
+            List<IOperation> ops = new List<IOperation>
             {
                 new Deselect(entities)
             };
 
             // Remove the children
-            foreach (var entity in entities)
+            foreach (Entity entity in entities)
             {
-                var children = entity.Hierarchy.Where(x => !(x is Entity)).ToList();
+                List<IMapObject> children = entity.Hierarchy.Where(x => !(x is Entity)).ToList();
 
                 if (children.Any())
                 {
                     // Make sure we don't try and attach the solids back to an entity
-                    var newParentId = entities.Contains(entity.Hierarchy.Parent)
+                    long newParentId = entities.Contains(entity.Hierarchy.Parent)
                         ? document.Map.Root.ID
                         : entity.Hierarchy.Parent.ID;
 
@@ -64,7 +64,7 @@ namespace CBRE.BspEditor.Editing.Commands
             }
 
             // Remove the parents
-            foreach (var entity in entities)
+            foreach (Entity entity in entities)
             {
                 // If the parent is a selected entity then we don't need to detach this one as the parent will be detatched
                 if (!entities.Contains(entity.Hierarchy.Parent))

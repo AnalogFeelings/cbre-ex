@@ -38,7 +38,7 @@ namespace CBRE.Shell.Registers
         {
             _loaders = documentLoaders.Select(x => x.Value).ToList();
 
-            var assembly = Assembly.GetEntryAssembly()?.GetName().Name ?? "CBRE.Shell";
+            string assembly = Assembly.GetEntryAssembly()?.GetName().Name ?? "CBRE.Shell";
             _programId = assembly.Replace(".", "");
 
             _openDocuments = new ThreadSafeList<IDocument>();
@@ -59,8 +59,8 @@ namespace CBRE.Shell.Registers
 
         public DocumentPointer GetDocumentPointer(IDocument document)
         {
-            var loader = _loaders.FirstOrDefault(x => x.CanSave(document));
-            var pointer = loader?.GetDocumentPointer(document);
+            IDocumentLoader loader = _loaders.FirstOrDefault(x => x.CanSave(document));
+            DocumentPointer pointer = loader?.GetDocumentPointer(document);
             return pointer;
         }
 
@@ -83,14 +83,14 @@ namespace CBRE.Shell.Registers
 
         public async Task<IDocument> NewDocument(IDocumentLoader loader)
         {
-            var doc = await loader.CreateBlank();
+            IDocument doc = await loader.CreateBlank();
             if (doc != null) OpenDocument(doc);
             return doc;
         }
 
         public async Task<IDocument> OpenDocument(DocumentPointer documentPointer, string loaderName = null)
         {
-            var fileName = documentPointer.FileName;
+            string fileName = documentPointer.FileName;
             if (!File.Exists(fileName)) return null;
 
             if (IsOpen(fileName))
@@ -99,10 +99,10 @@ namespace CBRE.Shell.Registers
                 return null;
             }
 
-            var loader = _loaders.FirstOrDefault(x => x.GetType().Name == loaderName && x.CanLoad(fileName));
+            IDocumentLoader loader = _loaders.FirstOrDefault(x => x.GetType().Name == loaderName && x.CanLoad(fileName));
             if (loader == null) return null;
 
-            var doc = await loader.Load(documentPointer);
+            IDocument doc = await loader.Load(documentPointer);
             if (doc != null) OpenDocument(doc);
 
             return doc;
@@ -124,7 +124,7 @@ namespace CBRE.Shell.Registers
             
             if (loader != null)
             {
-                var doc = await loader.Load(fileName);
+                IDocument doc = await loader.Load(fileName);
                 if (doc != null) OpenDocument(doc);
                 return doc;
             }
@@ -189,9 +189,9 @@ namespace CBRE.Shell.Registers
         /// <returns>True if the document was closed</returns>
         public async Task<bool> RequestCloseDocument(IDocument document)
         {
-            var canClose = await document.RequestClose();
+            bool canClose = await document.RequestClose();
 
-            var msg = new DocumentCloseMessage(document);
+            DocumentCloseMessage msg = new DocumentCloseMessage(document);
             await Oy.Publish("Document:RequestClose", msg);
             if (msg.Cancelled) canClose = false;
 
@@ -228,15 +228,15 @@ namespace CBRE.Shell.Registers
         {
             if (!store.Contains("Associations")) return;
 
-            var associations = store.Get("Associations", new FileAssociations());
+            FileAssociations associations = store.Get("Associations", new FileAssociations());
             AssociateExtensionHandlers(associations.Where(x => x.Value).Select(x => x.Key));
         }
 
         public void StoreValues(ISettingsStore store)
         {
-            var associations = new FileAssociations();
-            var reg = GetRegisteredExtensionAssociations().ToList();
-            foreach (var ext in _loaders.SelectMany(x => x.SupportedFileExtensions).SelectMany(x => x.Extensions))
+            FileAssociations associations = new FileAssociations();
+            List<string> reg = GetRegisteredExtensionAssociations().ToList();
+            foreach (string ext in _loaders.SelectMany(x => x.SupportedFileExtensions).SelectMany(x => x.Extensions))
             {
                 associations[ext] = reg.Contains(ext, StringComparer.InvariantCultureIgnoreCase);
             }
@@ -247,8 +247,8 @@ namespace CBRE.Shell.Registers
         {
             public FileAssociations Clone()
             {
-                var b = new FileAssociations();
-                foreach (var kv in this) b.Add(kv.Key, kv.Value);
+                FileAssociations b = new FileAssociations();
+                foreach (KeyValuePair<string, bool> kv in this) b.Add(kv.Key, kv.Value);
                 return b;
             }
         }
@@ -262,26 +262,26 @@ namespace CBRE.Shell.Registers
         {
             try
             {
-                using (var root = Registry.CurrentUser.OpenSubKey("Software\\Classes", true))
+                using (RegistryKey root = Registry.CurrentUser.OpenSubKey("Software\\Classes", true))
                 {
                     if (root == null) return;
 
-                    foreach (var ext in _loaders.SelectMany(x => x.SupportedFileExtensions))
+                    foreach (FileExtensionInfo ext in _loaders.SelectMany(x => x.SupportedFileExtensions))
                     {
-                        foreach (var extension in ext.Extensions)
+                        foreach (string extension in ext.Extensions)
                         {
-                            using (var progId = root.CreateSubKey(_programId + extension + "." + _programIdVer))
+                            using (RegistryKey progId = root.CreateSubKey(_programId + extension + "." + _programIdVer))
                             {
                                 if (progId == null) continue;
 
                                 progId.SetValue("", ext.Description);
 
-                                using (var di = progId.CreateSubKey("DefaultIcon"))
+                                using (RegistryKey di = progId.CreateSubKey("DefaultIcon"))
                                 {
                                     di?.SetValue("", ExecutableLocation() + ",-40001");
                                 }
 
-                                using (var comm = progId.CreateSubKey("shell\\open\\command"))
+                                using (RegistryKey comm = progId.CreateSubKey("shell\\open\\command"))
                                 {
                                     comm?.SetValue("", "\"" + ExecutableLocation() + "\" \"%1\"");
                                 }
@@ -302,19 +302,19 @@ namespace CBRE.Shell.Registers
         {
             try
             {
-                using (var root = Registry.CurrentUser.OpenSubKey("Software\\Classes", true))
+                using (RegistryKey root = Registry.CurrentUser.OpenSubKey("Software\\Classes", true))
                 {
                     if (root == null) return;
 
-                    foreach (var extension in extensions)
+                    foreach (string extension in extensions)
                     {
-                        using (var ext = root.CreateSubKey(extension))
+                        using (RegistryKey ext = root.CreateSubKey(extension))
                         {
                             if (ext == null) return;
                             ext.SetValue("", _programId + extension + "." + _programIdVer);
                             ext.SetValue("PerceivedType", "Document");
 
-                            using (var openWith = ext.CreateSubKey("OpenWithProgIds"))
+                            using (RegistryKey openWith = ext.CreateSubKey("OpenWithProgIds"))
                             {
                                 openWith?.SetValue(_programId + extension + "." + _programIdVer, string.Empty);
                             }
@@ -330,18 +330,18 @@ namespace CBRE.Shell.Registers
 
         private IEnumerable<string> GetRegisteredExtensionAssociations()
         {
-            var associations = new List<string>();
+            List<string> associations = new List<string>();
             try
             {
-                using (var root = Registry.CurrentUser.OpenSubKey("Software\\Classes"))
+                using (RegistryKey root = Registry.CurrentUser.OpenSubKey("Software\\Classes"))
                 {
                     if (root == null) return Enumerable.Empty<string>();
 
-                    foreach (var ft in _loaders.SelectMany(x => x.SupportedFileExtensions))
+                    foreach (FileExtensionInfo ft in _loaders.SelectMany(x => x.SupportedFileExtensions))
                     {
-                        foreach (var extension in ft.Extensions)
+                        foreach (string extension in ft.Extensions)
                         {
-                            using (var ext = root.OpenSubKey(extension))
+                            using (RegistryKey ext = root.OpenSubKey(extension))
                             {
                                 if (ext == null) continue;
                                 if (Convert.ToString(ext.GetValue("")) == _programId + extension + "." + _programIdVer)

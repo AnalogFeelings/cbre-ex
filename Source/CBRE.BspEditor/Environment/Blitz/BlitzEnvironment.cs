@@ -54,7 +54,7 @@ namespace CBRE.BspEditor.Environment.Blitz
             {
                 if (_root == null)
                 {
-                    var dirs = Directories.Where(Directory.Exists).ToList();
+                    List<string> dirs = Directories.Where(Directory.Exists).ToList();
                     if (dirs.Any()) _root = new RootFile(Name, dirs.Select(x => new NativeFile(x)));
                     else _root = new VirtualFile(null, "");
                 }
@@ -90,20 +90,20 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         private async Task<TextureCollection> MakeTextureCollectionAsync()
         {
-            var genericRefs = _genericProvider.GetPackagesInFile(Name, Root);
-            var generics = await _genericProvider.GetTexturePackages(Name, genericRefs);
+            IEnumerable<TexturePackageReference> genericRefs = _genericProvider.GetPackagesInFile(Name, Root);
+            IEnumerable<TexturePackage> generics = await _genericProvider.GetTexturePackages(Name, genericRefs);
 
             string editorPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             string toolsPath = Path.Combine(editorPath, "ToolTextures");
             string spritesPath = Path.Combine(editorPath, "Sprites");
 
             IFile toolFile = new NativeFile(toolsPath);
-            var toolRefs = _genericProvider.GetPackagesInFile("tooltextures", toolFile);
-            var tools = await _genericProvider.GetTexturePackages("tooltextures", toolRefs);
+            IEnumerable<TexturePackageReference> toolRefs = _genericProvider.GetPackagesInFile("tooltextures", toolFile);
+            IEnumerable<TexturePackage> tools = await _genericProvider.GetTexturePackages("tooltextures", toolRefs);
 
             IFile spriteFile = new NativeFile(spritesPath);
-            var spriteRefs = _genericProvider.GetPackagesInFile("sprites", spriteFile);
-            var sprites = await _genericProvider.GetTexturePackages("sprites", spriteRefs);
+            IEnumerable<TexturePackageReference> spriteRefs = _genericProvider.GetPackagesInFile("sprites", spriteFile);
+            IEnumerable<TexturePackage> sprites = await _genericProvider.GetTexturePackages("sprites", spriteRefs);
 
             return new BlitzTextureCollection(generics.Union(sprites).Union(tools));
         }
@@ -130,7 +130,7 @@ namespace CBRE.BspEditor.Environment.Blitz
         public async Task UpdateDocumentData(MapDocument document)
         {
             // Ensure that worldspawn has the correct entity data
-            var ed = document.Map.Root.Data.GetOne<EntityData>();
+            EntityData ed = document.Map.Root.Data.GetOne<EntityData>();
 
             if (ed == null)
             {
@@ -148,7 +148,7 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         private IEnumerable<TexturePackage> GetUsedTexturePackages(MapDocument document, TextureCollection collection)
         {
-            var used = GetUsedTextures(document).ToList();
+            List<string> used = GetUsedTextures(document).ToList();
             return collection.Packages.Where(x => used.Any(x.HasTexture));
         }
 
@@ -164,7 +164,7 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         private async Task ExportDocumentForBatch(MapDocument doc, string path, Box cordonBounds)
         {
-            var cordonTextureName = "BLACK"; // todo make this configurable
+            string cordonTextureName = "BLACK"; // todo make this configurable
 
             if (cordonBounds != null && !cordonBounds.IsEmpty())
             {

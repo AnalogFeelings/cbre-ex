@@ -56,20 +56,20 @@ namespace CBRE.BspEditor.Providers
 
         public async Task<BspFileLoadResult> Load(Stream stream, IEnvironment environment)
         {
-            var task = await Task.Factory.StartNew(async () =>
+            Task<BspFileLoadResult> task = await Task.Factory.StartNew(async () =>
             {
-                var result = new BspFileLoadResult();
+                BspFileLoadResult result = new BspFileLoadResult();
 
-                var map = new Map();
-                var so = _formatter.Deserialize(stream).ToList();
+                Map map = new Map();
+                List<SerialisedObject> so = _formatter.Deserialize(stream).ToList();
 
-                foreach (var s in so) s.Name = s.Name?.ToLower();
+                foreach (SerialisedObject s in so) s.Name = s.Name?.ToLower();
 
                 // If the cbre_native node is found, we should use it to maximise compatibility
-                var native = so.FirstOrDefault(x => x.Name == "cbre_native");
+                SerialisedObject native = so.FirstOrDefault(x => x.Name == "cbre_native");
                 if (native != null)
                 {
-                    foreach (var o in native.Children)
+                    foreach (SerialisedObject o in native.Children)
                     {
                         if (o.Name == nameof(Root))
                         {
@@ -107,9 +107,9 @@ namespace CBRE.BspEditor.Providers
         private void LoadVisgroups(Map map, SerialisedObject visgroups)
         {
             if (visgroups == null) return;
-            foreach (var vg in visgroups.Children.Where(x => x.Name?.ToLower() == "visgroup"))
+            foreach (SerialisedObject vg in visgroups.Children.Where(x => x.Name?.ToLower() == "visgroup"))
             {
-                var v = new Visgroup
+                Visgroup v = new Visgroup
                 {
                     Name = vg.Get("name", ""),
                     ID = vg.Get("visgroupid", -1),
@@ -124,30 +124,30 @@ namespace CBRE.BspEditor.Providers
 
         private void LoadWorld(Map map, List<SerialisedObject> objects)
         {
-            var vos = objects.Select(VmfObject.Deserialise).Where(vo => vo != null).ToList();
+            List<VmfObject> vos = objects.Select(VmfObject.Deserialise).Where(vo => vo != null).ToList();
 
-            var world = vos.OfType<VmfWorld>().FirstOrDefault();
+            VmfWorld world = vos.OfType<VmfWorld>().FirstOrDefault();
             if (world == null) return;
 
             // A map of ids from the map -> ids from the vmf
-            var mapToSource = new Dictionary<long, long>();
+            Dictionary<long, long> mapToSource = new Dictionary<long, long>();
             
             world.Editor.Apply(map.Root);
             mapToSource.Add(map.Root.ID, world.ID);
 
-            var tree = new List<VmfObject>();
+            List<VmfObject> tree = new List<VmfObject>();
 
-            foreach (var vo in vos)
+            foreach (VmfObject vo in vos)
             {
                 // Set the parent id to the world id
                 if (vo.ID != world.ID && vo.Editor.ParentID == 0) vo.Editor.ParentID = world.ID;
 
                 // Flatten the tree (nested hiddens -> no more hiddens)
                 // (Flat tree includes self as well)
-                var flat = vo.Flatten().ToList();
+                List<VmfObject> flat = vo.Flatten().ToList();
 
                 // Set the default parent id for all the child objects
-                foreach (var child in flat)
+                foreach (VmfObject child in flat)
                 {
                     if (child.Editor.ParentID == 0) child.Editor.ParentID = vo.ID;
                 }
@@ -159,26 +159,26 @@ namespace CBRE.BspEditor.Providers
             tree.Remove(world);
 
             // All objects should have proper ids by now, get rid of anything with parentid 0 just in case
-            var grouped = tree.GroupBy(x => x.Editor.ParentID).Where(x => x.Key > 0).ToDictionary(x => x.Key, x => x.ToList());
-            
+            Dictionary<long, List<VmfObject>> grouped = tree.GroupBy(x => x.Editor.ParentID).Where(x => x.Key > 0).ToDictionary(x => x.Key, x => x.ToList());
+
             // Step through each level of the tree and add them to their parent branches
-            var leaves = new List<IMapObject> {map.Root};
+            List<IMapObject> leaves = new List<IMapObject> {map.Root};
 
             // Use a iteration limit of 1000. If the tree's that deep, I don't want to load your map anyway...
-            for (var i = 0; i < 1000 && leaves.Any(); i++) // i.e. while (leaves.Any())
+            for (int i = 0; i < 1000 && leaves.Any(); i++) // i.e. while (leaves.Any())
             {
-                var newLeaves = new List<IMapObject>();
-                foreach (var leaf in leaves)
+                List<IMapObject> newLeaves = new List<IMapObject>();
+                foreach (IMapObject leaf in leaves)
                 {
-                    var sourceId = mapToSource[leaf.ID];
+                    long sourceId = mapToSource[leaf.ID];
                     if (!grouped.ContainsKey(sourceId)) continue;
 
-                    var items = grouped[sourceId];
+                    List<VmfObject> items = grouped[sourceId];
 
                     // Create objects from items
-                    foreach (var item in items)
+                    foreach (VmfObject item in items)
                     {
-                        var mapObject = item.ToMapObject(map.NumberGenerator);
+                        IMapObject mapObject = item.ToMapObject(map.NumberGenerator);
                         mapToSource.Add(mapObject.ID, item.ID);
                         mapObject.Hierarchy.Parent = leaf;
                         newLeaves.Add(mapObject);
@@ -193,12 +193,12 @@ namespace CBRE.BspEditor.Providers
         private void LoadCameras(Map map, SerialisedObject cameras)
         {
             if (cameras == null) return;
-            var activeCam = cameras.Get("activecamera", 0);
+            int activeCam = cameras.Get("activecamera", 0);
 
-            var cams = cameras.Children.Where(x => x.Name?.ToLower() == "camera").ToList();
-            for (var i = 0; i < cams.Count; i++)
+            List<SerialisedObject> cams = cameras.Children.Where(x => x.Name?.ToLower() == "camera").ToList();
+            for (int i = 0; i < cams.Count; i++)
             {
-                var cm = cams[i];
+                SerialisedObject cm = cams[i];
                 map.Data.Add(new Camera
                 {
                     EyePosition = cm.Get("position", Vector3.Zero),
@@ -212,8 +212,8 @@ namespace CBRE.BspEditor.Providers
         {
             if (cordon == null) return;
 
-            var start = cordon.Get("mins", Vector3.One * -1024);
-            var end = cordon.Get("maxs", Vector3.One * 1024);
+            Vector3 start = cordon.Get("mins", Vector3.One * -1024);
+            Vector3 end = cordon.Get("maxs", Vector3.One * 1024);
             map.Data.Add(new CordonBounds
             {
                 Box = new Box(start, end),
@@ -225,12 +225,12 @@ namespace CBRE.BspEditor.Providers
         {
             if (viewsettings == null) return;
 
-            var snapToGrid = viewsettings.Get("bSnapToGrid", 1) == 1;
-            var show2DGrid = viewsettings.Get("bShowGrid", 1) == 1;
-            var show3DGrid = viewsettings.Get("bShow3DGrid", 0) == 1; // todo, I guess
-            var gridSpacing = viewsettings.Get("nGridSpacing", 64);
+            bool snapToGrid = viewsettings.Get("bSnapToGrid", 1) == 1;
+            bool show2DGrid = viewsettings.Get("bShowGrid", 1) == 1;
+            bool show3DGrid = viewsettings.Get("bShow3DGrid", 0) == 1; // todo, I guess
+            int gridSpacing = viewsettings.Get("nGridSpacing", 64);
 
-            var grid = show2DGrid ? await _squareGridFactory.Create(environment) : new NoGrid();
+            IGrid grid = show2DGrid ? await _squareGridFactory.Create(environment) : new NoGrid();
             if (grid is SquareGrid sg) sg.Step = gridSpacing;
 
             map.Data.Add(new GridData(grid)
@@ -238,27 +238,27 @@ namespace CBRE.BspEditor.Providers
                 SnapToGrid = snapToGrid
             });
 
-            var ignoreGrouping = viewsettings.Get("bIgnoreGrouping", 0) == 1;
+            bool ignoreGrouping = viewsettings.Get("bIgnoreGrouping", 0) == 1;
             map.Data.Add(new SelectionOptions
             {
                 IgnoreGrouping = ignoreGrouping
             });
 
-            var hideFaceMask = viewsettings.Get("bHideFaceMask", 0) == 1;
+            bool hideFaceMask = viewsettings.Get("bHideFaceMask", 0) == 1;
             map.Data.Add(new HideFaceMask
             {
                 Hidden = hideFaceMask
             });
 
-            var hideNullTextures = viewsettings.Get("bHideNullTextures", 0) == 1;
+            bool hideNullTextures = viewsettings.Get("bHideNullTextures", 0) == 1;
             map.Data.Add(new DisplayFlags
             {
                 HideNullTextures = hideNullTextures,
                 HideDisplacementSolids = false
             });
 
-            var textureLock = viewsettings.Get("bTextureLock", 1) == 1;
-            var textureScalingLock = viewsettings.Get("bTextureScalingLock", 0) == 1;
+            bool textureLock = viewsettings.Get("bTextureLock", 1) == 1;
+            bool textureScalingLock = viewsettings.Get("bTextureScalingLock", 0) == 1;
             map.Data.Add(new TransformationFlags
             {
                 TextureLock = textureLock,
@@ -272,7 +272,7 @@ namespace CBRE.BspEditor.Providers
         {
             return Task.Factory.StartNew(() =>
             {
-                var list = new List<SerialisedObject>();
+                List<SerialisedObject> list = new List<SerialisedObject>();
 
                 SaveVisgroups(map, list);
                 SaveWorld(map, list);
@@ -280,7 +280,7 @@ namespace CBRE.BspEditor.Providers
                 SaveCordon(map, list);
                 SaveViewSettings(map, list);
 
-                var native = new SerialisedObject("cbre_native");
+                SerialisedObject native = new SerialisedObject("cbre_native");
                 native.Children.Add(_factory.Serialise(map.Root));
                 native.Children.AddRange(map.Data.Select(_factory.Serialise).Where(x => x != null));
                 list.Add(native);
@@ -293,10 +293,10 @@ namespace CBRE.BspEditor.Providers
 
         private void SaveVisgroups(Map map, List<SerialisedObject> list)
         {
-            var so = new SerialisedObject("visgroups");
-            foreach (var visgroup in map.Data.OfType<Visgroup>())
+            SerialisedObject so = new SerialisedObject("visgroups");
+            foreach (Visgroup visgroup in map.Data.OfType<Visgroup>())
             {
-                var vgo = new SerialisedObject("visgroup");
+                SerialisedObject vgo = new SerialisedObject("visgroup");
                 vgo.Set("name", visgroup.Name);
                 vgo.Set("visgroupid", visgroup.ID);
                 vgo.SetColor("color", visgroup.Colour);
@@ -310,30 +310,30 @@ namespace CBRE.BspEditor.Providers
             // call the avengers
 
             // World is a normal entity, except it should also include groups
-            var world = map.Root;
-            var sw = SerialiseEntity(world);
-            foreach (var group in world.FindAll().OfType<Group>())
+            Root world = map.Root;
+            SerialisedObject sw = SerialiseEntity(world);
+            foreach (Group group in world.FindAll().OfType<Group>())
             {
-                var sg = VmfObject.Serialise(group);
+                VmfObject sg = VmfObject.Serialise(group);
                 if (sg != null) sw.Children.Add(sg.ToSerialisedObject());
             }
             if (sw != null) list.Add(sw);
 
             // Entities are separate from the world
-            var entities = map.Root.FindAll().OfType<Entity>().Select(SerialiseEntity).ToList();
+            List<SerialisedObject> entities = map.Root.FindAll().OfType<Entity>().Select(SerialiseEntity).ToList();
             list.AddRange(entities);
         }
 
         private SerialisedObject SerialiseEntity(IMapObject obj)
         {
-            var self = VmfObject.Serialise(obj);
+            VmfObject self = VmfObject.Serialise(obj);
             if (self == null) return null;
-            
-            var so = self.ToSerialisedObject();
 
-            foreach (var solid in obj.FindAll().OfType<Solid>())
+            SerialisedObject so = self.ToSerialisedObject();
+
+            foreach (Solid solid in obj.FindAll().OfType<Solid>())
             {
-                var s = VmfObject.Serialise(solid);
+                VmfObject s = VmfObject.Serialise(solid);
                 if (s != null) so.Children.Add(s.ToSerialisedObject());
             }
 
@@ -342,16 +342,16 @@ namespace CBRE.BspEditor.Providers
 
         private void SaveCameras(Map map, List<SerialisedObject> list)
         {
-            var cams = map.Data.OfType<Camera>().ToList();
+            List<Camera> cams = map.Data.OfType<Camera>().ToList();
             if (!cams.Any()) return;
 
-            var so = new SerialisedObject("cameras");
-            for (var i = 0; i < cams.Count; i++)
+            SerialisedObject so = new SerialisedObject("cameras");
+            for (int i = 0; i < cams.Count; i++)
             {
-                var camera = cams[i];
+                Camera camera = cams[i];
                 if (camera.IsActive) so.Set("activecamera", i);
 
-                var vgo = new SerialisedObject("camera");
+                SerialisedObject vgo = new SerialisedObject("camera");
                 vgo.Set("position", $"[{FormatVector3(camera.EyePosition)}]");
                 vgo.Set("look", $"[{FormatVector3(camera.LookPosition)}]");
                 so.Children.Add(vgo);
@@ -362,10 +362,10 @@ namespace CBRE.BspEditor.Providers
 
         private void SaveCordon(Map map, List<SerialisedObject> list)
         {
-            var cordon = map.Data.GetOne<CordonBounds>();
+            CordonBounds cordon = map.Data.GetOne<CordonBounds>();
             if (cordon == null) return;
 
-            var so = new SerialisedObject("cordon");
+            SerialisedObject so = new SerialisedObject("cordon");
 
             so.Set("mins", $"({FormatVector3(cordon.Box.Start)})");
             so.Set("maxs", $"({FormatVector3(cordon.Box.End)})");
@@ -376,13 +376,13 @@ namespace CBRE.BspEditor.Providers
 
         private void SaveViewSettings(Map map, List<SerialisedObject> list)
         {
-            var so = new SerialisedObject("viewsettings");
+            SerialisedObject so = new SerialisedObject("viewsettings");
 
-            var grid = map.Data.GetOne<GridData>();
-            var sel = map.Data.GetOne<SelectionOptions>();
-            var face = map.Data.GetOne<HideFaceMask>();
-            var dis = map.Data.GetOne<DisplayFlags>();
-            var tf = map.Data.GetOne<TransformationFlags>();
+            GridData grid = map.Data.GetOne<GridData>();
+            SelectionOptions sel = map.Data.GetOne<SelectionOptions>();
+            HideFaceMask face = map.Data.GetOne<HideFaceMask>();
+            DisplayFlags dis = map.Data.GetOne<DisplayFlags>();
+            TransformationFlags tf = map.Data.GetOne<TransformationFlags>();
 
             if (grid != null)
             {
@@ -430,10 +430,10 @@ namespace CBRE.BspEditor.Providers
 
         private static bool ParseFloatArray(string input, char[] splitChars, int expected, out float[] array)
         {
-            var spl = input.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+            string[] spl = input.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
             if (spl.Length == expected)
             {
-                var parsed = spl.Select(x => float.TryParse(x, NumberStyles.Float, CultureInfo.InvariantCulture, out var o) ? (float?) o : null).ToList();
+                List<float?> parsed = spl.Select(x => float.TryParse(x, NumberStyles.Float, CultureInfo.InvariantCulture, out float o) ? (float?) o : null).ToList();
                 if (parsed.All(x => x.HasValue))
                 {
                     // ReSharper disable once PossibleInvalidOperationException
@@ -447,10 +447,10 @@ namespace CBRE.BspEditor.Providers
 
         private static bool ParseDoubleArray(string input, char[] splitChars, int expected, out double[] array)
         {
-            var spl = input.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+            string[] spl = input.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
             if (spl.Length == expected)
             {
-                var parsed = spl.Select(x => double.TryParse(x, NumberStyles.Float, CultureInfo.InvariantCulture, out var o) ? (double?) o : null).ToList();
+                List<double?> parsed = spl.Select(x => double.TryParse(x, NumberStyles.Float, CultureInfo.InvariantCulture, out double o) ? (double?) o : null).ToList();
                 if (parsed.All(x => x.HasValue))
                 {
                     // ReSharper disable once PossibleInvalidOperationException
@@ -522,14 +522,14 @@ namespace CBRE.BspEditor.Providers
             public VmfEntity(SerialisedObject obj) : base(obj)
             {
                 Objects = new List<VmfObject>();
-                foreach (var so in obj.Children)
+                foreach (SerialisedObject so in obj.Children)
                 {
-                    var o = Deserialise(so);
+                    VmfObject o = Deserialise(so);
                     if (o != null) Objects.Add(o);
                 }
 
-                var ed = new EntityData();
-                foreach (var kv in obj.Properties)
+                EntityData ed = new EntityData();
+                foreach (KeyValuePair<string, string> kv in obj.Properties)
                 {
                     if (kv.Key == null || ExcludedKeys.Contains(kv.Key.ToLower())) continue;
                     ed.Set(kv.Key, kv.Value);
@@ -562,7 +562,7 @@ namespace CBRE.BspEditor.Providers
 
             public override IMapObject ToMapObject(UniqueNumberGenerator generator)
             {
-                var ent = new Entity(generator.Next("MapObject"));
+                Entity ent = new Entity(generator.Next("MapObject"));
 
                 ent.Data.Add(EntityData);
                 if (Origin != null) ent.Data.Add(new Origin(Origin.Value));
@@ -576,7 +576,7 @@ namespace CBRE.BspEditor.Providers
 
             public override SerialisedObject ToSerialisedObject()
             {
-                var so = new SerialisedObject(SerialisedObjectName);
+                SerialisedObject so = new SerialisedObject(SerialisedObjectName);
                 so.Set("id", ID);
                 so.Set("classname", EntityData.Name);
                 so.Set("spawnflags", EntityData.Flags);
@@ -584,7 +584,7 @@ namespace CBRE.BspEditor.Providers
                 {
                     so.Set("origin", Origin);
                 }
-                foreach (var prop in EntityData.Properties)
+                foreach (KeyValuePair<string, string> prop in EntityData.Properties)
                 {
                     so.Properties.Add(new KeyValuePair<string, string>(prop.Key, prop.Value));
                 }
@@ -630,14 +630,14 @@ namespace CBRE.BspEditor.Providers
 
             public override IMapObject ToMapObject(UniqueNumberGenerator generator)
             {
-                var grp = new Group(generator.Next("MapObject"));
+                Group grp = new Group(generator.Next("MapObject"));
                 Editor.Apply(grp);
                 return grp;
             }
 
             public override SerialisedObject ToSerialisedObject()
             {
-                var so = new SerialisedObject("group");
+                SerialisedObject so = new SerialisedObject("group");
                 so.Set("id", ID);
 
                 so.Children.Add(Editor.ToSerialisedObject());
@@ -653,7 +653,7 @@ namespace CBRE.BspEditor.Providers
             public VmfSolid(SerialisedObject obj) : base(obj)
             {
                 Sides = new List<VmfSide>();
-                foreach (var so in obj.Children.Where(x => x.Name == "side"))
+                foreach (SerialisedObject so in obj.Children.Where(x => x.Name == "side"))
                 {
                     Sides.Add(new VmfSide(so));
                 }
@@ -671,7 +671,7 @@ namespace CBRE.BspEditor.Providers
 
             public override IMapObject ToMapObject(UniqueNumberGenerator generator)
             {
-                var sol = new Solid(generator.Next("MapObject"));
+                Solid sol = new Solid(generator.Next("MapObject"));
                 Editor.Apply(sol);
                 CreateFaces(sol, Sides, generator);
                 return sol;
@@ -679,7 +679,7 @@ namespace CBRE.BspEditor.Providers
 
             public override SerialisedObject ToSerialisedObject()
             {
-                var so = new SerialisedObject("solid");
+                SerialisedObject so = new SerialisedObject("solid");
                 so.Set("id", ID);
                 so.Children.AddRange(Sides.Select(x => x.ToSerialisedObject()));
                 so.Children.Add(Editor.ToSerialisedObject());
@@ -692,11 +692,11 @@ namespace CBRE.BspEditor.Providers
                 if (!sides.All(x => x.Vertices.Count >= 3))
                 {
                     // We need to create the solid from intersecting planes
-                    var poly = new Polyhedron(sides.Select(x => x.Plane));
-                    foreach (var side in sides)
+                    Polyhedron poly = new Polyhedron(sides.Select(x => x.Plane));
+                    foreach (VmfSide side in sides)
                     {
                         side.Vertices.Clear();
-                        var pg = poly.Polygons.FirstOrDefault(x => x.Plane.Normal.EquivalentTo(side.Plane.Normal));
+                        Polygon pg = poly.Polygons.FirstOrDefault(x => x.Plane.Normal.EquivalentTo(side.Plane.Normal));
                         if (pg == null)
                         {
                             continue;
@@ -705,15 +705,15 @@ namespace CBRE.BspEditor.Providers
                     }
                 }
 
-                foreach (var emptySide in sides.Where(x => !x.Vertices.Any()))
+                foreach (VmfSide emptySide in sides.Where(x => !x.Vertices.Any()))
                 {
                     Console.WriteLine(emptySide.ID);
                 }
 
                 // We know the vertices, now create the faces
-                foreach (var side in sides)
+                foreach (VmfSide side in sides)
                 {
-                    var face = new Face(generator.Next("Face"))
+                    Face face = new Face(generator.Next("Face"))
                     {
                         Plane = side.Plane.ToStandardPlane(),
                         Texture = side.Texture
@@ -733,9 +733,9 @@ namespace CBRE.BspEditor.Providers
             public VmfHidden(SerialisedObject obj) : base(obj)
             {
                 Objects = new List<VmfObject>();
-                foreach (var so in obj.Children)
+                foreach (SerialisedObject so in obj.Children)
                 {
-                    var o = VmfObject.Deserialise(so);
+                    VmfObject o = VmfObject.Deserialise(so);
                     if (o != null) Objects.Add(o);
                 }
             }
@@ -804,13 +804,13 @@ namespace CBRE.BspEditor.Providers
 
                 // Older versions of CBRE save vertices, this is entirely optional but why not.
                 Vertices = new List<Vector3>();
-                var verts = obj.Children.FirstOrDefault(x => x.Name == "vertex");
+                SerialisedObject verts = obj.Children.FirstOrDefault(x => x.Name == "vertex");
                 if (verts == null) return;
 
-                var count = obj.Get("count", 0);
-                for (var i = 0; i < count; i++)
+                int count = obj.Get("count", 0);
+                for (int i = 0; i < count; i++)
                 {
-                    var pt = obj.Get<Vector3>("vertex" + i);
+                    Vector3 pt = obj.Get<Vector3>("vertex" + i);
                     if (pt == null)
                     {
                         Vertices.Clear();
@@ -830,7 +830,7 @@ namespace CBRE.BspEditor.Providers
 
             public SerialisedObject ToSerialisedObject()
             {
-                var so = new SerialisedObject("side");
+                SerialisedObject so = new SerialisedObject("side");
                 so.Set("id", ID);
                 so.Set("plane", $"({FormatVector3(Vertices[0])}) ({FormatVector3(Vertices[1])}) ({FormatVector3(Vertices[2])})");
                 so.Set("material", Texture.Name);
@@ -840,9 +840,9 @@ namespace CBRE.BspEditor.Providers
                 so.Set("lightmapscale", LightmapScale);
                 so.Set("smoothing_groups", SmoothingGroups);
 
-                var verts = new SerialisedObject("vertex");
+                SerialisedObject verts = new SerialisedObject("vertex");
                 verts.Set("count", Vertices.Count);
-                for (var i = 0; i < Vertices.Count; i++)
+                for (int i = 0; i < Vertices.Count; i++)
                 {
                     verts.Set("vertex" + i, FormatVector3(Vertices[i]));
                 }
@@ -873,7 +873,7 @@ namespace CBRE.BspEditor.Providers
                 // logicalpos?
 
                 VisgroupIDs = new List<long>();
-                foreach (var vid in obj.Properties.Where(x => x.Key == "visgroupid"))
+                foreach (KeyValuePair<string, string> vid in obj.Properties.Where(x => x.Key == "visgroupid"))
                 {
                     if (long.TryParse(vid.Value, out long id)) VisgroupIDs.Add(id);
                 }
@@ -890,9 +890,9 @@ namespace CBRE.BspEditor.Providers
 
             public void Apply(IMapObject obj)
             {
-                var c = Color.GetBrightness() > 0 ? Color : Colour.GetRandomBrushColour();
+                Color c = Color.GetBrightness() > 0 ? Color : Colour.GetRandomBrushColour();
                 obj.Data.Replace(new ObjectColor(c));
-                foreach (var id in VisgroupIDs)
+                foreach (long id in VisgroupIDs)
                 {
                     obj.Data.Add(new VisgroupID(id));
                 }
@@ -900,13 +900,13 @@ namespace CBRE.BspEditor.Providers
 
             public SerialisedObject ToSerialisedObject()
             {
-                var so = new SerialisedObject("editor");
+                SerialisedObject so = new SerialisedObject("editor");
                 so.SetColor("color", Color);
                 so.Set("parentid", ParentID);
                 so.Set("groupid", GroupID);
                 so.Set("visgroupshown", VisgroupShown ? "1" : "0");
                 so.Set("visgroupautoshown", VisgroupAutoShown ? "1" : "0");
-                foreach (var id in VisgroupIDs.Distinct())
+                foreach (long id in VisgroupIDs.Distinct())
                 {
                     so.Properties.Add(new KeyValuePair<string, string>("visgroupid", Convert.ToString(id, CultureInfo.InvariantCulture)));
                 }

@@ -16,8 +16,8 @@ namespace CBRE.Packages.Zip
             PackageFile = packageFile;
             Entries = new List<ZipEntry>();
 
-			// Read the data from the .zip
-            var zip = new ZipArchive(OpenFile(packageFile));
+            // Read the data from the .zip
+            ZipArchive zip = new ZipArchive(OpenFile(packageFile));
             Entries.AddRange(zip.GetFiles().Select(x => new ZipEntry(this, x)));
             BuildDirectories();
         }
@@ -40,7 +40,7 @@ namespace CBRE.Packages.Zip
 
         public byte[] ExtractEntry(IPackageEntry entry)
         {
-            using (var sr = new BinaryReader(OpenStream(entry)))
+            using (BinaryReader sr = new BinaryReader(OpenStream(entry)))
             {
                 return sr.ReadBytes((int)sr.BaseStream.Length);
             }
@@ -48,7 +48,7 @@ namespace CBRE.Packages.Zip
 
         public Stream OpenStream(IPackageEntry entry)
         {
-            var pe = entry as ZipEntry;
+            ZipEntry pe = entry as ZipEntry;
             if (pe == null) throw new ArgumentException("This package is only compatible with ZipEntry objects.");
             return pe.Entry.GetStream(OpenFile(PackageFile));
         }
@@ -70,14 +70,14 @@ namespace CBRE.Packages.Zip
         {
             _folders = new Dictionary<string, HashSet<string>>();
             _files = new Dictionary<string, HashSet<string>>();
-            foreach (var entry in GetEntries())
+            foreach (IPackageEntry entry in GetEntries())
             {
-                var split = entry.FullName.Split('/');
-                var joined = "";
-                for (var i = 0; i < split.Length; i++)
+                string[] split = entry.FullName.Split('/');
+                string joined = "";
+                for (int i = 0; i < split.Length; i++)
                 {
-                    var sub = split[i];
-                    var name = joined.Length == 0 ? sub : joined + '/' + sub;
+                    string sub = split[i];
+                    string name = joined.Length == 0 ? sub : joined + '/' + sub;
                     if (i == split.Length - 1)
                     {
                         // File name
@@ -129,19 +129,19 @@ namespace CBRE.Packages.Zip
 
         public IEnumerable<string> SearchDirectories(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectDirectories(path) : GetDirectories(path);
+            IEnumerable<string> files = recursive ? CollectDirectories(path) : GetDirectories(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         public IEnumerable<string> SearchFiles(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectFiles(path) : GetFiles(path);
+            IEnumerable<string> files = recursive ? CollectFiles(path) : GetFiles(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         private IEnumerable<string> CollectDirectories(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].Where(x => x.Length > 0));
@@ -152,7 +152,7 @@ namespace CBRE.Packages.Zip
 
         private IEnumerable<string> CollectFiles(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].SelectMany(CollectFiles));
@@ -166,14 +166,14 @@ namespace CBRE.Packages.Zip
 
         private string GetName(string path)
         {
-            var idx = path.LastIndexOf('/');
+            int idx = path.LastIndexOf('/');
             if (idx < 0) return path;
             return path.Substring(idx + 1);
         }
 
         public Stream OpenFile(string path)
         {
-            var entry = GetEntry(path);
+            IPackageEntry entry = GetEntry(path);
             if (entry == null) throw new FileNotFoundException();
             return OpenStream(entry);
         }

@@ -31,10 +31,10 @@ namespace CBRE.Shell.Settings
             {
                 _shell.WindowState = store.Get("WindowState", _shell.WindowState);
 
-                foreach (var dp in _shell.GetDockPanels())
+                foreach (Controls.DockedPanel dp in _shell.GetDockPanels())
                 {
-                    var dph = $"DockPanel:{dp.Name}:Hidden";
-                    var dps = $"DockPanel:{dp.Name}:Size";
+                    string dph = $"DockPanel:{dp.Name}:Hidden";
+                    string dps = $"DockPanel:{dp.Name}:Size";
                     dp.Hidden = store.Get(dph, dp.Hidden);
                     dp.DockDimension = store.Get(dps, dp.DockDimension);
                 }
@@ -44,7 +44,7 @@ namespace CBRE.Shell.Settings
         public void StoreValues(ISettingsStore store)
         {
             store.Set("WindowState", Convert.ToString(_shell.WindowState, CultureInfo.InvariantCulture));
-            foreach (var dp in _shell.GetDockPanels())
+            foreach (Controls.DockedPanel dp in _shell.GetDockPanels())
             {
                 store.Set($"DockPanel:{dp.Name}:Hidden", dp.Hidden);
                 store.Set($"DockPanel:{dp.Name}:Size", dp.DockDimension);

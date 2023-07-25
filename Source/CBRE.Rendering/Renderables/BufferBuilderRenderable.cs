@@ -31,14 +31,14 @@ namespace CBRE.Rendering.Renderables
 
         public void Render(RenderContext context, IPipeline pipeline, IViewport viewport, CommandList cl)
         {
-            for (var i = 0; i < _buffer.NumBuffers; i++)
+            for (int i = 0; i < _buffer.NumBuffers; i++)
             {
-                var groups = _buffer.IndirectBufferGroups[i].Where(x => x.Pipeline == pipeline.Type && !x.HasTransparency).Where(x => x.Camera == CameraType.Both || x.Camera == viewport.Camera.Type).ToList();
+                List<BufferGroup> groups = _buffer.IndirectBufferGroups[i].Where(x => x.Pipeline == pipeline.Type && !x.HasTransparency).Where(x => x.Camera == CameraType.Both || x.Camera == viewport.Camera.Type).ToList();
                 if (!groups.Any()) continue;
 
                 cl.SetVertexBuffer(0, _buffer.VertexBuffers[i]);
                 cl.SetIndexBuffer(_buffer.IndexBuffers[i], IndexFormat.UInt32);
-                foreach (var bg in groups)
+                foreach (BufferGroup bg in groups)
                 {
                     pipeline.Bind(context, cl, bg.Binding);
                     _buffer.IndirectBuffers[i].DrawIndexed(cl, bg.Offset * IndSize, bg.Count, 20);
@@ -48,9 +48,9 @@ namespace CBRE.Rendering.Renderables
 
         public IEnumerable<ILocation> GetLocationObjects(IPipeline pipeline, IViewport viewport)
         {
-            for (var i = 0; i < _buffer.NumBuffers; i++)
+            for (int i = 0; i < _buffer.NumBuffers; i++)
             {
-                foreach (var group in _buffer.IndirectBufferGroups[i])
+                foreach (BufferGroup group in _buffer.IndirectBufferGroups[i])
                 {
                     if (group.Pipeline != pipeline.Type || !group.HasTransparency) continue;
                     if (group.Camera != CameraType.Both && group.Camera != viewport.Camera.Type) continue;
@@ -61,10 +61,10 @@ namespace CBRE.Rendering.Renderables
 
         public void Render(RenderContext context, IPipeline pipeline, IViewport viewport, CommandList cl, ILocation locationObject)
         {
-            var groupLocation = (GroupLocation)locationObject;
+            GroupLocation groupLocation = (GroupLocation)locationObject;
 
-            var i = groupLocation.Index;
-            var bg = groupLocation.Group;
+            int i = groupLocation.Index;
+            BufferGroup bg = groupLocation.Group;
 
             cl.SetVertexBuffer(0, _buffer.VertexBuffers[i]);
             cl.SetIndexBuffer(_buffer.IndexBuffers[i], IndexFormat.UInt32);

@@ -34,14 +34,14 @@ namespace CBRE.BspEditor.Modification.Operations
         {
             _action = async x =>
             {
-                var ch = await operation.Perform(x);
+                Change ch = await operation.Perform(x);
                 _change = c => c.Merge(ch);
             };
         }
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var change = new Change(document);
+            Change change = new Change(document);
             await _action(document);
             _change(change);
             return change;

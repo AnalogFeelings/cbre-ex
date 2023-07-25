@@ -34,7 +34,7 @@ namespace CBRE.Shell.Settings.Editors
             Combobox.DisplayMember = "Label";
             Combobox.ValueMember = "Value";
 
-            var values = enumType.GetFields(BindingFlags.Static | BindingFlags.Public);
+            FieldInfo[] values = enumType.GetFields(BindingFlags.Static | BindingFlags.Public);
             Combobox.Items.AddRange(values.Select(x => new EnumValue(x)).OfType<object>().ToArray());
 
             Combobox.SelectedIndexChanged += (o, e) => OnValueChanged?.Invoke(this, Key);

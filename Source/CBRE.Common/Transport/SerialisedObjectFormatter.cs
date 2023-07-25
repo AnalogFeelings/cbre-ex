@@ -31,9 +31,9 @@ namespace CBRE.Common.Transport
         /// <param name="objects">The objects to serialise</param>
         public void Serialize(Stream serializationStream, IEnumerable<SerialisedObject> objects)
         {
-            using (var writer = new StreamWriter(serializationStream, Encoding.UTF8, 1024, true))
+            using (StreamWriter writer = new StreamWriter(serializationStream, Encoding.UTF8, 1024, true))
             {
-                foreach (var obj in objects.Where(x => x != null))
+                foreach (SerialisedObject obj in objects.Where(x => x != null))
                 {
                     Print(obj, writer);
                 }
@@ -47,7 +47,7 @@ namespace CBRE.Common.Transport
         /// <returns>The deserialised objects</returns>
         public IEnumerable<SerialisedObject> Deserialize(Stream serializationStream)
         {
-            using (var reader = new StreamReader(serializationStream, Encoding.UTF8, true, 1024, true))
+            using (StreamReader reader = new StreamReader(serializationStream, Encoding.UTF8, true, 1024, true))
             {
                 return Parse(reader);
             }
@@ -74,13 +74,13 @@ namespace CBRE.Common.Transport
         /// <param name="tabs">The number of tabs to indent this value to</param>
         private static void Print(SerialisedObject obj, TextWriter tw, int tabs = 0)
         {
-            var preTabStr = new string(' ', tabs * 4);
-            var postTabStr = new string(' ', (tabs + 1) * 4);
+            string preTabStr = new string(' ', tabs * 4);
+            string postTabStr = new string(' ', (tabs + 1) * 4);
             tw.Write(preTabStr);
             tw.WriteLine(obj.Name);
             tw.Write(preTabStr);
             tw.WriteLine("{");
-            foreach (var kv in obj.Properties)
+            foreach (KeyValuePair<string, string> kv in obj.Properties)
             {
                 tw.Write(postTabStr);
                 tw.Write('"');
@@ -92,7 +92,7 @@ namespace CBRE.Common.Transport
                 tw.Write('"');
                 tw.WriteLine();
             }
-            foreach (var child in obj.Children)
+            foreach (SerialisedObject child in obj.Children)
             {
                 Print(child, tw, tabs + 1);
             }
@@ -129,7 +129,7 @@ namespace CBRE.Common.Transport
         private static string CleanLine(string line)
         {
             if (line == null) return null;
-            var ret = line;
+            string ret = line;
             if (ret.Contains("//")) ret = ret.Substring(0, ret.IndexOf("//", StringComparison.Ordinal)); // Comments
             return ret.Trim();
         }
@@ -142,8 +142,8 @@ namespace CBRE.Common.Transport
         /// <returns>The parsed structure</returns>
         private static SerialisedObject ParseStructure(TextReader reader, string name)
         {
-            var spl = name.SplitWithQuotes();
-            var gs = new SerialisedObject(spl[0]);
+            string[] spl = name.SplitWithQuotes();
+            SerialisedObject gs = new SerialisedObject(spl[0]);
             string line;
             if (spl.Length != 2 || spl[1] != "{")
             {
@@ -174,7 +174,7 @@ namespace CBRE.Common.Transport
         private static bool ValidStructStartString(string s)
         {
             if (string.IsNullOrEmpty(s)) return false;
-            var split = s.SplitWithQuotes();
+            string[] split = s.SplitWithQuotes();
             return split.Length == 1 || (split.Length == 2 && split[1] == "{");
         }
 
@@ -186,7 +186,7 @@ namespace CBRE.Common.Transport
         private static bool ValidStructPropertyString(string s)
         {
             if (string.IsNullOrEmpty(s)) return false;
-            var split = s.SplitWithQuotes();
+            string[] split = s.SplitWithQuotes();
             return split.Length == 2;
         }
 
@@ -197,7 +197,7 @@ namespace CBRE.Common.Transport
         /// <param name="prop">The property string to parse</param>
         private static void ParseProperty(SerialisedObject gs, string prop)
         {
-            var split = prop.SplitWithQuotes();
+            string[] split = prop.SplitWithQuotes();
             gs.Properties.Add(new KeyValuePair<string, string>(split[0], (split[1] ?? "").Replace('`', '"')));
         }
         #endregion

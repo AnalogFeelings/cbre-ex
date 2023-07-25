@@ -43,10 +43,10 @@ namespace CBRE.BspEditor.Editing.Components
             _visibleOnly = true;
             _selectedOnly = false;
 
-            using (var icon = new Bitmap(Resources.Menu_CheckForProblems))
+            using (Bitmap icon = new Bitmap(Resources.Menu_CheckForProblems))
             {
-                var ptr = icon.GetHicon();
-                var ico = Icon.FromHandle(ptr);
+                IntPtr ptr = icon.GetHicon();
+                Icon ico = Icon.FromHandle(ptr);
                 Icon = ico;
                 ico.Dispose();
             }
@@ -55,7 +55,7 @@ namespace CBRE.BspEditor.Editing.Components
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -143,7 +143,7 @@ namespace CBRE.BspEditor.Editing.Components
             _problems = doc == null ? new List<ProblemWrapper>() : await Check(doc, GetFilter(_visibleOnly, _selectedOnly));
             this.InvokeLater(() =>
             {
-                var si = ProblemsList.SelectedIndex;
+                int si = ProblemsList.SelectedIndex;
                 ProblemsList.BeginUpdate();
                 ProblemsList.Items.Clear();
                 ProblemsList.Items.AddRange(_problems.OfType<object>().ToArray());
@@ -166,15 +166,15 @@ namespace CBRE.BspEditor.Editing.Components
 
         private async Task<List<ProblemWrapper>> Check(MapDocument map, Predicate<IMapObject> filter)
         {
-            var list = new List<ProblemWrapper>();
+            List<ProblemWrapper> list = new List<ProblemWrapper>();
 
-            var index = 1;
-            foreach (var checker in _problemCheckers)
+            int index = 1;
+            foreach (Lazy<IProblemCheck> checker in _problemCheckers)
             {
-                var probs = await checker.Value.Check(map, filter);
-                foreach (var p in probs)
+                List<Problem> probs = await checker.Value.Check(map, filter);
+                foreach (Problem p in probs)
                 {
-                    var w = new ProblemWrapper(index++, map, p, checker.Value);
+                    ProblemWrapper w = new ProblemWrapper(index++, map, p, checker.Value);
                     list.Add(w);
                 }
             }
@@ -184,7 +184,7 @@ namespace CBRE.BspEditor.Editing.Components
 
         private void UpdateSelectedProblem(object sender, EventArgs e)
         {
-            var sel = ProblemsList.SelectedItem as ProblemWrapper;
+            ProblemWrapper sel = ProblemsList.SelectedItem as ProblemWrapper;
             DescriptionTextBox.Text = sel?.Details ?? "";
             btnGoToError.Enabled = sel?.Problem.Objects.Any() == true;
             btnFix.Enabled = btnFixAllOfType.Enabled = sel?.CanFix == true;
@@ -201,8 +201,8 @@ namespace CBRE.BspEditor.Editing.Components
 
         private void OpenUrl(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var sel = ProblemsList.SelectedItem as ProblemWrapper;
-            var uri = sel?.Url;
+            ProblemWrapper sel = ProblemsList.SelectedItem as ProblemWrapper;
+            Uri uri = sel?.Url;
             if (uri != null)
             {
                 Process.Start(uri.ToString());
@@ -211,30 +211,30 @@ namespace CBRE.BspEditor.Editing.Components
 
         private async void GoToError(object sender, EventArgs e)
         {
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             if (doc == null) return;
-            
-            var sel = ProblemsList.SelectedItem as ProblemWrapper;
+
+            ProblemWrapper sel = ProblemsList.SelectedItem as ProblemWrapper;
             if (sel == null || !sel.Problem.Objects.Any()) return;
 
-            var op = new Transaction(
+            Transaction op = new Transaction(
                 new Deselect(doc.Selection.Except(sel.Problem.Objects)),
                 new Select(sel.Problem.Objects)
             );
             await MapDocumentOperation.Perform(doc, op);
 
-            var bb = doc.Selection.GetSelectionBoundingBox();
+            DataStructures.Geometric.Box bb = doc.Selection.GetSelectionBoundingBox();
             await Oy.Publish("MapDocument:Viewport:Focus2D", bb);
             await Oy.Publish("MapDocument:Viewport:Focus3D", bb);
         }
 
         private async Task FixErrors(IEnumerable<ProblemWrapper> problems)
         {
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             if (doc == null) return;
 
-            var fixes = problems.Where(x => x.CanFix && x.Document == doc).ToList();
-            foreach (var pw in fixes)
+            List<ProblemWrapper> fixes = problems.Where(x => x.CanFix && x.Document == doc).ToList();
+            foreach (ProblemWrapper pw in fixes)
             {
                 await pw.Checker.Fix(doc, pw.Problem);
             }
@@ -247,7 +247,7 @@ namespace CBRE.BspEditor.Editing.Components
 
         private async void FixAllOfType(object sender, EventArgs e)
         {
-            var sel = ProblemsList.SelectedItem as ProblemWrapper;
+            ProblemWrapper sel = ProblemsList.SelectedItem as ProblemWrapper;
             if (sel == null) return;
             await FixErrors(_problems.Where(x => x.Checker == sel.Checker));
         }

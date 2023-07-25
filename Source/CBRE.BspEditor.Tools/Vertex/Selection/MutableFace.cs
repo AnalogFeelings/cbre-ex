@@ -31,7 +31,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
 
         public void Transform(Matrix4x4 matrix)
         {
-            foreach (var v in Vertices)
+            foreach (MutableVertex v in Vertices)
             {
                 v.Set(Vector3.Transform(v.Position, matrix));
             }
@@ -39,7 +39,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
 
         public virtual IEnumerable<Line> GetEdges()
         {
-            for (var i = 0; i < Vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
                 yield return new Line(Vertices[i].Position, Vertices[(i + 1) % Vertices.Count].Position);
             }
@@ -52,17 +52,17 @@ namespace CBRE.BspEditor.Tools.Vertex.Selection
                 return Vertices.Select(x => Tuple.Create(x.Position, 0f, 0f));
             }
 
-            var udiv = width * Texture.XScale;
-            var uadd = Texture.XShift / width;
-            var vdiv = height * Texture.YScale;
-            var vadd = Texture.YShift / height;
+            float udiv = width * Texture.XScale;
+            float uadd = Texture.XShift / width;
+            float vdiv = height * Texture.YScale;
+            float vadd = Texture.YShift / height;
 
             return Vertices.Select(x => Tuple.Create(x.Position, x.Position.Dot(Texture.UAxis) / udiv + uadd, x.Position.Dot(Texture.VAxis) / vdiv + vadd));
         }
 
         public Face ToFace(UniqueNumberGenerator idGenerator)
         {
-            var f = new Face(idGenerator.Next("Face"))
+            Face f = new Face(idGenerator.Next("Face"))
             {
                 Texture = Texture.Clone()
             };

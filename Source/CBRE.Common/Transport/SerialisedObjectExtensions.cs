@@ -22,8 +22,8 @@ namespace CBRE.Common.Transport
         /// <param name="replace">True to replace any properties with the same key</param>
         public static void Set<T>(this SerialisedObject so, string key, T value, bool replace = true)
         {
-            var conv = TypeDescriptor.GetConverter(typeof(T));
-            var v = conv.ConvertToString(null, CultureInfo.InvariantCulture, value);
+            TypeConverter conv = TypeDescriptor.GetConverter(typeof(T));
+            string v = conv.ConvertToString(null, CultureInfo.InvariantCulture, value);
             if (replace) so.Properties.RemoveAll(s => s.Key == key);
             so.Properties.Add(new KeyValuePair<string, string>(key, v));
         }
@@ -38,12 +38,12 @@ namespace CBRE.Common.Transport
         /// <returns>The property value, or the default value if the key wasn't found</returns>
         public static T Get<T>(this SerialisedObject so, string key, T defaultValue = default(T))
         {
-            var match = so.Properties.Where(x => x.Key == key).ToList();
+            List<KeyValuePair<string, string>> match = so.Properties.Where(x => x.Key == key).ToList();
             if (!match.Any()) return defaultValue;
             try
             {
-                var val = match[0].Value;
-                var conv = TypeDescriptor.GetConverter(typeof(T));
+                string val = match[0].Value;
+                TypeConverter conv = TypeDescriptor.GetConverter(typeof(T));
                 return (T) conv.ConvertFromString(null, CultureInfo.InvariantCulture, val);
             }
             catch
@@ -60,9 +60,9 @@ namespace CBRE.Common.Transport
         /// <param name="color">The value to set</param>
         public static void SetColor(this SerialisedObject so, string key, Color color)
         {
-            var r = Convert.ToString(color.R, CultureInfo.InvariantCulture);
-            var g = Convert.ToString(color.G, CultureInfo.InvariantCulture);
-            var b = Convert.ToString(color.B, CultureInfo.InvariantCulture);
+            string r = Convert.ToString(color.R, CultureInfo.InvariantCulture);
+            string g = Convert.ToString(color.G, CultureInfo.InvariantCulture);
+            string b = Convert.ToString(color.B, CultureInfo.InvariantCulture);
             Set(so, key, $"{r} {g} {b}");
         }
 
@@ -74,12 +74,12 @@ namespace CBRE.Common.Transport
         /// <returns>The property value as a colour</returns>
         public static Color GetColor(this SerialisedObject so, string key)
         {
-            var str = Get<string>(so, key) ?? "";
-            var spl = str.Split(' ');
+            string str = Get<string>(so, key) ?? "";
+            string[] spl = str.Split(' ');
             if (spl.Length != 3) spl = new[] {"0", "0", "0"};
-            byte.TryParse(spl[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var r);
-            byte.TryParse(spl[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var g);
-            byte.TryParse(spl[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var b);
+            byte.TryParse(spl[0], NumberStyles.Any, CultureInfo.InvariantCulture, out byte r);
+            byte.TryParse(spl[1], NumberStyles.Any, CultureInfo.InvariantCulture, out byte g);
+            byte.TryParse(spl[2], NumberStyles.Any, CultureInfo.InvariantCulture, out byte b);
             return Color.FromArgb(255, r, g, b);
         }
     }

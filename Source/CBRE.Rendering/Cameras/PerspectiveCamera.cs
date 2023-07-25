@@ -45,12 +45,12 @@ namespace CBRE.Rendering.Cameras
         {
             get
             {
-                var rot = Matrix4x4.CreateRotationX(_angles.Y) * Matrix4x4.CreateRotationZ(_angles.X);
+                Matrix4x4 rot = Matrix4x4.CreateRotationX(_angles.Y) * Matrix4x4.CreateRotationZ(_angles.X);
                 return Vector3.Transform(-Vector3.UnitZ, rot);
             }
             set
             {
-                var norm = value.LengthSquared() <= 0.01f ? Vector3.UnitY : Vector3.Normalize(value);
+                Vector3 norm = value.LengthSquared() <= 0.01f ? Vector3.UnitY : Vector3.Normalize(value);
                 _angles.Y = (float) (Math.Asin(norm.Z) + Math.PI / 2);
                 _angles.X = (float) (Math.Atan2(-norm.Y, -norm.X) + Math.PI / 2);
 
@@ -79,7 +79,7 @@ namespace CBRE.Rendering.Cameras
 
         internal PerspectiveCamera(string serialised) : this()
         {
-            var tags = (serialised ?? "").Split(',', '/');
+            string[] tags = (serialised ?? "").Split(',', '/');
             if (tags.Length < 3) return;
 
             float p, x = 0, y = 0, z = 0;
@@ -112,15 +112,15 @@ namespace CBRE.Rendering.Cameras
 
         private Matrix4x4 GetCameraMatrix()
         {
-            var rot = Matrix4x4.CreateFromYawPitchRoll(-Angles.Z, -Angles.Y, -Angles.X);
-            var mov = Matrix4x4.CreateTranslation(-_position);
+            Matrix4x4 rot = Matrix4x4.CreateFromYawPitchRoll(-Angles.Z, -Angles.Y, -Angles.X);
+            Matrix4x4 mov = Matrix4x4.CreateTranslation(-_position);
             return mov * rot;
         }
 
         private Matrix4x4 GetViewportMatrix(int width, int height)
         {
             const float near = 1.0f;
-            var ratio = width / (float)height;
+            float ratio = width / (float)height;
             if (ratio <= 0) ratio = 1;
             return Matrix4x4.CreatePerspectiveFieldOfView((float) MathHelper.DegreesToRadians(FOV), ratio, near, ClipDistance);
         }
@@ -128,32 +128,32 @@ namespace CBRE.Rendering.Cameras
         public Vector3 ScreenToWorld(Vector3 screen)
         {
             screen = new Vector3(screen.X, screen.Y, 1);
-            var viewport = new[] { 0, 0, Width, Height };
-            var pm = Matrix4x4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(FOV), Width / (float)Height, 1.0f, 50000);
-            var vm = GetCameraMatrix();
+            int[] viewport = new[] { 0, 0, Width, Height };
+            Matrix4x4 pm = Matrix4x4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(FOV), Width / (float)Height, 1.0f, 50000);
+            Matrix4x4 vm = GetCameraMatrix();
             return MathFunctions.Unproject(screen, viewport, pm, vm);
         }
 
         public Vector3 WorldToScreen(Vector3 world)
         {
-            var viewport = new[] { 0, 0, Width, Height };
-            var pm = Matrix4x4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(FOV), Width / (float)Height, 1.0f, 50000);
-            var vm = GetCameraMatrix();
+            int[] viewport = new[] { 0, 0, Width, Height };
+            Matrix4x4 pm = Matrix4x4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(FOV), Width / (float)Height, 1.0f, 50000);
+            Matrix4x4 vm = GetCameraMatrix();
 
-            var proj = MathFunctions.Project(world, viewport, pm, vm);
+            Vector3 proj = MathFunctions.Project(world, viewport, pm, vm);
             proj.Y = Height - proj.Y;
             return proj;
         }
 
         public (Vector3, Vector3) CastRayFromScreen(Vector3 screen)
         {
-            var near = new Vector3(screen.X, Height - screen.Y, 0);
-            var far = new Vector3(screen.X, Height - screen.Y, 1);
-            var pm = Matrix4x4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(FOV), Width / (float)Height, 1.0f, 50000);
-            var vm = GetCameraMatrix();
-            var viewport = new[] { 0, 0, Width, Height };
-            var un = MathFunctions.Unproject(near, viewport, pm, vm);
-            var uf = MathFunctions.Unproject(far, viewport, pm, vm);
+            Vector3 near = new Vector3(screen.X, Height - screen.Y, 0);
+            Vector3 far = new Vector3(screen.X, Height - screen.Y, 1);
+            Matrix4x4 pm = Matrix4x4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(FOV), Width / (float)Height, 1.0f, 50000);
+            Matrix4x4 vm = GetCameraMatrix();
+            int[] viewport = new[] { 0, 0, Width, Height };
+            Vector3 un = MathFunctions.Unproject(near, viewport, pm, vm);
+            Vector3 uf = MathFunctions.Unproject(far, viewport, pm, vm);
             return (un, uf);
         }
 
@@ -205,13 +205,13 @@ namespace CBRE.Rendering.Cameras
 
         public void Pan(float degrees)
         {
-            var rad = degrees * (Pi / 180);
+            float rad = degrees * (Pi / 180);
             _angles.X += rad;
         }
 
         public void Tilt(float degrees)
         {
-            var rad = degrees * (Pi / 180);
+            float rad = degrees * (Pi / 180);
             _angles.Y -= rad;
             if (_angles.Y < 0.01f) _angles.Y = 0.01f;
             if (_angles.Y > Pi - 0.01f) _angles.Y = Pi - 0.01f;
@@ -220,21 +220,21 @@ namespace CBRE.Rendering.Cameras
         public void Advance(float units)
         {
             if (float.IsNaN(units) || float.IsInfinity(units)) return;
-            var add = Direction * units;
+            Vector3 add = Direction * units;
             _position += add;
         }
 
         public void Strafe(float units)
         {
             if (float.IsNaN(units) || float.IsInfinity(units)) return;
-            var add = GetRight() * units;
+            Vector3 add = GetRight() * units;
             _position += add;
         }
 
         public void Ascend(float units)
         {
             if (float.IsNaN(units) || float.IsInfinity(units)) return;
-            var add = GetUp() * units;
+            Vector3 add = GetUp() * units;
             _position += add;
         }
 
@@ -246,19 +246,19 @@ namespace CBRE.Rendering.Cameras
 
         public Vector3 GetUp()
         {
-            var normal = Vector3.Cross(GetRight(), Direction);
+            Vector3 normal = Vector3.Cross(GetRight(), Direction);
             normal = Vector3.Normalize(normal);
             return normal;
         }
         
         public Vector3 GetRight()
         {
-            var temp = Direction;
+            Vector3 temp = Direction;
             temp.Z = 0;
             if (temp.Length() < 0.001f) temp = Vector3.UnitY;
             temp = Vector3.Normalize(temp);
 
-            var normal = Vector3.Cross(temp, Vector3.UnitZ);
+            Vector3 normal = Vector3.Cross(temp, Vector3.UnitZ);
             normal = Vector3.Normalize(normal);
 
             return normal;

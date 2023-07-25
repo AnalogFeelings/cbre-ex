@@ -13,10 +13,10 @@ namespace CBRE.BspEditor.Tools.Vertex.Errors
 
         public IEnumerable<VertexError> GetErrors(VertexSolid solid)
         {
-            foreach (var face in solid.Copy.Faces)
+            foreach (MutableFace face in solid.Copy.Faces)
             {
-                var overlapping = face.Vertices.GroupBy(x => x.Position.Round(2)).Where(x => x.Count() > 1).ToList();
-                foreach (var ol in overlapping)
+                List<IGrouping<System.Numerics.Vector3, MutableVertex>> overlapping = face.Vertices.GroupBy(x => x.Position.Round(2)).Where(x => x.Count() > 1).ToList();
+                foreach (IGrouping<System.Numerics.Vector3, MutableVertex> ol in overlapping)
                 {
                     yield return new VertexError(Key, solid).Add(face).Add(ol);
                 }

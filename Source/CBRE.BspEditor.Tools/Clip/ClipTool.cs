@@ -92,7 +92,7 @@ namespace CBRE.BspEditor.Tools.Clip
         
         private void CycleClipSide()
         {
-            var side = (int) _side;
+            int side = (int) _side;
             side = (side + 1) % Enum.GetValues(typeof (ClipSide)).Length;
             _side = (ClipSide) side;
         }
@@ -101,12 +101,12 @@ namespace CBRE.BspEditor.Tools.Clip
         {
             if (_clipPlanePoint1 == null || _clipPlanePoint2 == null || _clipPlanePoint3 == null) return ClipState.None;
 
-            var p = camera.Flatten(camera.ScreenToWorld(new Vector3(x, y, 0)));
-            var p1 = camera.Flatten(_clipPlanePoint1.Value);
-            var p2 = camera.Flatten(_clipPlanePoint2.Value);
-            var p3 = camera.Flatten(_clipPlanePoint3.Value);
+            Vector3 p = camera.Flatten(camera.ScreenToWorld(new Vector3(x, y, 0)));
+            Vector3 p1 = camera.Flatten(_clipPlanePoint1.Value);
+            Vector3 p2 = camera.Flatten(_clipPlanePoint2.Value);
+            Vector3 p3 = camera.Flatten(_clipPlanePoint3.Value);
 
-            var d = 5 / camera.Zoom;
+            float d = 5 / camera.Zoom;
 
             if (p.X >= p1.X - d && p.X <= p1.X + d && p.Y >= p1.Y - d && p.Y <= p1.Y + d) return ClipState.MovingPoint1;
             if (p.X >= p2.X - d && p.X <= p2.X + d && p.Y >= p2.Y - d && p.Y <= p2.Y + d) return ClipState.MovingPoint2;
@@ -119,8 +119,8 @@ namespace CBRE.BspEditor.Tools.Clip
         {
             _prevState = _state;
 
-            var point = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
-            var st = GetStateAtPoint(e.X, e.Y, camera);
+            Vector3 point = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
+            ClipState st = GetStateAtPoint(e.X, e.Y, camera);
             if (_state == ClipState.None || st == ClipState.None)
             {
                 _state = ClipState.Drawing;
@@ -139,10 +139,10 @@ namespace CBRE.BspEditor.Tools.Clip
 
         protected override void MouseMove(MapDocument document, MapViewport vp, OrthographicCamera camera, ViewportEvent e)
         {
-            var viewport = vp;
+            MapViewport viewport = vp;
 
-            var point = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
-            var st = GetStateAtPoint(e.X, e.Y, camera);
+            Vector3 point = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
+            ClipState st = GetStateAtPoint(e.X, e.Y, camera);
             if (_state == ClipState.Drawing)
             {
                 _state = ClipState.MovingPoint2;
@@ -153,10 +153,10 @@ namespace CBRE.BspEditor.Tools.Clip
             else if (_state == ClipState.MovingPoint1)
             {
                 // Move point 1
-                var cp1 = camera.GetUnusedCoordinate(_clipPlanePoint1.Value) + point;
+                Vector3 cp1 = camera.GetUnusedCoordinate(_clipPlanePoint1.Value) + point;
                 if (KeyboardState.Ctrl)
                 {
-                    var diff = _clipPlanePoint1 - cp1;
+                    Vector3? diff = _clipPlanePoint1 - cp1;
                     _clipPlanePoint2 -= diff;
                     _clipPlanePoint3 -= diff;
                 }
@@ -165,10 +165,10 @@ namespace CBRE.BspEditor.Tools.Clip
             else if (_state == ClipState.MovingPoint2)
             {
                 // Move point 2
-                var cp2 = camera.GetUnusedCoordinate(_clipPlanePoint2.Value) + point;
+                Vector3 cp2 = camera.GetUnusedCoordinate(_clipPlanePoint2.Value) + point;
                 if (KeyboardState.Ctrl)
                 {
-                    var diff = _clipPlanePoint2 - cp2;
+                    Vector3? diff = _clipPlanePoint2 - cp2;
                     _clipPlanePoint1 -= diff;
                     _clipPlanePoint3 -= diff;
                 }
@@ -177,10 +177,10 @@ namespace CBRE.BspEditor.Tools.Clip
             else if (_state == ClipState.MovingPoint3)
             {
                 // Move point 3
-                var cp3 = camera.GetUnusedCoordinate(_clipPlanePoint3.Value) + point;
+                Vector3 cp3 = camera.GetUnusedCoordinate(_clipPlanePoint3.Value) + point;
                 if (KeyboardState.Ctrl)
                 {
-                    var diff = _clipPlanePoint3 - cp3;
+                    Vector3? diff = _clipPlanePoint3 - cp3;
                     _clipPlanePoint1 -= diff;
                     _clipPlanePoint2 -= diff;
                 }
@@ -229,15 +229,15 @@ namespace CBRE.BspEditor.Tools.Clip
 
         private void PerformClip(MapDocument document)
         {
-            var objects = document.Selection.OfType<Solid>().ToList();
+            List<Solid> objects = document.Selection.OfType<Solid>().ToList();
             if (!objects.Any()) return;
 
-            var plane = new Plane(_clipPlanePoint1.Value, _clipPlanePoint2.Value, _clipPlanePoint3.Value);
-            var clip = new Transaction();
-            var found = false;
-            foreach (var solid in objects)
+            Plane plane = new Plane(_clipPlanePoint1.Value, _clipPlanePoint2.Value, _clipPlanePoint3.Value);
+            Transaction clip = new Transaction();
+            bool found = false;
+            foreach (Solid solid in objects)
             {
-                solid.Split(document.Map.NumberGenerator, plane, out var backSolid, out var frontSolid);
+                solid.Split(document.Map.NumberGenerator, plane, out Solid backSolid, out Solid frontSolid);
                 found = true;
                 
                 // Remove the clipped solid
@@ -268,9 +268,9 @@ namespace CBRE.BspEditor.Tools.Clip
             if (_state != ClipState.None && _clipPlanePoint1 != null && _clipPlanePoint2 != null && _clipPlanePoint3 != null)
             {
                 // Draw the lines
-                var p1 = _clipPlanePoint1.Value;
-                var p2 = _clipPlanePoint2.Value;
-                var p3 = _clipPlanePoint3.Value;
+                Vector3 p1 = _clipPlanePoint1.Value;
+                Vector3 p2 = _clipPlanePoint2.Value;
+                Vector3 p3 = _clipPlanePoint3.Value;
 
                 builder.Append(
                     new []
@@ -291,28 +291,28 @@ namespace CBRE.BspEditor.Tools.Clip
                     && !p1.EquivalentTo(p3)
                     && !document.Selection.IsEmpty)
                 {
-                    var plane = new Plane(p1, p2, p3);
-                    var pp = plane.ToPrecisionPlane();
+                    Plane plane = new Plane(p1, p2, p3);
+                    DataStructures.Geometric.Precision.Plane pp = plane.ToPrecisionPlane();
 
                     // Draw the clipped solids
-                    var faces = new List<Polygon>();
-                    foreach (var solid in document.Selection.OfType<Solid>().ToList())
+                    List<Polygon> faces = new List<Polygon>();
+                    foreach (Solid solid in document.Selection.OfType<Solid>().ToList())
                     {
-                        var s = solid.ToPolyhedron().ToPrecisionPolyhedron();
-                        s.Split(pp, out var back, out var front);
+                        DataStructures.Geometric.Precision.Polyhedron s = solid.ToPolyhedron().ToPrecisionPolyhedron();
+                        s.Split(pp, out DataStructures.Geometric.Precision.Polyhedron back, out DataStructures.Geometric.Precision.Polyhedron front);
 
                         if (_side != ClipSide.Front && back != null) faces.AddRange(back.Polygons.Select(x => x.ToStandardPolygon()));
                         if (_side != ClipSide.Back && front != null) faces.AddRange(front.Polygons.Select(x => x.ToStandardPolygon()));
                     }
 
-                    var verts = new List<VertexStandard>();
-                    var indices = new List<int>();
+                    List<VertexStandard> verts = new List<VertexStandard>();
+                    List<int> indices = new List<int>();
 
-                    foreach (var polygon in faces)
+                    foreach (Polygon polygon in faces)
                     {
-                        var c = verts.Count;
+                        int c = verts.Count;
                         verts.AddRange(polygon.Vertices.Select(x => new VertexStandard { Position = x, Colour = Vector4.One, Tint = Vector4.One }));
-                        for (var i = 0; i < polygon.Vertices.Count; i++)
+                        for (int i = 0; i < polygon.Vertices.Count; i++)
                         {
                             indices.Add(c + i);
                             indices.Add(c + (i + 1) % polygon.Vertices.Count);
@@ -325,29 +325,29 @@ namespace CBRE.BspEditor.Tools.Clip
                     );
 
                     // Draw the clipping plane
-                    
-                    var poly = new DataStructures.Geometric.Precision.Polygon(pp);
-                    var bbox = document.Selection.GetSelectionBoundingBox();
-                    var point = bbox.Center;
-                    foreach (var boxPlane in bbox.GetBoxPlanes())
+
+                    DataStructures.Geometric.Precision.Polygon poly = new DataStructures.Geometric.Precision.Polygon(pp);
+                    Box bbox = document.Selection.GetSelectionBoundingBox();
+                    Vector3 point = bbox.Center;
+                    foreach (Plane boxPlane in bbox.GetBoxPlanes())
                     {
-                        var proj = boxPlane.Project(point);
-                        var dist = (point - proj).Length() * 0.1f;
-                        var pln = new Plane(boxPlane.Normal, proj + boxPlane.Normal * Math.Max(dist, 100)).ToPrecisionPlane();
-                        if (poly.Split(pln, out var b, out _)) poly = b;
+                        Vector3 proj = boxPlane.Project(point);
+                        float dist = (point - proj).Length() * 0.1f;
+                        DataStructures.Geometric.Precision.Plane pln = new Plane(boxPlane.Normal, proj + boxPlane.Normal * Math.Max(dist, 100)).ToPrecisionPlane();
+                        if (poly.Split(pln, out DataStructures.Geometric.Precision.Polygon b, out _)) poly = b;
                     }
 
                     verts.Clear();
                     indices.Clear();
 
-                    var clipPoly = poly.ToStandardPolygon();
-                    var colour = Color.FromArgb(64, Color.Turquoise).ToVector4();
+                    Polygon clipPoly = poly.ToStandardPolygon();
+                    Vector4 colour = Color.FromArgb(64, Color.Turquoise).ToVector4();
 
                     // Add the face in both directions so it renders on both sides
-                    var polies = new[] { clipPoly.Vertices.ToList(), clipPoly.Vertices.Reverse().ToList() };
-                    foreach (var p in polies)
+                    List<Vector3>[] polies = new[] { clipPoly.Vertices.ToList(), clipPoly.Vertices.Reverse().ToList() };
+                    foreach (List<Vector3> p in polies)
                     {
-                        var offs = verts.Count;
+                        int offs = verts.Count;
                         verts.AddRange(p.Select(x => new VertexStandard
                         {
                             Position = x,
@@ -356,7 +356,7 @@ namespace CBRE.BspEditor.Tools.Clip
                             Flags = VertexFlags.FlatColour
                         }));
 
-                        for (var i = 2; i < clipPoly.Vertices.Count; i++)
+                        for (int i = 2; i < clipPoly.Vertices.Count; i++)
                         {
                             indices.Add(offs);
                             indices.Add(offs + i - 1);
@@ -378,15 +378,15 @@ namespace CBRE.BspEditor.Tools.Clip
 
             if (_state != ClipState.None && _clipPlanePoint1 != null && _clipPlanePoint2 != null && _clipPlanePoint3 != null)
             {
-                var p1 = _clipPlanePoint1.Value;
-                var p2 = _clipPlanePoint2.Value;
-                var p3 = _clipPlanePoint3.Value;
-                var points = new[] {p1, p2, p3};
+                Vector3 p1 = _clipPlanePoint1.Value;
+                Vector3 p2 = _clipPlanePoint2.Value;
+                Vector3 p3 = _clipPlanePoint3.Value;
+                Vector3[] points = new[] {p1, p2, p3};
 
-                foreach (var p in points)
+                foreach (Vector3 p in points)
                 {
                     const int size = 4;
-                    var spos = camera.WorldToScreen(p);
+                    Vector3 spos = camera.WorldToScreen(p);
                     
                     im.AddRectOutlineOpaque(new Vector2(spos.X - size, spos.Y - size), new Vector2(spos.X + size, spos.Y + size), Color.Black, Color.White);
                 }

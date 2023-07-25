@@ -27,7 +27,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -42,9 +42,9 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         public void PopulateChangeLists(MapDocument doc, List<Vg> newVisgroups, List<Vg> changedVisgroups, List<Vg> deletedVisgroups)
         {
-            foreach (var g in _visgroups)
+            foreach (Vg g in _visgroups)
             {
-                var dg = doc.Map.Data.Get<Vg>().FirstOrDefault(x => x.ID == g.ID);
+                Vg dg = doc.Map.Data.Get<Vg>().FirstOrDefault(x => x.ID == g.ID);
                 if (dg == null) newVisgroups.Add(g);
                 else if (dg.Name != g.Name || dg.Colour != g.Colour) changedVisgroups.Add(g);
             }
@@ -71,7 +71,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
             ColourPanel.BackColor = SystemColors.Control;
             if (visgroupItem != null)
             {
-                var visgroup = (Vg) visgroupItem.Tag;
+                Vg visgroup = (Vg) visgroupItem.Tag;
                 GroupName.Text = visgroup.Name;
                 ColourPanel.BackColor = visgroup.Colour;
                 ColourPanel.ForeColor = visgroup.Colour.GetIdealForegroundColour();
@@ -84,13 +84,13 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private long GetNewID()
         {
-            var ids = _visgroups.Select(x => x.ID).Union(_deleted.Select(x => x.ID)).ToList();
+            List<long> ids = _visgroups.Select(x => x.ID).Union(_deleted.Select(x => x.ID)).ToList();
             return Math.Max(1, ids.Any() ? ids.Max() + 1 : 1);
         }
 
         private void AddGroup(object sender, EventArgs e)
         {
-            var newGroup = new Vg
+            Vg newGroup = new Vg
             {
                                    ID = GetNewID(),
                                    Colour = Colour.GetRandomLightColour(),
@@ -106,10 +106,10 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private void RemoveGroup(object sender, EventArgs e)
         {
-            var visgroup = VisgroupPanel.SelectedVisgroup;
+            VisgroupItem visgroup = VisgroupPanel.SelectedVisgroup;
             if (visgroup == null) return;
 
-            var vg = (Vg) visgroup.Tag;
+            Vg vg = (Vg) visgroup.Tag;
             _visgroups.Remove(vg);
             _deleted.Add(vg);
             UpdateVisgroups();
@@ -117,10 +117,10 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private void GroupNameChanged(object sender, EventArgs e)
         {
-            var visgroup = VisgroupPanel.SelectedVisgroup;
+            VisgroupItem visgroup = VisgroupPanel.SelectedVisgroup;
             if (visgroup == null) return;
-            
-            var vg = (Vg) visgroup.Tag;
+
+            Vg vg = (Vg) visgroup.Tag;
             if (vg.Name == GroupName.Text) return;
             visgroup.Text = vg.Name = GroupName.Text;
             VisgroupPanel.UpdateVisgroupState(visgroup);
@@ -128,11 +128,11 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private void ColourClicked(object sender, EventArgs e)
         {
-            var visgroup = VisgroupPanel.SelectedVisgroup;
+            VisgroupItem visgroup = VisgroupPanel.SelectedVisgroup;
             if (visgroup == null) return;
-            
-            var vg = (Vg) visgroup.Tag;
-            using (var cp = new ColorDialog {Color = vg.Colour})
+
+            Vg vg = (Vg) visgroup.Tag;
+            using (ColorDialog cp = new ColorDialog {Color = vg.Colour})
             {
                 if (cp.ShowDialog() != DialogResult.OK) return;
 

@@ -24,7 +24,7 @@ namespace CBRE.BspEditor.Rendering.Overlay
             Oy.Subscribe<IDocument>("Document:Activated", DocumentActivated);
             Oy.Subscribe<IDocument>("Document:Closed", DocumentClosed);
 
-            foreach (var or in _overlayRenderables.Union(_documentOverlayRenderables))
+            foreach (IOverlayRenderable or in _overlayRenderables.Union(_documentOverlayRenderables))
             {
                 _engine.Value.Add(or);
             }
@@ -38,14 +38,14 @@ namespace CBRE.BspEditor.Rendering.Overlay
 
         private async Task DocumentActivated(IDocument doc)
         {
-            var md = doc as MapDocument;
+            MapDocument md = doc as MapDocument;
             _activeDocument = new WeakReference<MapDocument>(md);
             await UpdateDocument(md);
         }
 
         private async Task DocumentClosed(IDocument doc)
         {
-            if (_activeDocument.TryGetTarget(out var md) && md == doc)
+            if (_activeDocument.TryGetTarget(out MapDocument md) && md == doc)
             {
                 await UpdateDocument(null);
             }
@@ -53,7 +53,7 @@ namespace CBRE.BspEditor.Rendering.Overlay
 
         private Task UpdateDocument(MapDocument doc)
         {
-            foreach (var dor in _documentOverlayRenderables)
+            foreach (IMapDocumentOverlayRenderable dor in _documentOverlayRenderables)
             {
                 dor.SetActiveDocument(doc);
             }

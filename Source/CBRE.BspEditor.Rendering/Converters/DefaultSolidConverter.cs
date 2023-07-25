@@ -42,34 +42,34 @@ namespace CBRE.BspEditor.Rendering.Converters
         {
             faces = faces.Where(x => x.Vertices.Count > 2).ToList();
 
-            var displayFlags = document.Map.Data.GetOne<DisplayFlags>();
-            var hideNull = displayFlags?.HideNullTextures == true;
+            DisplayFlags displayFlags = document.Map.Data.GetOne<DisplayFlags>();
+            bool hideNull = displayFlags?.HideNullTextures == true;
 
             // Pack the vertices like this [ f1v1 ... f1vn ] ... [ fnv1 ... fnvn ]
-            var numVertices = (uint) faces.Sum(x => x.Vertices.Count);
+            uint numVertices = (uint) faces.Sum(x => x.Vertices.Count);
 
             // Pack the indices like this [ solid1 ... solidn ] [ wireframe1 ... wireframe n ]
-            var numSolidIndices = (uint) faces.Sum(x => (x.Vertices.Count - 2) * 3);
-            var numWireframeIndices = numVertices * 2;
+            uint numSolidIndices = (uint) faces.Sum(x => (x.Vertices.Count - 2) * 3);
+            uint numWireframeIndices = numVertices * 2;
 
-            var points = new VertexStandard[numVertices];
-            var indices = new uint[numSolidIndices + numWireframeIndices];
-            
-            var colour = (obj.IsSelected ? Color.Red : obj.Data.GetOne<ObjectColor>()?.Color ?? Color.White).ToVector4();
+            VertexStandard[] points = new VertexStandard[numVertices];
+            uint[] indices = new uint[numSolidIndices + numWireframeIndices];
+
+            Vector4 colour = (obj.IsSelected ? Color.Red : obj.Data.GetOne<ObjectColor>()?.Color ?? Color.White).ToVector4();
 
             //var c = obj.IsSelected ? Color.FromArgb(255, 128, 128) : Color.White;
             //var tint = new Vector4(c.R, c.G, c.B, c.A) / 255f;
-            var tint = Vector4.One;
+            Vector4 tint = Vector4.One;
 
-            var tc = await document.Environment.GetTextureCollection();
+            Environment.TextureCollection tc = await document.Environment.GetTextureCollection();
 
-            var pipeline = PipelineType.TexturedOpaque;
-            var entityHasTransparency = false;
-            var flags = obj.IsSelected ? VertexFlags.SelectiveTransformed : VertexFlags.None;
+            PipelineType pipeline = PipelineType.TexturedOpaque;
+            bool entityHasTransparency = false;
+            VertexFlags flags = obj.IsSelected ? VertexFlags.SelectiveTransformed : VertexFlags.None;
 
             // try and find the parent entity for render flags
             // TODO: this code is extremely specific to Goldsource and should be abstracted away
-            var parentEntity = obj.FindClosestParent(x => x is Entity) as Entity;
+            Entity parentEntity = obj.FindClosestParent(x => x is Entity) as Entity;
             if (parentEntity?.EntityData != null)
             {
                 const int renderModeColor = 1;
@@ -78,15 +78,15 @@ namespace CBRE.BspEditor.Rendering.Converters
                 const int renderModeSolid = 4;
                 const int renderModeAdditive = 5;
 
-                var rendermode = parentEntity.EntityData.Get("rendermode", 0);
-                var renderamt = parentEntity.EntityData.Get("renderamt", 255f) / 255;
+                int rendermode = parentEntity.EntityData.Get("rendermode", 0);
+                float renderamt = parentEntity.EntityData.Get("renderamt", 255f) / 255;
                 entityHasTransparency = renderamt < 0.99;
 
                 switch (rendermode)
                 {
                     case renderModeColor:
                         // Flat colour, use render colour and force it to run through the alpha tested pipeline
-                        var rendercolor = parentEntity.EntityData.GetVector3("rendercolor") / 255f ?? Vector3.One;
+                        Vector3 rendercolor = parentEntity.EntityData.GetVector3("rendercolor") / 255f ?? Vector3.One;
                         tint = new Vector4(rendercolor, renderamt);
                         flags |= VertexFlags.FlatColour | VertexFlags.AlphaTested;
                         pipeline = PipelineType.TexturedAlpha;
@@ -118,28 +118,28 @@ namespace CBRE.BspEditor.Rendering.Converters
 
             if (obj.IsSelected) tint *= new Vector4(1, 0.5f, 0.5f, 1);
 
-            var vi = 0u;
-            var si = 0u;
-            var wi = numSolidIndices;
-            foreach (var face in faces)
+            uint vi = 0u;
+            uint si = 0u;
+            uint wi = numSolidIndices;
+            foreach (Face face in faces)
             {
-                var opacity = tc.GetOpacity(face.Texture.Name);
-                var t = await tc.GetTextureItem(face.Texture.Name);
-                var w = t?.Width ?? 0;
-                var h = t?.Height ?? 0;
+                float opacity = tc.GetOpacity(face.Texture.Name);
+                TextureItem t = await tc.GetTextureItem(face.Texture.Name);
+                int w = t?.Width ?? 0;
+                int h = t?.Height ?? 0;
 
-                var tintModifier = new Vector4(1, 1, 1, opacity);
-                var extraFlags = t == null ? VertexFlags.FlatColour : VertexFlags.None;
+                Vector4 tintModifier = new Vector4(1, 1, 1, opacity);
+                VertexFlags extraFlags = t == null ? VertexFlags.FlatColour : VertexFlags.None;
 
-                var offs = vi;
-                var numFaceVerts = (uint)face.Vertices.Count;
+                uint offs = vi;
+                uint numFaceVerts = (uint)face.Vertices.Count;
 
-                var textureCoords = face.GetTextureCoordinates(w, h).ToList();
+                List<System.Tuple<Vector3, float, float>> textureCoords = face.GetTextureCoordinates(w, h).ToList();
 
-                var normal = face.Plane.Normal;
-                for (var i = 0; i < face.Vertices.Count; i++)
+                Vector3 normal = face.Plane.Normal;
+                for (int i = 0; i < face.Vertices.Count; i++)
                 {
-                    var v = face.Vertices[i];
+                    Vector3 v = face.Vertices[i];
                     points[vi++] = new VertexStandard
                     {
                         Position = v,
@@ -167,12 +167,12 @@ namespace CBRE.BspEditor.Rendering.Converters
                 }
             }
 
-            var groups = new List<BufferGroup>();
+            List<BufferGroup> groups = new List<BufferGroup>();
 
             uint texOffset = 0;
-            foreach (var f in faces)
+            foreach (Face f in faces)
             {
-                var texInd = (uint)(f.Vertices.Count - 2) * 3;
+                uint texInd = (uint)(f.Vertices.Count - 2) * 3;
 
                 if (hideNull && tc.IsToolTexture(f.Texture.Name))
                 {
@@ -180,13 +180,13 @@ namespace CBRE.BspEditor.Rendering.Converters
                     continue;
                 }
 
-                var opacity = tc.GetOpacity(f.Texture.Name);
-                var t = await tc.GetTextureItem(f.Texture.Name);
-                var transparent = entityHasTransparency || opacity < 0.95f || t?.Flags.HasFlag(TextureFlags.Transparent) == true;
+                float opacity = tc.GetOpacity(f.Texture.Name);
+                TextureItem t = await tc.GetTextureItem(f.Texture.Name);
+                bool transparent = entityHasTransparency || opacity < 0.95f || t?.Flags.HasFlag(TextureFlags.Transparent) == true;
 
-                var texture = t == null ? string.Empty : $"{document.Environment.ID}::{f.Texture.Name}";
+                string texture = t == null ? string.Empty : $"{document.Environment.ID}::{f.Texture.Name}";
 
-                var group = new BufferGroup(
+                BufferGroup group = new BufferGroup(
                     pipeline == PipelineType.TexturedOpaque && transparent ? PipelineType.TexturedAlpha : pipeline,
                     CameraType.Perspective, transparent, f.Origin, texture, texOffset, texInd
                 );
@@ -204,8 +204,8 @@ namespace CBRE.BspEditor.Rendering.Converters
             // Also push the untransformed wireframe when selected
             if (obj.IsSelected)
             {
-                for (var i = 0; i < points.Length; i++) points[i].Flags = VertexFlags.None;
-                var untransformedIndices = indices.Skip((int) numSolidIndices);
+                for (int i = 0; i < points.Length; i++) points[i].Flags = VertexFlags.None;
+                IEnumerable<uint> untransformedIndices = indices.Skip((int) numSolidIndices);
                 builder.Append(points, untransformedIndices, new[]
                 {
                     new BufferGroup(PipelineType.Wireframe, CameraType.Both, 0, numWireframeIndices)

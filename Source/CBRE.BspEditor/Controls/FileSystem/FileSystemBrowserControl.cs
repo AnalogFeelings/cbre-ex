@@ -78,7 +78,7 @@ namespace CBRE.BspEditor.Controls.FileSystem
 
         private string GetIcon(string file)
         {
-            var ext = (Path.GetExtension(file) ?? "").Trim('.').ToLower();
+            string ext = (Path.GetExtension(file) ?? "").Trim('.').ToLower();
             return FileImages.Images.ContainsKey(ext) ? ext : IconGeneric;
         }
 
@@ -87,11 +87,11 @@ namespace CBRE.BspEditor.Controls.FileSystem
             FileList.Items.Clear();
             if (File == null) return;
             LocationTextbox.Text = File.FullPathName;
-            foreach (var child in File.GetChildren().OrderBy(x => x.Name.ToLower()))
+            foreach (IFile child in File.GetChildren().OrderBy(x => x.Name.ToLower()))
             {
                 FileList.Items.Add(new ListViewItem(child.Name, IconDirectory) {Tag = child});
             }
-            foreach (var file in File.GetFiles().Where(x => Matches(x.Name)).OrderBy(x => x.Name.ToLower()))
+            foreach (IFile file in File.GetFiles().Where(x => Matches(x.Name)).OrderBy(x => x.Name.ToLower()))
             {
                 FileList.Items.Add(new ListViewItem(file.Name, GetIcon(file.FullPathName)) {Tag = file});
             }
@@ -117,7 +117,7 @@ namespace CBRE.BspEditor.Controls.FileSystem
 
         private void UpdateSelection(object sender, EventArgs e)
         {
-            var str = "";
+            string str = "";
             foreach (ListViewItem si in FileList.SelectedItems)
             {
                 str += si.Text + "; ";
@@ -127,7 +127,7 @@ namespace CBRE.BspEditor.Controls.FileSystem
 
         private void UpButtonClicked(object sender, EventArgs e)
         {
-            var parent = File.Parent;
+            IFile parent = File.Parent;
             if (parent != null) File = parent;
         }
 

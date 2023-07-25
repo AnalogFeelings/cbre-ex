@@ -28,7 +28,7 @@ namespace CBRE.BspEditor.Rendering.Converters
         
         public Task Convert(BufferBuilder builder, MapDocument document, IMapObject obj, ResourceCollector resourceCollector)
         {
-            var points = new[]
+            VertexStandard[] points = new[]
             {
                 // X axis - red
                 new VertexStandard { Position = Vector3.Zero, Colour = Vector4.UnitX + Vector4.UnitW },
@@ -43,7 +43,7 @@ namespace CBRE.BspEditor.Rendering.Converters
                 new VertexStandard { Position = Vector3.UnitZ * 100, Colour = Vector4.UnitZ + Vector4.UnitW },
             };
 
-            var indices = new uint[] { 0, 1, 2, 3, 4, 5 };
+            uint[] indices = new uint[] { 0, 1, 2, 3, 4, 5 };
 
             builder.Append(points, indices, new []
             {

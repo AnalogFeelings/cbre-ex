@@ -22,7 +22,7 @@ namespace CBRE.Shell.Registers
         
         public Task OnInitialise()
         {
-            foreach (var si in _statusItems.OrderBy(x => OrderHintAttribute.GetOrderHint(x.Value.GetType())))
+            foreach (Lazy<IStatusItem> si in _statusItems.OrderBy(x => OrderHintAttribute.GetOrderHint(x.Value.GetType())))
             {
                 Add(si.Value);
             }
@@ -42,7 +42,7 @@ namespace CBRE.Shell.Registers
 
         public void Add(IStatusItem item)
         {
-            var si = new StatusBarItem(item);
+            StatusBarItem si = new StatusBarItem(item);
             _items.Add(si);
 
             if (_shell.StatusStrip.Items.Count == 0) si.Label.BorderSides = ToolStripStatusLabelBorderSides.None;
@@ -51,7 +51,7 @@ namespace CBRE.Shell.Registers
 
         private Task ContextChanged(IContext context)
         {
-            foreach (var si in _items)
+            foreach (StatusBarItem si in _items)
             {
                 si.ContextChanged(context);
             }

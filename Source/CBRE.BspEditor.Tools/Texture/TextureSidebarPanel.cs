@@ -79,14 +79,14 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task DocumentActivated(IDocument doc)
         {
-            var md = doc as MapDocument;
+            MapDocument md = doc as MapDocument;
 
             _activeDocument = new WeakReference<MapDocument>(md);
             _currentTexture = null;
 
             await this.InvokeAsync(() =>
             {
-                var dis = SelectionPictureBox.Image;
+                Image dis = SelectionPictureBox.Image;
                 SelectionPictureBox.Image = null;
                 dis?.Dispose();
             });
@@ -122,12 +122,12 @@ namespace CBRE.BspEditor.Tools.Texture
 
             if (selection != null)
             {
-                var tc = await doc.Environment.GetTextureCollection();
+                Environment.TextureCollection tc = await doc.Environment.GetTextureCollection();
                 texItem = await tc.GetTextureItem(selection);
 
                 if (texItem != null)
                 {
-                    using (var ss = tc.GetStreamSource())
+                    using (ITextureStreamSource ss = tc.GetStreamSource())
                     {
                         bmp = await ss.GetImage(selection, 256, 256);
                     }
@@ -148,7 +148,7 @@ namespace CBRE.BspEditor.Tools.Texture
                     }
                 }
 
-                var dis = SelectionPictureBox.Image;
+                Image dis = SelectionPictureBox.Image;
                 SelectionPictureBox.Image = null;
                 dis?.Dispose();
 

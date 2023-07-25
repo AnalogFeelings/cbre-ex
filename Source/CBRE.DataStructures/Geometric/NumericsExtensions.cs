@@ -18,9 +18,9 @@ namespace CBRE.DataStructures.Geometric
         // Vector3
         public static bool EquivalentTo(this Vector3 self, Vector3 test, float delta = Epsilon)
         {
-            var xd = Math.Abs(self.X - test.X);
-            var yd = Math.Abs(self.Y - test.Y);
-            var zd = Math.Abs(self.Z - test.Z);
+            float xd = Math.Abs(self.X - test.X);
+            float yd = Math.Abs(self.Y - test.Y);
+            float zd = Math.Abs(self.Z - test.Z);
             return xd < delta && yd < delta && zd < delta;
         }
 
@@ -38,7 +38,7 @@ namespace CBRE.DataStructures.Geometric
         public static Vector3 ClosestAxis(this Vector3 self)
         {
             // VHE prioritises the axes in order of X, Y, Z.
-            var norm = Vector3.Abs(self);
+            Vector3 norm = Vector3.Abs(self);
 
             if (norm.X >= norm.Y && norm.X >= norm.Z) return Vector3.UnitX;
             if (norm.Y >= norm.Z) return Vector3.UnitY;
@@ -73,13 +73,13 @@ namespace CBRE.DataStructures.Geometric
         // Color
         public static Color ToColor(this Vector4 self)
         {
-            var mul = self * 255;
+            Vector4 mul = self * 255;
             return Color.FromArgb((byte) mul.W, (byte) mul.X, (byte) mul.Y, (byte) mul.Z);
         }
 
         public static Color ToColor(this Vector3 self)
         {
-            var mul = self * 255;
+            Vector3 mul = self * 255;
             return Color.FromArgb(255, (byte) mul.X, (byte) mul.Y, (byte) mul.Z);
         }
 

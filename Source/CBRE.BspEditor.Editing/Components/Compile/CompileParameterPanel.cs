@@ -52,9 +52,9 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         public void AddParameters(IEnumerable<CompileParameter> parameters)
         {
             _pauseEvents = true;
-            foreach (var cp in parameters)
+            foreach (CompileParameter cp in parameters)
             {
-                var fp = new ParameterTogglePanel(cp);
+                ParameterTogglePanel fp = new ParameterTogglePanel(cp);
                 fp.ValueChanged += ToggleParameter;
                 FlowPanel.Controls.Add(fp);
 
@@ -89,11 +89,11 @@ namespace CBRE.BspEditor.Editing.Components.Compile
         public void SetCommands(string generated, string additional)
         {
             _pauseEvents = true;
-            var split = generated.SplitWithQuotes().ToList();
+            List<string> split = generated.SplitWithQuotes().ToList();
             _panels.ForEach(x => x.Clear());
             while (split.Any())
             {
-                foreach (var panel in _panels)
+                foreach (ParameterTogglePanel panel in _panels)
                 {
                     if (panel.TrySetValue(split)) break;
                 }
@@ -151,13 +151,13 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
             private void AddControls()
             {
-                var controls = new List<Control>();
+                List<Control> controls = new List<Control>();
                 switch (Parameter.Type)
                 {
                     case CompileParameterType.Checkbox:
                         break;
                     case CompileParameterType.String:
-                        var text = new TextBox
+                        TextBox text = new TextBox
                         {
                             Width = 100,
                             Text = Parameter.Value,
@@ -167,7 +167,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         controls.Add(text);
                         break;
                     case CompileParameterType.Decimal:
-                        var nud = new NumericUpDown
+                        NumericUpDown nud = new NumericUpDown
                         {
                             Width = 60,
                             Minimum = Parameter.Min,
@@ -181,19 +181,19 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         controls.Add(nud);
                         break;
                     case CompileParameterType.Choice:
-                        var combo = new ComboBox
+                        ComboBox combo = new ComboBox
                         {
                             DropDownStyle = ComboBoxStyle.DropDownList,
                             Margin = new Padding(0),
                             Width = 100
                         };
-                        foreach (var option in Parameter.Options) combo.Items.Add(option);
+                        foreach (string option in Parameter.Options) combo.Items.Add(option);
                         combo.SelectedItem = Parameter.ChoiceValue;
                         combo.SelectedIndexChanged += (s, e) => OnValueChanged();
                         controls.Add(combo);
                         break;
                     case CompileParameterType.File:
-                        var file = new TextBox
+                        TextBox file = new TextBox
                         {
                             Text = Parameter.Value,
                             Tag = "File",
@@ -202,7 +202,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         };
                         file.TextChanged += (s, e) => OnValueChanged();
                         controls.Add(file);
-                        var fileButton = new Button
+                        Button fileButton = new Button
                         {
                             Text = "...",
                             Width = 25,
@@ -212,7 +212,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         };
                         fileButton.Click += (s, e) =>
                         {
-                            using (var fo = new OpenFileDialog{Filter = Parameter.Filter})
+                            using (OpenFileDialog fo = new OpenFileDialog{Filter = Parameter.Filter})
                             {
                                 if (fo.ShowDialog() == DialogResult.OK)
                                 {
@@ -223,7 +223,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         controls.Add(fileButton);
                         break;
                     case CompileParameterType.Folder:
-                        var folder = new TextBox
+                        TextBox folder = new TextBox
                         {
                             Text = Parameter.Value,
                             Tag = "Folder",
@@ -232,7 +232,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         };
                         folder.TextChanged += (s, e) => OnValueChanged();
                         controls.Add(folder);
-                        var folderButton = new Button
+                        Button folderButton = new Button
                         {
                             Text = "...",
                             Width = 25,
@@ -242,7 +242,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         };
                         folderButton.Click += (s, e) =>
                         {
-                            using (var fo = new FolderBrowserDialog())
+                            using (FolderBrowserDialog fo = new FolderBrowserDialog())
                             {
                                 if (fo.ShowDialog() == DialogResult.OK)
                                 {
@@ -254,7 +254,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         break;
                     case CompileParameterType.Colour:
                     case CompileParameterType.ColourFloat:
-                        var cpanel = new Panel
+                        Panel cpanel = new Panel
                         {
                             Width = 40,
                             Height = 20,
@@ -264,7 +264,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         };
                         cpanel.Click += (s, e) =>
                         {
-                            using (var cp = new ColorDialog{Color = cpanel.BackColor})
+                            using (ColorDialog cp = new ColorDialog{Color = cpanel.BackColor})
                             {
                                 if (cp.ShowDialog() == DialogResult.OK)
                                 {
@@ -278,7 +278,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                foreach (var control in controls)
+                foreach (Control control in controls)
                 {
                     ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
                     Controls.Add(control);
@@ -290,17 +290,17 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                 switch (Parameter.Type)
                 {
                     case CompileParameterType.String:
-                        var text = Controls.OfType<TextBox>().FirstOrDefault();
+                        TextBox text = Controls.OfType<TextBox>().FirstOrDefault();
                         return text == null ? "" : text.Text;
                     case CompileParameterType.Decimal:
-                        var nud = Controls.OfType<NumericUpDown>().FirstOrDefault();
+                        NumericUpDown nud = Controls.OfType<NumericUpDown>().FirstOrDefault();
                         return nud == null ? "" : nud.Value.ToString(CultureInfo.InvariantCulture);
                     case CompileParameterType.Choice:
-                        var combo = Controls.OfType<ComboBox>().FirstOrDefault();
+                        ComboBox combo = Controls.OfType<ComboBox>().FirstOrDefault();
                         if (combo != null && combo.SelectedIndex >= 0)
                         {
-                            var idx = combo.SelectedIndex;
-                            var list = Parameter.Options.Count == Parameter.OptionValues.Count ? Parameter.OptionValues : Parameter.Options;
+                            int idx = combo.SelectedIndex;
+                            List<string> list = Parameter.Options.Count == Parameter.OptionValues.Count ? Parameter.OptionValues : Parameter.Options;
                             if (idx >= 0 && idx < list.Count)
                             {
                                 return list[idx];
@@ -308,15 +308,15 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                         }
                         return "";
                     case CompileParameterType.File:
-                        var file = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "File"));
+                        TextBox file = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "File"));
                         return '"' + (file == null ? "" : file.Text) + '"';
                     case CompileParameterType.Folder:
-                        var folder = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "Folder"));
+                        TextBox folder = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "Folder"));
                         return '"' + (folder == null ? "" : folder.Text) + '"';
                     case CompileParameterType.Colour:
                     case CompileParameterType.ColourFloat:
-                        var c = Color.Black;
-                        var colour = Controls.OfType<Panel>().FirstOrDefault();
+                        Color c = Color.Black;
+                        Panel colour = Controls.OfType<Panel>().FirstOrDefault();
                         if (colour != null) c = colour.BackColor;
                         return String.Join(" ",
                             new[] {c.R, c.G, c.B}.Select(x => Parameter.Type == CompileParameterType.ColourFloat
@@ -332,35 +332,35 @@ namespace CBRE.BspEditor.Editing.Components.Compile
                 switch (Parameter.Type)
                 {
                     case CompileParameterType.String:
-                        var text = Controls.OfType<TextBox>().FirstOrDefault();
+                        TextBox text = Controls.OfType<TextBox>().FirstOrDefault();
                         if (text != null) text.Text = val;
                         break;
                     case CompileParameterType.Decimal:
-                        var nud = Controls.OfType<NumericUpDown>().FirstOrDefault();
+                        NumericUpDown nud = Controls.OfType<NumericUpDown>().FirstOrDefault();
                         if (nud == null) break;
                         decimal d;
                         nud.Value = Decimal.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out d) ? d : 0;
                         break;
                     case CompileParameterType.Choice:
-                        var combo = Controls.OfType<ComboBox>().FirstOrDefault();
-                        var list = Parameter.Options.Count == Parameter.OptionValues.Count ? Parameter.OptionValues : Parameter.Options;
+                        ComboBox combo = Controls.OfType<ComboBox>().FirstOrDefault();
+                        List<string> list = Parameter.Options.Count == Parameter.OptionValues.Count ? Parameter.OptionValues : Parameter.Options;
                         if (combo != null) combo.SelectedIndex = Math.Max(0, list.FindIndex(x => String.Equals(x, val, StringComparison.InvariantCultureIgnoreCase)));
                         break;
                     case CompileParameterType.File:
-                        var file = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "File"));
+                        TextBox file = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "File"));
                         if (file != null) file.Text = val;
                         break;
                     case CompileParameterType.Folder:
-                        var folder = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "Folder"));
+                        TextBox folder = Controls.OfType<TextBox>().FirstOrDefault(x => String.Equals(x.Tag as string, "Folder"));
                         if (folder != null) folder.Text = val;
                         break;
                     case CompileParameterType.Colour:
                     case CompileParameterType.ColourFloat:
-                        var colour = Controls.OfType<Panel>().FirstOrDefault();
+                        Panel colour = Controls.OfType<Panel>().FirstOrDefault();
                         if (colour == null) break;
-                        var spl = (val ?? "").Split(' ');
+                        string[] spl = (val ?? "").Split(' ');
                         float r, g, b;
-                        var c = Color.Black;
+                        Color c = Color.Black;
                         if (spl.Length == 3 && float.TryParse(spl[0], out r) && float.TryParse(spl[1], out g) && float.TryParse(spl[2], out b))
                         {
                             if (Parameter.Type == CompileParameterType.ColourFloat)
@@ -378,7 +378,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
             public string GetValue()
             {
-                var ex = ExtractValue();
+                string ex = ExtractValue();
                 return Parameter.Flag + (String.IsNullOrWhiteSpace(ex) ? "" : " " + ex);
             }
 

@@ -41,9 +41,9 @@ namespace CBRE.BspEditor.Editing.Components
 
             public int Compare(object x, object y)
             {
-                var i1 = (ListViewItem)x;
-                var i2 = (ListViewItem)y;
-                var compare = String.CompareOrdinal(i1.SubItems[Column].Text, i2.SubItems[Column].Text);
+                ListViewItem i1 = (ListViewItem)x;
+                ListViewItem i2 = (ListViewItem)y;
+                int compare = String.CompareOrdinal(i1.SubItems[Column].Text, i2.SubItems[Column].Text);
                 return SortOrder == SortOrder.Descending ? -compare : compare;
             }
         }
@@ -63,7 +63,7 @@ namespace CBRE.BspEditor.Editing.Components
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -149,10 +149,10 @@ namespace CBRE.BspEditor.Editing.Components
         {
             if (!FollowSelection.Checked) return;
 
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             if (doc == null) return;
 
-            var selection = doc.Selection.GetSelectedParents().LastOrDefault(x => x is Entity);
+            IMapObject selection = doc.Selection.GetSelectedParents().LastOrDefault(x => x is Entity);
             SetSelected(selection);
         }
 
@@ -177,7 +177,7 @@ namespace CBRE.BspEditor.Editing.Components
             {
                 if (selection == null) return;
 
-                var item = EntityList.Items.OfType<ListViewItem>().FirstOrDefault(x => x.Tag == selection);
+                ListViewItem item = EntityList.Items.OfType<ListViewItem>().FirstOrDefault(x => x.Tag == selection);
                 if (item == null) return;
 
                 item.Selected = true;
@@ -190,14 +190,14 @@ namespace CBRE.BspEditor.Editing.Components
             this.InvokeLater(() =>
             {
                 EntityList.BeginUpdate();
-                var selected = GetSelected();
+                Entity selected = GetSelected();
                 EntityList.ListViewItemSorter = null;
                 EntityList.Items.Clear();
 
-                var doc = _context.Get<MapDocument>("ActiveDocument");
+                MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
                 if (doc != null)
                 {
-                    var items = doc.Map.Root
+                    ListViewItem[] items = doc.Map.Root
                         .Find(x => x is Entity)
                         .OfType<Entity>()
                         .Where(DoFilters)
@@ -216,7 +216,7 @@ namespace CBRE.BspEditor.Editing.Components
 
         private ListViewItem GetListItem(Entity entity)
         {
-            var targetname = entity.EntityData.Properties.FirstOrDefault(x => x.Key.ToLower() == "targetname");
+            KeyValuePair<string, string> targetname = entity.EntityData.Properties.FirstOrDefault(x => x.Key.ToLower() == "targetname");
             return new ListViewItem(new[]
                                         {
                                             entity.EntityData.Name,
@@ -226,7 +226,7 @@ namespace CBRE.BspEditor.Editing.Components
 
         private bool DoFilters(Entity ent)
         {
-            var hasChildren = ent.Hierarchy.HasChildren;
+            bool hasChildren = ent.Hierarchy.HasChildren;
 
             if (hasChildren && TypePoint.Checked) return false;
             if (!hasChildren && TypeBrush.Checked) return false;
@@ -235,15 +235,15 @@ namespace CBRE.BspEditor.Editing.Components
                 if (ent.Data.OfType<IObjectVisibility>().Any(x => x.IsHidden)) return false;
             }
 
-            var classFilter = FilterClass.Text.ToUpperInvariant();
-            var exactClass = FilterClassExact.Checked;
-            var keyFilter = FilterKey.Text.ToUpperInvariant();
-            var valueFilter = FilterValue.Text.ToUpperInvariant();
-            var exactKeyValue = FilterKeyValueExact.Checked;
+            string classFilter = FilterClass.Text.ToUpperInvariant();
+            bool exactClass = FilterClassExact.Checked;
+            string keyFilter = FilterKey.Text.ToUpperInvariant();
+            string valueFilter = FilterValue.Text.ToUpperInvariant();
+            bool exactKeyValue = FilterKeyValueExact.Checked;
 
             if (!String.IsNullOrWhiteSpace(classFilter))
             {
-                var name = (ent.EntityData.Name ?? "").ToUpperInvariant();
+                string name = (ent.EntityData.Name ?? "").ToUpperInvariant();
                 if (exactClass && name != classFilter) return false;
                 if (!exactClass && !name.Contains(classFilter)) return false;
             }
@@ -251,8 +251,8 @@ namespace CBRE.BspEditor.Editing.Components
             if (!String.IsNullOrWhiteSpace(keyFilter))
             {
                 if (ent.EntityData.Properties.All(x => x.Key.ToUpperInvariant() != keyFilter)) return false;
-                var prop = ent.EntityData.Properties.FirstOrDefault(x => x.Key.ToUpperInvariant() == keyFilter);
-                var val = prop.Value.ToUpperInvariant();
+                KeyValuePair<string, string> prop = ent.EntityData.Properties.FirstOrDefault(x => x.Key.ToUpperInvariant() == keyFilter);
+                string val = prop.Value.ToUpperInvariant();
                 if (exactKeyValue && val != valueFilter) return false;
                 if (!exactKeyValue && !val.Contains(valueFilter)) return false;
             }
@@ -291,11 +291,11 @@ namespace CBRE.BspEditor.Editing.Components
 
         private async Task SelectEntity(Entity sel)
         {
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             if (doc == null) return;
 
-            var currentSelection = doc.Selection.Except(sel.FindAll()).ToList();
-            var tran = new Transaction(
+            List<IMapObject> currentSelection = doc.Selection.Except(sel.FindAll()).ToList();
+            Transaction tran = new Transaction(
                 new Deselect(currentSelection),
                 new Select(sel.FindAll())
             );
@@ -304,7 +304,7 @@ namespace CBRE.BspEditor.Editing.Components
 
         private void GoToSelectedEntity(object sender, EventArgs e)
         {
-            var selected = GetSelected();
+            Entity selected = GetSelected();
             if (selected == null) return;
             SelectEntity(selected);
             Oy.Publish("MapDocument:Viewport:Focus2D", selected.BoundingBox);
@@ -313,17 +313,17 @@ namespace CBRE.BspEditor.Editing.Components
 
         private void DeleteSelectedEntity(object sender, EventArgs e)
         {
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             if (doc == null) return;
 
-            var selected = GetSelected();
+            Entity selected = GetSelected();
             if (selected == null) return;
             MapDocumentOperation.Perform(doc, new Detatch(selected.Hierarchy.Parent.ID, selected));
         }
 
         private void OpenEntityProperties(object sender, EventArgs e)
         {
-            var selected = GetSelected();
+            Entity selected = GetSelected();
             if (selected == null) return;
             SelectEntity(selected).ContinueWith(_ => Oy.Publish("Command:Run", new CommandMessage("BspEditor:Map:Properties")));
         }

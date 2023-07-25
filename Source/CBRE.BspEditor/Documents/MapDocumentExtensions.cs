@@ -24,7 +24,7 @@ namespace CBRE.BspEditor.Documents
         {
             // If we're exporting cordon then we need to ensure that only objects in the bounds are exported.
             // Additionally a surrounding box needs to be added to enclose the map.
-            var cloneMap = new Map();
+            Map cloneMap = new Map();
 
             // Copy the map data
             cloneMap.Data.Clear();
@@ -36,21 +36,21 @@ namespace CBRE.BspEditor.Documents
 
             // Add copies of all the matching child objects (and their children, etc)
             cloneMap.Root.Hierarchy.Clear();
-            foreach (var obj in doc.Map.Root.Hierarchy.Where(x => x.BoundingBox.IntersectsWith(cordonBounds)))
+            foreach (IMapObject obj in doc.Map.Root.Hierarchy.Where(x => x.BoundingBox.IntersectsWith(cordonBounds)))
             {
-                var copy = (IMapObject)obj.Copy(cloneMap.NumberGenerator);
+                IMapObject copy = (IMapObject)obj.Copy(cloneMap.NumberGenerator);
                 copy.Hierarchy.Parent = cloneMap.Root;
             }
 
             // Add a hollow box around the cordon bounds
-            var outside = new Box(cloneMap.Root.Hierarchy.Select(x => x.BoundingBox).Union(new[] { cordonBounds }));
+            Box outside = new Box(cloneMap.Root.Hierarchy.Select(x => x.BoundingBox).Union(new[] { cordonBounds }));
             outside = new Box(outside.Start - Vector3.One * 10, outside.End + Vector3.One * 10);
-            var inside = cordonBounds;
+            Box inside = cordonBounds;
 
-            var outsideBox = new Solid(cloneMap.NumberGenerator.Next("MapObject"));
-            foreach (var arr in outside.GetBoxFaces())
+            Solid outsideBox = new Solid(cloneMap.NumberGenerator.Next("MapObject"));
+            foreach (Vector3[] arr in outside.GetBoxFaces())
             {
-                var face = new Face(cloneMap.NumberGenerator.Next("Face"))
+                Face face = new Face(cloneMap.NumberGenerator.Next("Face"))
                 {
                     Plane = new DataStructures.Geometric.Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = cordonTextureName }
@@ -61,10 +61,10 @@ namespace CBRE.BspEditor.Documents
 
             outsideBox.DescendantsChanged();
 
-            var insideBox = new Solid(cloneMap.NumberGenerator.Next("MapObject"));
-            foreach (var arr in inside.GetBoxFaces())
+            Solid insideBox = new Solid(cloneMap.NumberGenerator.Next("MapObject"));
+            foreach (Vector3[] arr in inside.GetBoxFaces())
             {
-                var face = new Face(cloneMap.NumberGenerator.Next("Face"))
+                Face face = new Face(cloneMap.NumberGenerator.Next("Face"))
                 {
                     Plane = new DataStructures.Geometric.Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = cordonTextureName }
@@ -76,13 +76,13 @@ namespace CBRE.BspEditor.Documents
             insideBox.DescendantsChanged();
 
             // Carve the inside box into the outside box and add the front solids to the map
-            foreach (var face in insideBox.Faces)
+            foreach (Face face in insideBox.Faces)
             {
                 // Carve the box
-                if (!outsideBox.Split(cloneMap.NumberGenerator, face.Plane, out var back, out var front)) continue;
+                if (!outsideBox.Split(cloneMap.NumberGenerator, face.Plane, out Solid back, out Solid front)) continue;
 
                 // Align texture to face
-                foreach (var f in front.Faces)
+                foreach (Face f in front.Faces)
                 {
                     f.Texture.XScale = f.Texture.YScale = 1;
                     f.Texture.AlignToNormal(f.Plane.Normal);

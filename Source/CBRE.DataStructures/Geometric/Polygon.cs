@@ -28,15 +28,15 @@ namespace CBRE.DataStructures.Geometric
         /// <param name="vertices">The vertices of the polygon</param>
         public Polygon(IEnumerable<Vector3> vertices)
         {
-            var verts = vertices.ToList();
+            List<Vector3> verts = vertices.ToList();
 
             // Remove colinear vertices
-            for (var i = 0; i < verts.Count - 2; i++)
+            for (int i = 0; i < verts.Count - 2; i++)
             {
-                var v1 = verts[i];
-                var v2 = verts[i + 2];
-                var p = verts[i + 1];
-                var line = new Line(v1, v2);
+                Vector3 v1 = verts[i];
+                Vector3 v2 = verts[i + 2];
+                Vector3 p = verts[i + 1];
+                Line line = new Line(v1, v2);
                 // If the midpoint is on the line, remove it
                 if (line.ClosestPoint(p).EquivalentTo(p))
                 {
@@ -75,7 +75,7 @@ namespace CBRE.DataStructures.Geometric
         /// <returns>A list of lines</returns>
         public IEnumerable<Line> GetLines()
         {
-            for (var i = 1; i < Vertices.Count; i++)
+            for (int i = 1; i < Vertices.Count; i++)
             {
                 yield return new Line(Vertices[i - 1], Vertices[i]);
             }
@@ -88,7 +88,7 @@ namespace CBRE.DataStructures.Geometric
         public bool IsValid()
         {
             if (Vertices.Count < 3) return false;
-            var plane = Plane;
+            Plane plane = Plane;
             return Vertices.All(x => plane.OnPlane(x) == 0);
         }
 
@@ -96,15 +96,15 @@ namespace CBRE.DataStructures.Geometric
         {
             if (Vertices.Count < 3) return false;
 
-            var plane = Plane;
-            for (var i = 0; i < Vertices.Count; i++)
+            Plane plane = Plane;
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                var v1 = Vertices[i];
-                var v2 = Vertices[(i + 1) % Vertices.Count];
-                var v3 = Vertices[(i + 2) % Vertices.Count];
-                var l1 = (v1 - v2).Normalise();
-                var l2 = (v3 - v2).Normalise();
-                var cross = l1.Cross(l2);
+                Vector3 v1 = Vertices[i];
+                Vector3 v2 = Vertices[(i + 1) % Vertices.Count];
+                Vector3 v3 = Vertices[(i + 2) % Vertices.Count];
+                Vector3 l1 = (v1 - v2).Normalise();
+                Vector3 l2 = (v3 - v2).Normalise();
+                Vector3 cross = l1.Cross(l2);
                 if (plane.OnPlane(v2 + cross, epsilon) < 0.0001m) return false;
             }
             return true;
@@ -117,14 +117,14 @@ namespace CBRE.DataStructures.Geometric
         /// <returns>A PlaneClassification value.</returns>
         public PlaneClassification ClassifyAgainstPlane(Plane p)
         {
-            var count = Vertices.Count;
-            var front = 0;
-            var back = 0;
-            var onplane = 0;
+            int count = Vertices.Count;
+            int front = 0;
+            int back = 0;
+            int onplane = 0;
 
-            foreach (var t in Vertices)
+            foreach (Vector3 t in Vertices)
             {
-                var test = p.OnPlane(t);
+                int test = p.OnPlane(t);
 
                 // Vertices on the plane are both in front and behind the plane in this context
                 if (test <= 0) back++;
@@ -147,30 +147,30 @@ namespace CBRE.DataStructures.Geometric
         {
             if (Vertices.Count < 3) return null;
 
-            var plane = Plane;
-            var isect = plane.GetIntersectionPoint(line, ignoreDirection);
+            Plane plane = Plane;
+            Vector3? isect = plane.GetIntersectionPoint(line, ignoreDirection);
             if (isect == null) return null;
 
-            var intersect = isect.Value;
+            Vector3 intersect = isect.Value;
 
-            var vectors = Vertices;
+            IReadOnlyList<Vector3> vectors = Vertices;
 
             // http://paulbourke.net/geometry/insidepoly/
 
             // The angle sum will be 2 * PI if the point is inside the face
             double sum = 0;
-            for (var i = 0; i < vectors.Count; i++)
+            for (int i = 0; i < vectors.Count; i++)
             {
-                var i1 = i;
-                var i2 = (i + 1) % vectors.Count;
+                int i1 = i;
+                int i2 = (i + 1) % vectors.Count;
 
                 // Translate the vertices so that the intersect point is on the origin
-                var v1 = vectors[i1] - intersect;
-                var v2 = vectors[i2] - intersect;
+                Vector3 v1 = vectors[i1] - intersect;
+                Vector3 v2 = vectors[i2] - intersect;
 
-                var m1 = v1.Length();
-                var m2 = v2.Length();
-                var nom = m1 * m2;
+                float m1 = v1.Length();
+                float m2 = v2.Length();
+                float nom = m1 * m2;
                 if (nom < 0.001f)
                 {
                     // intersection is at a vertex
@@ -179,7 +179,7 @@ namespace CBRE.DataStructures.Geometric
                 sum += Math.Acos(v1.Dot(v2) / nom);
             }
 
-            var delta = Math.Abs(sum - Math.PI * 2);
+            double delta = Math.Abs(sum - Math.PI * 2);
             return (delta < 0.001d) ? intersect : (Vector3?) null;
         }
 

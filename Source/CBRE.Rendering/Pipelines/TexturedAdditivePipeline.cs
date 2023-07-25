@@ -25,7 +25,7 @@ namespace CBRE.Rendering.Pipelines
         {
             (_vertex, _fragment) = context.ResourceLoader.LoadShaders(nameof(PipelineType.TexturedAlpha));
 
-            var pDesc = new GraphicsPipelineDescription
+            GraphicsPipelineDescription pDesc = new GraphicsPipelineDescription
             {
                 BlendState = new BlendStateDescription
                 {
@@ -83,7 +83,7 @@ namespace CBRE.Rendering.Pipelines
             cl.SetPipeline(_pipeline);
             cl.SetGraphicsResourceSet(0, _projectionResourceSet);
 
-            foreach (var r in renderables)
+            foreach (IRenderable r in renderables)
             {
                 r.Render(context, this, target, cl);
             }
@@ -99,7 +99,7 @@ namespace CBRE.Rendering.Pipelines
 
         public void Bind(RenderContext context, CommandList cl, string binding)
         {
-            var tex = context.ResourceLoader.GetTexture(binding);
+            Resources.Texture tex = context.ResourceLoader.GetTexture(binding);
             tex?.BindTo(cl, 1);
         }
 

@@ -45,8 +45,8 @@ namespace CBRE.Rendering.Viewports
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             DoubleBuffered = false;
 
-            var hWnd = Handle; // Will call CreateHandle internally
-            var hInstance = HInstance;
+            IntPtr hWnd = Handle; // Will call CreateHandle internally
+            IntPtr hInstance = HInstance;
 
             uint w = (uint)Width, h = (uint)Height;
             if (w <= 0) w = 1;
@@ -55,8 +55,8 @@ namespace CBRE.Rendering.Viewports
             ID = _nextId++;
             Camera = new PerspectiveCamera { Width = Width, Height = Height };
 
-            var source = SwapchainSource.CreateWin32(hWnd, hInstance);
-            var desc = new SwapchainDescription(source, w, h, options.SwapchainDepthFormat, options.SyncToVerticalBlank);
+            SwapchainSource source = SwapchainSource.CreateWin32(hWnd, hInstance);
+            SwapchainDescription desc = new SwapchainDescription(source, w, h, options.SwapchainDepthFormat, options.SyncToVerticalBlank);
             Swapchain = graphics.ResourceFactory.CreateSwapchain(desc);
 
             Overlay = new ViewportOverlay(this);
@@ -72,8 +72,8 @@ namespace CBRE.Rendering.Viewports
         {
             if (_resizeRequired)
             {
-                var w = Math.Max(Width, 1);
-                var h = Math.Max(Height, 1);
+                int w = Math.Max(Width, 1);
+                int h = Math.Max(Height, 1);
                 Swapchain.Resize((uint) w, (uint) h);
                 _resizeRequired = false;
             }

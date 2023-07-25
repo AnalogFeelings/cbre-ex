@@ -44,7 +44,7 @@ namespace CBRE.BspEditor.Grid
 
         private float GetActualStep(float step, float scale)
         {
-            var actualDist = step * scale;
+            float actualDist = step * scale;
             while (actualDist < HideSmallerThan && HideFactor > 0)
             {
                 step *= HideFactor;
@@ -55,9 +55,9 @@ namespace CBRE.BspEditor.Grid
 
         public virtual IEnumerable<GridLine> GetLines(Vector3 normal, float scale, Vector3 worldMinimum, Vector3 worldMaximum)
         {
-            var lower = Low;
-            var upper = High;
-            var step = GetActualStep(Step, scale);
+            float lower = Low;
+            float upper = High;
+            float step = GetActualStep(Step, scale);
 
             Func<Vector3, Vector3> tform;
             Func<Vector3, Vector3> rform;
@@ -84,13 +84,13 @@ namespace CBRE.BspEditor.Grid
             worldMinimum = rform(worldMinimum);
             worldMaximum = rform(worldMaximum);
 
-            for (var f = lower; f <= upper; f += step)
+            for (float f = lower; f <= upper; f += step)
             {
                 if ((f < worldMinimum.X || f > worldMaximum.X) && (f < worldMinimum.Y || f > worldMaximum.Y)) continue;
 
-                var i = (int) f;
+                int i = (int) f;
 
-                var type = GridLineType.Standard;
+                GridLineType type = GridLineType.Standard;
                 if (f != i) type = GridLineType.Fractional;
                 else if (i == 0) type = GridLineType.Axis;
                 else if (Math.Abs(i - Low) < 0.01f || Math.Abs(i - High) < 0.01f) type = GridLineType.Boundary;

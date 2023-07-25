@@ -30,7 +30,7 @@ namespace CBRE.BspEditor.Documents
             {
                 _fileName = value;
 
-                var p = System.IO.Path.GetFileName(_fileName);
+                string p = System.IO.Path.GetFileName(_fileName);
                 if (!String.IsNullOrWhiteSpace(p)) Name = p;
             }
         }
@@ -61,7 +61,7 @@ namespace CBRE.BspEditor.Documents
         {
             get
             {
-                var sel = Map.Data.Get<Selection>().FirstOrDefault();
+                Selection sel = Map.Data.Get<Selection>().FirstOrDefault();
                 if (sel != null) return sel;
 
                 sel = new Selection();

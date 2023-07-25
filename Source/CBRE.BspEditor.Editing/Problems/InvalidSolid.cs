@@ -23,7 +23,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var solids = document.Map.Root.FindAll()
+            List<Problem> solids = document.Map.Root.FindAll()
                 .Where(x => filter(x))
                 .OfType<Solid>()
                 .Where(x => !x.IsValid())
@@ -35,8 +35,8 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task Fix(MapDocument document, Problem problem)
         {
-            var delete = new Transaction();
-            foreach (var g in problem.Objects.GroupBy(x => x.Hierarchy.Parent.ID))
+            Transaction delete = new Transaction();
+            foreach (IGrouping<long, IMapObject> g in problem.Objects.GroupBy(x => x.Hierarchy.Parent.ID))
             {
                 delete.Add(new Detatch(g.Key, g));
             }

@@ -136,7 +136,7 @@ namespace CBRE.Shell.Forms
                     AvailableMemory = "Unknown";
                 }
 
-                var list = new List<Exception>();
+                List<Exception> list = new List<Exception>();
                 do
                 {
                     list.Add(exception);
@@ -144,7 +144,7 @@ namespace CBRE.Shell.Forms
                 } while (exception != null);
 
                 FullStackTrace = (info + "\r\n").Trim();
-                foreach (var ex in Enumerable.Reverse(list))
+                foreach (Exception ex in Enumerable.Reverse(list))
                 {
                     FullStackTrace += "\r\n" + ex.Message + " (" + ex.GetType().FullName + ")\r\n" + ex.StackTrace;
                 }

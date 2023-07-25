@@ -84,7 +84,7 @@ namespace CBRE.Common.Scheduling
         {
             lock (Lock)
             {
-                foreach (var sch in Callbacks.Where(x => x.Context is T variable && contextFilter(variable)))
+                foreach (ScheduledCallback sch in Callbacks.Where(x => x.Context is T variable && contextFilter(variable)))
                 {
                     sch.SetScheduleTime(newTime);
                 }
@@ -109,8 +109,8 @@ namespace CBRE.Common.Scheduling
             }
             else
             {
-                var next = Callbacks.Where(x => x.ScheduledTime.HasValue).OrderBy(x => x.ScheduledTime).First();
-                var delay = Math.Max(0, DateTime.Now.Subtract(next.ScheduledTime.Value).TotalMilliseconds) + 100;
+                ScheduledCallback next = Callbacks.Where(x => x.ScheduledTime.HasValue).OrderBy(x => x.ScheduledTime).First();
+                double delay = Math.Max(0, DateTime.Now.Subtract(next.ScheduledTime.Value).TotalMilliseconds) + 100;
                 Timer.Interval = delay;
                 Timer.Start();
             }
@@ -120,7 +120,7 @@ namespace CBRE.Common.Scheduling
         {
             lock (Lock)
             {
-                var expired = Callbacks.Where(x => x.ScheduledTime.HasValue && x.ScheduledTime <= DateTime.Now).ToList();
+                List<ScheduledCallback> expired = Callbacks.Where(x => x.ScheduledTime.HasValue && x.ScheduledTime <= DateTime.Now).ToList();
                 expired.ForEach(x => x.Run());
                 Callbacks.RemoveAll(x => !x.ScheduledTime.HasValue);
                 UpdateTimer();

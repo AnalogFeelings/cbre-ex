@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Tools
 
         private async Task ToolActivated(ITool tool)
         {
-            var at = ActiveTool;
+            BaseTool at = ActiveTool;
             if (at != null)
             {
                 await at.ToolDeselected();

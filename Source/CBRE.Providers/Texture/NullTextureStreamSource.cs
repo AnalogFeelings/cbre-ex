@@ -10,7 +10,7 @@ namespace CBRE.Providers.Texture
         static NullTextureStreamSource()
         {
             PlaceholderImage = new Bitmap(16, 16, PixelFormat.Format32bppArgb);
-            using (var g = Graphics.FromImage(PlaceholderImage))
+            using (Graphics g = Graphics.FromImage(PlaceholderImage))
             {
                 g.FillRectangle(Brushes.Black, 0, 0, 16, 16);
                 g.FillRectangle(Brushes.Magenta, 8, 0, 8, 8);

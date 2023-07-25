@@ -90,7 +90,7 @@ namespace CBRE.DataStructures.Geometric
 
         public IEnumerable<Polygon> GetBackwardsPolygons(float epsilon = 0.001f)
         {
-            var origin = Origin;
+            Vector3 origin = Origin;
             return Polygons.Where(x => x.Plane.OnPlane(origin, epsilon) > 0);
         }
 

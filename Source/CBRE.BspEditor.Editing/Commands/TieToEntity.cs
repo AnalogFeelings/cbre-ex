@@ -51,10 +51,10 @@ namespace CBRE.BspEditor.Editing.Commands
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var existingEntities = document.Selection.OfType<Entity>().ToList();
+            List<Entity> existingEntities = document.Selection.OfType<Entity>().ToList();
 
             Entity existing = null;
-            var confirmed = false;
+            bool confirmed = false;
             if (existingEntities.Count == 0)
             {
                 // No entities selected, just create it straight up
@@ -64,7 +64,7 @@ namespace CBRE.BspEditor.Editing.Commands
             {
                 // One entity selected, user chooses to merge or create a new entity
                 using (
-                    var qf = new QuickForm(EntitySelectedTitle) {Width = 400}
+                    QuickForm qf = new QuickForm(EntitySelectedTitle) {Width = 400}
                         .Label(String.Format(OneEntitySelectedMessage, existingEntities[0].EntityData?.Name))
                         .DialogButtons(
                             (KeepExisting, DialogResult.Yes),
@@ -73,7 +73,7 @@ namespace CBRE.BspEditor.Editing.Commands
                         )
                 )
                 {
-                    var result = await qf.ShowDialogAsync();
+                    DialogResult result = await qf.ShowDialogAsync();
                     if (result == DialogResult.Yes) existing = existingEntities[0];
                     confirmed = result != DialogResult.Cancel;
                 }
@@ -82,13 +82,13 @@ namespace CBRE.BspEditor.Editing.Commands
             {
                 // Multiple entities selected, user chooses which one to keep
                 using (
-                    var qf = new QuickForm(EntitySelectedTitle) { Width = 400 }
+                    QuickForm qf = new QuickForm(EntitySelectedTitle) { Width = 400 }
                         .Label(MultipleEntitiesSelectedMessage)
                         .ComboBox("Entity", "", existingEntities.Select(x => new EntityContainer { Entity = x }))
                         .OkCancel(OK, Cancel)
                 )
                 {
-                    var result = await qf.ShowDialogAsync();
+                    DialogResult result = await qf.ShowDialogAsync();
                     if (result == DialogResult.OK) existing = (qf.Object("Entity") as EntityContainer)?.Entity;
                     confirmed = result != DialogResult.Cancel;
                 }
@@ -96,11 +96,11 @@ namespace CBRE.BspEditor.Editing.Commands
 
             if (!confirmed) return;
 
-            var ops = new List<IOperation>();
+            List<IOperation> ops = new List<IOperation>();
 
-            var gameData = await document.Environment.GetGameData();
-            var def = document.Environment.DefaultBrushEntity;
-            var defaultEntityClass = (
+            GameData gameData = await document.Environment.GetGameData();
+            string def = document.Environment.DefaultBrushEntity;
+            GameDataObject defaultEntityClass = (
                 from g in gameData.Classes
                 where g.ClassType == ClassType.Solid
                 orderby String.Equals(g.Name, def, StringComparison.InvariantCultureIgnoreCase) ? 0 : 1,
@@ -130,16 +130,16 @@ namespace CBRE.BspEditor.Editing.Commands
             }
 
             // Any other entities in the selection should be destroyed
-            foreach (var entity in existingEntities.Where(x => !ReferenceEquals(x, existing)))
+            foreach (Entity entity in existingEntities.Where(x => !ReferenceEquals(x, existing)))
             {
-                var children = entity.Hierarchy.Where(x => !(x is Entity)).ToList();
+                List<IMapObject> children = entity.Hierarchy.Where(x => !(x is Entity)).ToList();
                 ops.Add(new Detatch(entity.ID, children));
                 ops.Add(new Attach(existing.ID, children));
                 ops.Add(new Detatch(entity.Hierarchy.Parent.ID, entity));
             }
 
             // All other parents should be added to the entity
-            foreach (var obj in document.Selection.GetSelectedParents().Except(existingEntities))
+            foreach (IMapObject obj in document.Selection.GetSelectedParents().Except(existingEntities))
             {
                 ops.Add(new Detatch(obj.Hierarchy.Parent.ID, obj));
                 ops.Add(new Attach(existing.ID, obj));

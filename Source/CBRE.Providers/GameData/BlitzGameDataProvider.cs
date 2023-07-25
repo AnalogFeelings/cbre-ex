@@ -13,7 +13,7 @@ namespace CBRE.Providers.GameData
     {
         public DataStructures.GameData.GameData GetGameDataFromFiles(IEnumerable<string> files)
         {
-            var gameData = new DataStructures.GameData.GameData();
+            DataStructures.GameData.GameData gameData = new DataStructures.GameData.GameData();
 
             gameData.MapSizeHigh = 16384;
             gameData.MapSizeLow = -16384;

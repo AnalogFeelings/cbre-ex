@@ -46,10 +46,10 @@ namespace CBRE.Shell.Registers
         public Task OnStartup()
         {
             // Register the exported sidebar components
-            foreach (var export in _sidebarComponents)
+            foreach (Lazy<ISidebarComponent> export in _sidebarComponents)
             {
-                var ty = export.Value.GetType();
-                var hint = OrderHintAttribute.GetOrderHint(ty);
+                Type ty = export.Value.GetType();
+                string hint = OrderHintAttribute.GetOrderHint(ty);
                 Add(export.Value, hint);
                 Log.Debug("Sidebar", "Loaded: " + export.Value.GetType().FullName);
             }
@@ -73,7 +73,7 @@ namespace CBRE.Shell.Registers
         /// <param name="orderHint"></param>
         private void Add(ISidebarComponent component, string orderHint)
         {
-            var sc = new SidebarComponent(component, orderHint);
+            SidebarComponent sc = new SidebarComponent(component, orderHint);
             _right.Add(sc);
             _right = _right.OrderBy(x => x.OrderHint).ToList();
             Shell.RightSidebarContainer.Insert(sc.Panel, _right.IndexOf(sc));
@@ -81,7 +81,7 @@ namespace CBRE.Shell.Registers
 
         private Task ContextChanged(IContext context)
         {
-            foreach (var sc in _left.Union(_right))
+            foreach (SidebarComponent sc in _left.Union(_right))
             {
                 sc.ContextChanged(context);
             }
@@ -104,15 +104,15 @@ namespace CBRE.Shell.Registers
         {
             _shell.Value.Invoke((MethodInvoker) delegate
             {
-                var controls = _left.Union(_right).ToDictionary(x => x.ID, x => x);
-                foreach (var sv in store.GetKeys())
+                Dictionary<string, SidebarComponent> controls = _left.Union(_right).ToDictionary(x => x.ID, x => x);
+                foreach (string sv in store.GetKeys())
                 {
                     if (sv.EndsWith(":Side"))
                     {
-                        var key = sv.Substring(0, sv.Length - 5);
+                        string key = sv.Substring(0, sv.Length - 5);
                         if (controls.ContainsKey(key))
                         {
-                            var con = controls[key];
+                            SidebarComponent con = controls[key];
 
                             _left.Remove(con);
                             _right.Remove(con);
@@ -123,10 +123,10 @@ namespace CBRE.Shell.Registers
                     }
                     if (sv.EndsWith(":Expanded"))
                     {
-                        var key = sv.Substring(0, sv.Length - 9);
+                        string key = sv.Substring(0, sv.Length - 9);
                         if (controls.ContainsKey(key))
                         {
-                            var con = controls[key];
+                            SidebarComponent con = controls[key];
                             con.Panel.Hidden = !store.Get(sv, true);
                         }
                     }
@@ -140,16 +140,16 @@ namespace CBRE.Shell.Registers
 
         public void StoreValues(ISettingsStore store)
         {
-            for (var i = 0; i < _left.Count; i++)
+            for (int i = 0; i < _left.Count; i++)
             {
-                var sc = _left[i];
+                SidebarComponent sc = _left[i];
                 store.Set($"{sc.ID}:Side", "Left");
                 store.Set($"{sc.ID}:Order", i);
                 store.Set($"{sc.ID}:Expanded", !sc.Panel.Hidden);
             }
-            for (var i = 0; i < _right.Count; i++)
+            for (int i = 0; i < _right.Count; i++)
             {
-                var sc = _right[i];
+                SidebarComponent sc = _right[i];
                 store.Set($"{sc.ID}:Side", "Right");
                 store.Set($"{sc.ID}:Order", i);
                 store.Set($"{sc.ID}:Expanded", !sc.Panel.Hidden);
@@ -210,7 +210,7 @@ namespace CBRE.Shell.Registers
             {
                 Panel.InvokeLater(() =>
                 {
-                    var iic = Component.IsInContext(context);
+                    bool iic = Component.IsInContext(context);
                     Panel.Text = Component.Title;
                     if (iic != Panel.Visible) Panel.Visible = iic;
                 });

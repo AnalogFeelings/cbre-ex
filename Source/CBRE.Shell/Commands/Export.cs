@@ -39,18 +39,18 @@ namespace CBRE.Shell.Commands
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var doc = context.Get<IDocument>("ActiveDocument");
+            IDocument doc = context.Get<IDocument>("ActiveDocument");
             if (doc != null)
             {
-                var loaders = _loaders.Select(x => x.Value).Where(x => x.CanSave(doc)).ToList();
+                List<IDocumentLoader> loaders = _loaders.Select(x => x.Value).Where(x => x.CanSave(doc)).ToList();
 
-                var filter = loaders.SelectMany(x => x.SupportedFileExtensions).Select(x => x.Description + "|" + String.Join(";", x.Extensions.Select(e => "*" + e))).ToList();
+                List<string> filter = loaders.SelectMany(x => x.SupportedFileExtensions).Select(x => x.Description + "|" + String.Join(";", x.Extensions.Select(e => "*" + e))).ToList();
 
-                using (var sfd = new SaveFileDialog { Filter = String.Join("|", filter) })
+                using (SaveFileDialog sfd = new SaveFileDialog { Filter = String.Join("|", filter) })
                 {
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
-                        var loader = loaders.FirstOrDefault(x => x.CanLoad(doc.FileName));
+                        IDocumentLoader loader = loaders.FirstOrDefault(x => x.CanLoad(doc.FileName));
                         if (loader != null)
                         {
                             await Oy.Publish("Document:BeforeSave", doc);

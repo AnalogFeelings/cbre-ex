@@ -54,7 +54,7 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         public void FixBounds()
         {
-            var box = new Box(Start, End);
+            Box box = new Box(Start, End);
             OrigStart = Start = box.Start;
             OrigEnd = End = box.End;
             OnChanged();
@@ -70,10 +70,10 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         public void Resize(ResizeHandle handle, MapViewport viewport, OrthographicCamera camera, Vector3 position)
         {
-            var fs = camera.Flatten(Start);
-            var fe = camera.Flatten(End);
-            var us = camera.GetUnusedCoordinate(Start);
-            var ue = camera.GetUnusedCoordinate(End);
+            Vector3 fs = camera.Flatten(Start);
+            Vector3 fe = camera.Flatten(End);
+            Vector3 us = camera.GetUnusedCoordinate(Start);
+            Vector3 ue = camera.GetUnusedCoordinate(End);
             switch (handle)
             {
                 case ResizeHandle.TopLeft:
@@ -117,16 +117,16 @@ namespace CBRE.BspEditor.Tools.Draggable
             const float minValue = -10000000000f;
             const float maxValue = +10000000000f;
 
-            var state = this;
+            BoxState state = this;
 
             // If one of the dimensions has a depth value of 0, extend it out into infinite space
             // If two or more dimensions have depth 0, do nothing.
-            
-            var sameX = Math.Abs(state.Start.X - state.End.X) < 0.001f;
-            var sameY = Math.Abs(state.Start.Y - state.End.Y) < 0.001f;
-            var sameZ = Math.Abs(state.Start.Z - state.End.Z) < 0.001f;
-            var start = state.Start;
-            var end = state.End;
+
+            bool sameX = Math.Abs(state.Start.X - state.End.X) < 0.001f;
+            bool sameY = Math.Abs(state.Start.Y - state.End.Y) < 0.001f;
+            bool sameZ = Math.Abs(state.Start.Z - state.End.Z) < 0.001f;
+            Vector3 start = state.Start;
+            Vector3 end = state.End;
 
             if (sameX)
             {

@@ -86,12 +86,12 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private Dictionary<Primitives.MapData.Visgroup, bool> GetMembershipChanges()
         {
-            var dic = new Dictionary<Primitives.MapData.Visgroup, bool>();
+            Dictionary<Primitives.MapData.Visgroup, bool> dic = new Dictionary<Primitives.MapData.Visgroup, bool>();
 
-            foreach (var checkState in visgroupPanel.GetAllCheckStates().Where(x => x.Value != CheckState.Indeterminate))
+            foreach (KeyValuePair<VisgroupItem, CheckState> checkState in visgroupPanel.GetAllCheckStates().Where(x => x.Value != CheckState.Indeterminate))
             {
                 if (_state.All(x => x.Key.Tag != checkState.Key.Tag)) continue;
-                var state = _state.First(x => x.Key.Tag == checkState.Key.Tag);
+                KeyValuePair<VisgroupItem, CheckState> state = _state.First(x => x.Key.Tag == checkState.Key.Tag);
                 if (checkState.Value != state.Value) dic[(Primitives.MapData.Visgroup) state.Key.Tag] = checkState.Value == CheckState.Checked;
             }
 
@@ -103,18 +103,18 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private Dictionary<VisgroupItem, CheckState> GetVisgroups(MapDocument document, List<IMapObject> objects)
         {
-            var d = new Dictionary<VisgroupItem, CheckState>();
+            Dictionary<VisgroupItem, CheckState> d = new Dictionary<VisgroupItem, CheckState>();
             if (document == null || objects == null) return d;
 
-            var objGroups = objects
+            Dictionary<long, int> objGroups = objects
                 .SelectMany(x => x.Data.Get<VisgroupID>().Select(v => new {Object = x, Visgroup = v.ID}))
                 .GroupBy(x => x.Visgroup)
                 .ToDictionary(x => x.Key, x => x.Count());
 
-            foreach (var visgroup in document.Map.Data.Get<Primitives.MapData.Visgroup>())
+            foreach (Primitives.MapData.Visgroup visgroup in document.Map.Data.Get<Primitives.MapData.Visgroup>())
             {
-                var id = visgroup.ID;
-                var cs = CheckState.Unchecked;
+                long id = visgroup.ID;
+                CheckState cs = CheckState.Unchecked;
                 if (objGroups.ContainsKey(id))
                 {
                     if (objGroups[id] == objects.Count) cs = CheckState.Checked;
@@ -134,15 +134,15 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// <inheritdoc />
         public IEnumerable<IOperation> GetChanges(MapDocument document, List<IMapObject> objects)
         {
-            var mc = GetMembershipChanges();
+            Dictionary<Primitives.MapData.Visgroup, bool> mc = GetMembershipChanges();
             if (mc.Count == 0) yield break;
 
-            foreach (var mo in objects)
+            foreach (IMapObject mo in objects)
             {
-                var visgroups = mo.Data.Get<VisgroupID>().ToDictionary(x => x.ID);
-                foreach (var kv in mc)
+                Dictionary<long, VisgroupID> visgroups = mo.Data.Get<VisgroupID>().ToDictionary(x => x.ID);
+                foreach (KeyValuePair<Primitives.MapData.Visgroup, bool> kv in mc)
                 {
-                    var id = kv.Key.ID;
+                    long id = kv.Key.ID;
                     if (kv.Value && !visgroups.ContainsKey(id))
                     {
                         // Object should be a member of this visgroup but it's not - add it

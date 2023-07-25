@@ -66,12 +66,12 @@ namespace CBRE.Packages.Vpk
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            var ret = 0;
+            int ret = 0;
             if (Position < _entry.PreloadData.Length)
             {
                 // Get the preload data
-                var remainingPreload = _entry.PreloadData.Length - Position;
-                var copyLength = Math.Min(count, remainingPreload);
+                long remainingPreload = _entry.PreloadData.Length - Position;
+                long copyLength = Math.Min(count, remainingPreload);
                 Array.Copy(_entry.PreloadData, Position, buffer, offset, copyLength);
                 count -= (int) copyLength;
                 offset += (int) copyLength;
@@ -80,15 +80,15 @@ namespace CBRE.Packages.Vpk
             }
             if (Position >= _entry.PreloadData.Length && _entry.EntryLength > 0)
             {
-                var currentEntry = Position - _entry.PreloadData.Length;
-                var remainingEntry = _entry.EntryLength - currentEntry;
-                var copyLength = (int) Math.Min(count, remainingEntry);
+                long currentEntry = Position - _entry.PreloadData.Length;
+                long remainingEntry = _entry.EntryLength - currentEntry;
+                int copyLength = (int) Math.Min(count, remainingEntry);
                 if (copyLength > 0)
                 {
                     lock (_stream)
                     {
                         _stream.Position = _streamStart + currentEntry;
-                        var read = _stream.Read(buffer, offset, copyLength);
+                        int read = _stream.Read(buffer, offset, copyLength);
                         ret += read;
                         Position += read;
                     }

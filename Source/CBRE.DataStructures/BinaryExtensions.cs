@@ -8,8 +8,8 @@ namespace CBRE.DataStructures
     {
         public static Vector3[] ReadVector3Array(this BinaryReader br, int num)
         {
-            var arr = new Vector3[num];
-            for (var i = 0; i < num; i++) arr[i] = br.ReadVector3();
+            Vector3[] arr = new Vector3[num];
+            for (int i = 0; i < num; i++) arr[i] = br.ReadVector3();
             return arr;
         }
 

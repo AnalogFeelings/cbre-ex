@@ -21,8 +21,8 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public async Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var gd = await document.Environment.GetGameData();
-            var missing = document.Map.Root.FindAll()
+            DataStructures.GameData.GameData gd = await document.Environment.GetGameData();
+            List<Problem> missing = document.Map.Root.FindAll()
                 .Where(x => filter(x))
                 .SelectMany(x => x.Data.OfType<EntityData>()
                     .Where(ed => gd.GetClass(ed.Name) == null)

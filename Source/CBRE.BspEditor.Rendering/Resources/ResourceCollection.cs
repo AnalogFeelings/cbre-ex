@@ -51,23 +51,23 @@ namespace CBRE.BspEditor.Rendering.Resources
         public async Task<IModel> GetModel(IEnvironment environment, string path)
         {
             EnsureEnvironment(environment);
-            var mlist = _models[environment.ID];
-            var rlist = _resources[environment.ID];
+            HashSet<ModelResource> mlist = _models[environment.ID];
+            List<IResource> rlist = _resources[environment.ID];
 
             // Check if the model has already been loaded
-            var existing = mlist.FirstOrDefault(x => string.Equals(x.Name, path, StringComparison.InvariantCultureIgnoreCase));
+            ModelResource existing = mlist.FirstOrDefault(x => string.Equals(x.Name, path, StringComparison.InvariantCultureIgnoreCase));
             if (existing != null) return existing.Model;
 
             // Find the file
-            var file = environment.Root.TraversePath(path);
+            IFile file = environment.Root.TraversePath(path);
             if (file == null || !file.Exists) return null;
 
             // Find a provider for the file
-            var provider = _modelProviders.FirstOrDefault(x => x.Value.CanLoadModel(file));
+            Lazy<IModelProvider> provider = _modelProviders.FirstOrDefault(x => x.Value.CanLoadModel(file));
             if (provider == null) return null;
 
             // Try to load the model
-            var res = await provider.Value.LoadModel(file);
+            IModel res = await provider.Value.LoadModel(file);
             if (res == null) return null;
 
             // Set up the model and return
@@ -88,10 +88,10 @@ namespace CBRE.BspEditor.Rendering.Resources
         public IModelRenderable CreateModelRenderable(IEnvironment environment, IModel model)
         {
             EnsureEnvironment(environment);
-            var rlist = _resources[environment.ID];
+            List<IResource> rlist = _resources[environment.ID];
 
-            var provider = _modelProviders.FirstOrDefault(x => x.Value.IsProvider(model));
-            var res = provider?.Value.CreateRenderable(model);
+            Lazy<IModelProvider> provider = _modelProviders.FirstOrDefault(x => x.Value.IsProvider(model));
+            IModelRenderable res = provider?.Value.CreateRenderable(model);
             if (res == null) return null;
 
             _engine.Value.CreateResource(res);
@@ -109,7 +109,7 @@ namespace CBRE.BspEditor.Rendering.Resources
         public void DestroyModelRenderable(IEnvironment environment, IModelRenderable renderable)
         {
             EnsureEnvironment(environment);
-            var rlist = _resources[environment.ID];
+            List<IResource> rlist = _resources[environment.ID];
 
             _engine.Value.DestroyResource(renderable);
             rlist.Remove(renderable);
@@ -126,19 +126,19 @@ namespace CBRE.BspEditor.Rendering.Resources
             if (environment?.ID == null) return;
             EnsureEnvironment(environment);
 
-            var rlist = _resources[environment.ID];
-            var tlist = _textures[environment.ID];
+            List<IResource> rlist = _resources[environment.ID];
+            HashSet<string> tlist = _textures[environment.ID];
 
-            var textures = collector.Textures.Except(tlist, StringComparer.InvariantCultureIgnoreCase).ToHashSet();
+            HashSet<string> textures = collector.Textures.Except(tlist, StringComparer.InvariantCultureIgnoreCase).ToHashSet();
 
             if (textures.Any())
             {
-                var tc = await environment.GetTextureCollection();
-                var items = await tc.GetTextureItems(textures);
-                using (var ss = tc.GetStreamSource())
+                TextureCollection tc = await environment.GetTextureCollection();
+                IEnumerable<TextureItem> items = await tc.GetTextureItems(textures);
+                using (ITextureStreamSource ss = tc.GetStreamSource())
                 {
                     // ReSharper disable once AccessToDisposedClosure : We know this closure completes before `ss` is disposed due to Task.WaitAll
-                    var tasks = items.Select(x => Task.Run(() => UploadTexture(environment, x, ss))).ToList();
+                    List<Task<IResource>> tasks = items.Select(x => Task.Run(() => UploadTexture(environment, x, ss))).ToList();
                     await Task.WhenAll(tasks);
                     rlist.AddRange(tasks.Select(x => x.Result));
                     tlist.UnionWith(textures);
@@ -155,10 +155,10 @@ namespace CBRE.BspEditor.Rendering.Resources
 
         private async Task<IResource> UploadTexture(IEnvironment environment, TextureItem item, ITextureStreamSource source)
         {
-            using (var bitmap = await source.GetImage(item.Name, 512, 512))
+            using (Bitmap bitmap = await source.GetImage(item.Name, 512, 512))
             {
-                var lb = bitmap.LockBits(new Rectangle(0, 0, item.Width, item.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-                var data = new byte[lb.Stride * lb.Height];
+                BitmapData lb = bitmap.LockBits(new Rectangle(0, 0, item.Width, item.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                byte[] data = new byte[lb.Stride * lb.Height];
                 Marshal.Copy(lb.Scan0, data, 0, data.Length);
                 bitmap.UnlockBits(lb);
                 
@@ -172,19 +172,19 @@ namespace CBRE.BspEditor.Rendering.Resources
         /// <param name="usedEnvironments">The environments to retain resources for</param>
         public void DisposeOtherEnvironments(HashSet<IEnvironment> usedEnvironments)
         {
-            foreach (var dt in _textures.Keys.Except(usedEnvironments.Select(x => x.ID)).ToList())
+            foreach (string dt in _textures.Keys.Except(usedEnvironments.Select(x => x.ID)).ToList())
             {
                 _textures.TryRemove(dt, out _);
             }
-            foreach (var dm in _models.Keys.Except(usedEnvironments.Select(x => x.ID)).ToList())
+            foreach (string dm in _models.Keys.Except(usedEnvironments.Select(x => x.ID)).ToList())
             {
                 _models.TryRemove(dm, out _);
             }
-            foreach (var dr in _resources.Keys.Except(usedEnvironments.Select(x => x.ID)).ToList())
+            foreach (string dr in _resources.Keys.Except(usedEnvironments.Select(x => x.ID)).ToList())
             {
-                var list = _resources[dr];
+                List<IResource> list = _resources[dr];
                 _resources.TryRemove(dr, out _);
-                foreach (var res in list) _engine.Value.DestroyResource(res);
+                foreach (IResource res in list) _engine.Value.DestroyResource(res);
             }
         }
 

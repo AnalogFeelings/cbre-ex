@@ -14,8 +14,8 @@ namespace CBRE.Common.Shell.Commands
         /// <returns>The command's ID</returns>
         public static string GetID(this ICommand command)
         {
-            var ty = command.GetType();
-            var mt = ty.GetCustomAttributes(typeof(CommandIDAttribute), false).OfType<CommandIDAttribute>().FirstOrDefault();
+            System.Type ty = command.GetType();
+            CommandIDAttribute mt = ty.GetCustomAttributes(typeof(CommandIDAttribute), false).OfType<CommandIDAttribute>().FirstOrDefault();
             return mt?.ID ?? ty.FullName;
         }
     }

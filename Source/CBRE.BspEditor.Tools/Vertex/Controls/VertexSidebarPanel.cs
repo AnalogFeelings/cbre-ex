@@ -40,7 +40,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Title = strings.GetString(prefix, "Title");
@@ -71,7 +71,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
 
             ControlPanel.Controls.Clear();
 
-            var t = _tool.CurrentSubTool;
+            VertexSubtool t = _tool.CurrentSubTool;
             if (t == null)
             {
                 ControlPanel.Text = "";
@@ -91,7 +91,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
         {
             if (ButtonLayoutPanel.Controls.Count > 0) return;
 
-            foreach (var subTool in _subTools.Select(x => x.Value).OrderBy(x => x.OrderHint))
+            foreach (VertexSubtool subTool in _subTools.Select(x => x.Value).OrderBy(x => x.OrderHint))
             {
                 AddSubTool(subTool);
             }
@@ -99,7 +99,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
 
         private void AddSubTool(VertexSubtool tool)
         {
-            var rdo = new RadioButton
+            RadioButton rdo = new RadioButton
             {
                 Name = tool.Title,
                 Text = tool.Title,

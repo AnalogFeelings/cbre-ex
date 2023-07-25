@@ -22,14 +22,14 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var obj = document.Map.Root.FindByID(_id);
-            var data = obj?.Data.GetOne<EntityData>();
+            IMapObject obj = document.Map.Root.FindByID(_id);
+            EntityData data = obj?.Data.GetOne<EntityData>();
             if (data != null)
             {
                 _beforeState = data.ToSerialisedObject();
-                foreach (var kv in _valuesToSet)
+                foreach (KeyValuePair<string, string> kv in _valuesToSet)
                 {
                     if (kv.Value == null) data.Properties.Remove(kv.Key);
                     else data.Properties[kv.Key] = kv.Value;
@@ -42,12 +42,12 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Reverse(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var obj = document.Map.Root.FindByID(_id);
+            IMapObject obj = document.Map.Root.FindByID(_id);
             if (obj != null && _beforeState != null)
             {
-                var ed = new EntityData(_beforeState);
+                EntityData ed = new EntityData(_beforeState);
                 obj.Data.Replace(ed);
                 ch.Update(obj);
             }

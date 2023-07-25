@@ -32,8 +32,8 @@ namespace CBRE.Shell.Forms
 
             _appTranslationsFolder = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Translations");
             _userTranslationsFolder = _appInfo.GetApplicationSettingsFolder("Translations");
-            
-            var source = new DataTable("Translations");
+
+            DataTable source = new DataTable("Translations");
             source.Columns.Add("ID", typeof(string));
             source.Columns.Add("Type", typeof(string));
             source.Columns.Add("FriendlyID", typeof(string));
@@ -56,12 +56,12 @@ namespace CBRE.Shell.Forms
             cmbLanguage.BeginUpdate();
             cmbLanguage.Items.Clear();
 
-            foreach (var lang in _catalog.Languages.Values)
+            foreach (Language lang in _catalog.Languages.Values)
             {
                 if (lang.Code.Contains("debug")) continue;
                 if (lang.Code == "en") continue;
 
-                var w = new Wrapper<Language>(lang, lang.Description);
+                Wrapper<Language> w = new Wrapper<Language>(lang, lang.Description);
                 cmbLanguage.Items.Add(w);
             }
 
@@ -72,11 +72,11 @@ namespace CBRE.Shell.Forms
         {
             cmbFile.BeginUpdate();
             cmbFile.Items.Clear();
-            
-            var enFiles = Directory.GetFiles(_appTranslationsFolder, "*.en.json");
-            foreach (var file in enFiles)
+
+            string[] enFiles = Directory.GetFiles(_appTranslationsFolder, "*.en.json");
+            foreach (string file in enFiles)
             {
-                var w = new Wrapper<string>(file, Path.GetFileName(file.Substring(0, file.Length - 8)));
+                Wrapper<string> w = new Wrapper<string>(file, Path.GetFileName(file.Substring(0, file.Length - 8)));
                 cmbFile.Items.Add(w);
             }
             if (cmbFile.Items.Count > 0) cmbFile.SelectedIndex = 0;
@@ -96,8 +96,8 @@ namespace CBRE.Shell.Forms
 
         private void PopulateDataTable()
         {
-            var lang = cmbLanguage.SelectedItem as Wrapper<Language>;
-            var file = cmbFile.SelectedItem as Wrapper<string>;
+            Wrapper<Language> lang = cmbLanguage.SelectedItem as Wrapper<Language>;
+            Wrapper<string> file = cmbFile.SelectedItem as Wrapper<string>;
 
             // Making the headers invisible during update speeds up rendering a lot
 
@@ -105,7 +105,7 @@ namespace CBRE.Shell.Forms
             dataGridView.ColumnHeadersVisible = false;
             dataGridView.RowHeadersVisible = false;
 
-            var source = (DataTable) dataGridView.DataSource;
+            DataTable source = (DataTable) dataGridView.DataSource;
             source.Rows.Clear();
             if (lang != null && file != null)
             {
@@ -119,56 +119,56 @@ namespace CBRE.Shell.Forms
 
         private TranslationStringsCollection LoadLanguageFile(Language lang, string enFile)
         {
-            var prefix = Path.GetFileName(enFile.Substring(0, enFile.Length - 8));
-            var langFile = $"{prefix}.{lang.Code}.json";
+            string prefix = Path.GetFileName(enFile.Substring(0, enFile.Length - 8));
+            string langFile = $"{prefix}.{lang.Code}.json";
 
-            var appLang = TranslationStringsCatalog.LoadLanguageFromFile(Path.Combine(_appTranslationsFolder, langFile));
-            var userLang = TranslationStringsCatalog.LoadLanguageFromFile(Path.Combine(_userTranslationsFolder, langFile));
+            Language appLang = TranslationStringsCatalog.LoadLanguageFromFile(Path.Combine(_appTranslationsFolder, langFile));
+            Language userLang = TranslationStringsCatalog.LoadLanguageFromFile(Path.Combine(_userTranslationsFolder, langFile));
 
-            var tsc = new TranslationStringsCollection();
+            TranslationStringsCollection tsc = new TranslationStringsCollection();
             if (appLang != null)
             {
-                foreach (var kv in appLang.Collection.Settings) tsc.Settings[kv.Key] = kv.Value;
-                foreach (var kv in appLang.Collection.Strings) tsc.Strings[kv.Key] = kv.Value;
+                foreach (System.Collections.Generic.KeyValuePair<string, string> kv in appLang.Collection.Settings) tsc.Settings[kv.Key] = kv.Value;
+                foreach (System.Collections.Generic.KeyValuePair<string, string> kv in appLang.Collection.Strings) tsc.Strings[kv.Key] = kv.Value;
             }
             if (userLang != null)
             {
-                foreach (var kv in userLang.Collection.Settings) tsc.Settings[kv.Key] = kv.Value;
-                foreach (var kv in userLang.Collection.Strings) tsc.Strings[kv.Key] = kv.Value;
+                foreach (System.Collections.Generic.KeyValuePair<string, string> kv in userLang.Collection.Settings) tsc.Settings[kv.Key] = kv.Value;
+                foreach (System.Collections.Generic.KeyValuePair<string, string> kv in userLang.Collection.Strings) tsc.Strings[kv.Key] = kv.Value;
             }
             return tsc;
         }
 
         private void PopulateTable(DataTable table, Language targetLang, string file)
         {
-            var en = LoadLanguageFile(_catalog.Languages["en"], file);
-            var collection = LoadLanguageFile(targetLang, file);
-            var prefix = Path.GetFileName(file.Substring(0, file.Length - 8));
+            TranslationStringsCollection en = LoadLanguageFile(_catalog.Languages["en"], file);
+            TranslationStringsCollection collection = LoadLanguageFile(targetLang, file);
+            string prefix = Path.GetFileName(file.Substring(0, file.Length - 8));
 
-            foreach (var settingKv in en.Settings)
+            foreach (System.Collections.Generic.KeyValuePair<string, string> settingKv in en.Settings)
             {
-                if (!collection.Settings.TryGetValue(settingKv.Key, out var translated)) translated = "";
-                var niceKey = settingKv.Key[0] == '@' ? settingKv.Key : settingKv.Key.Substring(prefix.Length + 1);
+                if (!collection.Settings.TryGetValue(settingKv.Key, out string translated)) translated = "";
+                string niceKey = settingKv.Key[0] == '@' ? settingKv.Key : settingKv.Key.Substring(prefix.Length + 1);
                 table.Rows.Add(niceKey, "Setting", "Setting: " + niceKey, settingKv.Value, translated);
             }
 
-            foreach (var stringKv in en.Strings)
+            foreach (System.Collections.Generic.KeyValuePair<string, string> stringKv in en.Strings)
             {
-                if (!collection.Strings.TryGetValue(stringKv.Key, out var translated)) translated = "";
-                var niceKey = stringKv.Key.Substring(prefix.Length + 1);
+                if (!collection.Strings.TryGetValue(stringKv.Key, out string translated)) translated = "";
+                string niceKey = stringKv.Key.Substring(prefix.Length + 1);
                 table.Rows.Add(niceKey, "String", niceKey, stringKv.Value, translated);
             }
         }
 
         private void AddLanguageClicked(object sender, EventArgs e)
         {
-            using (var alf = new AddLanguageForm())
+            using (AddLanguageForm alf = new AddLanguageForm())
             {
                 if (alf.ShowDialog() == DialogResult.OK)
                 {
-                    var lang = new Language(alf.Code) {Description = alf.Description, Inherit = "en"};
+                    Language lang = new Language(alf.Code) {Description = alf.Description, Inherit = "en"};
 
-                    var w = new Wrapper<Language>(lang, lang.Description);
+                    Wrapper<Language> w = new Wrapper<Language>(lang, lang.Description);
                     cmbLanguage.Items.Add(w);
                     cmbLanguage.SelectedItem = w;
                 }
@@ -179,26 +179,26 @@ namespace CBRE.Shell.Forms
         {
             if (e.Button != MouseButtons.Left) return;
 
-            var test = dataGridView.HitTest(e.X, e.Y);
+            DataGridView.HitTestInfo test = dataGridView.HitTest(e.X, e.Y);
             if (test.Type == DataGridViewHitTestType.Cell) dataGridView.BeginEdit(true);
             else dataGridView.EndEdit();
         }
 
         private void SaveClicked(object sender, EventArgs e)
         {
-            var langW = cmbLanguage.SelectedItem as Wrapper<Language>;
-            var fileW = cmbFile.SelectedItem as Wrapper<string>;
+            Wrapper<Language> langW = cmbLanguage.SelectedItem as Wrapper<Language>;
+            Wrapper<string> fileW = cmbFile.SelectedItem as Wrapper<string>;
             if (langW == null || fileW == null) return;
 
-            var enFile = fileW.Object;
-            var targetLang = langW.Object;
+            string enFile = fileW.Object;
+            Language targetLang = langW.Object;
 
-            var prefix = Path.GetFileName(enFile.Substring(0, enFile.Length - 8));
-            var langFile = $"{prefix}.{targetLang.Code.ToLower()}.json";
-            
-            var source = (DataTable)dataGridView.DataSource;
+            string prefix = Path.GetFileName(enFile.Substring(0, enFile.Length - 8));
+            string langFile = $"{prefix}.{targetLang.Code.ToLower()}.json";
 
-            var file = new JObject();
+            DataTable source = (DataTable)dataGridView.DataSource;
+
+            JObject file = new JObject();
 
             file.Add("@Meta", new JObject
             {
@@ -208,30 +208,30 @@ namespace CBRE.Shell.Forms
                 ["Inherit"] = targetLang.Inherit ?? ""
             });
 
-            var settings = source.Rows.OfType<DataRow>().Where(x => Convert.ToString(x["Type"]) == "Setting").ToList();
+            System.Collections.Generic.List<DataRow> settings = source.Rows.OfType<DataRow>().Where(x => Convert.ToString(x["Type"]) == "Setting").ToList();
             if (settings.Any())
             {
-                var settingNode = new JObject();
-                foreach (var ss in settings)
+                JObject settingNode = new JObject();
+                foreach (DataRow ss in settings)
                 {
-                    var k = Convert.ToString(ss["ID"]);
-                    var v = Convert.ToString(ss["Translation"]);
+                    string k = Convert.ToString(ss["ID"]);
+                    string v = Convert.ToString(ss["Translation"]);
                     settingNode[k] = v;
                 }
                 file.Add("@Settings", settingNode);
             }
-            
-            var strings = source.Rows.OfType<DataRow>().Where(x => Convert.ToString(x["Type"]) == "String").ToList();
-            foreach (var ss in strings)
+
+            System.Collections.Generic.List<DataRow> strings = source.Rows.OfType<DataRow>().Where(x => Convert.ToString(x["Type"]) == "String").ToList();
+            foreach (DataRow ss in strings)
             {
-                var k = Convert.ToString(ss["ID"]);
-                var v = Convert.ToString(ss["Translation"]);
+                string k = Convert.ToString(ss["ID"]);
+                string v = Convert.ToString(ss["Translation"]);
                 file[k] = v;
             }
 
 
-            var userLang = Path.Combine(_userTranslationsFolder, langFile);
-            var output = file.ToString(Newtonsoft.Json.Formatting.Indented);
+            string userLang = Path.Combine(_userTranslationsFolder, langFile);
+            string output = file.ToString(Newtonsoft.Json.Formatting.Indented);
 
             if (!Directory.Exists(_userTranslationsFolder)) Directory.CreateDirectory(_userTranslationsFolder);
             File.WriteAllText(userLang, output);

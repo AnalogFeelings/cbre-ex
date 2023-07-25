@@ -30,15 +30,15 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
 
         private Task Opened(MapDocument doc)
         {
-            var ch = new Change(doc);
+            Change ch = new Change(doc);
             ch.AddRange(doc.Map.Root.FindAll());
-            foreach (var d in doc.Map.Data) ch.Update(d);
+            foreach (Primitives.MapData.IMapData d in doc.Map.Data) ch.Update(d);
             return Changed(ch);
         }
 
         private async Task Changed(Change change)
         {
-            foreach (var ch in _changeHandlers.OrderBy(x => x.OrderHint))
+            foreach (IMapDocumentChangeHandler ch in _changeHandlers.OrderBy(x => x.OrderHint))
             {
                 await ch.Changed(change);
             }

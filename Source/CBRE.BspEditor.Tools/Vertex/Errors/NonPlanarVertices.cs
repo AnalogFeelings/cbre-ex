@@ -12,9 +12,9 @@ namespace CBRE.BspEditor.Tools.Vertex.Errors
 
         public IEnumerable<VertexError> GetErrors(VertexSolid solid)
         {
-            foreach (var face in solid.Copy.Faces)
+            foreach (MutableFace face in solid.Copy.Faces)
             {
-                var nonPlanar = face.Vertices.Where(x => face.Plane.OnPlane(x.Position, 0.5f) != 0).ToList();
+                List<MutableVertex> nonPlanar = face.Vertices.Where(x => face.Plane.OnPlane(x.Position, 0.5f) != 0).ToList();
                 if (nonPlanar.Any()) yield return new VertexError(Key, solid).Add(face).Add(nonPlanar);
             }
         }

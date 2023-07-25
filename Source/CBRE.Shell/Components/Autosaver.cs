@@ -63,13 +63,13 @@ namespace CBRE.Shell.Components
             Scheduler.RemoveContext<Autosaver>(x => x == this);
             if (!Enabled) return;
 
-            var at = Math.Max(1, IntervalMinutes);
+            int at = Math.Max(1, IntervalMinutes);
             Scheduler.Schedule(this, Autosave, Schedule.Interval(TimeSpan.FromMinutes(at)));
         }
 
         private void Autosave()
         {
-            foreach (var doc in _documentRegister.OpenDocuments)
+            foreach (IDocument doc in _documentRegister.OpenDocuments)
             {
                 if (OnlySaveIfChanged && !doc.HasUnsavedChanges) continue;
                 try
@@ -86,20 +86,20 @@ namespace CBRE.Shell.Components
 
         private void Autosave(IDocument document)
         {
-            var fs = GetAutosaveFormatString(document);
-            var directory = GetAutosaveFolder(document);
+            string fs = GetAutosaveFormatString(document);
+            string directory = GetAutosaveFolder(document);
             if (fs == null || directory == null) return;
 
             // Get the filename and ensure it doesn't exist
-            var date = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd-hh-mm-ss");
-            var filename = Path.Combine(directory, String.Format(fs, date));
+            string date = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd-hh-mm-ss");
+            string filename = Path.Combine(directory, String.Format(fs, date));
             if (File.Exists(filename)) File.Delete(filename);
 
             // Delete excessive autosaves
             if (RetainNumber > 0)
             {
-                var asFiles = GetExistingAutosaveFiles(directory, fs);
-                foreach (var file in asFiles.OrderByDescending(x => x.Value).Skip(RetainNumber))
+                Dictionary<string, DateTime> asFiles = GetExistingAutosaveFiles(directory, fs);
+                foreach (KeyValuePair<string, DateTime> file in asFiles.OrderByDescending(x => x.Value).Skip(RetainNumber))
                 {
                     if (File.Exists(file.Key)) File.Delete(file.Key);
                 }
@@ -111,7 +111,7 @@ namespace CBRE.Shell.Components
 
         private void Save(IDocument document)
         {
-            var filename = document.FileName;
+            string filename = document.FileName;
             if (filename == null || !Directory.Exists(Path.GetDirectoryName(filename))) return;
 
             _documentRegister.SaveDocument(document, filename);
@@ -119,38 +119,38 @@ namespace CBRE.Shell.Components
 
         private string GetAutosaveFormatString(IDocument document)
         {
-            var path = document.FileName;
+            string path = document.FileName;
             if (path == null) return null;
 
-            var we = Path.GetFileNameWithoutExtension(path);
-            var ex = Path.GetExtension(path);
+            string we = Path.GetFileNameWithoutExtension(path);
+            string ex = Path.GetExtension(path);
             return we + ".auto.{0}" + ex;
         }
 
         private string GetAutosaveFolder(IDocument document)
         {
             if (SaveToAlternateDirectory && Directory.Exists(AutosaveDirectory)) return AutosaveDirectory;
-            var dir = Path.GetDirectoryName(document.FileName);
+            string dir = Path.GetDirectoryName(document.FileName);
             return Directory.Exists(dir) ? dir : null;
         }
 
         public Dictionary<string, DateTime> GetExistingAutosaveFiles(string directory, string formatString)
         {
-            var ret = new Dictionary<string, DateTime>();
+            Dictionary<string, DateTime> ret = new Dictionary<string, DateTime>();
             if (formatString == null || directory == null) return ret;
 
             // Search for matching files
-            var files = Directory.GetFiles(directory, String.Format(formatString, "*"));
-            foreach (var file in files)
+            string[] files = Directory.GetFiles(directory, String.Format(formatString, "*"));
+            foreach (string file in files)
             {
                 // Match the date portion with a regex
-                var re = Regex.Escape(formatString.Replace("{0}", ":")).Replace(":", "{0}");
-                var regex = String.Format(re, "(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})");
-                var match = Regex.Match(Path.GetFileName(file), regex, RegexOptions.IgnoreCase);
+                string re = Regex.Escape(formatString.Replace("{0}", ":")).Replace(":", "{0}");
+                string regex = String.Format(re, "(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})");
+                Match match = Regex.Match(Path.GetFileName(file), regex, RegexOptions.IgnoreCase);
                 if (!match.Success) continue;
 
                 // Parse the date and add it if it is valid
-                var result = DateTime.TryParse(
+                bool result = DateTime.TryParse(
                     String.Format("{0}-{1}-{2}T{3}:{4}:{5}Z",
                         match.Groups[1].Value, match.Groups[2].Value,
                         match.Groups[3].Value, match.Groups[4].Value,
@@ -158,7 +158,7 @@ namespace CBRE.Shell.Components
                     ),
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.AssumeUniversal,
-                    out var date
+                    out DateTime date
                 );
                 if (result) ret.Add(file, date);
             }

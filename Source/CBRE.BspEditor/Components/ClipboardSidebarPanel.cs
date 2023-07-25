@@ -41,7 +41,7 @@ namespace CBRE.BspEditor.Components
             ClipboardList.BeginUpdate();
             ClipboardList.Items.Clear();
 
-            foreach (var val in _clipboard.Value.GetClipboardRing().Reverse())
+            foreach (ClipboardManager.ClipboardEntry val in _clipboard.Value.GetClipboardRing().Reverse())
             {
                 ClipboardList.Items.Add(val);
             }

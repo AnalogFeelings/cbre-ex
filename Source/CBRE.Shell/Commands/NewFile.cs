@@ -47,10 +47,10 @@ namespace CBRE.Shell.Commands
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var loaders = _loaders.Where(x => x.Value.CanLoad(null)).Select(x => x.Value).ToList();
+            List<IDocumentLoader> loaders = _loaders.Where(x => x.Value.CanLoad(null)).Select(x => x.Value).ToList();
             if (!loaders.Any()) return;
 
-            var loader = loaders[0];
+            IDocumentLoader loader = loaders[0];
             if (loaders.Count > 1)
             {
                 // prompt user to select document type

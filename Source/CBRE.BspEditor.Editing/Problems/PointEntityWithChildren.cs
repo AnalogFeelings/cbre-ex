@@ -23,7 +23,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public async Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var gamedata = await document.Environment.GetGameData();
+            GameData gamedata = await document.Environment.GetGameData();
             return document.Map.Root.FindAll()
                 .OfType<Entity>()
                 .Where(x => x.Hierarchy.HasChildren)
@@ -38,9 +38,9 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task Fix(MapDocument document, Problem problem)
         {
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var obj in problem.Objects)
+            foreach (IMapObject obj in problem.Objects)
             {
                 transaction.Add(new Detatch(obj.ID, obj.Hierarchy));
                 transaction.Add(new Attach(document.Map.Root.ID, obj.Hierarchy));

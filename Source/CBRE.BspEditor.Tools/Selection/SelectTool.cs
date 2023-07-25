@@ -116,7 +116,7 @@ namespace CBRE.BspEditor.Tools.Selection
             _emptyBox.State.Changed += EmptyBoxChanged;
             _emptyBox.DragEnded += (sender, args) =>
             {
-                var document = GetDocument();
+                MapDocument document = GetDocument();
                 if (document != null && AutoSelectBox) Confirm(document);
             };
             States.Add(_emptyBox);
@@ -158,12 +158,12 @@ namespace CBRE.BspEditor.Tools.Selection
         {
             yield return Oy.Subscribe<IDocument>("MapDocument:SelectionChanged", x =>
             {
-                var document = GetDocument();
+                MapDocument document = GetDocument();
                 if (x == document) SelectionChanged(document);
             });
             yield return Oy.Subscribe<Change>("MapDocument:Changed", x =>
             {
-                var document = GetDocument();
+                MapDocument document = GetDocument();
                 if (x.Document == document)
                 {
                     if (x.HasObjectChanges) UpdateBoxBasedOnSelection(document);
@@ -173,13 +173,13 @@ namespace CBRE.BspEditor.Tools.Selection
             yield return Oy.Subscribe<RightClickMenuBuilder>("MapViewport:RightClick", b =>
             {
                 if (!(b.Viewport.Viewport.Camera is OrthographicCamera camera)) return;
-                var document = GetDocument();
+                MapDocument document = GetDocument();
                 if (document == null) return;
 
-                var selectionBoundingBox = document.Selection.GetSelectionBoundingBox();
-                var point = camera.Flatten(camera.ScreenToWorld(b.Event.X, b.Event.Y));
-                var start = camera.Flatten(selectionBoundingBox.Start);
-                var end = camera.Flatten(selectionBoundingBox.End);
+                Box selectionBoundingBox = document.Selection.GetSelectionBoundingBox();
+                Vector3 point = camera.Flatten(camera.ScreenToWorld(b.Event.X, b.Event.Y));
+                Vector3 start = camera.Flatten(selectionBoundingBox.Start);
+                Vector3 end = camera.Flatten(selectionBoundingBox.End);
 
                 if (point.X < start.X || point.X > end.X || point.Y < start.Y || point.Y > end.Y) return;
 
@@ -214,56 +214,56 @@ namespace CBRE.BspEditor.Tools.Selection
 
                 if (b.Viewport.Is2D)
                 {
-                    var f = camera.Flatten(new Vector3(1, 2, 3));
-                    var e = camera.Expand(f);
+                    Vector3 f = camera.Flatten(new Vector3(1, 2, 3));
+                    Vector3 e = camera.Expand(f);
                     var flat = new {X = (int) f.X, Y = (int) f.Y, Z = (int) f.Z};
                     var expand = new {X = (int) e.X, Y = (int) e.Y, Z = (int) e.Z};
 
-                    var left = flat.X == 1 ? "AlignXMin" : (flat.X == 2 ? "AlignYMin" : "AlignZMin");
-                    var right = flat.X == 1 ? "AlignXMax" : (flat.X == 2 ? "AlignYMax" : "AlignZMax");
-                    var bottom = flat.Y == 1 ? "AlignXMin" : (flat.Y == 2 ? "AlignYMin" : "AlignZMin");
-                    var top = flat.Y == 1 ? "AlignXMax" : (flat.Y == 2 ? "AlignYMax" : "AlignZMax");
+                    string left = flat.X == 1 ? "AlignXMin" : (flat.X == 2 ? "AlignYMin" : "AlignZMin");
+                    string right = flat.X == 1 ? "AlignXMax" : (flat.X == 2 ? "AlignYMax" : "AlignZMax");
+                    string bottom = flat.Y == 1 ? "AlignXMin" : (flat.Y == 2 ? "AlignYMin" : "AlignZMin");
+                    string top = flat.Y == 1 ? "AlignXMax" : (flat.Y == 2 ? "AlignYMax" : "AlignZMax");
 
-                    var group = b.AddGroup(Align);
+                    ToolStripMenuItem group = b.AddGroup(Align);
 
-                    var l = b.CreateCommandItem($"BspEditor:Tools:{left}");
+                    ToolStripMenuItem l = b.CreateCommandItem($"BspEditor:Tools:{left}");
                     l.Text = Left;
                     group.DropDownItems.Add(l);
 
-                    var r = b.CreateCommandItem($"BspEditor:Tools:{right}");
+                    ToolStripMenuItem r = b.CreateCommandItem($"BspEditor:Tools:{right}");
                     r.Text = Right;
                     group.DropDownItems.Add(r);
 
-                    var u = b.CreateCommandItem($"BspEditor:Tools:{top}");
+                    ToolStripMenuItem u = b.CreateCommandItem($"BspEditor:Tools:{top}");
                     u.Text = Top;
                     group.DropDownItems.Add(u);
 
-                    var d = b.CreateCommandItem($"BspEditor:Tools:{bottom}");
+                    ToolStripMenuItem d = b.CreateCommandItem($"BspEditor:Tools:{bottom}");
                     d.Text = Bottom;
                     group.DropDownItems.Add(d);
 
-                    var horizontal = flat.X == 1 ? "FlipX" : (flat.X == 2 ? "FlipY" : "FlipZ");
-                    var vertical = flat.Y == 2 ? "FlipY" : (flat.Y == 3 ? "FlipZ" : "FlipX");
+                    string horizontal = flat.X == 1 ? "FlipX" : (flat.X == 2 ? "FlipY" : "FlipZ");
+                    string vertical = flat.Y == 2 ? "FlipY" : (flat.Y == 3 ? "FlipZ" : "FlipX");
 
                     group = b.AddGroup(Flip);
 
-                    var h = b.CreateCommandItem($"BspEditor:Tools:{horizontal}");
+                    ToolStripMenuItem h = b.CreateCommandItem($"BspEditor:Tools:{horizontal}");
                     h.Text = Horizontally;
                     group.DropDownItems.Add(h);
 
-                    var v = b.CreateCommandItem($"BspEditor:Tools:{vertical}");
+                    ToolStripMenuItem v = b.CreateCommandItem($"BspEditor:Tools:{vertical}");
                     v.Text = Vertically;
                     group.DropDownItems.Add(v);
 
                     group = b.AddGroup(Rotate);
 
-                    var axis = expand.X == 0 ? Vector3.UnitX : (expand.Y == 0 ? -Vector3.UnitY : Vector3.UnitZ);
+                    Vector3 axis = expand.X == 0 ? Vector3.UnitX : (expand.Y == 0 ? -Vector3.UnitY : Vector3.UnitZ);
 
-                    var cw = b.CreateCommandItem("BspEditor:Tools:Rotate", new { Axis = axis, Angle = -90f });
+                    ToolStripMenuItem cw = b.CreateCommandItem("BspEditor:Tools:Rotate", new { Axis = axis, Angle = -90f });
                     cw.Text = Clockwise;
                     group.DropDownItems.Add(cw);
 
-                    var acw = b.CreateCommandItem("BspEditor:Tools:Rotate", new { Axis = axis, Angle = 90f });
+                    ToolStripMenuItem acw = b.CreateCommandItem("BspEditor:Tools:Rotate", new { Axis = axis, Angle = 90f });
                     acw.Text = AntiClockwise;
                     group.DropDownItems.Add(acw);
                 }
@@ -275,7 +275,7 @@ namespace CBRE.BspEditor.Tools.Selection
         private bool _lastIgnoreGroupingValue;
         private void IgnoreGroupingPossiblyChanged(MapDocument document)
         {
-            var igVal = IgnoreGrouping();
+            bool igVal = IgnoreGrouping();
             if (igVal == _lastIgnoreGroupingValue) return;
             IgnoreGroupingChanged(document);
         }
@@ -284,7 +284,7 @@ namespace CBRE.BspEditor.Tools.Selection
         {
             TransformationModeChanged(SelectionBoxDraggableState.TransformationMode.Resize);
 
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document != null)
             {
                 IgnoreGroupingChanged(document);
@@ -299,12 +299,12 @@ namespace CBRE.BspEditor.Tools.Selection
         {
             if (document == null) return;
 
-            foreach (var widget in Children.OfType<Widget>()) widget.SelectionChanged();
+            foreach (Widget widget in Children.OfType<Widget>()) widget.SelectionChanged();
             UpdateBoxBasedOnSelection(document);
 
             if (!document.Selection.IsEmpty)
             {
-                var box = document.Selection.GetSelectionBoundingBox();
+                Box box = document.Selection.GetSelectionBoundingBox();
                 _selectionBox.SetRotationOrigin(box.Center);
             }
             else
@@ -325,7 +325,7 @@ namespace CBRE.BspEditor.Tools.Selection
             {
                 _emptyBox.State.Action = BoxAction.Idle;
 
-                var box = document.Selection.GetSelectionBoundingBox();
+                Box box = document.Selection.GetSelectionBoundingBox();
                 _selectionBox.State.Start = box.Start;
                 _selectionBox.State.End = box.End;
                 _selectionBox.State.Action = BoxAction.Drawn;
@@ -342,11 +342,11 @@ namespace CBRE.BspEditor.Tools.Selection
 
         private void IgnoreGroupingChanged(MapDocument document)
         {
-            var igVal = _lastIgnoreGroupingValue = IgnoreGrouping();
+            bool igVal = _lastIgnoreGroupingValue = IgnoreGrouping();
 
-            var selected = document.Selection.ToList();
-            var select = new List<IMapObject>();
-            var deselect = new List<IMapObject>();
+            List<IMapObject> selected = document.Selection.ToList();
+            List<IMapObject> select = new List<IMapObject>();
+            List<IMapObject> deselect = new List<IMapObject>();
 
             if (igVal)
             {
@@ -354,11 +354,11 @@ namespace CBRE.BspEditor.Tools.Selection
             }
             else
             {
-                var parents = selected.Select(x => x.FindTopmostParent(y => y is Group || y is Primitives.MapObjects.Entity) ?? x).Distinct();
-                foreach (var p in parents)
+                IEnumerable<IMapObject> parents = selected.Select(x => x.FindTopmostParent(y => y is Group || y is Primitives.MapObjects.Entity) ?? x).Distinct();
+                foreach (IMapObject p in parents)
                 {
-                    var children = p.FindAll();
-                    var leaves = children.Where(x => !x.Hierarchy.HasChildren);
+                    List<IMapObject> children = p.FindAll();
+                    IEnumerable<IMapObject> leaves = children.Where(x => !x.Hierarchy.HasChildren);
                     if (leaves.All(selected.Contains)) select.AddRange(children.Where(x => !selected.Contains(x)));
                     else deselect.AddRange(children.Where(selected.Contains));
                 }
@@ -366,7 +366,7 @@ namespace CBRE.BspEditor.Tools.Selection
 
             if (select.Any() || deselect.Any())
             {
-                var transaction = new Transaction(new Select(select), new Deselect(deselect));
+                Transaction transaction = new Transaction(new Select(select), new Deselect(deselect));
                 MapDocumentOperation.Perform(document, transaction);
             }
         }
@@ -414,10 +414,10 @@ namespace CBRE.BspEditor.Tools.Selection
             objectsToDeselect = objectsToDeselect.Where(x => !objectsToSelect.Contains(x));
 
             // Perform selections
-            var deselected = objectsToDeselect.ToList();
-            var selected = objectsToSelect.ToList();
+            List<IMapObject> deselected = objectsToDeselect.ToList();
+            List<IMapObject> selected = objectsToSelect.ToList();
 
-            var transaction = new Transaction(new Select(selected), new Deselect(deselected));
+            Transaction transaction = new Transaction(new Select(selected), new Deselect(deselected));
             MapDocumentOperation.Perform(document, transaction);
         }
 
@@ -441,8 +441,8 @@ namespace CBRE.BspEditor.Tools.Selection
         protected override void MouseDown(MapDocument document, MapViewport viewport, PerspectiveCamera camera, ViewportEvent e)
         {
             // First, get the ray that is cast from the clicked point along the viewport frustrum
-            var (rayStart, rayEnd) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
-            var ray = new Line(rayStart, rayEnd);
+            (Vector3 rayStart, Vector3 rayEnd) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
+            Line ray = new Line(rayStart, rayEnd);
 
             // Grab all the elements that intersect with the ray
             IntersectingObjectsFor3DSelection = document.Map.Root.GetIntersectionsForVisibleObjects(ray)
@@ -453,8 +453,8 @@ namespace CBRE.BspEditor.Tools.Selection
             ChosenItemFor3DSelection = IntersectingObjectsFor3DSelection.FirstOrDefault();
 
             // If Ctrl is down and the object is already selected, we should deselect it instead.
-            var list = new[] { ChosenItemFor3DSelection };
-            var desel = ChosenItemFor3DSelection != null && KeyboardState.Ctrl && ChosenItemFor3DSelection.IsSelected;
+            IMapObject[] list = new[] { ChosenItemFor3DSelection };
+            bool desel = ChosenItemFor3DSelection != null && KeyboardState.Ctrl && ChosenItemFor3DSelection.IsSelected;
             SetSelected(document, desel ? list : null, desel ? null : list, !KeyboardState.Ctrl, IgnoreGrouping());
         }
 
@@ -475,19 +475,19 @@ namespace CBRE.BspEditor.Tools.Selection
 
             e.Handled = true;
 
-            var desel = new List<IMapObject>();
-            var sel = new List<IMapObject>();
+            List<IMapObject> desel = new List<IMapObject>();
+            List<IMapObject> sel = new List<IMapObject>();
 
             // Select (or deselect) the current element
             if (ChosenItemFor3DSelection.IsSelected) desel.Add(ChosenItemFor3DSelection);
             else sel.Add(ChosenItemFor3DSelection);
 
             // Get the index of the current element
-            var index = IntersectingObjectsFor3DSelection.IndexOf(ChosenItemFor3DSelection);
+            int index = IntersectingObjectsFor3DSelection.IndexOf(ChosenItemFor3DSelection);
             if (index < 0) return;
 
             // Move the index in the mouse wheel direction, cycling if needed
-            var dir = e.Delta / Math.Abs(e.Delta);
+            int dir = e.Delta / Math.Abs(e.Delta);
             index = (index + dir) % IntersectingObjectsFor3DSelection.Count;
             if (index < 0) index += IntersectingObjectsFor3DSelection.Count;
 
@@ -517,12 +517,12 @@ namespace CBRE.BspEditor.Tools.Selection
 
         protected override void OnDraggableClicked(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e, Vector3 position, IDraggable draggable)
         {
-            var ctrl = KeyboardState.Ctrl;
+            bool ctrl = KeyboardState.Ctrl;
             if (draggable == _emptyBox || ctrl)
             {
-                var desel = new List<IMapObject>();
-                var sel = new List<IMapObject>();
-                var seltest = SelectionTest(document, camera, e);
+                List<IMapObject> desel = new List<IMapObject>();
+                List<IMapObject> sel = new List<IMapObject>();
+                IMapObject seltest = SelectionTest(document, camera, e);
                 if (seltest != null)
                 {
                     if (!ctrl || !seltest.IsSelected) sel.Add(seltest);
@@ -541,7 +541,7 @@ namespace CBRE.BspEditor.Tools.Selection
 
         protected override void OnDraggableDragStarted(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e, Vector3 position, IDraggable draggable)
         {
-            var ctrl = KeyboardState.Ctrl;
+            bool ctrl = KeyboardState.Ctrl;
 
             if (draggable == _emptyBox && !ctrl && !document.Selection.IsEmpty)
             {
@@ -551,9 +551,9 @@ namespace CBRE.BspEditor.Tools.Selection
             // If all selected items have an origin, snap to the closest one
             if (draggable is ResizeTransformHandle res && res.Handle == ResizeHandle.Center && !document.Selection.IsEmpty)
             {
-                var origins = document.Selection.Select(x => x.Data.GetOne<Origin>()).ToList();
+                List<Origin> origins = document.Selection.Select(x => x.Data.GetOne<Origin>()).ToList();
                 if (origins.Any(x => x == null)) return;
-                var closest = origins.Select(x => camera.Flatten(x.Location)).OrderBy(x => (x - position).LengthSquared()).First();
+                Vector3 closest = origins.Select(x => camera.Flatten(x.Location)).OrderBy(x => (x - position).LengthSquared()).First();
                 res.SetMoveOrigin(closest);
             }
         }
@@ -563,16 +563,16 @@ namespace CBRE.BspEditor.Tools.Selection
             base.OnDraggableDragMoved(document, viewport, camera, e, previousPosition, position, draggable);
             if (_selectionBox.State.Action == BoxAction.Resizing && draggable is ITransformationHandle)
             {
-                var tform = _selectionBox.GetTransformationMatrix(viewport, camera, document);
+                Matrix4x4? tform = _selectionBox.GetTransformationMatrix(viewport, camera, document);
                 if (tform.HasValue)
                 {
                     Engine.Interface.SetSelectiveTransform(tform.Value);
 
-                    var box = new Box(_selectionBox.State.OrigStart, _selectionBox.State.OrigEnd);
-                    var trans = tform.Value;
+                    Box box = new Box(_selectionBox.State.OrigStart, _selectionBox.State.OrigEnd);
+                    Matrix4x4 trans = tform.Value;
                     box = box.Transform(trans);
 
-                    var label = "";
+                    string label = "";
                     if (box != null && !box.IsEmpty()) label = box.Width.ToString("0") + " x " + box.Length.ToString("0") + " x " + box.Height.ToString("0");
                     Oy.Publish("MapDocument:ToolStatus:UpdateText", label);
                 }
@@ -581,15 +581,15 @@ namespace CBRE.BspEditor.Tools.Selection
 
         protected override void OnDraggableDragEnded(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e, Vector3 position, IDraggable draggable)
         {
-            var task = Task.CompletedTask;
+            Task task = Task.CompletedTask;
             if (_selectionBox.State.Action == BoxAction.Resizing && draggable is ITransformationHandle)
             {
                 // Execute the transform on the selection
-                var tform = _selectionBox.GetTransformationMatrix(viewport, camera, document);
+                Matrix4x4? tform = _selectionBox.GetTransformationMatrix(viewport, camera, document);
                 if (tform.HasValue)
                 {
-                    var ttType = _selectionBox.GetTextureTransformationType(document);
-                    var createClone = KeyboardState.Shift && draggable is ResizeTransformHandle handle && handle.Handle == ResizeHandle.Center;
+                    TextureTransformationType ttType = _selectionBox.GetTextureTransformationType(document);
+                    bool createClone = KeyboardState.Shift && draggable is ResizeTransformHandle handle && handle.Handle == ResizeHandle.Center;
                     task = ExecuteTransform(document, tform.Value, createClone, ttType);
                 }
             }
@@ -638,12 +638,12 @@ namespace CBRE.BspEditor.Tools.Selection
         private IMapObject SelectionTest(MapDocument document, OrthographicCamera camera, ViewportEvent e)
         {
             // Create a box to represent the click, with a tolerance level
-            var unused = camera.GetUnusedCoordinate(new Vector3(100000, 100000, 100000));
-            var tolerance = 4 / camera.Zoom; // Selection tolerance of four pixels
-            var used = camera.Expand(new Vector3(tolerance, tolerance, 0));
-            var add = used + unused;
-            var click = camera.ScreenToWorld(e.X, e.Y);
-            var box = new Box(click - add, click + add);
+            Vector3 unused = camera.GetUnusedCoordinate(new Vector3(100000, 100000, 100000));
+            float tolerance = 4 / camera.Zoom; // Selection tolerance of four pixels
+            Vector3 used = camera.Expand(new Vector3(tolerance, tolerance, 0));
+            Vector3 add = used + unused;
+            Vector3 click = camera.ScreenToWorld(e.X, e.Y);
+            Box box = new Box(click - add, click + add);
             
             // Get the first element that intersects with the box, selecting or deselecting as needed
             Func<IMapObject, Box, bool> filter;
@@ -660,12 +660,12 @@ namespace CBRE.BspEditor.Tools.Selection
             if (e.KeyCode == Keys.Enter) Confirm(document);
             else if (e.KeyCode == Keys.Escape) Cancel(document);
 
-            var nudge = GetNudgeValue(e.KeyCode);
+            Vector3? nudge = GetNudgeValue(e.KeyCode);
             if (nudge != null && (_selectionBox.State.Action == BoxAction.Drawn) && !document.Selection.IsEmpty)
             {
-                var translate = camera.Expand(nudge.Value);
-                var transformation = Matrix4x4.CreateTranslation(translate.X, translate.Y, translate.Z);
-                var matrix = transformation;
+                Vector3 translate = camera.Expand(nudge.Value);
+                Matrix4x4 transformation = Matrix4x4.CreateTranslation(translate.X, translate.Y, translate.Z);
+                Matrix4x4 matrix = transformation;
                 ExecuteTransform(document, matrix, KeyboardState.Shift, TextureTransformationType.Uniform);
                 SelectionChanged(document);
             }
@@ -699,7 +699,7 @@ namespace CBRE.BspEditor.Tools.Selection
             // Only confirm the box if the empty box is drawn
             if (_selectionBox.State.Action != BoxAction.Idle || _emptyBox.State.Action != BoxAction.Drawn) return;
 
-            var boundingbox = _emptyBox.State.GetSelectionBox();
+            Box boundingbox = _emptyBox.State.GetSelectionBox();
             if (boundingbox != null)
             {
                 // If the shift key is down, select all brushes that are fully contained by the box
@@ -713,7 +713,7 @@ namespace CBRE.BspEditor.Tools.Selection
 				else
 					filter = x => true;
 
-                var nodes = GetBoxIntersections(document, boundingbox, filter);
+                IEnumerable<IMapObject> nodes = GetBoxIntersections(document, boundingbox, filter);
 
                 SetSelected(document, null, nodes, false, IgnoreGrouping());
             }
@@ -744,12 +744,12 @@ namespace CBRE.BspEditor.Tools.Selection
         /// <param name="textureTransformationType"></param>
         private Task ExecuteTransform(MapDocument document, Matrix4x4 transform, bool clone, TextureTransformationType textureTransformationType)
         {
-            var parents = document.Selection.GetSelectedParents().ToList();
-            var transaction = new Transaction();
+            List<IMapObject> parents = document.Selection.GetSelectedParents().ToList();
+            Transaction transaction = new Transaction();
             if (clone)
             {
                 // We're creating copies, so clone and transform the objects before attaching them.
-                var copies = parents
+                IEnumerable<IMapObject> copies = parents
                     .Select(x => x.Copy(document.Map.NumberGenerator))
                     .OfType<IMapObject>()
                     .Select(mo =>
@@ -758,14 +758,14 @@ namespace CBRE.BspEditor.Tools.Selection
                         mo.Transform(transform);
                         if (textureTransformationType == TextureTransformationType.Uniform)
                         {
-                            foreach (var s in mo.FindAll().OfType<Solid>().SelectMany(x => x.Faces).Select(x => x.Texture))
+                            foreach (Primitives.Texture s in mo.FindAll().OfType<Solid>().SelectMany(x => x.Faces).Select(x => x.Texture))
                             {
                                 s.TransformUniform(transform);
                             }
                         }
                         else if (textureTransformationType == TextureTransformationType.Scale)
                         {
-                            foreach (var t in mo.FindAll().SelectMany(x => x.Data.OfType<ITextured>()))
+                            foreach (ITextured t in mo.FindAll().SelectMany(x => x.Data.OfType<ITextured>()))
                             {
                                 t.Texture.TransformScale(transform);
                             }

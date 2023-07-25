@@ -40,9 +40,9 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
         {
             if (Renderable == null) return null;
 
-            var model = Renderable.Model;
-            var origin = obj.Data.GetOne<Origin>()?.Location ?? Vector3.Zero;
-            var (min, max) = Renderable.GetBoundingBox();
+            IModel model = Renderable.Model;
+            Vector3 origin = obj.Data.GetOne<Origin>()?.Location ?? Vector3.Zero;
+            (Vector3 min, Vector3 max) = Renderable.GetBoundingBox();
             return new Box(min, max);
             //return new Box(model.Mins + origin, model.Maxs + origin);
         }
@@ -59,7 +59,7 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject(nameof(EntityModel));
+            SerialisedObject so = new SerialisedObject(nameof(EntityModel));
             so.Set(nameof(Name), Name);
             return so;
         }

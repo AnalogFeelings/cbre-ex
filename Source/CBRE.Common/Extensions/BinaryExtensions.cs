@@ -21,7 +21,7 @@ namespace CBRE.Common.Extensions
         /// <returns>The string that was read</returns>
         public static string ReadFixedLengthString(this BinaryReader br, Encoding encoding, int length)
         {
-            var bstr = br.ReadBytes(length).TakeWhile(b => b != 0).ToArray();
+            byte[] bstr = br.ReadBytes(length).TakeWhile(b => b != 0).ToArray();
             return encoding.GetString(bstr);
         }
 
@@ -34,7 +34,7 @@ namespace CBRE.Common.Extensions
         /// <param name="str">The string to write</param>
         public static void WriteFixedLengthString(this BinaryWriter bw, Encoding encoding, int length, string str)
         {
-            var arr = new byte[length];
+            byte[] arr = new byte[length];
             encoding.GetBytes(str, 0, str.Length, arr, 0);
             bw.Write(arr, 0, length);
         }
@@ -46,7 +46,7 @@ namespace CBRE.Common.Extensions
         /// <returns>The string that was read</returns>
         public static string ReadNullTerminatedString(this BinaryReader br)
         {
-            var str = "";
+            string str = "";
             char c;
             while ((c = br.ReadChar()) != 0)
             {
@@ -75,8 +75,8 @@ namespace CBRE.Common.Extensions
         {
             // GH#87: RMF strings aren't prefixed in the same way .NET's BinaryReader expects
             // Read the byte length and then read that number of characters.
-            var len = br.ReadByte();
-            var chars = br.ReadChars(len);
+            byte len = br.ReadByte();
+            char[] chars = br.ReadChars(len);
             return new string(chars).Trim('\0');
         }
 
@@ -109,8 +109,8 @@ namespace CBRE.Common.Extensions
         /// <returns>The resulting array</returns>
         public static ushort[] ReadUshortArray(this BinaryReader br, int num)
         {
-            var arr = new ushort[num];
-            for (var i = 0; i < num; i++) arr[i] = br.ReadUInt16();
+            ushort[] arr = new ushort[num];
+            for (int i = 0; i < num; i++) arr[i] = br.ReadUInt16();
             return arr;
         }
 
@@ -122,8 +122,8 @@ namespace CBRE.Common.Extensions
         /// <returns>The resulting array</returns>
         public static short[] ReadShortArray(this BinaryReader br, int num)
         {
-            var arr = new short[num];
-            for (var i = 0; i < num; i++) arr[i] = br.ReadInt16();
+            short[] arr = new short[num];
+            for (int i = 0; i < num; i++) arr[i] = br.ReadInt16();
             return arr;
         }
 
@@ -135,8 +135,8 @@ namespace CBRE.Common.Extensions
         /// <returns>The resulting array</returns>
         public static int[] ReadIntArray(this BinaryReader br, int num)
         {
-            var arr = new int[num];
-            for (var i = 0; i < num; i++) arr[i] = br.ReadInt32();
+            int[] arr = new int[num];
+            for (int i = 0; i < num; i++) arr[i] = br.ReadInt32();
             return arr;
         }
 
@@ -148,8 +148,8 @@ namespace CBRE.Common.Extensions
         /// <returns>The resulting array</returns>
         public static decimal[] ReadSingleArrayAsDecimal(this BinaryReader br, int num)
         {
-            var arr = new decimal[num];
-            for (var i = 0; i < num; i++) arr[i] = br.ReadSingleAsDecimal();
+            decimal[] arr = new decimal[num];
+            for (int i = 0; i < num; i++) arr[i] = br.ReadSingleAsDecimal();
             return arr;
         }
 
@@ -161,8 +161,8 @@ namespace CBRE.Common.Extensions
         /// <returns>The resulting array</returns>
         public static float[] ReadSingleArray(this BinaryReader br, int num)
         {
-            var arr = new float[num];
-            for (var i = 0; i < num; i++) arr[i] = br.ReadSingle();
+            float[] arr = new float[num];
+            for (int i = 0; i < num; i++) arr[i] = br.ReadSingle();
             return arr;
         }
 
@@ -219,10 +219,10 @@ namespace CBRE.Common.Extensions
         /// <returns>The colour which was read</returns>
         public static Color ReadRGBAColour(this BinaryReader br)
         {
-            var r = br.ReadByte();
-            var g = br.ReadByte();
-            var b = br.ReadByte();
-            var a = br.ReadByte();
+            byte r = br.ReadByte();
+            byte g = br.ReadByte();
+            byte b = br.ReadByte();
+            byte a = br.ReadByte();
             return Color.FromArgb(a, r, g, b);
         }
 

@@ -16,7 +16,7 @@ namespace CBRE.Editor
             // This is a deviation from expected behaviour of an application, which is why this is in
             // the editor bootstrapper, and not in the shell.
 
-            var forceDecimalCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+            CultureInfo forceDecimalCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
 
             forceDecimalCulture.NumberFormat.NumberDecimalSeparator = ".";
             forceDecimalCulture.NumberFormat.NumberGroupSeparator = ",";

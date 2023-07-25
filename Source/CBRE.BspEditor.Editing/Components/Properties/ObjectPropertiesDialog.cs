@@ -47,9 +47,9 @@ namespace CBRE.BspEditor.Editing.Components.Properties
             _pages = new Dictionary<IObjectPropertyEditorTab, TabPage>();
             this.InvokeLater(() =>
             {
-                foreach (var tab in _tabs.Select(x => x.Value).OrderBy(x => x.OrderHint))
+                foreach (IObjectPropertyEditorTab tab in _tabs.Select(x => x.Value).OrderBy(x => x.OrderHint))
                 {
-                    var page = new TabPage(tab.Name) {Tag = tab};
+                    TabPage page = new TabPage(tab.Name) {Tag = tab};
                     tab.Control.Dock = DockStyle.Fill;
                     page.Controls.Add(tab.Control);
                     _pages[tab] = page;
@@ -114,19 +114,19 @@ namespace CBRE.BspEditor.Editing.Components.Properties
         /// </summary>
         private void UpdateTabVisibility(IContext context, List<IMapObject> objects)
         {
-            var changed = false;
+            bool changed = false;
             tabPanel.SuspendLayout();
 
-            var currentlyVisibleTabs = tabPanel.TabPages.OfType<TabPage>().Select(x => _pages.FirstOrDefault(p => p.Value == x).Key).ToList();
-            var newVisibleTabs = _tabs.Where(x => x.Value.IsInContext(context, objects)).OrderBy(x => x.Value.OrderHint).Select(x => x.Value).ToList();
+            List<IObjectPropertyEditorTab> currentlyVisibleTabs = tabPanel.TabPages.OfType<TabPage>().Select(x => _pages.FirstOrDefault(p => p.Value == x).Key).ToList();
+            List<IObjectPropertyEditorTab> newVisibleTabs = _tabs.Where(x => x.Value.IsInContext(context, objects)).OrderBy(x => x.Value.OrderHint).Select(x => x.Value).ToList();
 
             // Add tabs which aren't visible and should be
-            foreach (var add in newVisibleTabs.Except(currentlyVisibleTabs).ToList())
+            foreach (IObjectPropertyEditorTab add in newVisibleTabs.Except(currentlyVisibleTabs).ToList())
             {
                 // Locate the next or previous tab in the visible tab set so we can insert the new tab before/after it
-                var prevCv = currentlyVisibleTabs.Where(x => String.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) < 0).OrderByDescending(x => x.OrderHint).FirstOrDefault();
-                var nextCv = currentlyVisibleTabs.Where(x => String.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) > 0).OrderBy(x => x.OrderHint).FirstOrDefault();
-                var idx = prevCv != null ? tabPanel.TabPages.IndexOf(_pages[prevCv]) + 1
+                IObjectPropertyEditorTab prevCv = currentlyVisibleTabs.Where(x => String.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) < 0).OrderByDescending(x => x.OrderHint).FirstOrDefault();
+                IObjectPropertyEditorTab nextCv = currentlyVisibleTabs.Where(x => String.Compare(x.OrderHint, add.OrderHint, StringComparison.Ordinal) > 0).OrderBy(x => x.OrderHint).FirstOrDefault();
+                int idx = prevCv != null ? tabPanel.TabPages.IndexOf(_pages[prevCv]) + 1
                         : nextCv != null ? tabPanel.TabPages.IndexOf(_pages[nextCv])
                         : 0;
 
@@ -137,7 +137,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties
             }
 
             // Remove tables which are visible and shouldn't be
-            foreach (var rem in currentlyVisibleTabs.Except(newVisibleTabs))
+            foreach (IObjectPropertyEditorTab rem in currentlyVisibleTabs.Except(newVisibleTabs))
             {
                 tabPanel.TabPages.Remove(_pages[rem]);
                 changed = true;
@@ -184,7 +184,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties
             {
                 if (visible)
                 {
-                    var doc = context.Get<MapDocument>("ActiveDocument");
+                    MapDocument doc = context.Get<MapDocument>("ActiveDocument");
 
                     #pragma warning disable 4014 // Intentionally unawaited
                     DocumentActivated(doc);
@@ -228,15 +228,15 @@ namespace CBRE.BspEditor.Editing.Components.Properties
         private async Task<bool> Save()
         {
             if (_currentDocument == null) return true;
-            var changed = _tabs.Select(x => x.Value).Where(x => x.HasChanges).ToList();
+            List<IObjectPropertyEditorTab> changed = _tabs.Select(x => x.Value).Where(x => x.HasChanges).ToList();
             if (!changed.Any()) return true;
 
-            var list = _selectedObjects;
-            var changes = changed.SelectMany(x => x.GetChanges(_currentDocument, list));
-            var tsn = new Transaction(changes);
+            List<IMapObject> list = _selectedObjects;
+            IEnumerable<IOperation> changes = changed.SelectMany(x => x.GetChanges(_currentDocument, list));
+            Transaction tsn = new Transaction(changes);
 
             // Clear all changes from all tabs
-            foreach (var t in _tabs) await t.Value.SetObjects(_currentDocument, _selectedObjects);
+            foreach (Lazy<IObjectPropertyEditorTab> t in _tabs) await t.Value.SetObjects(_currentDocument, _selectedObjects);
 
             await MapDocumentOperation.Perform(_currentDocument, tsn);
             return true;
@@ -296,7 +296,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties
                 ? _selectedObjects
                 : _currentDocument?.Selection.GetSelectedParents().ToList();
             
-            foreach (var tab in _tabs)
+            foreach (Lazy<IObjectPropertyEditorTab> tab in _tabs)
             {
                 await tab.Value.SetObjects(_currentDocument, _selectedObjects);
             }

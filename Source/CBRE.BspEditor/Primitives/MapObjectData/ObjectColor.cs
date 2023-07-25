@@ -40,7 +40,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("ObjectColor");
+            SerialisedObject so = new SerialisedObject("ObjectColor");
             so.SetColor("Color", Color);
             return so;
         }

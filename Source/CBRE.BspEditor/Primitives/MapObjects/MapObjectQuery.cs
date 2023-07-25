@@ -77,7 +77,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <returns></returns>
         public MapObjectQuery Children(Func<IMapObject, bool> filter = null)
         {
-            var ch = _context.SelectMany(x => x.Hierarchy);
+            IEnumerable<IMapObject> ch = _context.SelectMany(x => x.Hierarchy);
             if (filter != null) ch = ch.Where(filter);
             return new MapObjectQuery(this, ch);
         }
@@ -88,7 +88,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <returns></returns>
         public MapObjectQuery Descendants(Func<IMapObject, bool> filter = null)
         {
-            var ch = _context.SelectMany(x => x.FindAll());
+            IEnumerable<IMapObject> ch = _context.SelectMany(x => x.FindAll());
             if (filter != null) ch = ch.Where(filter);
             return new MapObjectQuery(this, ch);
         }
@@ -120,7 +120,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <returns></returns>
         public MapObjectQuery Each(Action<IMapObject> action)
         {
-            foreach (var o in _context)
+            foreach (IMapObject o in _context)
             {
                 action(o);
             }

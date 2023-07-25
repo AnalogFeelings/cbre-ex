@@ -27,7 +27,7 @@ namespace CBRE.Shell.Registers
         public async Task OnStartup()
         {
             // Register the exported tools
-            foreach (var export in _tools.OrderBy(x => OrderHintAttribute.GetOrderHint(x.Value.GetType())))
+            foreach (Lazy<ITool> export in _tools.OrderBy(x => OrderHintAttribute.GetOrderHint(x.Value.GetType())))
             {
                 Log.Debug(nameof(ToolRegister), "Loaded: " + export.Value.GetType().FullName);
                 _components.Add(export.Value);
@@ -57,8 +57,8 @@ namespace CBRE.Shell.Registers
 
         private async Task ContextChanged(IContext context)
         {
-            var activeTool = context.Get<ITool>("ActiveTool");
-            var toolsInContext = _components.Where(x => x.IsInContext(context)).ToList();
+            ITool activeTool = context.Get<ITool>("ActiveTool");
+            List<ITool> toolsInContext = _components.Where(x => x.IsInContext(context)).ToList();
 
             // If there are any tools available, or the active tool exists
             // And if the active tool isn't in context
@@ -75,9 +75,9 @@ namespace CBRE.Shell.Registers
             {
                 _shell.ToolsContainer.SuspendLayout();
                 _shell.ToolsContainer.Items.Clear();
-                foreach (var tl in toolsInContext)
+                foreach (ITool tl in toolsInContext)
                 {
-                    var toolButton = new ToolStripButton("", tl.Icon, async (s, ea) => await ActivateTool(tl), tl.Name)
+                    ToolStripButton toolButton = new ToolStripButton("", tl.Icon, async (s, ea) => await ActivateTool(tl), tl.Name)
                     {
                         Checked = tl == activeTool,
                         ToolTipText = tl.Name,
@@ -112,7 +112,7 @@ namespace CBRE.Shell.Registers
             public SwitchToolHotkey(ITool tool)
             {
                 Tool = tool;
-                var dha = tool.GetType().GetCustomAttributes(typeof(DefaultHotkeyAttribute), false).OfType<DefaultHotkeyAttribute>().FirstOrDefault();
+                DefaultHotkeyAttribute dha = tool.GetType().GetCustomAttributes(typeof(DefaultHotkeyAttribute), false).OfType<DefaultHotkeyAttribute>().FirstOrDefault();
                 DefaultHotkey = dha?.Hotkey;
             }
 

@@ -39,7 +39,7 @@ namespace CBRE.Providers.Model.Mdl10
             _model = model;
 
             _transforms = new Matrix4x4[128];
-            for (var i = 0; i < _transforms.Length; i++)
+            for (int i = 0; i < _transforms.Length; i++)
             {
                 _transforms[i] = Matrix4x4.Identity;
             }
@@ -55,10 +55,10 @@ namespace CBRE.Providers.Model.Mdl10
 
         public (Vector3, Vector3) GetBoundingBox()
         {
-            var (min, max) = _model.GetBoundingBox(Sequence, 0, 0);
+            (Vector3 min, Vector3 max) = _model.GetBoundingBox(Sequence, 0, 0);
 
-            var tf = GetModelTransformation();
-            var box = new Box(min, max);
+            Matrix4x4 tf = GetModelTransformation();
+            Box box = new Box(min, max);
             box = box.Transform(tf);
 
             return (box.Start, box.End);
@@ -66,15 +66,15 @@ namespace CBRE.Providers.Model.Mdl10
 
         public void Update(long milliseconds)
         {
-            var currentSequence = Sequence;
+            int currentSequence = Sequence;
             if (currentSequence >= _model.Model.Sequences.Count) return;
 
-            var seq = _model.Model.Sequences[currentSequence];
-            var targetFps = 1000 / seq.Framerate;
-            var diff = milliseconds - _lastFrameMillis;
+            Format.Sequence seq = _model.Model.Sequences[currentSequence];
+            float targetFps = 1000 / seq.Framerate;
+            long diff = milliseconds - _lastFrameMillis;
 
             _interframePercent += diff / targetFps;
-            var skip = (int)_interframePercent;
+            int skip = (int)_interframePercent;
             _interframePercent -= skip;
 
             _currentFrame = (_currentFrame + skip) % seq.NumFrames;
@@ -131,7 +131,7 @@ namespace CBRE.Providers.Model.Mdl10
             {
                 if (_lastSequence != Sequence)
                 {
-                    var transforms = new Matrix4x4[128];
+                    Matrix4x4[] transforms = new Matrix4x4[128];
                     _model.Model.GetTransforms(Sequence, 0, 0, ref transforms);
                     cl.UpdateBuffer(_frozenTransformsBuffer, 0, transforms);
                     _lastSequence = Sequence;

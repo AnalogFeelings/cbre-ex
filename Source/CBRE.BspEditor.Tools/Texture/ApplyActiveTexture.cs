@@ -31,19 +31,19 @@ namespace CBRE.BspEditor.Tools.Texture
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var md = context.Get<MapDocument>("ActiveDocument");
+            MapDocument md = context.Get<MapDocument>("ActiveDocument");
             if (md == null || md.Selection.IsEmpty) return;
 
-            var at = md.Map.Data.GetOne<ActiveTexture>();
+            ActiveTexture at = md.Map.Data.GetOne<ActiveTexture>();
             if (String.IsNullOrWhiteSpace(at?.Name)) return;
 
-            var edit = new Transaction();
+            Transaction edit = new Transaction();
 
-            foreach (var solid in md.Selection.OfType<Solid>())
+            foreach (Solid solid in md.Selection.OfType<Solid>())
             {
-                foreach (var face in solid.Faces)
+                foreach (Face face in solid.Faces)
                 {
-                    var clone = (Face) face.Clone();
+                    Face clone = (Face) face.Clone();
                     clone.Texture.Name = at.Name;
 
                     edit.Add(new RemoveMapObjectData(solid.ID, face));

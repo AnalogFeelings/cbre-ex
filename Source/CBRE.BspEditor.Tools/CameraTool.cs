@@ -62,14 +62,14 @@ namespace CBRE.BspEditor.Tools
 
         private Task CameraNext(object param)
         {
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document == null) return Task.CompletedTask;
 
-            var cams = GetDocumentCameras(document);
+            List<Camera> cams = GetDocumentCameras(document);
 
             if (_state == State.None && cams.Count >= 2)
             {
-                var idx = cams.FindIndex(x => x.IsActive);
+                int idx = cams.FindIndex(x => x.IsActive);
                 idx = (idx + 1) % cams.Count;
                 cams.ForEach(x => x.IsActive = false);
                 cams[idx].IsActive = true;
@@ -81,14 +81,14 @@ namespace CBRE.BspEditor.Tools
 
         private Task CameraPrevious(object param)
         {
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document == null) return Task.CompletedTask;
 
-            var cams = GetDocumentCameras(document);
+            List<Camera> cams = GetDocumentCameras(document);
 
             if (_state == State.None && cams.Count >= 2)
             {
-                var idx = cams.FindIndex(x => x.IsActive);
+                int idx = cams.FindIndex(x => x.IsActive);
                 idx = (idx + cams.Count - 1) % cams.Count;
                 cams.ForEach(x => x.IsActive = false);
                 cams[idx].IsActive = true;
@@ -101,12 +101,12 @@ namespace CBRE.BspEditor.Tools
 
         private void CameraDelete()
         {
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document == null) return;
 
-            var cams = GetDocumentCameras(document);
+            List<Camera> cams = GetDocumentCameras(document);
             if (_state != State.None || cams.Count < 2) return;
-            var del = cams.FirstOrDefault(x => x.IsActive);
+            Camera del = cams.FirstOrDefault(x => x.IsActive);
             CameraPrevious(null);
             if (del != GetDocumentCameras(document).FirstOrDefault(x => x.IsActive)) document.Map.Data.Remove(del);
         }
@@ -123,19 +123,19 @@ namespace CBRE.BspEditor.Tools
 
         private Tuple<Vector3, Vector3> GetViewportCamera()
         {
-            var cam = _controlHost.Value.GetControls().OfType<ViewportMapDocumentControl>().Select(x => x.Camera).OfType<PerspectiveCamera>().FirstOrDefault();
+            PerspectiveCamera cam = _controlHost.Value.GetControls().OfType<ViewportMapDocumentControl>().Select(x => x.Camera).OfType<PerspectiveCamera>().FirstOrDefault();
             if (cam == null) return null;
 
-            var pos = cam.Position;
-            var look = pos + cam.Direction;
+            Vector3 pos = cam.Position;
+            Vector3 look = pos + cam.Direction;
 
-            var dir = (look - pos).Normalise()*20;
+            Vector3 dir = (look - pos).Normalise()*20;
             return Tuple.Create(pos, pos + dir);
         }
 
         private void SetViewportCamera(Vector3 position, Vector3 look)
         {
-            var cam = _controlHost.Value.GetControls().OfType<ViewportMapDocumentControl>().Select(x => x.Camera).OfType<PerspectiveCamera>().FirstOrDefault();
+            PerspectiveCamera cam = _controlHost.Value.GetControls().OfType<ViewportMapDocumentControl>().Select(x => x.Camera).OfType<PerspectiveCamera>().FirstOrDefault();
             if (cam == null) return;
 
             look = (look - position).Normalise() + position;
@@ -145,13 +145,13 @@ namespace CBRE.BspEditor.Tools
 
         private State GetStateAtPoint(MapDocument document, int x, int y, OrthographicCamera camera, out Camera activeCamera)
         {
-            var d = 5 / camera.Zoom;
+            float d = 5 / camera.Zoom;
 
-            foreach (var cam in GetCameraList(document))
+            foreach (Camera cam in GetCameraList(document))
             {
-                var p = camera.Flatten(camera.ScreenToWorld(new Vector3(x, y, 0)));
-                var pos = camera.Flatten(cam.EyePosition);
-                var look = camera.Flatten(cam.LookPosition);
+                Vector3 p = camera.Flatten(camera.ScreenToWorld(new Vector3(x, y, 0)));
+                Vector3 pos = camera.Flatten(cam.EyePosition);
+                Vector3 look = camera.Flatten(cam.LookPosition);
                 activeCamera = cam;
                 if (p.X >= pos.X - d && p.X <= pos.X + d && p.Y >= pos.Y - d && p.Y <= pos.Y + d) return State.MovingPosition;
                 if (p.X >= look.X - d && p.X <= look.X + d && p.Y >= look.Y - d && p.Y <= look.Y + d) return State.MovingLook;
@@ -168,26 +168,26 @@ namespace CBRE.BspEditor.Tools
 
         private List<Camera> GetCameraList(MapDocument document)
         {
-            var c = GetViewportCamera();
+            Tuple<Vector3, Vector3> c = GetViewportCamera();
             if (!document.Map.Data.Get<Camera>().Any())
             {
                 document.Map.Data.Add(new Camera {EyePosition = c.Item1, LookPosition = c.Item2});
             }
-            var active = document.Map.Data.Get<Camera>().FirstOrDefault(x => x.IsActive);
+            Camera active = document.Map.Data.Get<Camera>().FirstOrDefault(x => x.IsActive);
             if (active == null)
             {
                 active = document.Map.Data.GetOne<Camera>() ?? new Camera();
                 active.IsActive = true;
             }
-            var len = active.Length;
+            float len = active.Length;
             active.EyePosition = c.Item1;
             active.LookPosition = c.Item1 + (c.Item2 - c.Item1).Normalise() * len;
 
-            var gs = document.Map.Data.GetOne<GridData>()?.Grid?.Spacing ?? 64;
-            var cameras = new List<Camera>();
-            foreach (var camera in document.Map.Data.Get<Camera>())
+            int gs = document.Map.Data.GetOne<GridData>()?.Grid?.Spacing ?? 64;
+            List<Camera> cameras = new List<Camera>();
+            foreach (Camera camera in document.Map.Data.Get<Camera>())
             {
-                var dir = camera.LookPosition - camera.EyePosition;
+                Vector3 dir = camera.LookPosition - camera.EyePosition;
                 camera.LookPosition = camera.EyePosition + dir.Normalise() * Math.Max(gs * 1.5f, dir.Length());
                 cameras.Add(camera);
             }
@@ -196,15 +196,15 @@ namespace CBRE.BspEditor.Tools
 
         protected override void MouseDown(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e)
         {
-            var vp = viewport;
+            MapViewport vp = viewport;
             if (vp == null) return;
 
-            var gs = document.Map.Data.GetOne<GridData>()?.Grid?.Spacing ?? 64;
+            int gs = document.Map.Data.GetOne<GridData>()?.Grid?.Spacing ?? 64;
 
             _state = GetStateAtPoint(document, e.X, e.Y, camera, out _stateCamera);
             if (_state == State.None && KeyboardState.Shift)
             {
-                var p = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
+                Vector3 p = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
                 _stateCamera = new Camera { EyePosition = p, LookPosition = p + Vector3.UnitX * 1.5f * gs };
                 document.Map.Data.Add(_stateCamera);
                 _state = State.MovingLook;
@@ -224,28 +224,28 @@ namespace CBRE.BspEditor.Tools
 
         protected override void MouseMove(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e)
         {
-            var vp = viewport;
+            MapViewport vp = viewport;
             if (vp == null) return;
 
-            var p = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
-            var cursor = Cursors.Default;
+            Vector3 p = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
+            Cursor cursor = Cursors.Default;
 
             switch (_state)
             {
                 case State.None:
-                    var st = GetStateAtPoint(document, e.X, e.Y, camera, out _stateCamera);
+                    State st = GetStateAtPoint(document, e.X, e.Y, camera, out _stateCamera);
                     if (st != State.None) cursor = Cursors.SizeAll;
                     break;
                 case State.MovingPosition:
                     if (_stateCamera == null) break;
-                    var newEye = camera.GetUnusedCoordinate(_stateCamera.EyePosition) + p;
+                    Vector3 newEye = camera.GetUnusedCoordinate(_stateCamera.EyePosition) + p;
                     if (KeyboardState.Ctrl) _stateCamera.LookPosition += (newEye - _stateCamera.EyePosition);
                     _stateCamera.EyePosition = newEye;
                     SetViewportCamera(_stateCamera.EyePosition, _stateCamera.LookPosition);
                     break;
                 case State.MovingLook:
                     if (_stateCamera == null) break;
-                    var newLook = camera.GetUnusedCoordinate(_stateCamera.LookPosition) + p;
+                    Vector3 newLook = camera.GetUnusedCoordinate(_stateCamera.LookPosition) + p;
                     if (KeyboardState.Ctrl) _stateCamera.EyePosition += (newLook - _stateCamera.LookPosition);
                     _stateCamera.LookPosition = newLook;
                     SetViewportCamera(_stateCamera.EyePosition, _stateCamera.LookPosition);
@@ -258,13 +258,13 @@ namespace CBRE.BspEditor.Tools
         {
             base.Render(document, viewport, camera, worldMin, worldMax, im);
 
-            foreach (var cam in GetCameraList(document))
+            foreach (Camera cam in GetCameraList(document))
             {
-                var p1 = camera.WorldToScreen(cam.EyePosition);
-                var p2 = camera.WorldToScreen(cam.LookPosition);
-                
-                var lineColor = cam.IsActive ? Color.Red : Color.Cyan;
-                var handleColor = cam.IsActive ? Color.DarkOrange : Color.LawnGreen;
+                Vector3 p1 = camera.WorldToScreen(cam.EyePosition);
+                Vector3 p2 = camera.WorldToScreen(cam.LookPosition);
+
+                Color lineColor = cam.IsActive ? Color.Red : Color.Cyan;
+                Color handleColor = cam.IsActive ? Color.DarkOrange : Color.LawnGreen;
 
                 im.AddLine(p1.ToVector2(), p2.ToVector2(), lineColor);
                 im.AddCircleFilled(p1.ToVector2(), 4, handleColor);

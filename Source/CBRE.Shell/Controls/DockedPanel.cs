@@ -83,11 +83,11 @@ namespace CBRE.Shell.Controls
         static DockedPanel()
         {
             _arrow = new Bitmap(Resources.Arrow_Down.Width, Resources.Arrow_Down.Height);
-            using (var g = System.Drawing.Graphics.FromImage(_arrow))
+            using (Graphics g = System.Drawing.Graphics.FromImage(_arrow))
             {
-                using (var attrs = new ImageAttributes())
+                using (ImageAttributes attrs = new ImageAttributes())
                 {
-                    var colorMatrix = new ColorMatrix(new[]
+                    ColorMatrix colorMatrix = new ColorMatrix(new[]
                     {
                         new float[] {1, 0, 0, 0, 0},
                         new float[] {0, 1, 0, 0, 0},
@@ -165,8 +165,8 @@ namespace CBRE.Shell.Controls
             } 
             else
             {
-                var ba = IsInButtonArea(e);
-                var ra = IsInResizeArea(e);
+                bool ba = IsInButtonArea(e);
+                bool ra = IsInResizeArea(e);
                 if (ba || (_hidden && ra))
                 {
                     Cursor = Cursors.Hand;
@@ -191,8 +191,8 @@ namespace CBRE.Shell.Controls
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            var ba = IsInButtonArea(e);
-            var ra = IsInResizeArea(e);
+            bool ba = IsInButtonArea(e);
+            bool ra = IsInResizeArea(e);
             if (ba || (ra && _hidden)) Hidden = !Hidden;
             else if (!_hidden && IsInResizeArea(e)) _resizing = true;
             base.OnMouseDown(e);
@@ -210,7 +210,7 @@ namespace CBRE.Shell.Controls
 
         protected override void OnDockChanged(EventArgs e)
         {
-            var padding = new Padding(0);
+            Padding padding = new Padding(0);
             switch (Dock)
             {
                 case DockStyle.Top:
@@ -234,8 +234,8 @@ namespace CBRE.Shell.Controls
             base.OnPaint(e);
 
             const int padding = 4;
-            var rect = Rectangle.Empty;
-            var rotflip = RotateFlipType.RotateNoneFlipNone;
+            Rectangle rect = Rectangle.Empty;
+            RotateFlipType rotflip = RotateFlipType.RotateNoneFlipNone;
             int buttonX = 0, buttonY = 0;
             switch (Dock)
             {
@@ -264,11 +264,11 @@ namespace CBRE.Shell.Controls
             }
             if (!rect.IsEmpty)
             {
-                using (var b = new SolidBrush(BackColor.Darken(_hidden ? 10 : 40)))
+                using (SolidBrush b = new SolidBrush(BackColor.Darken(_hidden ? 10 : 40)))
                 {
                     e.Graphics.FillRectangle(b, rect);
                 }
-                using (var cl = new Bitmap(_arrow))
+                using (Bitmap cl = new Bitmap(_arrow))
                 {
                     cl.RotateFlip(rotflip);
                     e.Graphics.DrawImage(cl, buttonX, buttonY);

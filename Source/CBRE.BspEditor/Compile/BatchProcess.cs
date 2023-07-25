@@ -29,17 +29,17 @@ namespace CBRE.BspEditor.Compile
         
         public override async Task Run(Batch batch, MapDocument document)
         {
-            var pcs = Process;
-            var args = Arguments;
-            var wd = WorkingDirectory;
+            string pcs = Process;
+            string args = Arguments;
+            string wd = WorkingDirectory;
 
             if (!File.Exists(pcs))
             {
                 // Only show this notice once at most
                 if (batch.Successful)
                 {
-                    var tlate = Container.Get<ITranslationStringProvider>();
-                    var prefix = GetType().FullName;
+                    ITranslationStringProvider tlate = Container.Get<ITranslationStringProvider>();
+                    string prefix = GetType().FullName;
                     MessageBox.Show(tlate.GetString(prefix, "ProgramNotFoundMessage"), tlate.GetString(prefix, "ProgramNotFoundTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 batch.Successful = false;
@@ -48,9 +48,9 @@ namespace CBRE.BspEditor.Compile
             }
 
             // Replace {Variables} in the strings
-            foreach (var kv in batch.Variables)
+            foreach (System.Collections.Generic.KeyValuePair<string, string> kv in batch.Variables)
             {
-                var s = '{' + kv.Key + '}';
+                string s = '{' + kv.Key + '}';
                 pcs = pcs.Replace(s, kv.Value);
                 args = args.Replace(s, kv.Value);
                 wd = wd.Replace(s, kv.Value);
@@ -58,7 +58,7 @@ namespace CBRE.BspEditor.Compile
 
             await Oy.Publish("Compile:Information", $"{pcs} {args}\r\n");
 
-            var process = new Process
+            Process process = new Process
             {
                 StartInfo = new ProcessStartInfo(pcs, args)
                 {
@@ -72,7 +72,7 @@ namespace CBRE.BspEditor.Compile
             };
 
             // Use a task to signal process completion
-            var tcs = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
             process.Exited += (s, e) =>
             {
                 tcs.SetResult(true);

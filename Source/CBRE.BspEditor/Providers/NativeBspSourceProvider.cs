@@ -46,11 +46,11 @@ namespace CBRE.BspEditor.Providers
         {
             return await Task.Factory.StartNew(() =>
             {
-                var result = new BspFileLoadResult();
+                BspFileLoadResult result = new BspFileLoadResult();
 
-                var map = new Map();
-                var so = _formatter.Deserialize(stream);
-                foreach (var o in so)
+                Map map = new Map();
+                IEnumerable<SerialisedObject> so = _formatter.Deserialize(stream);
+                foreach (SerialisedObject o in so)
                 {
                     if (o.Name == nameof(Root))
                     {
@@ -72,7 +72,7 @@ namespace CBRE.BspEditor.Providers
         {
             return Task.Factory.StartNew(() =>
             {
-                var list = new List<SerialisedObject>
+                List<SerialisedObject> list = new List<SerialisedObject>
                 {
                     _factory.Serialise(map.Root)
                 };

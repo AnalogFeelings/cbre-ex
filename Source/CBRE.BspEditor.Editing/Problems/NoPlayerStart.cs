@@ -26,7 +26,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var list = new List<Problem>();
+            List<Problem> list = new List<Problem>();
 
             if (filter(document.Map.Root) && !document.Map.Root.Find(x => x is Entity && string.Equals(x.Data.GetOne<EntityData>()?.Name, "info_player_start", StringComparison.InvariantCultureIgnoreCase)).Any())
             {
@@ -38,7 +38,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public async Task Fix(MapDocument document, Problem problem)
         {
-            var entity = new Entity(document.Map.NumberGenerator.Next("MapObject"))
+            Entity entity = new Entity(document.Map.NumberGenerator.Next("MapObject"))
             {
                 Data =
                 {
@@ -49,7 +49,7 @@ namespace CBRE.BspEditor.Editing.Problems
                 IsSelected = false
             };
 
-            var action = new Attach(document.Map.Root.ID, entity);
+            Attach action = new Attach(document.Map.Root.ID, entity);
             await MapDocumentOperation.Perform(document, action);
         }
     }

@@ -95,19 +95,19 @@ namespace CBRE.Shell.Controls
                 e.Graphics.DrawLine(SystemPens.ControlLightLight, 0, 1, Width, 1);
                 if (_mouseIn)
                 {
-                    using (var brush = new SolidBrush(BackColor.Darken()))
+                    using (SolidBrush brush = new SolidBrush(BackColor.Darken()))
                     {
                         e.Graphics.FillRectangle(brush, new Rectangle(0, 3, Width, Height - Padding.Vertical));
                     }
                 }
                 else
                 {
-                    using (var brush = new SolidBrush(BackColor.Darken(10)))
+                    using (SolidBrush brush = new SolidBrush(BackColor.Darken(10)))
                     {
                         e.Graphics.FillRectangle(brush, new Rectangle(0, Height - Padding.Vertical + 2, Width, 1));
                     }
                 }
-                using (var brush = new SolidBrush(ForeColor))
+                using (SolidBrush brush = new SolidBrush(ForeColor))
                 {
                     e.Graphics.FillPolygon(brush, GetTrianglePoints());
                 }
@@ -135,8 +135,8 @@ namespace CBRE.Shell.Controls
             {
                 if (_expanded)
                 {
-                    var left = 4;
-                    var top = 5 + Padding.Top;
+                    int left = 4;
+                    int top = 5 + Padding.Top;
                     return new[]
                     {
                         new Point(left, top),
@@ -147,8 +147,8 @@ namespace CBRE.Shell.Controls
                 }
                 else
                 {
-                    var left = 6;
-                    var top = 2 + Padding.Top;
+                    int left = 6;
+                    int top = 2 + Padding.Top;
                     return new[]
                     {
                         new Point(left, top),

@@ -75,14 +75,14 @@ namespace CBRE.Rendering.Engine
 
         internal void DestroyTexture(Texture texture)
         {
-            var keys = _textures.Where(x => x.Value == texture).ToList();
+            System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, Texture>> keys = _textures.Where(x => x.Value == texture).ToList();
             if (keys.Any()) _textures.TryRemove(keys[0].Key, out _);
             texture.Dispose();
         }
 
         internal Texture GetTexture(string name)
         {
-            return _textures.TryGetValue(name, out var tex) ? tex : MissingTexture.Value;
+            return _textures.TryGetValue(name, out Texture tex) ? tex : MissingTexture.Value;
         }
 
         // Shaders
@@ -106,18 +106,18 @@ namespace CBRE.Rendering.Engine
         private static readonly Assembly ResourceAssembly = Assembly.GetExecutingAssembly();
         internal static byte[] GetEmbeddedShader(string name)
         {
-            var names = new[] {name + ".bytes", name};
+            string[] names = new[] {name + ".bytes", name};
 #if DEBUG
             // Compiling shaders manually is a pain!
             if (!Features.DirectX11OrHigher) Log.Debug("ResourceLoader", "If you're debugging on DX10 you'll need to manually compile shaders.");
             else names = new[] {name};
 #endif
-            foreach (var n in names)
+            foreach (string n in names)
             {
-                using (var s = ResourceAssembly.GetManifestResourceStream(typeof(Scope), n))
+                using (Stream s = ResourceAssembly.GetManifestResourceStream(typeof(Scope), n))
                 {
                     if (s == null) continue;
-                    using (var ms = new MemoryStream())
+                    using (MemoryStream ms = new MemoryStream())
                     {
                         s.CopyTo(ms);
                         return ms.ToArray();

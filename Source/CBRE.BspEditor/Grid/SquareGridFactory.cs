@@ -29,7 +29,7 @@ namespace CBRE.BspEditor.Grid
 
         public async Task<IGrid> Create(IEnvironment environment)
         {
-            var gd = await environment.GetGameData();
+            DataStructures.GameData.GameData gd = await environment.GetGameData();
             return new SquareGrid(gd.MapSizeHigh, gd.MapSizeLow, 16);
         }
 

@@ -25,7 +25,7 @@ namespace CBRE.Providers.Texture.Generic
             IFile file = _file.TraversePath(item);
             if (file == null || !file.Exists) return null;
 
-            var temp = await Task.Factory.StartNew(() =>
+            Bitmap temp = await Task.Factory.StartNew(() =>
             {
                 using (Stream stream = file.Open())
                 {

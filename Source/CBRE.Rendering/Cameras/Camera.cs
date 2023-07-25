@@ -6,7 +6,7 @@ namespace CBRE.Rendering.Cameras
     {
         public static ICamera Deserialise(string serialised)
         {
-            var idx = serialised.Split(new [] { '/'}, 2, StringSplitOptions.None);
+            string[] idx = serialised.Split(new [] { '/'}, 2, StringSplitOptions.None);
             if (idx.Length == 0) idx = new [] { "PerspectiveCamera", "" };
             else if (idx.Length == 1) idx = new [] { idx[0], "" };
 

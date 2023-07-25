@@ -26,7 +26,7 @@ namespace CBRE.BspEditor.Editing.Commands
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            using (var vg = new AboutDialog())
+            using (AboutDialog vg = new AboutDialog())
             {
                 vg.ShowDialog();
             }

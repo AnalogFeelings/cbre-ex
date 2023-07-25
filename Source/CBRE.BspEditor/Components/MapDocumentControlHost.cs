@@ -62,7 +62,7 @@ namespace CBRE.BspEditor.Components
 
         public void OnUIShutdown()
         {
-            foreach (var container in GetContainers())
+            foreach (MapDocumentContainer container in GetContainers())
             {
                 container.MapDocumentControls.ForEach(x => x.Dispose());
                 container.MapDocumentControls.Clear();
@@ -74,7 +74,7 @@ namespace CBRE.BspEditor.Components
         public IEnumerable<MapDocumentControlWindowConfiguration> GetConfigurations()
         {
             yield return new MapDocumentControlWindowConfiguration(null, MainWindow);
-            foreach (var window in Windows)
+            foreach (ViewportWindow window in Windows)
             {
                 yield return new MapDocumentControlWindowConfiguration(window, window.MapDocumentContainer);
             }
@@ -84,7 +84,7 @@ namespace CBRE.BspEditor.Components
         {
             _shell.InvokeSync(() =>
             {
-                foreach (var config in configurations)
+                foreach (MapDocumentControlWindowConfiguration config in configurations)
                 {
                     if (config.WindowID == 0)
                     {
@@ -98,7 +98,7 @@ namespace CBRE.BspEditor.Components
                     }
                     else
                     {
-                        var window = GetWindow(config.WindowID);
+                        ViewportWindow window = GetWindow(config.WindowID);
                         if (window == null) continue;
 
                         RemoveInvalidCells(window.MapDocumentContainer, config.Configuration);
@@ -113,11 +113,11 @@ namespace CBRE.BspEditor.Components
 
         private void RemoveInvalidCells(MapDocumentContainer container, TableSplitConfiguration config)
         {
-            var recs = config.Rectangles.ToList();
-            foreach (var control in container.Table.Controls.OfType<Control>().ToList())
+            List<Rectangle> recs = config.Rectangles.ToList();
+            foreach (Control control in container.Table.Controls.OfType<Control>().ToList())
             {
-                var pos = container.Table.GetPositionFromControl(control);
-                var mdc = container.MapDocumentControls.FirstOrDefault(x => x.Control.Control == control);
+                TableLayoutPanelCellPosition pos = container.Table.GetPositionFromControl(control);
+                MapDocumentContainer.CellReference mdc = container.MapDocumentControls.FirstOrDefault(x => x.Control.Control == control);
                 if (recs.Any(x => x.X == pos.Column && x.Y == pos.Row)) continue;
 
                 container.Table.Controls.Remove(control);
@@ -130,17 +130,17 @@ namespace CBRE.BspEditor.Components
 
         private void PopulateEmptyCells(MapDocumentContainer container)
         {
-            var loop = HostedControl.Default(container.WindowID);
-            var index = 0;
-            foreach (var rec in container. Table.Configuration.Rectangles)
+            List<HostedControl> loop = HostedControl.Default(container.WindowID);
+            int index = 0;
+            foreach (Rectangle rec in container. Table.Configuration.Rectangles)
             {
-                var i = rec.Y;
-                var j = rec.X;
+                int i = rec.Y;
+                int j = rec.X;
 
-                var c = container.MapDocumentControls.FirstOrDefault(x => x.Row == i && x.Column == j);
+                MapDocumentContainer.CellReference c = container.MapDocumentControls.FirstOrDefault(x => x.Row == i && x.Column == j);
                 if (c != null) continue;
 
-                var hc = new HostedControl
+                HostedControl hc = new HostedControl
                 {
                     WindowID = container.WindowID,
                     Row = i,
@@ -150,7 +150,7 @@ namespace CBRE.BspEditor.Components
                 };
                 index = (index + 1) % loop.Count;
 
-                var ctrl = MakeControl(hc.Type, hc.Serialised);
+                IMapDocumentControl ctrl = MakeControl(hc.Type, hc.Serialised);
                 if (ctrl != null) container.SetControl(ctrl, hc.Column, hc.Row);
             }
         }
@@ -164,7 +164,7 @@ namespace CBRE.BspEditor.Components
 
         private ViewportWindow CreateWindow(MapDocumentControlWindowConfiguration config)
         {
-            var window = new ViewportWindow(config);
+            ViewportWindow window = new ViewportWindow(config);
             window.Closed += DestroyWindow;
             Windows.Add(window);
             window.Show(_shell);
@@ -173,7 +173,7 @@ namespace CBRE.BspEditor.Components
 
         private void DestroyWindow(object sender, EventArgs e)
         {
-            var window = (ViewportWindow)sender;
+            ViewportWindow window = (ViewportWindow)sender;
             Windows.Remove(window);
             window.Closed -= DestroyWindow;
             window.Dispose();
@@ -183,13 +183,13 @@ namespace CBRE.BspEditor.Components
         {
             _shell.InvokeSync(() =>
             {
-                var nextId = Enumerable.Range(1, Windows.Count + 1).Except(Windows.Select(x => x.MapDocumentContainer.WindowID)).First();
-                var window = CreateWindow(MapDocumentControlWindowConfiguration.Default(nextId));
-                var container = window.MapDocumentContainer;
-                foreach (var hc in HostedControl.Default(nextId))
+                int nextId = Enumerable.Range(1, Windows.Count + 1).Except(Windows.Select(x => x.MapDocumentContainer.WindowID)).First();
+                ViewportWindow window = CreateWindow(MapDocumentControlWindowConfiguration.Default(nextId));
+                MapDocumentContainer container = window.MapDocumentContainer;
+                foreach (HostedControl hc in HostedControl.Default(nextId))
                 {
                     if (UpdateControl(hc)) continue;
-                    var ctrl = MakeControl(hc.Type, hc.Serialised);
+                    IMapDocumentControl ctrl = MakeControl(hc.Type, hc.Serialised);
                     if (ctrl != null) container.SetControl(ctrl, hc.Column, hc.Row);
                 }
             });
@@ -200,7 +200,7 @@ namespace CBRE.BspEditor.Components
         private IEnumerable<MapDocumentContainer> GetContainers()
         {
             yield return MainWindow;
-            foreach (var w in Windows) yield return w.MapDocumentContainer;
+            foreach (ViewportWindow w in Windows) yield return w.MapDocumentContainer;
         }
 
         private MapDocumentContainer GetContainer(int windowId)
@@ -219,24 +219,24 @@ namespace CBRE.BspEditor.Components
 
         public void LoadValues(ISettingsStore store)
         {
-            var windowConfigs = store.Get<List<MapDocumentControlWindowConfiguration>>("WindowConfigurations")
+            List<MapDocumentControlWindowConfiguration> windowConfigs = store.Get<List<MapDocumentControlWindowConfiguration>>("WindowConfigurations")
                                 ?? new List<MapDocumentControlWindowConfiguration> { new MapDocumentControlWindowConfiguration() };
 
-            var containers = GetContainers().ToList();
-            var windowIds = windowConfigs.Select(x => x.WindowID).Union(containers.Select(x => x.WindowID)).ToList();
+            List<MapDocumentContainer> containers = GetContainers().ToList();
+            List<int> windowIds = windowConfigs.Select(x => x.WindowID).Union(containers.Select(x => x.WindowID)).ToList();
             
             // Ensure that controls are created on the UI thread
             _shell.InvokeSync(() =>
             {
-                foreach (var id in windowIds)
+                foreach (int id in windowIds)
                 {
-                    var config = windowConfigs.FirstOrDefault(x => x.WindowID == id);
-                    var container = containers.FirstOrDefault(x => x.WindowID == id);
+                    MapDocumentControlWindowConfiguration config = windowConfigs.FirstOrDefault(x => x.WindowID == id);
+                    MapDocumentContainer container = containers.FirstOrDefault(x => x.WindowID == id);
                     if (config == null)
                     {
                         if (!(container?.WindowID > 0)) continue;
 
-                        var window = GetWindow(container.WindowID);
+                        ViewportWindow window = GetWindow(container.WindowID);
                         if (window != null) DestroyWindow(window, EventArgs.Empty);
                     }
                     else if (container == null)
@@ -245,7 +245,7 @@ namespace CBRE.BspEditor.Components
                     }
                     else if (config.WindowID > 0)
                     {
-                        var window = GetWindow(container.WindowID);
+                        ViewportWindow window = GetWindow(container.WindowID);
                         window?.SetConfiguration(config);
                     }
                     else
@@ -256,17 +256,17 @@ namespace CBRE.BspEditor.Components
                     }
                 }
 
-                var controls = store.Get<List<HostedControl>>("Controls");
+                List<HostedControl> controls = store.Get<List<HostedControl>>("Controls");
                 if (controls == null || !controls.Any())
                 {
                     controls = HostedControl.Default(0);
                 }
 
-                foreach (var hc in controls)
+                foreach (HostedControl hc in controls)
                 {
                     if (UpdateControl(hc)) continue;
-                    var ctrl = MakeControl(hc.Type, hc.Serialised);
-                    var container = GetContainer(hc.WindowID);
+                    IMapDocumentControl ctrl = MakeControl(hc.Type, hc.Serialised);
+                    MapDocumentContainer container = GetContainer(hc.WindowID);
                     if (container != null && ctrl != null) container.SetControl(ctrl, hc.Column, hc.Row);
                 }
             });
@@ -274,14 +274,14 @@ namespace CBRE.BspEditor.Components
 
         public void StoreValues(ISettingsStore store)
         {
-            var config = GetContainers().Select(x => new MapDocumentControlWindowConfiguration(GetWindow(x.WindowID), x)).ToList();
+            List<MapDocumentControlWindowConfiguration> config = GetContainers().Select(x => new MapDocumentControlWindowConfiguration(GetWindow(x.WindowID), x)).ToList();
             store.Set("WindowConfigurations", config);
 
-            var controls = new List<HostedControl>();
+            List<HostedControl> controls = new List<HostedControl>();
 
-            foreach (var con in GetContainers())
+            foreach (MapDocumentContainer con in GetContainers())
             {
-                foreach (var mdc in con.MapDocumentControls)
+                foreach (MapDocumentContainer.CellReference mdc in con.MapDocumentControls)
                 {
                     controls.Add(new HostedControl
                     {
@@ -306,19 +306,19 @@ namespace CBRE.BspEditor.Components
 
         private bool UpdateControl(HostedControl hc)
         {
-            var container = GetContainer(hc.WindowID);
+            MapDocumentContainer container = GetContainer(hc.WindowID);
             if (container == null) return false;
 
             // Try and find the control in the same slot
-            var controlAt = container.Table.GetControlFromPosition(hc.Column, hc.Row);
+            Control controlAt = container.Table.GetControlFromPosition(hc.Column, hc.Row);
             if (controlAt == null) return false;
 
             // Find the corresponding map document control
-            var mdc = container.MapDocumentControls.FirstOrDefault(x => x.Control.Control == controlAt);
+            MapDocumentContainer.CellReference mdc = container.MapDocumentControls.FirstOrDefault(x => x.Control.Control == controlAt);
             if (mdc == null) return false;
 
             // Ensure that the control is the type we want
-            var factory = _controlFactories.FirstOrDefault(x => x.Value.Type == hc.Type)?.Value;
+            IMapDocumentControlFactory factory = _controlFactories.FirstOrDefault(x => x.Value.Type == hc.Type)?.Value;
             if (factory == null || !factory.IsType(mdc.Control)) return false;
 
             // Update the control instead of replacing it
@@ -328,7 +328,7 @@ namespace CBRE.BspEditor.Components
 
         private IMapDocumentControl MakeControl(string type, string serialised)
         {
-            var ctrl = _controlFactories.FirstOrDefault(x => x.Value.Type == type)?.Value.Create();
+            IMapDocumentControl ctrl = _controlFactories.FirstOrDefault(x => x.Value.Type == type)?.Value.Create();
             ctrl?.SetSerialisedSettings(serialised);
             return ctrl;
         }
@@ -342,10 +342,10 @@ namespace CBRE.BspEditor.Components
             if (_contextMenu != null) return;
 
             _contextMenu = new ContextMenuStrip();
-            foreach (var cf in _controlFactories.Select(x => x.Value))
+            foreach (IMapDocumentControlFactory cf in _controlFactories.Select(x => x.Value))
             {
                 if (_contextMenu.Items.Count > 0) _contextMenu.Items.Add(new ToolStripSeparator());
-                foreach (var kv in cf.GetStyles())
+                foreach (KeyValuePair<string, string> kv in cf.GetStyles())
                 {
                     _contextMenu.Items.Add(new ContextMenuItem(kv.Value, cf.Type, kv.Key));
                 }
@@ -359,10 +359,10 @@ namespace CBRE.BspEditor.Components
         {
             if (_contextControl == null || !(e.ClickedItem is ContextMenuItem mi)) return;
 
-            var container = GetContainer(_contextControl.WindowID);
+            MapDocumentContainer container = GetContainer(_contextControl.WindowID);
             if (container == null) return;
 
-            var hc = new HostedControl
+            HostedControl hc = new HostedControl
             {
                 WindowID = _contextControl.WindowID,
                 Row = _contextControl.Row,
@@ -374,33 +374,33 @@ namespace CBRE.BspEditor.Components
             _shell.InvokeSync(() =>
             {
                 if (UpdateControl(hc)) return;
-                var ctrl = MakeControl(hc.Type, hc.Serialised);
+                IMapDocumentControl ctrl = MakeControl(hc.Type, hc.Serialised);
                 if (ctrl != null) container.SetControl(ctrl, hc.Column, hc.Row);
             });
         }
 
         private bool InterceptRightClick()
         {
-            var mousePosition = MousePosition;
-            foreach (var container in GetContainers())
+            Point mousePosition = MousePosition;
+            foreach (MapDocumentContainer container in GetContainers())
             {
-                var client = container.PointToClient(mousePosition);
+                Point client = container.PointToClient(mousePosition);
                 if (!container.ClientRectangle.Contains(client)) continue;
 
-                foreach (var control in container.Table.Controls.OfType<Control>())
+                foreach (Control control in container.Table.Controls.OfType<Control>())
                 {
-                    var mapped = control.PointToClient(mousePosition);
+                    Point mapped = control.PointToClient(mousePosition);
 
                     if (mapped.X >= 0 && mapped.X < 40 && mapped.Y >= 0 && mapped.Y < FontHeight + 2)
                     {
-                        var pos = container.Table.GetPositionFromControl(control);
-                        var hc = new HostedControl
+                        TableLayoutPanelCellPosition pos = container.Table.GetPositionFromControl(control);
+                        HostedControl hc = new HostedControl
                         {
                             WindowID = container.WindowID,
                             Row = pos.Row,
                             Column = pos.Column,
                         };
-                        var mdc = GetControls().FirstOrDefault(x => x.Control == control);
+                        IMapDocumentControl mdc = GetControls().FirstOrDefault(x => x.Control == control);
                         ShowContextMenu(hc, mdc, mousePosition);
                         return true;
                     }
@@ -414,9 +414,9 @@ namespace CBRE.BspEditor.Components
         {
             CreateContextMenu();
             
-            foreach (var cmi in _contextMenu.Items.OfType<ContextMenuItem>())
+            foreach (ContextMenuItem cmi in _contextMenu.Items.OfType<ContextMenuItem>())
             {
-                var f = _controlFactories.Select(x => x.Value).FirstOrDefault(x => x.Type == cmi.Type);
+                IMapDocumentControlFactory f = _controlFactories.Select(x => x.Value).FirstOrDefault(x => x.Type == cmi.Type);
                 cmi.Checked = f != null && mdc != null && f.IsStyle(mdc, cmi.Style);
             }
 

@@ -62,8 +62,8 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public MapObjectDataCollection Clone()
         {
-            var copy = new MapObjectDataCollection();
-            foreach (var d in Data)
+            MapObjectDataCollection copy = new MapObjectDataCollection();
+            foreach (IMapObjectData d in Data)
             {
                 copy.Add(d.Clone() as IMapObjectData);
             }
@@ -72,8 +72,8 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public MapObjectDataCollection Copy(UniqueNumberGenerator numberGenerator)
         {
-            var copy = new MapObjectDataCollection();
-            foreach (var d in Data)
+            MapObjectDataCollection copy = new MapObjectDataCollection();
+            foreach (IMapObjectData d in Data)
             {
                 copy.Add(d.Copy(numberGenerator) as IMapObjectData);
             }

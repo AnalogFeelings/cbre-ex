@@ -63,7 +63,7 @@ namespace CBRE.BspEditor.Tools.Selection
 
         private void BindWidgets()
         {
-            foreach (var w in Widgets)
+            foreach (Widget w in Widgets)
             {
                 w.Transforming += WidgetTransforming;
                 w.Transformed += WidgetTransformed;
@@ -80,22 +80,22 @@ namespace CBRE.BspEditor.Tools.Selection
 
         private void WidgetTransformed(Widget sender, Matrix4x4? transformation)
         {
-            var document = Tool.GetDocument();
-            var task = Task.CompletedTask;
+            MapDocument document = Tool.GetDocument();
+            Task task = Task.CompletedTask;
 
             if (document != null && transformation.HasValue)
             {
-                var objects = document.Selection.GetSelectedParents().ToList();
+                List<IMapObject> objects = document.Selection.GetSelectedParents().ToList();
 
-                var transaction = new Transaction();
+                Transaction transaction = new Transaction();
 
                 // Perform the operation
-                var matrix = transformation.Value;
-                var transformOperation = new Transform(matrix, objects);
+                Matrix4x4 matrix = transformation.Value;
+                Transform transformOperation = new Transform(matrix, objects);
                 transaction.Add(transformOperation);
 
                 // Texture for texture operations
-                var tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+                TransformationFlags tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
                 if (tl.TextureLock && sender.IsUniformTransformation)
                 {
                     transaction.Add(new TransformTexturesUniform(matrix, objects.SelectMany(x => x.FindAll())));
@@ -119,7 +119,7 @@ namespace CBRE.BspEditor.Tools.Selection
 
         protected override void CreateBoxHandles()
         {
-            var resize = new List<IDraggable>
+            List<IDraggable> resize = new List<IDraggable>
             {
                 new ResizeTransformHandle(this, ResizeHandle.TopLeft),
                 new ResizeTransformHandle(this, ResizeHandle.TopRight),
@@ -140,7 +140,7 @@ namespace CBRE.BspEditor.Tools.Selection
                 _rotationOrigin.DragMoved += (sender, args) => Update();
             }
 
-            var rotate = new List<IDraggable>
+            List<IDraggable> rotate = new List<IDraggable>
             {
                 _rotationOrigin,
 
@@ -152,7 +152,7 @@ namespace CBRE.BspEditor.Tools.Selection
                 new ResizeTransformHandle(this, ResizeHandle.Center), 
             };
 
-            var skew = new List<IDraggable>
+            List<IDraggable> skew = new List<IDraggable>
             {
                 new SkewTransformHandle(this, ResizeHandle.Top),
                 new SkewTransformHandle(this, ResizeHandle.Right),
@@ -180,22 +180,22 @@ namespace CBRE.BspEditor.Tools.Selection
         public Matrix4x4? GetTransformationMatrix(MapViewport viewport, OrthographicCamera camera, MapDocument doc)
         {
             if (State.Action != BoxAction.Resizing) return null;
-            var tt = Tool.CurrentDraggable as ITransformationHandle;
+            ITransformationHandle tt = Tool.CurrentDraggable as ITransformationHandle;
             return tt?.GetTransformationMatrix(viewport, camera, State, doc);
         }
 
         public TextureTransformationType GetTextureTransformationType(MapDocument doc)
         {
             if (State.Action != BoxAction.Resizing) return TextureTransformationType.None;
-            var tt = Tool.CurrentDraggable as ITransformationHandle;
+            ITransformationHandle tt = Tool.CurrentDraggable as ITransformationHandle;
             return tt?.GetTextureTransformationType(doc) ?? TextureTransformationType.None;
         }
 
         public void Cycle()
         {
-            var intMode = (int) CurrentTransformationMode;
-            var numModes = Enum.GetValues(typeof (TransformationMode)).Length;
-            var nextMode = (intMode + 1) % numModes;
+            int intMode = (int) CurrentTransformationMode;
+            int numModes = Enum.GetValues(typeof (TransformationMode)).Length;
+            int nextMode = (intMode + 1) % numModes;
             SetTransformationMode((TransformationMode) nextMode);
         }
 
@@ -227,8 +227,8 @@ namespace CBRE.BspEditor.Tools.Selection
 
         protected override Color GetRenderFillColour()
         {
-            var c = base.GetRenderFillColour();
-            var a = Math.Min(100, Math.Max(0, _tool.SelectionBoxBackgroundOpacity));
+            Color c = base.GetRenderFillColour();
+            int a = Math.Min(100, Math.Max(0, _tool.SelectionBoxBackgroundOpacity));
             return Color.FromArgb(a, c);
         }
     }

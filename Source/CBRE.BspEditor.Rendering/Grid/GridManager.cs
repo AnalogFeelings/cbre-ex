@@ -51,7 +51,7 @@ namespace CBRE.BspEditor.Rendering.Grid
 
         private async Task DocumentChanged(Change change)
         {
-            if (_activeDocument.TryGetTarget(out var md) && change.Document == md)
+            if (_activeDocument.TryGetTarget(out MapDocument md) && change.Document == md)
             {
                 if (change.HasDataChanges && change.AffectedData.OfType<GridData>().Any())
                 {
@@ -62,14 +62,14 @@ namespace CBRE.BspEditor.Rendering.Grid
 
         private async Task DocumentActivated(IDocument doc)
         {
-            var md = doc as MapDocument;
+            MapDocument md = doc as MapDocument;
             _activeDocument = new WeakReference<MapDocument>(md);
             await UpdateGrid(md);
         }
 
         private async Task DocumentClosed(IDocument doc)
         {
-            if (_activeDocument.TryGetTarget(out var md) && md == doc)
+            if (_activeDocument.TryGetTarget(out MapDocument md) && md == doc)
             {
                 await UpdateGrid(null);
             }
@@ -79,8 +79,8 @@ namespace CBRE.BspEditor.Rendering.Grid
         {
             lock (_lock)
             {
-                var gr = new GridRenderable(viewport, _engine.Value);
-                if (_activeDocument.TryGetTarget(out var md)) gr.SetGrid(md);
+                GridRenderable gr = new GridRenderable(viewport, _engine.Value);
+                if (_activeDocument.TryGetTarget(out MapDocument md)) gr.SetGrid(md);
                 _viewportRenderables[viewport.ID] = gr;
                 _engine.Value.Add(gr);
             }
@@ -92,7 +92,7 @@ namespace CBRE.BspEditor.Rendering.Grid
             {
                 if (!_viewportRenderables.ContainsKey(viewport.ID)) return;
 
-                var gr = _viewportRenderables[viewport.ID];
+                GridRenderable gr = _viewportRenderables[viewport.ID];
                 _viewportRenderables.Remove(viewport.ID);
                 _engine.Value.Remove(gr);
                 gr.Dispose();
@@ -105,7 +105,7 @@ namespace CBRE.BspEditor.Rendering.Grid
         {
             lock (_lock)
             {
-                foreach (var gr in _viewportRenderables.Values)
+                foreach (GridRenderable gr in _viewportRenderables.Values)
                 {
                     gr.SetGrid(md);
                 }

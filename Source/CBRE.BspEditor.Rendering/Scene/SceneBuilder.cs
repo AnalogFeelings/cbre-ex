@@ -53,7 +53,7 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         public void Clear()
         {
-            foreach (var bb in _bufferBuilders) bb.Value.Dispose();
+            foreach (KeyValuePair<long, BufferBuilder> bb in _bufferBuilders) bb.Value.Dispose();
             _bufferBuilders.Clear();
             _renderables.Clear();
         }
@@ -62,7 +62,7 @@ namespace CBRE.BspEditor.Rendering.Scene
         {
             if (_bufferBuilders.ContainsKey(group))
             {
-                var bb = _bufferBuilders[group];
+                BufferBuilder bb = _bufferBuilders[group];
                 bb.Dispose();
                 _bufferBuilders.Remove(group);
             }
@@ -81,7 +81,7 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         public void Complete()
         {
-            foreach (var bb in _bufferBuilders)
+            foreach (KeyValuePair<long, BufferBuilder> bb in _bufferBuilders)
             {
                 bb.Value.Complete();
             }
@@ -90,7 +90,7 @@ namespace CBRE.BspEditor.Rendering.Scene
         public void Dispose()
         {
             SceneBuilderRenderable.Dispose();
-            foreach (var bb in _bufferBuilders)
+            foreach (KeyValuePair<long, BufferBuilder> bb in _bufferBuilders)
             {
                 bb.Value.Dispose();
             }

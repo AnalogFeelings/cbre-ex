@@ -78,8 +78,8 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         private static Bitmap GetCheckboxBitmap(CheckBoxState state)
         {
             /* http://stackoverflow.com/questions/5626031/tri-state-checkboxes-in-winforms-treeview */
-            var bmp = new Bitmap(16, 16);
-            using (var g = Graphics.FromImage(bmp))
+            Bitmap bmp = new Bitmap(16, 16);
+            using (Graphics g = Graphics.FromImage(bmp))
             {
                 CheckBoxRenderer.DrawCheckBox(g, new Point(0, 1), state);
             }
@@ -88,7 +88,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private void AddNode(TreeNode parent, List<VisgroupItem> visgroups, VisgroupItem visgroup)
         {
-            var node = new TreeNode(visgroup.Text)
+            TreeNode node = new TreeNode(visgroup.Text)
             {
                 StateImageKey = CastCheckState(visgroup.CheckState) + (visgroup.Disabled ? "Disabled" : ""),
                 BackColor = visgroup.Colour,
@@ -99,8 +99,8 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
             if (parent == null) VisgroupTree.Nodes.Add(node);
             else parent.Nodes.Add(node);
 
-            var children = visgroups.Where(x => x.Parent == visgroup);
-            foreach (var vg in children)
+            IEnumerable<VisgroupItem> children = visgroups.Where(x => x.Parent == visgroup);
+            foreach (VisgroupItem vg in children)
             {
                 AddNode(node, visgroups, vg);
             }
@@ -116,12 +116,12 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         {
             VisgroupTree.BeginUpdate();
 
-            var state = GetExpandState();
-            var scroll = GetTreeViewScrollPos(VisgroupTree);
+            List<string> state = GetExpandState();
+            Point scroll = GetTreeViewScrollPos(VisgroupTree);
 
             Clear();
-            var vgs = visgroups.ToList();
-            foreach (var v in vgs.Where(x => x.Parent == null))
+            List<VisgroupItem> vgs = visgroups.ToList();
+            foreach (VisgroupItem v in vgs.Where(x => x.Parent == null))
             {
                 AddNode(null, vgs, v);
             }
@@ -134,7 +134,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private void RestoreExpandState(List<string> expanded)
         {
-            foreach (var node in GetAllNodePaths().Where(x => expanded.Contains(x.Value)))
+            foreach (KeyValuePair<TreeNode, string> node in GetAllNodePaths().Where(x => expanded.Contains(x.Value)))
             {
                 node.Key.Expand();
             }
@@ -152,13 +152,13 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private Dictionary<TreeNode, string> GetAllNodePaths(Dictionary<TreeNode, string> nodes)
         {
-            var dic = new Dictionary<TreeNode, string>(nodes);
+            Dictionary<TreeNode, string> dic = new Dictionary<TreeNode, string>(nodes);
 
-            var children = nodes.SelectMany(x => x.Key.Nodes.OfType<TreeNode>().Select(n => new {x, n}))
+            Dictionary<TreeNode, string> children = nodes.SelectMany(x => x.Key.Nodes.OfType<TreeNode>().Select(n => new {x, n}))
                 .ToDictionary(x => x.n, x => x.x.Value + "/" + x.n.Text);
             if (children.Any())
             {
-                foreach (var kv in GetAllNodePaths(children))
+                foreach (KeyValuePair<TreeNode, string> kv in GetAllNodePaths(children))
                 {
                     dic[kv.Key] = kv.Value;
                 }
@@ -182,7 +182,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private IEnumerable<TreeNode> GetAllNodes(IEnumerable<TreeNode> nodes)
         {
-            var n = nodes.ToList();
+            List<TreeNode> n = nodes.ToList();
             return n.SelectMany(x => GetAllNodes(x.Nodes.OfType<TreeNode>())).Union(n);
         }
 
@@ -225,7 +225,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         /// </summary>
         public void UpdateVisgroupState(VisgroupItem visgroup)
         {
-            var node = GetNodeForTag(visgroup.Tag);
+            TreeNode node = GetNodeForTag(visgroup.Tag);
             if (node == null) return;
 
             node.Text = visgroup.Text;
@@ -242,7 +242,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         /// </summary>
         public CheckState GetCheckState(VisgroupItem visgroup)
         {
-            var node = GetNodeForTag(visgroup.Tag);
+            TreeNode node = GetNodeForTag(visgroup.Tag);
             return GetCheckState(node);
         }
 
@@ -279,9 +279,9 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         /// </summary>
         public void SetCheckState(VisgroupItem visgroup, CheckState state)
         {
-            var node = GetNodeForTag(visgroup.Tag);
+            TreeNode node = GetNodeForTag(visgroup.Tag);
             if (node == null) return;
-            var disabled = node.StateImageKey.EndsWith("Disabled");
+            bool disabled = node.StateImageKey.EndsWith("Disabled");
             node.StateImageKey = CastCheckState(state);
             if (disabled) node.StateImageKey += "Disabled";
         }
@@ -291,16 +291,16 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
             if (!ShowCheckboxes) return;
 
             // Only do something if the click is over the image (checkbox)
-            var hit = VisgroupTree.HitTest(e.X, e.Y);
+            TreeViewHitTestInfo hit = VisgroupTree.HitTest(e.X, e.Y);
             if (hit.Location != TreeViewHitTestLocations.StateImage) return;
 
-            var disabled = e.Node.StateImageKey.EndsWith("Disabled");
+            bool disabled = e.Node.StateImageKey.EndsWith("Disabled");
             if (disabled) return;
 
-            var vis = (VisgroupItem) e.Node.Tag;
+            VisgroupItem vis = (VisgroupItem) e.Node.Tag;
 
             // unchecked -> checked, checked -> unchecked, mixed -> unchecked
-            var visible = e.Node.StateImageKey.StartsWith("Unchecked");
+            bool visible = e.Node.StateImageKey.StartsWith("Unchecked");
             e.Node.StateImageKey = (visible ? "Checked" : "Unchecked");
             OnVisgroupToggled(vis, visible ? CheckState.Checked : CheckState.Unchecked);
         }

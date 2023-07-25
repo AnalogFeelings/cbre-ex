@@ -23,11 +23,11 @@ namespace CBRE.BspEditor.Modification.Operations.Selection
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            foreach (var id in _idsToSelect)
+            foreach (long id in _idsToSelect)
             {
-                var o = document.Map.Root.FindByID(id);
+                IMapObject o = document.Map.Root.FindByID(id);
                 if (o != null)
                 {
                     o.IsSelected = true;
@@ -40,11 +40,11 @@ namespace CBRE.BspEditor.Modification.Operations.Selection
 
         public async Task<Change> Reverse(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            foreach (var id in _idsToSelect)
+            foreach (long id in _idsToSelect)
             {
-                var o = document.Map.Root.FindByID(id);
+                IMapObject o = document.Map.Root.FindByID(id);
                 if (o != null)
                 {
                     o.IsSelected = false;

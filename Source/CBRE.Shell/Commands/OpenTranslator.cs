@@ -38,7 +38,7 @@ namespace CBRE.Shell.Commands
         {
             _shell.InvokeLater(() =>
             {
-                var tf = new TranslationForm();
+                TranslationForm tf = new TranslationForm();
                 tf.Show(_shell);
             });
             return Task.CompletedTask;

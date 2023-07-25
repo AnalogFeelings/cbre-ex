@@ -20,15 +20,15 @@ namespace CBRE.BspEditor.Controls
             if (Rows <= 0 || Columns <= 0) return false;
             if (Rows > 4 || Columns > 4) return false;
 
-            var cells = new bool[Rows, Columns];
-            var set = 0;
-            foreach (var r in Rectangles)
+            bool[,] cells = new bool[Rows, Columns];
+            int set = 0;
+            foreach (Rectangle r in Rectangles)
             {
                 if (r.X < 0 || r.X + r.Width > Columns) return false;
                 if (r.Y < 0 || r.Y + r.Height > Rows) return false;
-                for (var i = r.X; i < r.X + r.Width; i++)
+                for (int i = r.X; i < r.X + r.Width; i++)
                 {
-                    for (var j = r.Y; j < r.Y + r.Height; j++)
+                    for (int j = r.Y; j < r.Y + r.Height; j++)
                     {
                         if (cells[j, i]) return false;
                         cells[j, i] = true;

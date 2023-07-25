@@ -34,7 +34,7 @@ namespace CBRE.Rendering.Pipelines
                 )
             );
 
-            var pDesc = new GraphicsPipelineDescription
+            GraphicsPipelineDescription pDesc = new GraphicsPipelineDescription
             {
                 BlendState = BlendStateDescription.SingleDisabled,
                 DepthStencilState = DepthStencilStateDescription.DepthOnlyLessEqual,
@@ -71,7 +71,7 @@ namespace CBRE.Rendering.Pipelines
             cl.SetPipeline(_pipeline);
             cl.SetGraphicsResourceSet(0, _projectionResourceSet);
 
-            foreach (var r in renderables.OfType<IModelRenderable>())
+            foreach (IModelRenderable r in renderables.OfType<IModelRenderable>())
             {
                 cl.UpdateBuffer(_projectionBuffer, 0, new UniformProjection
                 {
@@ -106,7 +106,7 @@ namespace CBRE.Rendering.Pipelines
 
         public void Bind(RenderContext context, CommandList cl, string binding)
         {
-            var tex = context.ResourceLoader.GetTexture(binding);
+            Resources.Texture tex = context.ResourceLoader.GetTexture(binding);
             tex?.BindTo(cl, 1);
         }
 

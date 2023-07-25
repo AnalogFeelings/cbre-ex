@@ -19,14 +19,14 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public static CompileTool Parse(SerialisedObject gs)
         {
-            var tool = new CompileTool
+            CompileTool tool = new CompileTool
             {
                 Name = gs.Get("Name", ""),
                 Description = gs.Get("Description", ""),
                 Order = gs.Get("Order", 0),
                 Enabled = gs.Get("Enabled", true)
             };
-            var parameters = gs.Children.Where(x => x.Name == "Parameter");
+            IEnumerable<SerialisedObject> parameters = gs.Children.Where(x => x.Name == "Parameter");
             tool.Parameters.AddRange(parameters.Select(CompileParameter.Parse));
             return tool;
         }

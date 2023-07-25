@@ -35,14 +35,14 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         public ToolStripMenuItem AddCommand(string commandId, object parameters = null)
         {
-            var mi = CreateCommandItem(commandId, parameters);
+            ToolStripMenuItem mi = CreateCommandItem(commandId, parameters);
             Items.Add(mi);
             return mi;
         }
 
         public ToolStripMenuItem AddCallback(string description, Action callback)
         {
-            var mi = new ToolStripMenuItem(description);
+            ToolStripMenuItem mi = new ToolStripMenuItem(description);
             mi.Click += (s, e) => callback();
             Items.Add(mi);
             return mi;
@@ -50,14 +50,14 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         public ToolStripSeparator AddSeparator()
         {
-            var mi = new ToolStripSeparator();
+            ToolStripSeparator mi = new ToolStripSeparator();
             Items.Add(mi);
             return mi;
         }
 
         public ToolStripMenuItem AddGroup(string description)
         {
-            var g = new ToolStripMenuItem(description);
+            ToolStripMenuItem g = new ToolStripMenuItem(description);
             Items.Add(g);
             return g;
         }
@@ -75,7 +75,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
         public void Populate(ContextMenuStrip menu)
         {
             menu.Items.Clear();
-            foreach (var command in Items)
+            foreach (ToolStripItem command in Items)
             {
                 menu.Items.Add(command);
             }
@@ -92,8 +92,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
                 _parameters = parameters;
                 Click += RunCommand;
 
-                var register = Common.Container.Get<Shell.Registers.CommandRegister>();
-                var cmd = register.Get(_commandID);
+                Shell.Registers.CommandRegister register = Common.Container.Get<Shell.Registers.CommandRegister>();
+                ICommand cmd = register.Get(_commandID);
                 Text = cmd == null ? _commandID : cmd.Name;
             }
 

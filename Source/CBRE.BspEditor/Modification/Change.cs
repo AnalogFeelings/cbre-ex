@@ -73,7 +73,7 @@ namespace CBRE.BspEditor.Modification
 
         public Change AddRange(IEnumerable<IMapObject> objects)
         {
-            var all = objects.ToList();
+            List<IMapObject> all = objects.ToList();
             _added.UnionWith(all);
             _removed.ExceptWith(all);
             _updated.ExceptWith(all);
@@ -90,7 +90,7 @@ namespace CBRE.BspEditor.Modification
 
         public Change UpdateRange(IEnumerable<IMapObject> objects)
         {
-            var all = objects.ToList();
+            List<IMapObject> all = objects.ToList();
             _updated.UnionWith(all);
             _added.ExceptWith(all);
             _removed.ExceptWith(all);
@@ -119,7 +119,7 @@ namespace CBRE.BspEditor.Modification
 
         public Change RemoveRange(IEnumerable<IMapObject> objects)
         {
-            var all = objects.ToList();
+            List<IMapObject> all = objects.ToList();
             _added.ExceptWith(all);
             _updated.ExceptWith(all);
             _removed.UnionWith(all);

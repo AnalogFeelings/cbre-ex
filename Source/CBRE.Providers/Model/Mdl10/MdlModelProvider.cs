@@ -18,7 +18,7 @@ namespace CBRE.Providers.Model.Mdl10
         {
             return await Task.Factory.StartNew(() =>
             {
-                var mdl = MdlFile.FromFile(file);
+                MdlFile mdl = MdlFile.FromFile(file);
                 mdl.WriteFakePrecalculatedChromeCoordinates();
                 return new MdlModel(mdl);
             });

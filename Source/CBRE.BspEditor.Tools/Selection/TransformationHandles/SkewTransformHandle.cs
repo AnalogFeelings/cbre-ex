@@ -25,7 +25,7 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
 
         protected override void SetCursorForHandle(MapViewport viewport, ResizeHandle handle)
         {
-            var ct = handle.GetCursorType();
+            Cursor ct = handle.GetCursorType();
             switch (handle)
             {
                 case ResizeHandle.Top:
@@ -64,32 +64,32 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
 
         public Matrix4x4? GetTransformationMatrix(MapViewport viewport, OrthographicCamera camera, BoxState state, MapDocument doc)
         {
-            var shearUpDown = Handle == ResizeHandle.Left || Handle == ResizeHandle.Right;
-            var shearTopRight = Handle == ResizeHandle.Top || Handle == ResizeHandle.Right;
+            bool shearUpDown = Handle == ResizeHandle.Left || Handle == ResizeHandle.Right;
+            bool shearTopRight = Handle == ResizeHandle.Top || Handle == ResizeHandle.Right;
 
             if (!_skewStart.HasValue || !_skewEnd.HasValue) return null;
 
-            var nsmd = _skewEnd.Value - _skewStart.Value;
-            var mouseDiff = State.Tool.SnapIfNeeded(nsmd);
+            Vector3 nsmd = _skewEnd.Value - _skewStart.Value;
+            Vector3 mouseDiff = State.Tool.SnapIfNeeded(nsmd);
             if (KeyboardState.Shift && !KeyboardState.Alt)
             {
                 // todo post-beta: this is hard-coded to only work on the square grid
-                var gridData = doc.Map.Data.GetOne<GridData>();
+                GridData gridData = doc.Map.Data.GetOne<GridData>();
                 if (gridData?.Grid is SquareGrid sg && gridData?.SnapToGrid == true)
                 {
                     mouseDiff = nsmd.Snap(sg.Step / 2);
                 }
             }
 
-            var relative = camera.Flatten(state.OrigEnd - state.OrigStart);
-            var shearOrigin = (shearTopRight) ? state.OrigStart : state.OrigEnd;
+            Vector3 relative = camera.Flatten(state.OrigEnd - state.OrigStart);
+            Vector3 shearOrigin = (shearTopRight) ? state.OrigStart : state.OrigEnd;
 
-            var shearAmount = new Vector3(mouseDiff.X / relative.Y, mouseDiff.Y / relative.X, 0);
+            Vector3 shearAmount = new Vector3(mouseDiff.X / relative.Y, mouseDiff.Y / relative.X, 0);
             if (!shearTopRight) shearAmount *= -1;
 
-            var shearMatrix = Matrix4x4.Identity;
-            var sax = shearAmount.X;
-            var say = shearAmount.Y;
+            Matrix4x4 shearMatrix = Matrix4x4.Identity;
+            float sax = shearAmount.X;
+            float say = shearAmount.Y;
 
             switch (camera.ViewType)
             {
@@ -107,9 +107,9 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
                     break;
             }
 
-            var stran = Matrix4x4.CreateTranslation(-shearOrigin.X, -shearOrigin.Y, -shearOrigin.Z);
-            var shear = Matrix4x4.Multiply(stran, shearMatrix);
-            var inv = Matrix4x4.Invert(stran, out var i) ? i : Matrix4x4.Identity;
+            Matrix4x4 stran = Matrix4x4.CreateTranslation(-shearOrigin.X, -shearOrigin.Y, -shearOrigin.Z);
+            Matrix4x4 shear = Matrix4x4.Multiply(stran, shearMatrix);
+            Matrix4x4 inv = Matrix4x4.Invert(stran, out Matrix4x4 i) ? i : Matrix4x4.Identity;
             return Matrix4x4.Multiply(shear, inv);
         }
 

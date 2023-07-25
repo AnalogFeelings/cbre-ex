@@ -21,7 +21,7 @@ namespace CBRE.Shell.Settings.Editors
             get => NumericBox.Value;
             set
             {
-                var d = Convert.ToDecimal(value);
+                decimal d = Convert.ToDecimal(value);
                 Slider.Value = Math.Min(Slider.Maximum, Math.Max(Slider.Minimum, ActualToSlider(d)));
                 NumericBox.Value = Math.Min(NumericBox.Maximum, Math.Max(NumericBox.Minimum, d));
             }
@@ -53,29 +53,29 @@ namespace CBRE.Shell.Settings.Editors
 
         private void SetHint(string hint)
         {
-            var spl = (hint ?? "").Split(',');
+            string[] spl = (hint ?? "").Split(',');
 
-            if (spl.Length > 4 && decimal.TryParse(spl[4], out var mul)) _actualToSliderMultiplier = mul;
+            if (spl.Length > 4 && decimal.TryParse(spl[4], out decimal mul)) _actualToSliderMultiplier = mul;
 
-            if (spl.Length > 0 && decimal.TryParse(spl[0], out var min))
+            if (spl.Length > 0 && decimal.TryParse(spl[0], out decimal min))
             {
                 Slider.Minimum = ActualToSlider(min);
                 NumericBox.Minimum = min;
             }
 
-            if (spl.Length > 1 && decimal.TryParse(spl[1], out var max))
+            if (spl.Length > 1 && decimal.TryParse(spl[1], out decimal max))
             {
                 Slider.Maximum = ActualToSlider(max);
                 NumericBox.Maximum = max;
             }
 
-            if (spl.Length > 2 && decimal.TryParse(spl[2], out var step))
+            if (spl.Length > 2 && decimal.TryParse(spl[2], out decimal step))
             {
                 Slider.SmallChange = ActualToSlider(step);
                 NumericBox.Increment = step;
             }
 
-            if (spl.Length > 3 && decimal.TryParse(spl[3], out var step2))
+            if (spl.Length > 3 && decimal.TryParse(spl[3], out decimal step2))
             {
                 Slider.LargeChange = ActualToSlider(step2);
             }

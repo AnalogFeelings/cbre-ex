@@ -38,7 +38,7 @@ namespace CBRE.Shell.Commands
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var doc = context.Get<IDocument>("ActiveDocument");
+            IDocument doc = context.Get<IDocument>("ActiveDocument");
             if (doc != null)
             {
                 await _documentRegister.Value.RequestCloseDocument(doc);

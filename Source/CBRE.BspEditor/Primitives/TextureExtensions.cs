@@ -13,9 +13,9 @@ namespace CBRE.BspEditor.Primitives
         public static void AlignToNormal(this Texture tex, Vector3 normal)
         {
             // Get the closest axis for this normal
-            var axis = normal.ClosestAxis();
+            Vector3 axis = normal.ClosestAxis();
 
-            var tempV = axis == Vector3.UnitZ ? -Vector3.UnitY : -Vector3.UnitZ;
+            Vector3 tempV = axis == Vector3.UnitZ ? -Vector3.UnitY : -Vector3.UnitZ;
             tex.UAxis = normal.Cross(tempV).Normalise();
             tex.VAxis = tex.UAxis.Cross(normal).Normalise();
             tex.Rotation = 0;
@@ -23,18 +23,18 @@ namespace CBRE.BspEditor.Primitives
 
         public static bool IsAlignedToNormal(this Texture tex, Vector3 normal)
         {
-            var cp = tex.UAxis.Cross(tex.VAxis).Normalise();
+            Vector3 cp = tex.UAxis.Cross(tex.VAxis).Normalise();
             return cp.EquivalentTo(normal, 0.01f) || cp.EquivalentTo(-normal, 0.01f);
         }
 
         public static void AlignWithTexture(this Texture tex, Plane currentPlane, Plane alignToPlane, Texture alignToTexture)
         {
             // Get reference values for the axes
-            var refU = alignToTexture.UAxis;
-            var refV = alignToTexture.VAxis;
+            Vector3 refU = alignToTexture.UAxis;
+            Vector3 refV = alignToTexture.VAxis;
             // Reference points in the texture plane to use for shifting later on
-            var refX = alignToTexture.UAxis * alignToTexture.XShift * alignToTexture.XScale;
-            var refY = alignToTexture.VAxis * alignToTexture.YShift * alignToTexture.YScale;
+            Vector3 refX = alignToTexture.UAxis * alignToTexture.XShift * alignToTexture.XScale;
+            Vector3 refY = alignToTexture.VAxis * alignToTexture.YShift * alignToTexture.YScale;
 
             // Two non-parallel planes intersect at an edge. We want the textures on this face
             // to line up with the textures on the provided face. To do this, we rotate the texture 
@@ -43,15 +43,15 @@ namespace CBRE.BspEditor.Primitives
             // The scale values on both faces will always end up being the same value.
 
             // Find the intersection edge vector
-            var intersectionEdge = alignToPlane.Normal.Cross(currentPlane.Normal);
+            Vector3 intersectionEdge = alignToPlane.Normal.Cross(currentPlane.Normal);
 
             // If the planes are parallel, the texture doesn't need any rotation - just different shift values.
             if (Math.Abs(intersectionEdge.Length()) > 0.01f)
             {
                 // Create a plane using the intersection edge as the normal
-                var intersectionPlane = new Plane(intersectionEdge, 0);
+                Plane intersectionPlane = new Plane(intersectionEdge, 0);
 
-                var intersect = Plane.Intersect(alignToPlane, currentPlane, intersectionPlane);
+                Vector3? intersect = Plane.Intersect(alignToPlane, currentPlane, intersectionPlane);
                 if (intersect != null)
                 {
                     // Since the intersection plane is perpendicular to both face planes, we can find the angle
@@ -59,15 +59,15 @@ namespace CBRE.BspEditor.Primitives
                     // the normals of the planes onto the perpendicular plane and taking the cross product.
 
                     // Project the two normals onto the perpendicular plane
-                    var apNormal = intersectionPlane.Project(alignToPlane.Normal).Normalise();
-                    var cpNormal = intersectionPlane.Project(currentPlane.Normal).Normalise();
+                    Vector3 apNormal = intersectionPlane.Project(alignToPlane.Normal).Normalise();
+                    Vector3 cpNormal = intersectionPlane.Project(currentPlane.Normal).Normalise();
 
                     // Get the angle between the projected normals
-                    var dot = Math.Round(apNormal.Dot(cpNormal), 4);
-                    var angle = (float) Math.Acos(dot); // A.B = cos(angle)
+                    double dot = Math.Round(apNormal.Dot(cpNormal), 4);
+                    float angle = (float) Math.Acos(dot); // A.B = cos(angle)
 
                     // Rotate the texture axis by the angle around the intersection edge
-                    var transform = Matrix4x4.CreateFromAxisAngle(intersectionEdge.Normalise(), angle);
+                    Matrix4x4 transform = Matrix4x4.CreateFromAxisAngle(intersectionEdge.Normalise(), angle);
                     refU = transform.Transform(refU);
                     refV = transform.Transform(refV);
 
@@ -105,13 +105,13 @@ namespace CBRE.BspEditor.Primitives
             if (tileY <= 0) tileY = 1;
 
             // Scale will change, no need to use it in the calculations
-            var xvals = cloud.GetExtents().Select(x => x.Dot(tex.UAxis)).ToList();
-            var yvals = cloud.GetExtents().Select(x => x.Dot(tex.VAxis)).ToList();
+            System.Collections.Generic.List<float> xvals = cloud.GetExtents().Select(x => x.Dot(tex.UAxis)).ToList();
+            System.Collections.Generic.List<float> yvals = cloud.GetExtents().Select(x => x.Dot(tex.VAxis)).ToList();
 
-            var minU = xvals.Min();
-            var minV = yvals.Min();
-            var maxU = xvals.Max();
-            var maxV = yvals.Max();
+            float minU = xvals.Min();
+            float minV = yvals.Min();
+            float maxU = xvals.Max();
+            float maxV = yvals.Max();
 
             tex.XScale = (maxU - minU) / (width * tileX);
             tex.YScale = (maxV - minV) / (height * tileY);
@@ -123,13 +123,13 @@ namespace CBRE.BspEditor.Primitives
         {
             if (width <= 0 || height <= 0) return;
 
-            var xvals = cloud.GetExtents().Select(x => x.Dot(tex.UAxis) / tex.XScale).ToList();
-            var yvals = cloud.GetExtents().Select(x => x.Dot(tex.VAxis) / tex.YScale).ToList();
+            System.Collections.Generic.List<float> xvals = cloud.GetExtents().Select(x => x.Dot(tex.UAxis) / tex.XScale).ToList();
+            System.Collections.Generic.List<float> yvals = cloud.GetExtents().Select(x => x.Dot(tex.VAxis) / tex.YScale).ToList();
 
-            var minU = xvals.Min();
-            var minV = yvals.Min();
-            var maxU = xvals.Max();
-            var maxV = yvals.Max();
+            float minU = xvals.Min();
+            float minV = yvals.Min();
+            float maxU = xvals.Max();
+            float maxV = yvals.Max();
 
             switch (mode)
             {
@@ -140,8 +140,8 @@ namespace CBRE.BspEditor.Primitives
                     tex.XShift = -maxU + width;
                     break;
                 case BoxAlignMode.Center:
-                    var avgU = (minU + maxU) / 2;
-                    var avgV = (minV + maxV) / 2;
+                    float avgU = (minU + maxU) / 2;
+                    float avgV = (minV + maxV) / 2;
                     tex.XShift = -avgU + width / 2f;
                     tex.YShift = -avgV + height / 2f;
                     break;
@@ -156,12 +156,12 @@ namespace CBRE.BspEditor.Primitives
         
         public static void SetRotation(this Texture tex, float rotate)
         {
-            var rads = (float) MathHelper.DegreesToRadians(tex.Rotation - rotate);
+            float rads = (float) MathHelper.DegreesToRadians(tex.Rotation - rotate);
 
             // Rotate around the texture normal
-            var texNorm = tex.VAxis.Cross(tex.UAxis).Normalise();
+            Vector3 texNorm = tex.VAxis.Cross(tex.UAxis).Normalise();
 
-            var transform = Matrix4x4.CreateFromAxisAngle(texNorm, rads);
+            Matrix4x4 transform = Matrix4x4.CreateFromAxisAngle(texNorm, rads);
             tex.UAxis = transform.Transform(tex.UAxis);
             tex.VAxis = transform.Transform(tex.VAxis);
             tex.Rotation = rotate;

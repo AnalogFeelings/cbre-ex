@@ -26,15 +26,15 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public static CompileSpecification Parse(SerialisedObject gs)
         {
-            var spec = new CompileSpecification
+            CompileSpecification spec = new CompileSpecification
             {
                 ID = gs.Get("ID", ""),
                 Name = gs.Get("Name", ""),
                 Engine = gs.Get("Engine", "")
             };
-            var tools = gs.Children.Where(x => x.Name == "Tool");
+            IEnumerable<SerialisedObject> tools = gs.Children.Where(x => x.Name == "Tool");
             spec.Tools.AddRange(tools.Select(CompileTool.Parse));
-            var presets = gs.Children.Where(x => x.Name == "Preset");
+            IEnumerable<SerialisedObject> presets = gs.Children.Where(x => x.Name == "Preset");
             spec.Presets.AddRange(presets.Select(CompilePreset.Parse));
             return spec;
         }
@@ -46,7 +46,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public string GetDefaultParameters(string name)
         {
-            var tool = GetTool(name);
+            CompileTool tool = GetTool(name);
             return tool == null
                 ? ""
                 : String.Join(" ", tool.Parameters.Select(x => x.GetDefaultArgumentString()).Where(x => !String.IsNullOrWhiteSpace(x)));
@@ -54,7 +54,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public bool GetDefaultRun(string name)
         {
-            var tool = GetTool(name);
+            CompileTool tool = GetTool(name);
             return tool != null && tool.Enabled;
         }
     }

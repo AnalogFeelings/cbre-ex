@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Tools.Grid
 
         public IEnumerable<IMenuItem> GetMenuItems()
         {
-            foreach (var grid in _grids)
+            foreach (Lazy<IGridFactory> grid in _grids)
             {
                 yield return new GridMenuItem(grid.Value);
             }
@@ -58,10 +58,10 @@ namespace CBRE.BspEditor.Tools.Grid
             {
                 if (context.TryGet("ActiveDocument", out MapDocument doc))
                 {
-                    var grid = await GridFactory.Create(doc.Environment);
+                    IGrid grid = await GridFactory.Create(doc.Environment);
 
-                    var gd = new GridData(grid);
-                    var operation = new TrivialOperation(x => doc.Map.Data.Replace(gd), x => x.Update(gd));
+                    GridData gd = new GridData(grid);
+                    TrivialOperation operation = new TrivialOperation(x => doc.Map.Data.Replace(gd), x => x.Update(gd));
 
                     await MapDocumentOperation.Perform(doc, operation);
                     

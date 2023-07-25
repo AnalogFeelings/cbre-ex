@@ -22,11 +22,11 @@ namespace CBRE.Shell.Controls
 
         protected void UpdateText()
         {
-            var text = Text ?? "";
+            string text = Text ?? "";
             HelpTextBox.ResetFont();
-            var rtf = ConvertSimpleMarkdownToRtf(text);
+            string rtf = ConvertSimpleMarkdownToRtf(text);
             HelpTextBox.Rtf = rtf;
-            var size = TextRenderer.MeasureText(HelpTextBox.Text, HelpTextBox.Font, HelpTextBox.Size, TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak);
+            System.Drawing.Size size = TextRenderer.MeasureText(HelpTextBox.Text, HelpTextBox.Font, HelpTextBox.Size, TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak);
             Height = size.Height + HelpTextBox.Margin.Vertical + HelpTextBox.Lines.Length * 5;
         }
 
@@ -45,13 +45,13 @@ namespace CBRE.Shell.Controls
              *   This is some {\b bold} text.\par
              * }";
              */
-            var escaped = simpleMarkdown
+            string escaped = simpleMarkdown
                 .Replace("\\", "\\\\")
                 .Replace("{", "\\{")
                 .Replace("}", "\\}");
 
-            var sb = new StringBuilder();
-            foreach (var c in escaped)
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in escaped)
             {
                 if (c > 127) sb.AppendFormat(@"\u{0}?", (int) c);
                 else if (c == '\\') sb.Append("\\\\");
@@ -60,10 +60,10 @@ namespace CBRE.Shell.Controls
                 else sb.Append(c);
             }
 
-            var bolded = Regex.Replace(sb.ToString(), @"\*(?:\b(?=\w)|(?=\\))(.*?)\b(?!\w)\*", @"{\b $1}");
-            var bulleted = Regex.Replace(bolded, @"^\s*-\s+", @" \bullet  ", RegexOptions.Multiline);
-            var paragraphs = Regex.Replace(bulleted, @"(\r?\n){2,}", "\\par\\par ");
-            var lines = Regex.Replace(paragraphs, @"(\r?\n)+", "\\par ");
+            string bolded = Regex.Replace(sb.ToString(), @"\*(?:\b(?=\w)|(?=\\))(.*?)\b(?!\w)\*", @"{\b $1}");
+            string bulleted = Regex.Replace(bolded, @"^\s*-\s+", @" \bullet  ", RegexOptions.Multiline);
+            string paragraphs = Regex.Replace(bulleted, @"(\r?\n){2,}", "\\par\\par ");
+            string lines = Regex.Replace(paragraphs, @"(\r?\n)+", "\\par ");
 
             return @"{\rtf1\ansi\f0\pard\sa60 " + lines + " }";
         }

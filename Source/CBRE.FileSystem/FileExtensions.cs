@@ -21,17 +21,17 @@ namespace CBRE.FileSystem
         public static IFile TraversePath(this IFile file, string path)
         {
             path = (path ?? "").Replace('\\', '/');
-            var idx = path.IndexOf(":", StringComparison.InvariantCulture);
+            int idx = path.IndexOf(":", StringComparison.InvariantCulture);
             if (idx > 0)
             {
                 path = path.Substring(idx + 1);
                 if (path.Length == 0 || path[0] != '/') path = '/' + path;
             }
-            var f = file;
-            var split = path.Split('/');
-            for (var i = 0; i < split.Length; i++)
+            IFile f = file;
+            string[] split = path.Split('/');
+            for (int i = 0; i < split.Length; i++)
             {
-                var name = split[i];
+                string name = split[i];
                 if (i == 0 && name == "")
                 {
                     while (f != null && f.Parent != null) f = f.Parent;
@@ -49,7 +49,7 @@ namespace CBRE.FileSystem
                         f = f.Parent;
                         break;
                     default:
-                        var c = f.GetChild(name);
+                        IFile c = f.GetChild(name);
                         if (c != null)
                         {
                             f = c;
@@ -69,7 +69,7 @@ namespace CBRE.FileSystem
 
         private static IEnumerable<IFile> CollectChildren(IFile file)
         {
-            var files = new List<IFile> { file };
+            List<IFile> files = new List<IFile> { file };
             files.AddRange(file.GetChildren().SelectMany(CollectChildren));
             return files;
         }
@@ -96,8 +96,8 @@ namespace CBRE.FileSystem
 
         public static string GetRelativePath(this IFile file, IFile relative)
         {
-            var path = file.Name;
-            var par = file;
+            string path = file.Name;
+            IFile par = file;
             while (par != null && par.FullPathName != relative.FullPathName)
             {
                 if (par.Parent != null) path = par.Parent.Name + "/" + path;

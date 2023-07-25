@@ -28,7 +28,7 @@ namespace CBRE.BspEditor.Editing.Commands.Toggles
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+            TransformationFlags tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
             tl.TextureLock = !tl.TextureLock;
 
             await MapDocumentOperation.Perform(document, new TrivialOperation(x => x.Map.Data.Replace(tl), x => x.Update(tl)));
@@ -37,7 +37,7 @@ namespace CBRE.BspEditor.Editing.Commands.Toggles
         public bool GetToggleState(IContext context)
         {
             if (!context.TryGet("ActiveDocument", out MapDocument doc)) return false;
-            var tf = doc.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+            TransformationFlags tf = doc.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
             return tf.TextureLock;
         }
     }

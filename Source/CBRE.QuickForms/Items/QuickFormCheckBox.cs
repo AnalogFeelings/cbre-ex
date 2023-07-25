@@ -19,7 +19,7 @@ namespace CBRE.QuickForms.Items
 	            Checked = isChecked
 	        };
 
-		    var margin = _checkBox.Margin;
+            Padding margin = _checkBox.Margin;
 		    margin.Left += LabelWidth + 6;
 		    _checkBox.Margin = margin;
 

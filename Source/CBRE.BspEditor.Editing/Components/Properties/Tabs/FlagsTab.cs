@@ -75,16 +75,16 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// <inheritdoc />
         public IEnumerable<IOperation> GetChanges(MapDocument document, List<IMapObject> objects)
         {
-            var cv = GetChangedValues();
+            Dictionary<int, bool> cv = GetChangedValues();
             if (cv.Count == 0) yield break;
 
-            foreach (var mo in objects)
+            foreach (IMapObject mo in objects)
             {
-                var data = mo.Data.GetOne<EntityData>();
+                EntityData data = mo.Data.GetOne<EntityData>();
                 if (data != null)
                 {
-                    var cf = data.Flags;
-                    var nf = ApplyFlags(cf, cv);
+                    int cf = data.Flags;
+                    int nf = ApplyFlags(cf, cv);
                     yield return new EditEntityDataFlags(mo.ID, nf);
                 }
             }
@@ -95,7 +95,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private int ApplyFlags(int originalFlags, Dictionary<int, bool> changes)
         {
-            foreach (var kv in changes)
+            foreach (KeyValuePair<int, bool> kv in changes)
             {
                 if (kv.Value) originalFlags |= kv.Key;
                 else originalFlags &= ~kv.Key;
@@ -109,12 +109,12 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         /// </summary>
         private Dictionary<int, bool> GetChangedValues()
         {
-            var d = new Dictionary<int, bool>();
+            Dictionary<int, bool> d = new Dictionary<int, bool>();
 
-            for (var i = 0; i < FlagsTable.Items.Count; i++)
+            for (int i = 0; i < FlagsTable.Items.Count; i++)
             {
-                var fh = (FlagHolder) FlagsTable.Items[i];
-                var cs = FlagsTable.GetItemCheckState(i);
+                FlagHolder fh = (FlagHolder) FlagsTable.Items[i];
+                CheckState cs = FlagsTable.GetItemCheckState(i);
                 if (cs == CheckState.Indeterminate || cs == fh.OriginalValue) continue;
                 d.Add(fh.BitValue, cs == CheckState.Checked);
             }
@@ -134,7 +134,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
                 .Where(x => x.EntityData != null)
                 .ToList();
 
-            var classes = datas
+            List<string> classes = datas
                 .Select(x => x.EntityData.Name)
                 .Where(x => !String.IsNullOrWhiteSpace(x))
                 .Distinct(StringComparer.InvariantCultureIgnoreCase)
@@ -142,7 +142,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
 
             if (classes.Count == 1)
             {
-                var gdo = gameData.Classes.FirstOrDefault(x => x.ClassType != ClassType.Base && String.Equals(x.Name, classes[0], StringComparison.InvariantCultureIgnoreCase));
+                GameDataObject gdo = gameData.Classes.FirstOrDefault(x => x.ClassType != ClassType.Base && String.Equals(x.Name, classes[0], StringComparison.InvariantCultureIgnoreCase));
                 PopulateFlags(gdo, datas.Select(x => x.EntityData.Flags).ToList());
             }
 
@@ -158,14 +158,14 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
         {
             FlagsTable.Items.Clear();
 
-            var flagsProp = cls?.Properties.FirstOrDefault(x => x.Name == "spawnflags");
+            Property flagsProp = cls?.Properties.FirstOrDefault(x => x.Name == "spawnflags");
             if (flagsProp == null) return;
 
-            foreach (var option in flagsProp.Options.OrderBy(x => int.TryParse(x.Key, out int v) ? v : 0))
+            foreach (Option option in flagsProp.Options.OrderBy(x => int.TryParse(x.Key, out int v) ? v : 0))
             {
-                var key = int.Parse(option.Key);
-                var numChecked = flags.Count(x => (x & key) > 0);
-                var cs = numChecked == flags.Count ? CheckState.Checked : (numChecked == 0 ? CheckState.Unchecked : CheckState.Indeterminate);
+                int key = int.Parse(option.Key);
+                int numChecked = flags.Count(x => (x & key) > 0);
+                CheckState cs = numChecked == flags.Count ? CheckState.Checked : (numChecked == 0 ? CheckState.Unchecked : CheckState.Indeterminate);
                 FlagsTable.Items.Add(new FlagHolder(option, cs), cs);
             }
         }

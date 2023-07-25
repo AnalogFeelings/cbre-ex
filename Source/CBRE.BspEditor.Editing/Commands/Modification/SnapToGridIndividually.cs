@@ -33,25 +33,25 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var grid = document.Map.Data.GetOne<GridData>();
+            GridData grid = document.Map.Data.GetOne<GridData>();
             if (grid == null) return;
-            
-            var tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
 
-            var transaction = new Transaction();
+            TransformationFlags tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
 
-            foreach (var mo in document.Selection.GetSelectedParents().ToList())
+            Transaction transaction = new Transaction();
+
+            foreach (IMapObject mo in document.Selection.GetSelectedParents().ToList())
             {
-                var box = mo.BoundingBox;
+                DataStructures.Geometric.Box box = mo.BoundingBox;
 
-                var start = box.Start;
-                var snapped = grid.Grid.Snap(start);
-                var trans = snapped - start;
+                Vector3 start = box.Start;
+                Vector3 snapped = grid.Grid.Snap(start);
+                Vector3 trans = snapped - start;
                 if (trans == Vector3.Zero) continue;
 
-                var tform = Matrix4x4.CreateTranslation(trans);
+                Matrix4x4 tform = Matrix4x4.CreateTranslation(trans);
 
-                var transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, mo);
+                BspEditor.Modification.Operations.Mutation.Transform transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(tform, mo);
                 transaction.Add(transformOperation);
 
                 // Check for texture transform

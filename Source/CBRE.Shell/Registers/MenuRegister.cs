@@ -30,10 +30,10 @@ namespace CBRE.Shell.Registers
         public Task OnStartup()
         {
             // Register commands as menu items
-            foreach (var export in _itemProviders)
+            foreach (Lazy<IMenuItemProvider> export in _itemProviders)
             {
                 export.Value.MenuItemsChanged += UpdateMenus;
-                foreach (var menuItem in export.Value.GetMenuItems())
+                foreach (IMenuItem menuItem in export.Value.GetMenuItems())
                 {
                     Add(menuItem);
                 }
@@ -45,7 +45,7 @@ namespace CBRE.Shell.Registers
         public async Task OnInitialise()
         {
             // Register metadata providers
-            foreach (var md in _metaDataProviders)
+            foreach (Lazy<IMenuMetadataProvider> md in _metaDataProviders)
             {
                 _declaredGroups.AddRange(md.Value.GetMenuGroups());
                 _declaredSections.AddRange(md.Value.GetMenuSections());
@@ -78,9 +78,9 @@ namespace CBRE.Shell.Registers
             {
                 _menuItems.Clear();
 
-                foreach (var export in _itemProviders)
+                foreach (Lazy<IMenuItemProvider> export in _itemProviders)
                 {
-                    foreach (var menuItem in export.Value.GetMenuItems())
+                    foreach (IMenuItem menuItem in export.Value.GetMenuItems())
                     {
                         Add(menuItem);
                     }
@@ -163,7 +163,7 @@ namespace CBRE.Shell.Registers
             {
                 Clear();
 
-                foreach (var mi in items)
+                foreach (IMenuItem mi in items)
                 {
                     Add(mi);
                 }
@@ -180,7 +180,7 @@ namespace CBRE.Shell.Registers
 
                 ToolStrip.BeginInit();
                 ToolStrip.Controls.Clear();
-                foreach (var ts in RootNodes.Values.OrderByDescending(x => x.OrderHint))
+                foreach (MenuTreeRoot ts in RootNodes.Values.OrderByDescending(x => x.OrderHint))
                 {
                     if (ts.ToolStrip.Items.Count > 0) ToolStrip.Join(ts.ToolStrip);
                 }
@@ -193,7 +193,7 @@ namespace CBRE.Shell.Registers
             private void AddSection(MenuSection ds)
             {
                 // Create the root
-                var rtn = new MenuTreeRoot(_context, ds.Description, ds);
+                MenuTreeRoot rtn = new MenuTreeRoot(_context, ds.Description, ds);
 
                 // When the menu is closed, push an empty string to the status bar
                 rtn.MenuMenuItem.DropDownClosed += (s, a) => { Oy.Publish("Status:Information", ""); };
@@ -213,7 +213,7 @@ namespace CBRE.Shell.Registers
                 // If the section isn't known, add it to the end
                 if (!RootNodes.ContainsKey(item.Section)) AddSection(new MenuSection(item.Section, item.Section, "Z"));
 
-                var root = RootNodes[item.Section];
+                MenuTreeRoot root = RootNodes[item.Section];
 
                 root.AddDescendant(item, _declaredGroups);
             }
@@ -225,12 +225,12 @@ namespace CBRE.Shell.Registers
                 RootNodes.Clear();
 
                 // Add known sections straight away
-                foreach (var ds in _declaredSections.OrderBy(x => x.OrderHint)) AddSection(ds);
+                foreach (MenuSection ds in _declaredSections.OrderBy(x => x.OrderHint)) AddSection(ds);
             }
 
             public void Update()
             {
-                foreach (var node in RootNodes.Values)
+                foreach (MenuTreeRoot node in RootNodes.Values)
                 {
                     node.Update();
                 }
@@ -268,16 +268,16 @@ namespace CBRE.Shell.Registers
                 BaseMenuTreeNode node = this;
 
                 // Traverse the path until we get to the target
-                var path = (item.Path ?? "").Split('/').Where(x => x.Length > 0).ToList();
-                var currentPath = new List<string>();
-                foreach (var p in path)
+                List<string> path = (item.Path ?? "").Split('/').Where(x => x.Length > 0).ToList();
+                List<string> currentPath = new List<string>();
+                foreach (string p in path)
                 {
                     currentPath.Add(p);
 
                     // If the current node isn't found, add it in
                     if (!node.Children.ContainsKey(p))
                     {
-                        var gr = declaredGroups.FirstOrDefault(x => x.Name == p && x.Path == String.Join("/", currentPath) && x.Section == item.Section);
+                        MenuGroup gr = declaredGroups.FirstOrDefault(x => x.Name == p && x.Path == String.Join("/", currentPath) && x.Section == item.Section);
                         node.AddChild(p, new MenuTreeTextNode(Context, gr?.Description ?? p, gr));
                     }
 
@@ -285,8 +285,8 @@ namespace CBRE.Shell.Registers
                 }
 
                 // Add the node to the parent node
-                var group = declaredGroups.FirstOrDefault(x => x.Name == item.Group && x.Path == item.Path && x.Section == item.Section);
-                var itemNode = new MenuTreeNode(Context, item, group);
+                MenuGroup group = declaredGroups.FirstOrDefault(x => x.Name == item.Group && x.Path == item.Path && x.Section == item.Section);
+                MenuTreeNode itemNode = new MenuTreeNode(Context, item, group);
                 node.AddChild(item.ID, itemNode);
 
                 // Add to the toolbar as well
@@ -306,29 +306,29 @@ namespace CBRE.Shell.Registers
                 }
 
                 // Insert the item into the correct index
-                var groupIndex = _toolbarGroups.FindIndex(x => x.Group.Name == menuTreeNode.Group.Name);
+                int groupIndex = _toolbarGroups.FindIndex(x => x.Group.Name == menuTreeNode.Group.Name);
 
                 // Skip to the start of the group
-                var groupStart = 0;
-                for (var i = 0; i < groupIndex; i++)
+                int groupStart = 0;
+                for (int i = 0; i < groupIndex; i++)
                 {
-                    var g = _toolbarGroups[i];
+                    MenuTreeGroup g = _toolbarGroups[i];
                     groupStart += g.Nodes.Count + (g.HasSplitter ? 1 : 0);
                 }
 
                 // Add the node to the list and sort
-                var group = _toolbarGroups[groupIndex];
+                MenuTreeGroup group = _toolbarGroups[groupIndex];
                 group.Nodes = group.Nodes.Union(new[] { menuTreeNode }).OrderBy(x => x.OrderHint ?? "").ToList();
 
                 // Skip to the start of the node and insert
-                var idx = group.Nodes.IndexOf(menuTreeNode);
+                int idx = group.Nodes.IndexOf(menuTreeNode);
                 ToolStrip.Items.Insert(groupStart + idx, menuTreeNode.ToolbarButton);
 
                 // Check groups for splitters
                 groupStart = 0;
-                for (var i = 0; i < _toolbarGroups.Count - 1; i++)
+                for (int i = 0; i < _toolbarGroups.Count - 1; i++)
                 {
-                    var g = _toolbarGroups[i];
+                    MenuTreeGroup g = _toolbarGroups[i];
                     groupStart += g.Nodes.Count;
 
                     // Add a splitter to the group if needed
@@ -369,7 +369,7 @@ namespace CBRE.Shell.Registers
 
             public MenuTreeNode(IContext context, IMenuItem menuItem, MenuGroup group)
             {
-                var en = menuItem.IsInContext(context);
+                bool en = menuItem.IsInContext(context);
 
                 Group = group ?? new MenuGroup("", "", "", "T");
                 Context = context;
@@ -413,12 +413,12 @@ namespace CBRE.Shell.Registers
 
             public override void Update()
             {
-                var en = MenuItem.IsInContext(Context);
+                bool en = MenuItem.IsInContext(Context);
                 MenuMenuItem.Enabled = en;
                 if (ToolbarButton != null) ToolbarButton.Enabled = en;
                 if (MenuItem.IsToggle && en)
                 {
-                    var ts = MenuItem.GetToggleState(Context);
+                    bool ts = MenuItem.GetToggleState(Context);
                     MenuMenuItem.CheckState = ts ? CheckState.Checked : CheckState.Unchecked;
                     if (ToolbarButton != null) ToolbarButton.CheckState = MenuMenuItem.CheckState;
                 }
@@ -455,29 +455,29 @@ namespace CBRE.Shell.Registers
                 }
 
                 // Insert the item into the correct index
-                var groupIndex = Groups.FindIndex(x => x.Group.Name == menuTreeNode.Group.Name);
+                int groupIndex = Groups.FindIndex(x => x.Group.Name == menuTreeNode.Group.Name);
 
                 // Skip to the start of the group
-                var groupStart = 0;
-                for (var i = 0; i < groupIndex; i++)
+                int groupStart = 0;
+                for (int i = 0; i < groupIndex; i++)
                 {
-                    var g = Groups[i];
+                    MenuTreeGroup g = Groups[i];
                     groupStart += g.Nodes.Count + (g.HasSplitter ? 1 : 0);
                 }
 
                 // Add the node to the list and sort
-                var group = Groups[groupIndex];
+                MenuTreeGroup group = Groups[groupIndex];
                 group.Nodes = group.Nodes.Union(new[] {menuTreeNode}).OrderBy(x => x.OrderHint ?? "").ToList();
 
                 // Skip to the start of the node and insert
-                var idx = group.Nodes.IndexOf(menuTreeNode);
+                int idx = group.Nodes.IndexOf(menuTreeNode);
                 MenuMenuItem.DropDownItems.Insert(groupStart + idx, menuTreeNode.MenuMenuItem);
 
                 // Check groups for splitters
                 groupStart = 0;
-                for (var i = 0; i < Groups.Count - 1; i++)
+                for (int i = 0; i < Groups.Count - 1; i++)
                 {
-                    var g = Groups[i];
+                    MenuTreeGroup g = Groups[i];
                     groupStart += g.Nodes.Count;
 
                     // Add a splitter to the group if needed
@@ -493,7 +493,7 @@ namespace CBRE.Shell.Registers
 
             public virtual void Update()
             {
-                foreach (var c in Children)
+                foreach (KeyValuePair<string, BaseMenuTreeNode> c in Children)
                 {
                     c.Value.Update();
                 }

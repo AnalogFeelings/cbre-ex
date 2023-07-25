@@ -17,7 +17,7 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         private T GetVal<T>(Dictionary<string, string> dictionary, string key, T def = default(T))
         {
-            if (dictionary.TryGetValue(key, out var val))
+            if (dictionary.TryGetValue(key, out string val))
             {
                 try
                 {
@@ -33,7 +33,7 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         public IEnvironment Deserialise(SerialisedEnvironment environment)
         {
-            var gse = new BlitzEnvironment()
+            BlitzEnvironment gse = new BlitzEnvironment()
             {
                 ID = environment.ID,
                 Name = environment.Name,
@@ -52,8 +52,8 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         public SerialisedEnvironment Serialise(IEnvironment environment)
         {
-            var env = (BlitzEnvironment) environment;
-            var se = new SerialisedEnvironment
+            BlitzEnvironment env = (BlitzEnvironment) environment;
+            SerialisedEnvironment se = new SerialisedEnvironment
             {
                 ID = environment.ID,
                 Name = environment.Name,

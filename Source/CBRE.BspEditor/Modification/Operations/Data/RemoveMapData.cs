@@ -31,9 +31,9 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
             
-            foreach (var d in _dataToRemove)
+            foreach (IMapData d in _dataToRemove)
             {
                 document.Map.Data.Remove(d);
                 ch.Update(d);
@@ -44,9 +44,9 @@ namespace CBRE.BspEditor.Modification.Operations.Data
 
         public async Task<Change> Reverse(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            foreach (var d in _dataToRemove)
+            foreach (IMapData d in _dataToRemove)
             {
                 document.Map.Data.Add(d);
                 ch.Update(d);

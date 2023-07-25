@@ -39,7 +39,7 @@ namespace CBRE.Shell.Settings
         public async Task OnInitialise()
         {
             // Register all settings containers
-            foreach (var export in _settingsContainers)
+            foreach (Lazy<ISettingsContainer> export in _settingsContainers)
             {
                 Log.Debug("Settings", "Settings container: " + export.Value.GetType().FullName);
                 Add(export.Value);
@@ -78,14 +78,14 @@ namespace CBRE.Shell.Settings
             if (name == null) _values.Clear();
             else if (_values.ContainsKey(name)) _values.Remove(name);
 
-            var path = _appInfo?.GetApplicationSettingsFolder("Shell");
+            string path = _appInfo?.GetApplicationSettingsFolder("Shell");
             if (path == null) return Task.CompletedTask;
 
             if (Directory.Exists(path))
             {
-                foreach (var file in Directory.GetFiles(path, "*.json"))
+                foreach (string file in Directory.GetFiles(path, "*.json"))
                 {
-                    var containerName = Path.GetFileNameWithoutExtension(file);
+                    string containerName = Path.GetFileNameWithoutExtension(file);
 
                     if (containerName == null) continue;
                     if (name != null && containerName != name) continue;
@@ -104,7 +104,7 @@ namespace CBRE.Shell.Settings
                 }
             }
 
-            foreach (var container in _containers)
+            foreach (ISettingsContainer container in _containers)
             {
                 if (name != null && container.Name != name) continue;
                 container.LoadValues(_values.ContainsKey(container.Name) ? _values[container.Name] : new JsonSettingsStore());
@@ -120,15 +120,15 @@ namespace CBRE.Shell.Settings
         /// <returns>A task that complete when the operation is complete</returns>
         private Task SaveSettings(string name)
         {
-            var path = _appInfo?.GetApplicationSettingsFolder("Shell");
+            string path = _appInfo?.GetApplicationSettingsFolder("Shell");
             if (path == null) return Task.CompletedTask;
 
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-            foreach (var container in _containers)
+            foreach (ISettingsContainer container in _containers)
             {
                 if (name != null && container.Name != name) continue;
-                var store = _values.ContainsKey(container.Name) ? _values[container.Name] : new JsonSettingsStore();
+                JsonSettingsStore store = _values.ContainsKey(container.Name) ? _values[container.Name] : new JsonSettingsStore();
                 container.StoreValues(store);
                 File.WriteAllText(Path.Combine(path, container.Name + ".json"), store.ToJson());
             }

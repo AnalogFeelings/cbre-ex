@@ -32,19 +32,19 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var dir = Path.GetDirectoryName(document.FileName);
-            var file = Path.GetFileNameWithoutExtension(document.FileName);
+            string dir = Path.GetDirectoryName(document.FileName);
+            string file = Path.GetFileNameWithoutExtension(document.FileName);
 
             if (dir != null && file != null)
             {
-                var lin = Path.Combine(dir, file + ".lin");
+                string lin = Path.Combine(dir, file + ".lin");
                 if (File.Exists(lin))
                 {
                     await LoadPointfile(document, lin);
                     return;
                 }
 
-                var pts = Path.Combine(dir, file + ".pts");
+                string pts = Path.Combine(dir, file + ".pts");
                 if (File.Exists(pts))
                 {
                     await LoadPointfile(document, pts);
@@ -62,7 +62,7 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
         {
             if (file != null && File.Exists(file))
             {
-                var text = File.ReadAllLines(file);
+                string[] text = File.ReadAllLines(file);
                 Pointfile point;
                 try
                 {
@@ -81,7 +81,7 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
 
                 if (point.Lines.Any())
                 {
-                    var start = point.Lines[0].Start;
+                    System.Numerics.Vector3 start = point.Lines[0].Start;
                     await Oy.Publish("MapDocument:Viewport:Focus2D", start);
                     await Oy.Publish("MapDocument:Viewport:Focus3D", start);
                 }

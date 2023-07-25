@@ -69,13 +69,13 @@ namespace CBRE.Shell.Forms
             {
                 _keys = _settingsContainers.ToDictionary(x => x.Value, x =>
                 {
-                    var keys = x.Value.GetKeys().ToList();
+                    List<SettingKey> keys = x.Value.GetKeys().ToList();
                     keys.ForEach(k => k.Container = x.Value.Name);
                     return keys;
                 });
                 _values = _settingsContainers.ToDictionary(x => x.Value, x =>
                 {
-                    var fss = new JsonSettingsStore();
+                    JsonSettingsStore fss = new JsonSettingsStore();
                     x.Value.StoreValues(fss);
                     return fss;
                 });
@@ -94,31 +94,31 @@ namespace CBRE.Shell.Forms
         {
             GroupList.BeginUpdate();
 
-            var nodes = new Dictionary<string, TreeNode>();
+            Dictionary<string, TreeNode> nodes = new Dictionary<string, TreeNode>();
 
             GroupList.Nodes.Clear();
-            foreach (var k in _keys.SelectMany(x => x.Value).GroupBy(x => x.Group).OrderBy(x => x.Key))
+            foreach (IGrouping<string, SettingKey> k in _keys.SelectMany(x => x.Value).GroupBy(x => x.Group).OrderBy(x => x.Key))
             {
-                var gh = new GroupHolder(k.Key, _translations.Value.GetSetting("@Group." + k.Key) ?? k.Key);
+                GroupHolder gh = new GroupHolder(k.Key, _translations.Value.GetSetting("@Group." + k.Key) ?? k.Key);
 
                 TreeNode parentNode = null;
-                var par = k.Key.LastIndexOf('/');
+                int par = k.Key.LastIndexOf('/');
                 if (par > 0)
                 {
-                    var sub = k.Key.Substring(0, par);
+                    string sub = k.Key.Substring(0, par);
                     if (nodes.ContainsKey(sub))
                     {
                         parentNode = nodes[sub];
                     }
                     else
                     {
-                        var pgh = new GroupHolder(sub, _translations.Value.GetSetting("@Group." + sub) ?? sub);
+                        GroupHolder pgh = new GroupHolder(sub, _translations.Value.GetSetting("@Group." + sub) ?? sub);
                         parentNode = new TreeNode(pgh.Label) {Tag = pgh};
                         GroupList.Nodes.Add(parentNode);
                         nodes.Add(sub, parentNode);
                     }
                 }
-                var node = new TreeNode(gh.Label) { Tag = gh };
+                TreeNode node = new TreeNode(gh.Label) { Tag = gh };
                 if (parentNode != null) parentNode.Nodes.Add(node);
                 else GroupList.Nodes.Add(node);
                 nodes.Add(k.Key, node);
@@ -149,15 +149,15 @@ namespace CBRE.Shell.Forms
 
             if (GroupList?.SelectedNode?.Tag is GroupHolder gh)
             {
-                var group = gh.Key;
-                foreach (var kv in _keys)
+                string group = gh.Key;
+                foreach (KeyValuePair<ISettingsContainer, List<SettingKey>> kv in _keys)
                 {
-                    var container = kv.Key;
-                    var keys = kv.Value.Where(x => x.Group == group);
-                    var values = _values[container];
-                    foreach (var key in keys)
+                    ISettingsContainer container = kv.Key;
+                    IEnumerable<SettingKey> keys = kv.Value.Where(x => x.Group == group);
+                    JsonSettingsStore values = _values[container];
+                    foreach (SettingKey key in keys)
                     {
-                        var editor = GetEditor(key);
+                        ISettingEditor editor = GetEditor(key);
                         editor.Key = key;
                         editor.Label = _translations.Value.GetSetting($"{kv.Key.Name}.{key.Key}") ?? key.Key;
                         editor.Value = values.Get(key.Type, key.Key);
@@ -165,7 +165,7 @@ namespace CBRE.Shell.Forms
                         if (SettingsPanel.Controls.Count > 0)
                         {
                             // Add a separator
-                            var line = new Label
+                            Label line = new Label
                             {
                                 Height = 1,
                                 BackColor = Color.FromArgb(128, Color.Black),
@@ -174,7 +174,7 @@ namespace CBRE.Shell.Forms
                             SettingsPanel.Controls.Add(line);
                         }
 
-                        var ctrl = (Control) editor.Control;
+                        Control ctrl = (Control) editor.Control;
                         ctrl.Anchor |= AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
                         SettingsPanel.Controls.Add(ctrl);
 
@@ -195,8 +195,8 @@ namespace CBRE.Shell.Forms
 
         private void OnValueChanged(object sender, SettingKey key)
         {
-            var se = sender as ISettingEditor;
-            var store = _values.Where(x => x.Key.Name == key.Container).Select(x => x.Value).FirstOrDefault();
+            ISettingEditor se = sender as ISettingEditor;
+            JsonSettingsStore store = _values.Where(x => x.Key.Name == key.Container).Select(x => x.Value).FirstOrDefault();
             if (store != null && se != null)
             {
                 store.Set(key.Key, se.Value);
@@ -205,7 +205,7 @@ namespace CBRE.Shell.Forms
 
         private ISettingEditor GetEditor(SettingKey key)
         {
-            foreach (var ef in _editorFactories.OrderBy(x => x.Value.OrderHint))
+            foreach (Lazy<ISettingEditorFactory> ef in _editorFactories.OrderBy(x => x.Value.OrderHint))
             {
                 if (ef.Value.Supports(key)) return ef.Value.CreateEditorFor(key);
             }
@@ -239,7 +239,7 @@ namespace CBRE.Shell.Forms
 
         private void OkClicked(object sender, EventArgs e)
         {
-            foreach (var kv in _values)
+            foreach (KeyValuePair<ISettingsContainer, JsonSettingsStore> kv in _values)
             {
                 kv.Key.LoadValues(kv.Value);
             }

@@ -28,7 +28,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
             Type = obj.Get("Type", "");
             Direction = obj.Get("Direction", PathDirection.OneWay);
 
-            var children = obj.Children.Where(x => x.Name == "Node");
+            IEnumerable<SerialisedObject> children = obj.Children.Where(x => x.Name == "Node");
             Nodes = children.Select(x => new PathNode(x)).ToList();
         }
 
@@ -69,7 +69,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("Path");
+            SerialisedObject so = new SerialisedObject("Path");
             so.Set("Name", Name);
             so.Set("Type", Type);
             so.Set("Direction", Direction);
@@ -104,7 +104,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
                 Position = obj.Get<Vector3>("Position");
                 
                 Properties = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                foreach (var prop in obj.Properties)
+                foreach (KeyValuePair<string, string> prop in obj.Properties)
                 {
                     if (prop.Key == "ID" || prop.Key == "Name" || prop.Key == "Position") continue;
                     Properties[prop.Key] = prop.Value;
@@ -129,9 +129,9 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
             public SerialisedObject ToSerialisedObject()
             {
-                var so = new SerialisedObject("PathNode");
+                SerialisedObject so = new SerialisedObject("PathNode");
 
-                foreach (var kv in Properties) so.Set(kv.Key, kv.Value);
+                foreach (KeyValuePair<string, string> kv in Properties) so.Set(kv.Key, kv.Value);
                 
                 so.Set("ID", ID);
                 so.Set("Name", Name);
@@ -142,13 +142,13 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
             public PathNode Clone()
             {
-                var node = new PathNode
+                PathNode node = new PathNode
                 {
                     Position = Position,
                     ID = ID,
                     Name = Name
                 };
-                foreach (var kv in Properties) node.Properties[kv.Key] = kv.Value;
+                foreach (KeyValuePair<string, string> kv in Properties) node.Properties[kv.Key] = kv.Value;
                 return node;
             }
         }

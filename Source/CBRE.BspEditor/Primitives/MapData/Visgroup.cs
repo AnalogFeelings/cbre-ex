@@ -79,7 +79,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var v = new SerialisedObject("Visgroup");
+            SerialisedObject v = new SerialisedObject("Visgroup");
             v.Set("ID", ID);
             v.Set("Name", Name);
             v.Set("Visible", Visible);

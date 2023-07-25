@@ -101,31 +101,31 @@ namespace CBRE.BspEditor.Tools.Entity
         private async void BuildMenu()
         {
             _menu = null;
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document == null) return;
 
-            var gd = await document.Environment.GetGameData();
+            GameData gd = await document.Environment.GetGameData();
             if (gd == null) return;
 
-            var items = new List<ToolStripItem>();
-            var classes = gd.Classes.Where(x => x.ClassType != ClassType.Base && x.ClassType != ClassType.Solid).ToList();
-            var groups = classes.GroupBy(x => x.Name.Split('_')[0]);
-            foreach (var g in groups)
+            List<ToolStripItem> items = new List<ToolStripItem>();
+            List<GameDataObject> classes = gd.Classes.Where(x => x.ClassType != ClassType.Base && x.ClassType != ClassType.Solid).ToList();
+            IEnumerable<IGrouping<string, GameDataObject>> groups = classes.GroupBy(x => x.Name.Split('_')[0]);
+            foreach (IGrouping<string, GameDataObject> g in groups)
             {
-                var mi = new ToolStripMenuItem(g.Key);
-                var l = g.ToList();
+                ToolStripMenuItem mi = new ToolStripMenuItem(g.Key);
+                List<GameDataObject> l = g.ToList();
                 if (l.Count == 1)
                 {
-                    var cls = l[0];
+                    GameDataObject cls = l[0];
                     mi.Text = cls.Name;
                     mi.Tag = cls;
                     mi.Click += (s, e) => CreateEntity(_location, cls.Name);
                 }
                 else
                 {
-                    var subs = l.Select(x =>
+                    ToolStripItem[] subs = l.Select(x =>
                     {
-                        var item = new ToolStripMenuItem(x.Name) { Tag = x };
+                        ToolStripMenuItem item = new ToolStripMenuItem(x.Name) { Tag = x };
                         item.Click += (s, e) => CreateEntity(_location, x.Name);
                         return item;
                     }).OfType<ToolStripItem>().ToArray();
@@ -167,11 +167,11 @@ namespace CBRE.BspEditor.Tools.Entity
             if (e.Button != MouseButtons.Left) return;
 
             // Get the ray that is cast from the clicked point along the viewport frustrum
-            var (rs, re) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
-            var ray = new Line(rs, re);
+            (Vector3 rs, Vector3 re) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
+            Line ray = new Line(rs, re);
 
             // Grab all the elements that intersect with the ray
-            var hit = document.Map.Root.GetIntersectionsForVisibleObjects(ray).FirstOrDefault();
+            MapObjectExtensions.MapObjectIntersection hit = document.Map.Root.GetIntersectionsForVisibleObjects(ray).FirstOrDefault();
 
             if (hit == null) return; // Nothing was clicked
 
@@ -195,7 +195,7 @@ namespace CBRE.BspEditor.Tools.Entity
             if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right) return;
 
             _state = EntityState.Moving;
-            var loc = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
+            Vector3 loc = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
             _location = camera.GetUnusedCoordinate(_location) + loc;
         }
 
@@ -203,7 +203,7 @@ namespace CBRE.BspEditor.Tools.Entity
         {
             if (e.Button != MouseButtons.Left) return;
             _state = EntityState.Drawn;
-            var loc = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
+            Vector3 loc = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
             _location = camera.GetUnusedCoordinate(_location) + loc;
         }
 
@@ -211,7 +211,7 @@ namespace CBRE.BspEditor.Tools.Entity
         {
             if (!Control.MouseButtons.HasFlag(MouseButtons.Left)) return;
             if (_state != EntityState.Moving) return;
-            var loc = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
+            Vector3 loc = SnapIfNeeded(camera.ScreenToWorld(e.X, e.Y));
             _location = camera.GetUnusedCoordinate(_location) + loc;
         }
 
@@ -231,7 +231,7 @@ namespace CBRE.BspEditor.Tools.Entity
 
         private Task CreateEntity(Vector3 origin, string gd = null)
         {
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             return document == null ? Task.CompletedTask : CreateEntity(document, origin, gd);
         }
 
@@ -240,19 +240,19 @@ namespace CBRE.BspEditor.Tools.Entity
             if (gd == null) gd = _activeEntity;
             if (gd == null) return;
 
-            var colour = Colour.GetDefaultEntityColour();
-            var data = await document.Environment.GetGameData();
+            Color colour = Colour.GetDefaultEntityColour();
+            GameData data = await document.Environment.GetGameData();
             if (data != null)
             {
-                var cls = data.Classes.FirstOrDefault(x => String.Equals(x.Name, gd, StringComparison.InvariantCultureIgnoreCase));
+                GameDataObject cls = data.Classes.FirstOrDefault(x => String.Equals(x.Name, gd, StringComparison.InvariantCultureIgnoreCase));
                 if (cls != null)
                 {
-                    var col = cls.Behaviours.Where(x => x.Name == "color").ToArray();
+                    Behaviour[] col = cls.Behaviours.Where(x => x.Name == "color").ToArray();
                     if (col.Any()) colour = col[0].GetColour(0);
                 }
             }
 
-            var entity = new Primitives.MapObjects.Entity(document.Map.NumberGenerator.Next("MapObject"))
+            Primitives.MapObjects.Entity entity = new Primitives.MapObjects.Entity(document.Map.NumberGenerator.Next("MapObject"))
             {
                 Data =
                 {
@@ -262,7 +262,7 @@ namespace CBRE.BspEditor.Tools.Entity
                 }
             };
 
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
             transaction.Add(new Attach(document.Map.Root.ID, entity));
 
@@ -291,28 +291,28 @@ namespace CBRE.BspEditor.Tools.Entity
         {
             if (_state != EntityState.None)
             {
-                var vec = _location;
-                var high = 1024f * 1024f;
-                var low = -high;
+                Vector3 vec = _location;
+                float high = 1024f * 1024f;
+                float low = -high;
 
                 // Draw a box around the point
-                var c = new Box(vec - Vector3.One * 10, vec + Vector3.One * 10);
+                Box c = new Box(vec - Vector3.One * 10, vec + Vector3.One * 10);
 
                 const uint numVertices = 4 * 6 + 6;
                 const uint numWireframeIndices = numVertices * 2;
 
-                var points = new VertexStandard[numVertices];
-                var indices = new uint[numWireframeIndices];
+                VertexStandard[] points = new VertexStandard[numVertices];
+                uint[] indices = new uint[numWireframeIndices];
 
-                var colour = new Vector4(0, 1, 0, 1);
+                Vector4 colour = new Vector4(0, 1, 0, 1);
 
-                var vi = 0u;
-                var wi = 0u;
-                foreach (var face in c.GetBoxFaces())
+                uint vi = 0u;
+                uint wi = 0u;
+                foreach (Vector3[] face in c.GetBoxFaces())
                 {
-                    var offs = vi;
+                    uint offs = vi;
 
-                    foreach (var v in face)
+                    foreach (Vector3 v in face)
                     {
                         points[vi++] = new VertexStandard { 
                             Position = v,
@@ -330,7 +330,7 @@ namespace CBRE.BspEditor.Tools.Entity
                 }
 
                 // Draw 3 lines pinpointing the point
-                var lineOffset = vi;
+                uint lineOffset = vi;
 
                 points[vi++] = new VertexStandard { Position = new Vector3(low , vec.Y, vec.Z), Colour = colour, Tint = Vector4.One };
                 points[vi++] = new VertexStandard { Position = new Vector3(high, vec.Y, vec.Z), Colour = colour, Tint = Vector4.One };
@@ -345,8 +345,8 @@ namespace CBRE.BspEditor.Tools.Entity
                 indices[wi++] = lineOffset++;
                 indices[wi++] = lineOffset++;
                 indices[wi++] = lineOffset++;
-                
-                var groups = new[]
+
+                BufferGroup[] groups = new[]
                 {
                     new BufferGroup(PipelineType.Wireframe, CameraType.Both, 0, numWireframeIndices)
                 };

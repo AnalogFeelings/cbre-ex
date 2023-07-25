@@ -31,13 +31,13 @@ namespace CBRE.BspEditor.Editing.Problems
                 .ToList();
 
             // Unfiltered list of targetnames in the map
-            var targetnames = entities
+            HashSet<string> targetnames = entities
                 .Select(x => x.EntityData.Get("targetname", ""))
                 .Where(x => x.Length > 0)
                 .ToHashSet();
 
             // Filtered list of entities with targets without matching targetnames
-            var targets = entities
+            List<Problem> targets = entities
                 .Where(x => filter(x.Object))
                 .Select(x => new { x.Object, Target = x.EntityData.Get("target", "") })
                 .Where(x => x.Target.Length > 0 && !targetnames.Contains(x.Target))
@@ -49,14 +49,14 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task Fix(MapDocument document, Problem problem)
         {
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var obj in problem.Objects)
+            foreach (IMapObject obj in problem.Objects)
             {
-                var data = obj.Data.GetOne<EntityData>();
+                EntityData data = obj.Data.GetOne<EntityData>();
                 if (data == null) continue;
 
-                var vals = new Dictionary<string, string> {["target"] = null};
+                Dictionary<string, string> vals = new Dictionary<string, string> {["target"] = null};
                 transaction.Add(new EditEntityDataProperties(obj.ID, vals));
             }
 

@@ -128,8 +128,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
         {
             if (Camera is PerspectiveCamera cam)
             {
-                var position = pair.Item1;
-                var look = pair.Item2;
+                Vector3 position = pair.Item1;
+                Vector3 look = pair.Item2;
                 look = (look - position).Normalise() + position;
                 cam.Position = position;
                 cam.Direction = look - position;
@@ -177,8 +177,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
         {
             if (Camera is PerspectiveCamera cam)
             {
-                var dist = Math.Max(Math.Max(c.Width, c.Length), c.Height);
-                var normal = cam.Direction;
+                float dist = Math.Max(Math.Max(c.Width, c.Length), c.Height);
+                Vector3 normal = cam.Direction;
                 FocusOn(cam, c.Center, normal * -dist * 1.2f);
             }
             return Task.FromResult(0);
@@ -186,7 +186,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         private void FocusOn(PerspectiveCamera cam, Vector3 coordinate, Vector3 distance)
         {
-            var pos = coordinate + distance;
+            Vector3 pos = coordinate + distance;
             cam.Position = pos;
             cam.Direction = coordinate - pos;
         }
@@ -217,7 +217,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
             
             public void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
             {
-                foreach (var r in _control.Listeners.OfType<IOverlayRenderable>())
+                foreach (IOverlayRenderable r in _control.Listeners.OfType<IOverlayRenderable>())
                 {
                     r.Render(viewport, camera, worldMin, worldMax, im);
                 }
@@ -225,7 +225,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
             public void Render(IViewport viewport, PerspectiveCamera camera, I2DRenderer im)
             {
-                foreach (var r in _control.Listeners.OfType<IOverlayRenderable>())
+                foreach (IOverlayRenderable r in _control.Listeners.OfType<IOverlayRenderable>())
                 {
                     r.Render(viewport, camera, im);
                 }

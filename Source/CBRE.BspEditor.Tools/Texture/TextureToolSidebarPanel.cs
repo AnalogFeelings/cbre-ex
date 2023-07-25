@@ -82,19 +82,19 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void RandomShiftXButtonClicked(object sender, EventArgs e)
         {
-            var document = _tool.GetDocument();
-            var fs = document?.Map.Data.GetOne<FaceSelection>();
+            Documents.MapDocument document = _tool.GetDocument();
+            FaceSelection fs = document?.Map.Data.GetOne<FaceSelection>();
             if (fs == null || fs.IsEmpty) return;
 
-            var min = (int) RandomShiftMin.Value;
-            var max = (int) RandomShiftMax.Value;
-            
-            var rand = new Random();
+            int min = (int) RandomShiftMin.Value;
+            int max = (int) RandomShiftMax.Value;
 
-            var edit = new Transaction();
-            foreach (var it in fs.GetSelectedFaces())
+            Random rand = new Random();
+
+            Transaction edit = new Transaction();
+            foreach (System.Collections.Generic.KeyValuePair<Primitives.MapObjects.IMapObject, Face> it in fs.GetSelectedFaces())
             {
-                var clone = (Face) it.Value.Clone();
+                Face clone = (Face) it.Value.Clone();
                 clone.Texture.XShift = rand.Next(min, max + 1); // Upper bound is exclusive
 
                 edit.Add(new RemoveMapObjectData(it.Key.ID, it.Value));
@@ -106,19 +106,19 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void RandomShiftYButtonClicked(object sender, EventArgs e)
         {
-            var document = _tool.GetDocument();
-            var fs = document?.Map.Data.GetOne<FaceSelection>();
+            Documents.MapDocument document = _tool.GetDocument();
+            FaceSelection fs = document?.Map.Data.GetOne<FaceSelection>();
             if (fs == null || fs.IsEmpty) return;
 
-            var min = (int) RandomShiftMin.Value;
-            var max = (int) RandomShiftMax.Value;
-            
-            var rand = new Random();
+            int min = (int) RandomShiftMin.Value;
+            int max = (int) RandomShiftMax.Value;
 
-            var edit = new Transaction();
-            foreach (var it in fs.GetSelectedFaces())
+            Random rand = new Random();
+
+            Transaction edit = new Transaction();
+            foreach (System.Collections.Generic.KeyValuePair<Primitives.MapObjects.IMapObject, Face> it in fs.GetSelectedFaces())
             {
-                var clone = (Face) it.Value.Clone();
+                Face clone = (Face) it.Value.Clone();
                 clone.Texture.YShift = rand.Next(min, max + 1); // Upper bound is exclusive
 
                 edit.Add(new RemoveMapObjectData(it.Key.ID, it.Value));
@@ -135,22 +135,22 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task ApplyFit()
         {
-            var document = _tool.GetDocument();
-            var fs = document?.Map.Data.GetOne<FaceSelection>();
+            Documents.MapDocument document = _tool.GetDocument();
+            FaceSelection fs = document?.Map.Data.GetOne<FaceSelection>();
             if (fs == null || fs.IsEmpty) return;
-            
-            var tc = await document.Environment.GetTextureCollection();
-            if (tc == null) return;
-            
-            var tileX = (int) TileFitX.Value;
-            var tileY = (int) TileFitY.Value;
 
-            var edit = new Transaction();
-            foreach (var it in fs.GetSelectedFaces())
+            Environment.TextureCollection tc = await document.Environment.GetTextureCollection();
+            if (tc == null) return;
+
+            int tileX = (int) TileFitX.Value;
+            int tileY = (int) TileFitY.Value;
+
+            Transaction edit = new Transaction();
+            foreach (System.Collections.Generic.KeyValuePair<Primitives.MapObjects.IMapObject, Face> it in fs.GetSelectedFaces())
             {
-                var clone = (Face) it.Value.Clone();
-                
-                var tex = await tc.GetTextureItem(clone.Texture.Name);
+                Face clone = (Face) it.Value.Clone();
+
+                CBRE.Providers.Texture.TextureItem tex = await tc.GetTextureItem(clone.Texture.Name);
                 if (tex == null) continue;
 
                 clone.Texture.FitToPointCloud(tex.Width, tex.Height, new Cloud(clone.Vertices), tileX, tileY);

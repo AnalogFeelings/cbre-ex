@@ -23,7 +23,7 @@ namespace CBRE.Providers.Texture
         {
             Name = name;
             Flags = flags;
-            var baseItem = new TextureSubItem(TextureSubItemType.Base, this, name, width, height);
+            TextureSubItem baseItem = new TextureSubItem(TextureSubItemType.Base, this, name, width, height);
             SubItems = new Dictionary<TextureSubItemType, TextureSubItem> {{TextureSubItemType.Base, baseItem}};
         }
 
@@ -31,7 +31,7 @@ namespace CBRE.Providers.Texture
         {
             Name = name;
             Flags = flags;
-            var baseItem = new TextureSubItem(TextureSubItemType.Base, this, primarySubItemName, width, height);
+            TextureSubItem baseItem = new TextureSubItem(TextureSubItemType.Base, this, primarySubItemName, width, height);
             SubItems = new Dictionary<TextureSubItemType, TextureSubItem> {{TextureSubItemType.Base, baseItem}};
         }
 
@@ -44,7 +44,7 @@ namespace CBRE.Providers.Texture
 
         public TextureSubItem AddSubItem(TextureSubItemType type, string name, int width, int height)
         {
-            var si = new TextureSubItem(type, this, name, width, height);
+            TextureSubItem si = new TextureSubItem(type, this, name, width, height);
             SubItems.Add(type, si);
             return si;
         }

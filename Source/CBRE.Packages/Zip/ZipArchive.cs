@@ -26,8 +26,8 @@ namespace CBRE.Packages.Zip
 
         private void ReadEntries(Stream stream)
         {
-            var entries = new List<ZipEntry>();
-            using (var br = new BinaryReader(stream, Encoding.UTF8))
+            List<ZipEntry> entries = new List<ZipEntry>();
+            using (BinaryReader br = new BinaryReader(stream, Encoding.UTF8))
             {
                 ZipEntry entry;
                 do
@@ -51,7 +51,7 @@ namespace CBRE.Packages.Zip
 
         private ZipEntry ReadEntry(BinaryReader br)
         {
-            var type = (ZipEntryType) br.ReadUInt32();
+            ZipEntryType type = (ZipEntryType) br.ReadUInt32();
             br.BaseStream.Seek(-4, SeekOrigin.Current);
             switch (type)
             {
@@ -97,8 +97,8 @@ namespace CBRE.Packages.Zip
                 br.BaseStream.Seek(8, SeekOrigin.Current);
                 CompressedSize = br.ReadUInt32();
                 UncompressedSize = br.ReadUInt32();
-                var fileNameLength = br.ReadUInt16();
-                var extraLength = br.ReadUInt16();
+                ushort fileNameLength = br.ReadUInt16();
+                ushort extraLength = br.ReadUInt16();
                 FileName = new string(br.ReadChars(fileNameLength));
                 br.BaseStream.Seek(extraLength, SeekOrigin.Current);
                 DataStartOffset = br.BaseStream.Position;
@@ -112,11 +112,11 @@ namespace CBRE.Packages.Zip
                     case CompressionMethod.None:
                         return new SubStream(container, DataStartOffset, CompressedSize);
                     case CompressionMethod.Deflate:
-                        var sub = new SubStream(container, DataStartOffset, CompressedSize);
-                        var defl = new System.IO.Compression.DeflateStream(sub, System.IO.Compression.CompressionMode.Decompress);
+                        SubStream sub = new SubStream(container, DataStartOffset, CompressedSize);
+                        System.IO.Compression.DeflateStream defl = new System.IO.Compression.DeflateStream(sub, System.IO.Compression.CompressionMode.Decompress);
                         using (defl)
                         {
-                            var ms = new MemoryStream((int) UncompressedSize);
+                            MemoryStream ms = new MemoryStream((int) UncompressedSize);
                             defl.CopyTo(ms);
                             ms.Seek(0, SeekOrigin.Begin);
                             return ms;
@@ -140,7 +140,7 @@ namespace CBRE.Packages.Zip
                 if (br.ReadUInt32() != (uint) ZipEntryType.DataDescriptor)
                     throw new Exception("ZIP header is incorrect");
 
-                var crc = br.ReadUInt32();
+                uint crc = br.ReadUInt32();
                 CompressedSize = br.ReadUInt32();
                 UncompressedSize = br.ReadUInt32();
             }
@@ -166,9 +166,9 @@ namespace CBRE.Packages.Zip
                 br.BaseStream.Seek(8, SeekOrigin.Current);
                 CompressedSize = br.ReadUInt32();
                 UncompressedSize = br.ReadUInt32();
-                var fileNameLength = br.ReadUInt16();
-                var extraLength = br.ReadUInt16();
-                var commentLength = br.ReadUInt16();
+                ushort fileNameLength = br.ReadUInt16();
+                ushort extraLength = br.ReadUInt16();
+                ushort commentLength = br.ReadUInt16();
                 br.BaseStream.Seek(8, SeekOrigin.Current);
                 FileOffset = br.ReadUInt32();
                 FileName = new string(br.ReadChars(fileNameLength));
@@ -191,7 +191,7 @@ namespace CBRE.Packages.Zip
                 br.BaseStream.Seek(12, SeekOrigin.Current);
                 CentralOffset = br.ReadUInt32();
 
-                var commentLength = br.ReadUInt16();
+                ushort commentLength = br.ReadUInt16();
                 br.BaseStream.Seek(commentLength, SeekOrigin.Current);
             }
         }

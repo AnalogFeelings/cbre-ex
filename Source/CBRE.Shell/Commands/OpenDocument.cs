@@ -35,8 +35,8 @@ namespace CBRE.Shell.Commands
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var path = parameters.Get<string>("Path");
-            var hint = parameters.Get("LoaderHint", "");
+            string path = parameters.Get<string>("Path");
+            string hint = parameters.Get("LoaderHint", "");
 
             await _documentRegister.Value.OpenDocument(path, hint);
         }

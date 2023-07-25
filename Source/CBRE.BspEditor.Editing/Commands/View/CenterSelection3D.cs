@@ -24,7 +24,7 @@ namespace CBRE.BspEditor.Editing.Commands.View
         {
             if (document.Selection.IsEmpty) return;
 
-            var box = document.Selection.GetSelectionBoundingBox();
+            DataStructures.Geometric.Box box = document.Selection.GetSelectionBoundingBox();
 
             await Oy.Publish("MapDocument:Viewport:Focus3D", box);
         }

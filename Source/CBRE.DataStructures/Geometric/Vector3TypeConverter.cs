@@ -40,7 +40,7 @@ namespace CBRE.DataStructures.Geometric
                 else if (str.Length > 1 && str[0] == '(' && str[str.Length - 1] == ')') str = str.Substring(1, str.Length - 2);
                 else if (str.Length > 1 && str[0] == '<' && str[str.Length - 1] == '>') str = str.Substring(1, str.Length - 2);
 
-                var s = str.Split(' ');
+                string[] s = str.Split(' ');
                 return new Vector3(
                     float.Parse(s[0], NumberStyles.Float, culture),
                     float.Parse(s[1], NumberStyles.Float, culture),
@@ -57,7 +57,7 @@ namespace CBRE.DataStructures.Geometric
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (!(value is Vector3)) return null;
-            var v = (Vector3)value;
+            Vector3 v = (Vector3)value;
             if (destinationType == typeof(string)) return String.Format(culture, "{0} {1} {2}", v.X, v.Y, v.Z);
             if (destinationType == typeof(Vector3)) return new Vector3(v.X, v.Y, v.Z);
             return base.ConvertTo(context, culture, value, destinationType);

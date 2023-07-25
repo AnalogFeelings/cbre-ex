@@ -31,7 +31,7 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
 
         public async Task Changed(Change change)
         {
-            var sel = change.Document.Map.Data.Get<Selection>().FirstOrDefault();
+            Selection sel = change.Document.Map.Data.Get<Selection>().FirstOrDefault();
             if (sel == null)
             {
                 sel = new Selection();
@@ -52,15 +52,15 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
         private void HideDeselectedObjects(Change change)
         {
             // Objects that are selected but hidden should be deselected
-            var items = change.Added.Union(change.Updated).Where(x => x.IsSelected && x.IsHidden()).ToHashSet();
+            System.Collections.Generic.HashSet<IMapObject> items = change.Added.Union(change.Updated).Where(x => x.IsSelected && x.IsHidden()).ToHashSet();
 
             // Parents should only be selected if all their children are selected, so recursively deselect those too
             while (items.Any())
             {
-                var list = items.ToList();
+                System.Collections.Generic.List<IMapObject> list = items.ToList();
                 items.Clear();
 
-                foreach (var o in list.Where(x => x.IsSelected))
+                foreach (IMapObject o in list.Where(x => x.IsSelected))
                 {
                     o.IsSelected = false;
                     change.Update(o);
@@ -72,18 +72,18 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
         private void UpdateText(Selection selection)
         {
             string text;
-            var parents = selection.GetSelectedParents().ToList();
+            System.Collections.Generic.List<IMapObject> parents = selection.GetSelectedParents().ToList();
             if (!parents.Any())
             {
                 text = NoObjectsSelected;
             }
             else if (parents.Count == 1)
             {
-                var sel = parents[0];
+                IMapObject sel = parents[0];
                 if (sel is Entity e && !string.IsNullOrWhiteSpace(e.EntityData?.Name))
                 {
-                    var edn = e.EntityData.Name;
-                    var targetname = e.EntityData.Get("targetname", "").Trim();
+                    string edn = e.EntityData.Name;
+                    string targetname = e.EntityData.Get("targetname", "").Trim();
                     text = edn + (targetname.Length > 0 ? $" ({targetname})" : "");
                 }
                 else

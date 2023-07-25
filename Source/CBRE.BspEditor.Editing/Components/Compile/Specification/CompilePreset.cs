@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public static CompilePreset Parse(SerialisedObject gs)
         {
-            var args = gs.Children.FirstOrDefault(x => x.Name == "Arguments") ?? new SerialisedObject("Arguments");
+            SerialisedObject args = gs.Children.FirstOrDefault(x => x.Name == "Arguments") ?? new SerialisedObject("Arguments");
             return new CompilePreset
             {
                 Name = gs.Get("Name", ""),

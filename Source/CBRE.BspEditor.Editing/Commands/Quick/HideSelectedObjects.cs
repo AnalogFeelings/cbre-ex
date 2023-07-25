@@ -34,11 +34,11 @@ namespace CBRE.BspEditor.Editing.Commands.Quick
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var mo in document.Selection.ToList())
+            foreach (Primitives.MapObjects.IMapObject mo in document.Selection.ToList())
             {
-                var ex = mo.Data.GetOne<QuickHidden>();
+                QuickHidden ex = mo.Data.GetOne<QuickHidden>();
                 if (ex != null) transaction.Add(new RemoveMapObjectData(mo.ID, ex));
                 transaction.Add(new AddMapObjectData(mo.ID, new QuickHidden()));
             }

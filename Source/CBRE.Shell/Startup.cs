@@ -22,12 +22,12 @@ namespace CBRE.Shell
         /// </summary>
         public static void Run()
         {
-            var catalog = new AggregateCatalog();
+            AggregateCatalog catalog = new AggregateCatalog();
             
             catalog.Catalogs.Add(new ValidAssembliesInDirectoryContainer(AppDomain.CurrentDomain.BaseDirectory));
             BuildCatalog?.Invoke(null, catalog);
 
-            var container = new CompositionContainer(catalog, CompositionOptions.DisableSilentRejection);
+            CompositionContainer container = new CompositionContainer(catalog, CompositionOptions.DisableSilentRejection);
 
             Run(container);
         }
@@ -48,9 +48,9 @@ namespace CBRE.Shell
             AppDomain.CurrentDomain.UnhandledException += (s, e) => UnhandledException(e.ExceptionObject as Exception);
 
             Oy.UnhandledException += (s, e) => UnhandledException(e.Exception);
-            
-            var shell = container.GetExport<Forms.Shell>().Value;
-            var si = new SingleInstance(shell);
+
+            Forms.Shell shell = container.GetExport<Forms.Shell>().Value;
+            SingleInstance si = new SingleInstance(shell);
             
             si.UnhandledException += (s, e) =>
             {

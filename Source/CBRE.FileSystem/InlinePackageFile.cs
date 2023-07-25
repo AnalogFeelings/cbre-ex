@@ -69,8 +69,8 @@ namespace CBRE.FileSystem
         {
             get
             {
-                var path = FilePath;
-                var idx = path.LastIndexOf('/');
+                string path = FilePath;
+                int idx = path.LastIndexOf('/');
                 if (idx < 0) path = "";
                 path = path.Substring(0, idx);
                 return IfContainer<IFile>(
@@ -170,11 +170,11 @@ namespace CBRE.FileSystem
 
         public byte[] ReadAll()
         {
-            var stream = Open();
+            Stream stream = Open();
             if (stream == null) return new byte[0];
             using (stream)
             {
-                var arr = new byte[stream.Length];
+                byte[] arr = new byte[stream.Length];
                 stream.Read(arr, 0, arr.Length);
                 return arr;
             }
@@ -182,11 +182,11 @@ namespace CBRE.FileSystem
 
         public byte[] Read(long offset, long count)
         {
-            var stream = Open();
+            Stream stream = Open();
             if (stream == null) return new byte[0];
             using (stream)
             {
-                var arr = new byte[count];
+                byte[] arr = new byte[count];
                 stream.Read(arr, (int) offset, (int) count);
                 return arr;
             }

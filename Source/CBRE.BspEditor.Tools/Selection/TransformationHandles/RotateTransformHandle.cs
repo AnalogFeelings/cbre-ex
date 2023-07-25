@@ -28,7 +28,7 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
 
         protected override void SetCursorForHandle(MapViewport viewport, ResizeHandle handle)
         {
-            var ct = ToolCursors.RotateCursor;
+            System.Windows.Forms.Cursor ct = ToolCursors.RotateCursor;
             viewport.Control.Cursor = ct;
         }
 
@@ -51,8 +51,8 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
 
         public override void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
-            var (wpos, soff) = GetWorldPositionAndScreenOffset(camera);
-            var spos = camera.WorldToScreen(wpos) + soff;
+            (Vector3 wpos, Vector3 soff) = GetWorldPositionAndScreenOffset(camera);
+            Vector3 spos = camera.WorldToScreen(wpos) + soff;
 
             const float radius = 4;
 
@@ -62,25 +62,25 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
 
         public Matrix4x4? GetTransformationMatrix(MapViewport viewport, OrthographicCamera camera, BoxState state, MapDocument doc)
         {
-            var origin = camera.ZeroUnusedCoordinate((state.OrigStart + state.OrigEnd) / 2);
+            Vector3 origin = camera.ZeroUnusedCoordinate((state.OrigStart + state.OrigEnd) / 2);
             if (_origin != null) origin = _origin.Position;
 
             if (!_rotateStart.HasValue || !_rotateEnd.HasValue) return null;
 
-            var forigin = camera.Flatten(origin);
+            Vector3 forigin = camera.Flatten(origin);
 
-            var origv = Vector3.Normalize(_rotateStart.Value - forigin);
-            var newv =  Vector3.Normalize(_rotateEnd.Value - forigin);
+            Vector3 origv = Vector3.Normalize(_rotateStart.Value - forigin);
+            Vector3 newv =  Vector3.Normalize(_rotateEnd.Value - forigin);
 
-            var angle = Math.Acos(Math.Max(-1, Math.Min(1, origv.Dot(newv))));
+            double angle = Math.Acos(Math.Max(-1, Math.Min(1, origv.Dot(newv))));
             if ((origv.Cross(newv).Z < 0)) angle = 2 * Math.PI - angle;
 
             // TODO post-beta: configurable rotation snapping
-            var roundingDegrees = 15f;
+            float roundingDegrees = 15f;
             if (KeyboardState.Alt) roundingDegrees = 1;
 
-            var deg = angle * (180 / Math.PI);
-            var rnd = Math.Round(deg / roundingDegrees) * roundingDegrees;
+            double deg = angle * (180 / Math.PI);
+            double rnd = Math.Round(deg / roundingDegrees) * roundingDegrees;
             angle = rnd * (Math.PI / 180);
 
             Matrix4x4 rotm;
@@ -88,15 +88,15 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
             else if (camera.ViewType == OrthographicCamera.OrthographicType.Front) rotm = Matrix4x4.CreateRotationX((float)angle);
             else rotm = Matrix4x4.CreateRotationY((float)-angle); // The Y axis rotation goes in the reverse direction for whatever reason
 
-            var mov = Matrix4x4.CreateTranslation(-origin.X, -origin.Y, -origin.Z);
-            var rot = Matrix4x4.Multiply(mov, rotm);
-            var inv = Matrix4x4.Invert(mov, out var i) ? i : Matrix4x4.Identity;
+            Matrix4x4 mov = Matrix4x4.CreateTranslation(-origin.X, -origin.Y, -origin.Z);
+            Matrix4x4 rot = Matrix4x4.Multiply(mov, rotm);
+            Matrix4x4 inv = Matrix4x4.Invert(mov, out Matrix4x4 i) ? i : Matrix4x4.Identity;
             return Matrix4x4.Multiply(rot, inv);
         }
 
         public TextureTransformationType GetTextureTransformationType(MapDocument doc)
         {
-            var tl = doc.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+            TransformationFlags tl = doc.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
             return !tl.TextureLock ? TextureTransformationType.None : TextureTransformationType.Uniform;
         }
     }

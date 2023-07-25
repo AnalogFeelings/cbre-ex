@@ -64,7 +64,7 @@ namespace CBRE.BspEditor.Tools.Draggable
         {
             if (e.Dragging || e.Button != MouseButtons.Left) return;
             if (CurrentDraggable == null) return;
-            var point = camera.ScreenToWorld(e.X, e.Y);
+            Vector3 point = camera.ScreenToWorld(e.X, e.Y);
             point = camera.Flatten(point);
             OnDraggableClicked(document, viewport, camera, e, point, CurrentDraggable);
             if (!e.Handled) CurrentDraggable.Click(document, viewport, camera, e, point);
@@ -73,7 +73,7 @@ namespace CBRE.BspEditor.Tools.Draggable
         protected override void MouseDown(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e)
         {
             if (CurrentDraggable == null) return;
-            var point = camera.ScreenToWorld(e.X, e.Y);
+            Vector3 point = camera.ScreenToWorld(e.X, e.Y);
             point = camera.Flatten(point);
             OnDraggableMouseDown(document, viewport, camera, e, point, CurrentDraggable);
             if (!e.Handled) CurrentDraggable.MouseDown(document, viewport, camera, e, point);
@@ -82,7 +82,7 @@ namespace CBRE.BspEditor.Tools.Draggable
         protected override void MouseUp(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e)
         {
             if (CurrentDraggable == null) return;
-            var point = camera.ScreenToWorld(e.X, e.Y);
+            Vector3 point = camera.ScreenToWorld(e.X, e.Y);
             point = camera.Flatten(point);
             OnDraggableMouseUp(document, viewport, camera, e, point, CurrentDraggable);
             if (!e.Handled) CurrentDraggable.MouseUp(document, viewport, camera, e, point);
@@ -91,14 +91,14 @@ namespace CBRE.BspEditor.Tools.Draggable
         protected override void MouseMove(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e)
         {
             if (e.Dragging || e.Button == MouseButtons.Left) return;
-            var point = camera.ScreenToWorld(e.X, e.Y);
+            Vector3 point = camera.ScreenToWorld(e.X, e.Y);
             point = camera.Flatten(point);
             IDraggable drag = null;
-            foreach (var state in States)
+            foreach (IDraggableState state in States)
             {
-                var drags = state.GetDraggables().ToList();
+                List<IDraggable> drags = state.GetDraggables().ToList();
                 drags.Add(state);
-                foreach (var draggable in drags)
+                foreach (IDraggable draggable in drags)
                 {
                     if (draggable.CanDrag(document, viewport, camera, e, point))
                     {
@@ -120,7 +120,7 @@ namespace CBRE.BspEditor.Tools.Draggable
         {
             if (e.Button != MouseButtons.Left) return;
             if (CurrentDraggable == null) return;
-            var point = camera.Flatten(camera.ScreenToWorld(e.X, e.Y));
+            Vector3 point = camera.Flatten(camera.ScreenToWorld(e.X, e.Y));
             OnDraggableDragStarted(document, viewport, camera, e, point, CurrentDraggable);
             if (!e.Handled) CurrentDraggable.StartDrag(document, viewport, camera, e, point);
             _lastDragPoint = point;
@@ -130,8 +130,8 @@ namespace CBRE.BspEditor.Tools.Draggable
         {
             if (e.Button != MouseButtons.Left) return;
             if (CurrentDraggable == null || !_lastDragPoint.HasValue) return;
-            var point = camera.Flatten(camera.ScreenToWorld(e.X, e.Y));
-            var last = _lastDragPoint.Value;
+            Vector3 point = camera.Flatten(camera.ScreenToWorld(e.X, e.Y));
+            Vector3 last = _lastDragPoint.Value;
             OnDraggableDragMoving(document, viewport, camera, e, last, point, CurrentDraggable);
             if (!e.Handled) CurrentDraggable.Drag(document, viewport, camera, e, last, point);
             if (!e.Handled) OnDraggableDragMoved(document, viewport, camera, e, last, point, CurrentDraggable);
@@ -142,7 +142,7 @@ namespace CBRE.BspEditor.Tools.Draggable
         {
             if (e.Button != MouseButtons.Left) return;
             if (CurrentDraggable == null) return;
-            var point = camera.ScreenToWorld(e.X, e.Y);
+            Vector3 point = camera.ScreenToWorld(e.X, e.Y);
             point = camera.Flatten(point);
             OnDraggableDragEnded(document, viewport, camera, e, point, CurrentDraggable);
             if (!e.Handled) CurrentDraggable.EndDrag(document, viewport, camera, e, point);
@@ -151,12 +151,12 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         private IEnumerable<T> CollectObjects<T>(Func<IDraggable, IEnumerable<T>> collector)
         {
-            var list = new List<T>();
+            List<T> list = new List<T>();
 
-            var foundActive = false;
-            foreach (var state in States)
+            bool foundActive = false;
+            foreach (IDraggableState state in States)
             {
-                foreach (var draggable in state.GetDraggables())
+                foreach (IDraggable draggable in state.GetDraggables())
                 {
                     if (draggable == CurrentDraggable) foundActive = true;
                     else list.AddRange(collector(draggable));
@@ -171,7 +171,7 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         protected override void Render(MapDocument document, BufferBuilder builder, ResourceCollector resourceCollector)
         {
-            foreach (var obj in CollectObjects(x => new[] {x}))
+            foreach (IDraggable obj in CollectObjects(x => new[] {x}))
             {
                 obj.Render(document, builder);
             }
@@ -180,7 +180,7 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         protected override void Render(MapDocument document, IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
-            foreach (var obj in CollectObjects(x => new[] { x }).OrderBy(x => camera.GetUnusedValue(x.ZIndex)))
+            foreach (IDraggable obj in CollectObjects(x => new[] { x }).OrderBy(x => camera.GetUnusedValue(x.ZIndex)))
             {
                 obj.Render(viewport, camera, worldMin, worldMax, im);
             }
@@ -189,7 +189,7 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         protected override void Render(MapDocument document, IViewport viewport, PerspectiveCamera camera, I2DRenderer im)
         {
-            foreach (var obj in CollectObjects(x => new[] { x }).OrderByDescending(x => (x.Origin - camera.Position).LengthSquared()))
+            foreach (IDraggable obj in CollectObjects(x => new[] { x }).OrderByDescending(x => (x.Origin - camera.Position).LengthSquared()))
             {
                 obj.Render(viewport, camera, im);
             }

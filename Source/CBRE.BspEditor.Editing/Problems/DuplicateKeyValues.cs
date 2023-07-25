@@ -23,7 +23,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var entities = document.Map.Root.FindAll()
+            List<Problem> entities = document.Map.Root.FindAll()
                 .Where(x => filter(x))
                 .Select(x => new { Object = x, EntityData = x.Data.GetOne<EntityData>() })
                 .Where(x => x.EntityData != null && HasDuplicateKeyValues(x.EntityData))
@@ -43,18 +43,18 @@ namespace CBRE.BspEditor.Editing.Problems
             // This error should only come from external sources (map loading, etc) as the EditEntityDataProperties
             // simply doesn't allow adding duplicate keys at all.
 
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var obj in problem.Objects)
+            foreach (IMapObject obj in problem.Objects)
             {
-                var data = obj.Data.GetOne<EntityData>();
+                EntityData data = obj.Data.GetOne<EntityData>();
                 if (data == null) continue;
 
-                var vals = new Dictionary<string, string>();
+                Dictionary<string, string> vals = new Dictionary<string, string>();
 
                 // Set the key to the first found value
-                var groups = data.Properties.GroupBy(x => x.Key.ToLowerInvariant()).Where(x => x.Count() > 1);
-                foreach (var g in groups)
+                IEnumerable<IGrouping<string, KeyValuePair<string, string>>> groups = data.Properties.GroupBy(x => x.Key.ToLowerInvariant()).Where(x => x.Count() > 1);
+                foreach (IGrouping<string, KeyValuePair<string, string>> g in groups)
                 {
                     vals[g.Key] = g.First().Value;
                 }

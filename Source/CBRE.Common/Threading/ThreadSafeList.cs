@@ -102,7 +102,7 @@ namespace CBRE.Common.Threading
         /// <param name="items">The items to remove</param>
         public void RemoveRange(IEnumerable<T> items)
         {
-            var li = items.ToHashSet();
+            HashSet<T> li = items.ToHashSet();
             RemoveAll(li.Contains);
         }
 

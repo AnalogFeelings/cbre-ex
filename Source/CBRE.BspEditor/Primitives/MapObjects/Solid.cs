@@ -29,7 +29,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
 
         protected override Box GetBoundingBox()
         {
-            var faces = Faces.ToList();
+            List<Face> faces = Faces.ToList();
             return faces.Any(x => x.Vertices.Count > 0) ? new Box(faces.SelectMany(x => x.Vertices)) : Box.Empty;
         }
         

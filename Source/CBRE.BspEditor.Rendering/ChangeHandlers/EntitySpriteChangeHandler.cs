@@ -20,12 +20,12 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
 
         public async Task Changed(Change change)
         {
-            var gd = await change.Document.Environment.GetGameData();
-            var tc = await change.Document.Environment.GetTextureCollection();
-            foreach (var entity in change.Added.Union(change.Updated).OfType<Entity>())
+            GameData gd = await change.Document.Environment.GetGameData();
+            TextureCollection tc = await change.Document.Environment.GetTextureCollection();
+            foreach (Entity entity in change.Added.Union(change.Updated).OfType<Entity>())
             {
-                var sn = GetSpriteName(entity, gd);
-                var sd = sn == null ? null : await CreateSpriteData(entity, change.Document, gd, tc, sn);
+                string sn = GetSpriteName(entity, gd);
+                EntitySprite sd = sn == null ? null : await CreateSpriteData(entity, change.Document, gd, tc, sn);
                 if (sd == null) entity.Data.Remove(x => x is EntitySprite);
                 else entity.Data.Replace(sd);
                 entity.DescendantsChanged();
@@ -36,12 +36,12 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
         {
             if (!tc.HasTexture(name)) return null;
 
-            var texture = await tc.GetTextureItem(name);
+            CBRE.Providers.Texture.TextureItem texture = await tc.GetTextureItem(name);
             if (texture == null) return null;
 
-            var cls = gd?.GetClass(entity.EntityData.Name);
-            var scale = 1f;
-            var color = Color.White;
+            GameDataObject cls = gd?.GetClass(entity.EntityData.Name);
+            float scale = 1f;
+            Color color = Color.White;
 
             if (cls != null)
             {
@@ -51,10 +51,10 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
                     if (scale <= 0.1f) scale = 1;
                 }
 
-                var colProp = cls.Properties.FirstOrDefault(x => x.VariableType == VariableType.Color255 || x.VariableType == VariableType.Color1);
+                Property colProp = cls.Properties.FirstOrDefault(x => x.VariableType == VariableType.Color255 || x.VariableType == VariableType.Color1);
                 if (colProp != null)
                 {
-                    var col = entity.EntityData.GetVector3(colProp.Name);
+                    System.Numerics.Vector3? col = entity.EntityData.GetVector3(colProp.Name);
                     if (colProp.VariableType == VariableType.Color255) col /= 255f;
                     if (col.HasValue) color = col.Value.ToColor();
                 }
@@ -66,10 +66,10 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
         private static string GetSpriteName(Entity entity, GameData gd)
         {
             if (entity.Hierarchy.HasChildren || String.IsNullOrWhiteSpace(entity.EntityData.Name)) return null;
-            var cls = gd?.GetClass(entity.EntityData.Name);
+            GameDataObject cls = gd?.GetClass(entity.EntityData.Name);
             if (cls == null) return null;
 
-            var spr = cls.Behaviours.FirstOrDefault(x => String.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase))
+            Behaviour spr = cls.Behaviours.FirstOrDefault(x => String.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase))
                       ?? cls.Behaviours.FirstOrDefault(x => String.Equals(x.Name, "iconsprite", StringComparison.InvariantCultureIgnoreCase));
             if (spr == null) return null;
 
@@ -80,11 +80,11 @@ namespace CBRE.BspEditor.Rendering.ChangeHandlers
             }
 
             // Find the first property that is a studio type, or has a name of "sprite"...
-            var prop = cls.Properties.FirstOrDefault(x => x.VariableType == VariableType.Sprite) ??
+            Property prop = cls.Properties.FirstOrDefault(x => x.VariableType == VariableType.Sprite) ??
                        cls.Properties.FirstOrDefault(x => String.Equals(x.Name, "sprite", StringComparison.InvariantCultureIgnoreCase));
             if (prop != null)
             {
-                var val = entity.EntityData.Get(prop.Name, prop.DefaultValue);
+                string val = entity.EntityData.Get(prop.Name, prop.DefaultValue);
                 if (!String.IsNullOrWhiteSpace(val)) return val;
             }
             return null;

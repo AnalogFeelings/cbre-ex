@@ -13,7 +13,7 @@ namespace CBRE.BspEditor.Tools
 
         private WeakReference<BaseTool> _activeTool = new WeakReference<BaseTool>(null);
 
-        private BaseTool ActiveTool => _activeTool.TryGetTarget(out var t) ? t : null;
+        private BaseTool ActiveTool => _activeTool.TryGetTarget(out BaseTool t) ? t : null;
 
         public MapViewport Viewport { get; set; }
 
@@ -33,7 +33,7 @@ namespace CBRE.BspEditor.Tools
         private bool ShouldRelayEvent(BaseTool tool)
         {
             if (tool == null) return false;
-            var usage = tool.Usage;
+            BaseTool.ToolUsage usage = tool.Usage;
             return usage == BaseTool.ToolUsage.Both
                    || (usage == BaseTool.ToolUsage.View2D && Viewport.Is2D)
                    || (usage == BaseTool.ToolUsage.View3D && Viewport.Is3D);

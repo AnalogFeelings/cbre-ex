@@ -76,7 +76,7 @@ namespace CBRE.Shell
         /// </summary>
         public void UIStartup()
         {
-            foreach (var hook in _uiStartupHooks.OrderBy(x => x.GetType().Name))
+            foreach (IUIStartupHook hook in _uiStartupHooks.OrderBy(x => x.GetType().Name))
             {
                 Handle("UI Startup hook", hook, h => h.OnUIStartup());
             }
@@ -88,7 +88,7 @@ namespace CBRE.Shell
         /// <returns>The running task</returns>
         public async Task Startup()
         {
-            foreach (var export in _startupHooks.OrderBy(x => x.GetType().FullName))
+            foreach (IStartupHook export in _startupHooks.OrderBy(x => x.GetType().FullName))
             {
                 await Handle("Startup hook", export, h => h.OnStartup());
             }
@@ -100,7 +100,7 @@ namespace CBRE.Shell
         /// <returns>The running task</returns>
         public async Task Initialise()
         {
-            foreach (var export in _initialiseHooks.OrderBy(x => x.GetType().FullName))
+            foreach (IInitialiseHook export in _initialiseHooks.OrderBy(x => x.GetType().FullName))
             {
                 await Handle("Initialise hook", export, h => h.OnInitialise());
             }
@@ -112,7 +112,7 @@ namespace CBRE.Shell
         /// <returns>False if shutdown cannot continue</returns>
         public async Task<bool> ShuttingDown()
         {
-            foreach (var export in _shuttingDownHooks.OrderBy(x => x.GetType().FullName))
+            foreach (IShuttingDownHook export in _shuttingDownHooks.OrderBy(x => x.GetType().FullName))
             {
                 try
                 {
@@ -132,7 +132,7 @@ namespace CBRE.Shell
         /// </summary>
         public void UIShutdown()
         {
-            foreach (var hook in _uiShutdownHooks.OrderBy(x => x.GetType().Name))
+            foreach (IUIShutdownHook hook in _uiShutdownHooks.OrderBy(x => x.GetType().Name))
             {
                 Handle("UI Shutdown hook", hook, h => h.OnUIShutdown());
             }
@@ -144,7 +144,7 @@ namespace CBRE.Shell
         /// <returns>The running task</returns>
         public async Task Shutdown()
         {
-            foreach (var export in _shutdownHooks.OrderBy(x => x.GetType().FullName))
+            foreach (IShutdownHook export in _shutdownHooks.OrderBy(x => x.GetType().FullName))
             {
                 await Handle("Shutdown hook", export, h => h.OnShutdown());
             }

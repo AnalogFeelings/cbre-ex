@@ -23,7 +23,7 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public async Task<List<Problem>> Check(MapDocument document, Predicate<IMapObject> filter)
         {
-            var tc = await document.Environment.GetTextureCollection();
+            Environment.TextureCollection tc = await document.Environment.GetTextureCollection();
 
             // Get a list of all faces and textures
             var faces = document.Map.Root.FindAll()
@@ -33,8 +33,8 @@ namespace CBRE.BspEditor.Editing.Problems
                 .ToList();
 
             // Get the list of textures in the map and in the texture collection
-            var textureNames = faces.Select(x => x.Face.Texture.Name).ToHashSet(StringComparer.InvariantCultureIgnoreCase);
-            var knownTextureNames = tc.GetAllTextures().ToHashSet(StringComparer.InvariantCultureIgnoreCase);
+            HashSet<string> textureNames = faces.Select(x => x.Face.Texture.Name).ToHashSet(StringComparer.InvariantCultureIgnoreCase);
+            HashSet<string> knownTextureNames = tc.GetAllTextures().ToHashSet(StringComparer.InvariantCultureIgnoreCase);
 
             // The set only contains textures that aren't known
             textureNames.ExceptWith(knownTextureNames);
@@ -47,10 +47,10 @@ namespace CBRE.BspEditor.Editing.Problems
 
         public async Task Fix(MapDocument document, Problem problem)
         {
-            var tc = await document.Environment.GetTextureCollection();
+            Environment.TextureCollection tc = await document.Environment.GetTextureCollection();
 
             // Get the default texture to apply
-            var first = tc.GetBrowsableTextures()
+            string first = tc.GetBrowsableTextures()
                 .OrderBy(t => t, StringComparer.CurrentCultureIgnoreCase)
                 .Where(item => item.Length > 0)
                 .Select(item => new { item, c = Char.ToLower(item[0]) })
@@ -58,13 +58,13 @@ namespace CBRE.BspEditor.Editing.Problems
                 .Select(t => t.item)
                 .FirstOrDefault();
 
-            var transaction = new Transaction();
+            Transaction transaction = new Transaction();
 
-            foreach (var obj in problem.Objects)
+            foreach (IMapObject obj in problem.Objects)
             {
-                foreach (var face in obj.Data.Intersect(problem.ObjectData).OfType<Face>())
+                foreach (Face face in obj.Data.Intersect(problem.ObjectData).OfType<Face>())
                 {
-                    var clone = (Face)face.Clone();
+                    Face clone = (Face)face.Clone();
                     clone.Texture.Name = first;
 
                     transaction.Add(new RemoveMapObjectData(obj.ID, face));

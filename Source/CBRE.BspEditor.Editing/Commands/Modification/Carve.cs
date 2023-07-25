@@ -43,18 +43,18 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
             // Get the carving objects (whatever's selected)
-            var carvers = document.Selection.OfType<Solid>().ToList();
+            List<Solid> carvers = document.Selection.OfType<Solid>().ToList();
             if (!carvers.Any()) return;
 
             // Get the carve set. This set doesn't have to explicitly intersect with a carver,
             // it's only a list of candidates. The carve operation does a more precise filter.
-            var carvees = document.Map.Root
+            IEnumerable<Solid> carvees = document.Map.Root
                 .Find(x => x is Solid && carvers.Any(c => x.BoundingBox.IntersectsWith(c.BoundingBox)))
                 .OfType<Solid>()
                 .Where(x => !carvers.Contains(x));
 
             // Perform the carve
-            var tns = CarveObjects(document, carvers, carvees);
+            Transaction tns = CarveObjects(document, carvers, carvees);
             if (tns.IsEmpty) return;
 
             // Commit changes
@@ -72,22 +72,22 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
         private static Transaction CarveObjects(MapDocument document, IEnumerable<Solid> carvers, IEnumerable<Solid> carvees)
         {
             // Create a copy of the carvee list which will be modified as the carve happens
-            var carveSet = carvees.ToList();
+            List<Solid> carveSet = carvees.ToList();
 
             // Create a carve data to track changes before they are committed
-            var data = new CarveData(carveSet);
+            CarveData data = new CarveData(carveSet);
 
-            foreach (var carver in carvers)
+            foreach (Solid carver in carvers)
             {
-                var added = new List<Solid>();
-                var removed = new List<Solid>();
+                List<Solid> added = new List<Solid>();
+                List<Solid> removed = new List<Solid>();
 
                 // Carve all the candidates in the carve set
                 // Since we're carving with only one object at this point, we can do all the carve set in one go
                 // and do the add/remove operations at the end. This stops the carve result from potentially being re-carved somehow.
-                foreach (var carvee in carveSet)
+                foreach (Solid carvee in carveSet)
                 {
-                    var result = PerformCarve(document, carver, carvee, data);
+                    List<Solid> result = PerformCarve(document, carver, carvee, data);
                     if (result == null) continue;
                     
                     added.AddRange(result);
@@ -113,11 +113,11 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
         /// <returns>The list of added solids if the carve was successful, null otherwise</returns>
         private static List<Solid> PerformCarve(MapDocument document, Solid carver, Solid carvee, CarveData data)
         {
-            var split = false;
-            var solid = carvee; // this reference will change as the carve continues
-            var list = new List<Solid>();
+            bool split = false;
+            Solid solid = carvee; // this reference will change as the carve continues
+            List<Solid> list = new List<Solid>();
 
-            foreach (var plane in carver.Faces.Select(x => x.Plane))
+            foreach (DataStructures.Geometric.Plane plane in carver.Faces.Select(x => x.Plane))
             {
                 // Split solid by plane
                 Solid back, front;
@@ -154,7 +154,7 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
             if (!split) return null;
 
             // Update the carve data
-            foreach (var s in list) data.Attach(carvee, s);
+            foreach (Solid s in list) data.Attach(carvee, s);
             data.Detatch(carvee);
 
             return list;
@@ -177,14 +177,14 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
             public void Attach(Solid originalSolid, Solid solid)
             {
-                var parent = ObjectsAndParents[originalSolid];
+                long parent = ObjectsAndParents[originalSolid];
                 ObjectsAndParents[solid] = parent;
                 Transaction.Add(new Attach(parent, solid));
             }
 
             public void Detatch(Solid solid)
             {
-                var parent = ObjectsAndParents[solid];
+                long parent = ObjectsAndParents[solid];
                 Transaction.Add(new Detatch(parent, solid));
             }
         }

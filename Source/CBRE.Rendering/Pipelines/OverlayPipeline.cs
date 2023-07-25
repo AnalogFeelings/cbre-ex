@@ -25,7 +25,7 @@ namespace CBRE.Rendering.Pipelines
         {
             (_vertex, _fragment) = context.ResourceLoader.LoadShaders(Type.ToString());
 
-            var pDesc = new GraphicsPipelineDescription
+            GraphicsPipelineDescription pDesc = new GraphicsPipelineDescription
             {
                 BlendState = BlendStateDescription.SingleAlphaBlend,
                 DepthStencilState = DepthStencilStateDescription.Disabled,
@@ -70,7 +70,7 @@ namespace CBRE.Rendering.Pipelines
             cl.SetPipeline(_pipeline);
             cl.SetGraphicsResourceSet(0, _projectionResourceSet);
 
-            foreach (var r in renderables)
+            foreach (IRenderable r in renderables)
             {
                 r.Render(context, this, target, cl);
             }

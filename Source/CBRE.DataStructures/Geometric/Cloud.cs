@@ -25,7 +25,7 @@ namespace CBRE.DataStructures.Geometric
 
         public Cloud(IEnumerable<Vector3> points)
         {
-            var list = points.ToList();
+            List<Vector3> list = points.ToList();
 
             Points = new List<Vector3>(list);
             BoundingBox = new Box(list);
@@ -33,7 +33,7 @@ namespace CBRE.DataStructures.Geometric
             MinX = MinY = MinZ = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             MaxX = MaxY = MaxZ = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-            foreach (var p in list)
+            foreach (Vector3 p in list)
             {
                 if (p.X < MinX.X) MinX = p;
                 if (p.Y < MinY.Y) MinY = p;

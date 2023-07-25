@@ -45,21 +45,21 @@ namespace CBRE.BspEditor.Environment.Controls
             if (_factories.Any())
             {
                 ctxEnvironmentMenu.Items.Clear();
-                foreach (var ef in _factories)
+                foreach (IEnvironmentFactory ef in _factories)
                 {
-                    var mi = new ToolStripMenuItem(ef.Description) { Tag = ef };
+                    ToolStripMenuItem mi = new ToolStripMenuItem(ef.Description) { Tag = ef };
                     mi.Click += AddEnvironment;
                     ctxEnvironmentMenu.Items.Add(mi);
                 }
             }
-            
-            var translate = Common.Container.Get<ITranslationStringProvider>();
+
+            ITranslationStringProvider translate = Common.Container.Get<ITranslationStringProvider>();
             translate.Translate(this);
         }
 
         public void Translate(ITranslationStringProvider strings)
         {
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             btnAdd.Text = strings.GetString(prefix, "Add");
             btnRemove.Text = strings.GetString(prefix, "Remove");
             _nameLabel.Text = strings.GetString(prefix, "Name");
@@ -70,13 +70,13 @@ namespace CBRE.BspEditor.Environment.Controls
             treEnvironments.Nodes.Clear();
             if (_value == null) return;
 
-            foreach (var g in _value.GroupBy(x => x.Type))
+            foreach (IGrouping<string, SerialisedEnvironment> g in _value.GroupBy(x => x.Type))
             {
-                var ef = _factories.FirstOrDefault(x => x.TypeName == g.Key)?.Description ?? g.Key;
-                var groupNode = new TreeNode(ef);
-                foreach (var se in g)
+                string ef = _factories.FirstOrDefault(x => x.TypeName == g.Key)?.Description ?? g.Key;
+                TreeNode groupNode = new TreeNode(ef);
+                foreach (SerialisedEnvironment se in g)
                 {
-                    var envNode = new TreeNode(se.Name) { Tag = se };
+                    TreeNode envNode = new TreeNode(se.Name) { Tag = se };
                     groupNode.Nodes.Add(envNode);
                 }
                 treEnvironments.Nodes.Add(groupNode);
@@ -86,10 +86,10 @@ namespace CBRE.BspEditor.Environment.Controls
 
         private void AddEnvironment(object sender, EventArgs e)
         {
-            var factory = (sender as ToolStripItem)?.Tag as IEnvironmentFactory;
+            IEnvironmentFactory factory = (sender as ToolStripItem)?.Tag as IEnvironmentFactory;
             if (factory != null && _value != null)
             {
-                var newEnv = new SerialisedEnvironment
+                SerialisedEnvironment newEnv = new SerialisedEnvironment
                 {
                     ID = Guid.NewGuid().ToString("N"),
                     Name = "New Environment",
@@ -98,7 +98,7 @@ namespace CBRE.BspEditor.Environment.Controls
                 _value.Add(newEnv);
                 UpdateTreeNodes();
 
-                var nodeToSelect = treEnvironments.Nodes.OfType<TreeNode>().SelectMany(x => x.Nodes.OfType<TreeNode>()).FirstOrDefault(x => x.Tag == newEnv);
+                TreeNode nodeToSelect = treEnvironments.Nodes.OfType<TreeNode>().SelectMany(x => x.Nodes.OfType<TreeNode>()).FirstOrDefault(x => x.Tag == newEnv);
                 if (nodeToSelect != null) treEnvironments.SelectedNode = nodeToSelect;
 
                 OnValueChanged?.Invoke(this, Key);
@@ -107,7 +107,7 @@ namespace CBRE.BspEditor.Environment.Controls
 
         private void RemoveEnvironment(object sender, EventArgs e)
         {
-            var node = treEnvironments.SelectedNode?.Tag as SerialisedEnvironment;
+            SerialisedEnvironment node = treEnvironments.SelectedNode?.Tag as SerialisedEnvironment;
             if (node != null && _value != null)
             {
                 _value.Remove(node);
@@ -123,18 +123,18 @@ namespace CBRE.BspEditor.Environment.Controls
         {
             if (_currentEditor != null) _currentEditor.EnvironmentChanged -= UpdateEnvironment;
 
-            var translate = Common.Container.Get<ITranslationStringProvider>();
+            ITranslationStringProvider translate = Common.Container.Get<ITranslationStringProvider>();
 
             _currentEditor = null;
             pnlSettings.Controls.Clear();
 
-            var node = e?.Node?.Tag as SerialisedEnvironment;
+            SerialisedEnvironment node = e?.Node?.Tag as SerialisedEnvironment;
             if (node != null)
             {
-                var factory = _factories.FirstOrDefault(x => x.TypeName == node.Type);
+                IEnvironmentFactory factory = _factories.FirstOrDefault(x => x.TypeName == node.Type);
                 if (factory != null)
                 {
-                    var fp = new FlowLayoutPanel
+                    FlowLayoutPanel fp = new FlowLayoutPanel
                     {
                         Height = 30,
                         Width = 400,
@@ -147,7 +147,7 @@ namespace CBRE.BspEditor.Environment.Controls
 
                     _nameBox.Text = node.Name;
 
-                    var des = factory.Deserialise(node);
+                    IEnvironment des = factory.Deserialise(node);
                     _currentEditor = factory.CreateEditor();
                     translate.Translate(_currentEditor);
                     pnlSettings.Controls.Add(_currentEditor.Control);
@@ -159,14 +159,14 @@ namespace CBRE.BspEditor.Environment.Controls
 
         private void UpdateEnvironment(object sender, EventArgs e)
         {
-            var node = treEnvironments.SelectedNode?.Tag as SerialisedEnvironment;
+            SerialisedEnvironment node = treEnvironments.SelectedNode?.Tag as SerialisedEnvironment;
             if (node != null && _currentEditor != null)
             {
                 treEnvironments.SelectedNode.Text = _nameBox.Text;
-                var factory = _factories.FirstOrDefault(x => x.TypeName == node.Type);
+                IEnvironmentFactory factory = _factories.FirstOrDefault(x => x.TypeName == node.Type);
                 if (factory != null)
                 {
-                    var ser = factory.Serialise(_currentEditor.Environment);
+                    SerialisedEnvironment ser = factory.Serialise(_currentEditor.Environment);
                     node.Name = _nameBox.Text;
                     node.Properties = ser.Properties;
                 }

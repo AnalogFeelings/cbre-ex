@@ -33,7 +33,7 @@ namespace CBRE.Shell.Settings.Editors
             Combobox.DisplayMember = "Label";
             Combobox.ValueMember = "Value";
 
-            var values = catalog.Languages.Values;
+            System.Collections.Generic.Dictionary<string, Language>.ValueCollection values = catalog.Languages.Values;
             Combobox.Items.AddRange(values.Select(x => new LanguageValue(x)).OfType<object>().ToArray());
 
             Combobox.SelectedIndexChanged += (o, e) => OnValueChanged?.Invoke(this, Key);

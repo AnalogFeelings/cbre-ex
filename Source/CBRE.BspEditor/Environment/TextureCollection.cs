@@ -42,20 +42,20 @@ namespace CBRE.BspEditor.Environment
 
         public async Task Precache(IEnumerable<string> textures)
         {
-            var tex = new HashSet<string>(textures.Select(x => x.ToLower()));
+            HashSet<string> tex = new HashSet<string>(textures.Select(x => x.ToLower()));
             tex.ExceptWith(_itemCache.Keys);
             if (!tex.Any()) return;
 
-            var tasks = new List<Task>();
+            List<Task> tasks = new List<Task>();
 
-            foreach (var pack in _packages)
+            foreach (TexturePackage pack in _packages)
             {
-                var found = new HashSet<string>(tex.Where(x => pack.HasTexture(x)));
+                HashSet<string> found = new HashSet<string>(tex.Where(x => pack.HasTexture(x)));
                 tex.ExceptWith(found);
                 if (!found.Any()) continue;
-                var t = pack.GetTextures(found).ContinueWith(x =>
+                Task t = pack.GetTextures(found).ContinueWith(x =>
                 {
-                    foreach (var ti in x.Result) _itemCache[ti.Name] = ti;
+                    foreach (TextureItem ti in x.Result) _itemCache[ti.Name] = ti;
                 });
                 tasks.Add(t);
             }
@@ -65,8 +65,8 @@ namespace CBRE.BspEditor.Environment
 
         public IEnumerable<string> GetAllTextures()
         {
-            var hs = new HashSet<string>();
-            foreach (var pack in _packages) hs.UnionWith(pack.Textures);
+            HashSet<string> hs = new HashSet<string>();
+            foreach (TexturePackage pack in _packages) hs.UnionWith(pack.Textures);
             return hs;
         }
 
@@ -79,10 +79,10 @@ namespace CBRE.BspEditor.Environment
             name = name.ToLower();
             if (_itemCache.ContainsKey(name)) return _itemCache[name];
 
-            var packs = _packages.Where(x => x.HasTexture(name)).ToList();
-            foreach (var tp in packs)
+            List<TexturePackage> packs = _packages.Where(x => x.HasTexture(name)).ToList();
+            foreach (TexturePackage tp in packs)
             {
-                var r = await tp.GetTexture(name);
+                TextureItem r = await tp.GetTexture(name);
                 if (r == null) continue;
 
                 _itemCache[r.Name.ToLower()] = r;
@@ -93,8 +93,8 @@ namespace CBRE.BspEditor.Environment
 
         public async Task<IEnumerable<TextureItem>> GetTextureItems(IEnumerable<string> names)
         {
-            var n = names.Select(x => x.ToLower()).ToList();
-            var missing = n.Where(x => !_itemCache.ContainsKey(x));
+            List<string> n = names.Select(x => x.ToLower()).ToList();
+            IEnumerable<string> missing = n.Where(x => !_itemCache.ContainsKey(x));
             await Precache(missing);
             return n.Where(x => _itemCache.ContainsKey(x)).Select(x => _itemCache[x]);
         }

@@ -43,7 +43,7 @@ namespace CBRE.Shell.Forms
             if (e.KeyCode == Keys.Down)
             {
                 e.Handled = true;
-                var max = SearchResults.Controls.OfType<CommandItem>().Count() - 1;
+                int max = SearchResults.Controls.OfType<CommandItem>().Count() - 1;
                 if (_activeComponentIndex < max) _activeComponentIndex++;
                 UpdateActiveComponent();
             }
@@ -55,10 +55,10 @@ namespace CBRE.Shell.Forms
             }
             if (e.KeyCode == Keys.Enter)
             {
-                var list = SearchResults.Controls.OfType<CommandItem>().ToList();
+                List<CommandItem> list = SearchResults.Controls.OfType<CommandItem>().ToList();
                 if (list.Count > _activeComponentIndex)
                 {
-                    var idx = list[_activeComponentIndex];
+                    CommandItem idx = list[_activeComponentIndex];
                     Activate(idx.Activator);
                 }
             }
@@ -93,12 +93,12 @@ namespace CBRE.Shell.Forms
                     return;
                 }
 
-                var keywords = SearchBox.Text.Trim();
-                var result = _providers.SelectMany(p => p.SearchActivators(keywords)).Take(10).ToList();
+                string keywords = SearchBox.Text.Trim();
+                List<IActivator> result = _providers.SelectMany(p => p.SearchActivators(keywords)).Take(10).ToList();
 
-                foreach (var x in result)
+                foreach (IActivator x in result)
                 {
-                    var btn = new CommandItem(x, this);
+                    CommandItem btn = new CommandItem(x, this);
                     SearchResults.Controls.Add(btn);
                 }
             }
@@ -117,8 +117,8 @@ namespace CBRE.Shell.Forms
 
         private void UpdateActiveComponent()
         {
-            var list = SearchResults.Controls.OfType<CommandItem>().ToList();
-            for (var i = 0; i < list.Count; i++)
+            List<CommandItem> list = SearchResults.Controls.OfType<CommandItem>().ToList();
+            for (int i = 0; i < list.Count; i++)
             {
                 list[i].Active = i == _activeComponentIndex;
             }

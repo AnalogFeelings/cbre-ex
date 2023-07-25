@@ -39,12 +39,12 @@ namespace CBRE.BspEditor.Controls.Layout
         
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var lsw = new LayoutSettings(_host.Value.GetConfigurations());
+            LayoutSettings lsw = new LayoutSettings(_host.Value.GetConfigurations());
             _translator.Value.Translate(lsw);
             
             if (await lsw.ShowDialogAsync() == DialogResult.OK)
             {
-                var configs = lsw.Configurations;
+                System.Collections.Generic.List<MapDocumentControlWindowConfiguration> configs = lsw.Configurations;
                 _host.Value.SetConfigurations(configs);
             }
         }

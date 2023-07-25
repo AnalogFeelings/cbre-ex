@@ -25,8 +25,8 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
             if (Handle == ResizeHandle.Center)
             {
                 const int padding = 2;
-                var box = new Box(camera.Flatten(BoxState.Start), camera.Flatten(BoxState.End));
-                var c = position;
+                Box box = new Box(camera.Flatten(BoxState.Start), camera.Flatten(BoxState.End));
+                Vector3 c = position;
                 return c.X >= box.Start.X - padding && c.Y >= box.Start.Y - padding && c.Z >= box.Start.Z - padding
                        && c.X <= box.End.X + padding && c.Y <= box.End.Y + padding && c.Z <= box.End.Z + padding;
             }
@@ -37,9 +37,9 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
         {
             if (Handle == ResizeHandle.Center)
             {
-                var st = camera.Flatten(BoxState.Start);
-                var ed = camera.Flatten(BoxState.End);
-                var points = new[] {st, ed, new Vector3(st.X, ed.Y, 0), new Vector3(ed.X, st.Y, 0)};
+                Vector3 st = camera.Flatten(BoxState.Start);
+                Vector3 ed = camera.Flatten(BoxState.End);
+                Vector3[] points = new[] {st, ed, new Vector3(st.X, ed.Y, 0), new Vector3(ed.X, st.Y, 0)};
                 return points.OrderBy(x => (position - x).LengthSquared()).First();
             }
             return base.GetResizeOrigin(viewport, camera, position);
@@ -51,15 +51,15 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
             {
                 if (HighlightedViewport != viewport) return;
 
-                var start = camera.WorldToScreen(BoxState.Start);
-                var end = camera.WorldToScreen(BoxState.End);
+                Vector3 start = camera.WorldToScreen(BoxState.Start);
+                Vector3 end = camera.WorldToScreen(BoxState.End);
 
                 im.AddRectFilled(start.ToVector2(), end.ToVector2(), State.FillColour);
 
                 if (SnappedMoveOrigin != null)
                 {
                     const int size = 4;
-                    var orig = camera.WorldToScreen(camera.Expand(SnappedMoveOrigin.Value));
+                    Vector3 orig = camera.WorldToScreen(camera.Expand(SnappedMoveOrigin.Value));
 
                     im.AddLine(new Vector2(orig.X - size, orig.Y - size), new Vector2(orig.X + size, orig.Y + size), Color.Yellow, 1, false);
                     im.AddLine(new Vector2(orig.X + size, orig.Y - size), new Vector2(orig.X - size, orig.Y + size), Color.Yellow, 1, false);
@@ -76,18 +76,18 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
             Matrix4x4 resizeMatrix;
             if (Handle == ResizeHandle.Center)
             {
-                var movement = state.Start - state.OrigStart;
+                Vector3 movement = state.Start - state.OrigStart;
                 resizeMatrix = Matrix4x4.CreateTranslation(movement.X, movement.Y, movement.Z);
             }
             else
             {
-                var resize = (state.OrigStart - state.Start) + (state.End - state.OrigEnd);
+                Vector3 resize = (state.OrigStart - state.Start) + (state.End - state.OrigEnd);
                 resize = Vector3.Divide(resize, state.OrigEnd - state.OrigStart);
                 resize += new Vector3(1, 1, 1);
-                var offset = -GetOriginForTransform(camera, state);
-                var trans = Matrix4x4.CreateTranslation(offset.X, offset.Y, offset.Z);
-                var scale = Matrix4x4.Multiply(trans, Matrix4x4.CreateScale(resize.X, resize.Y, resize.Z));
-                var inv = Matrix4x4.Invert(trans, out var i) ? i : Matrix4x4.Identity;
+                Vector3 offset = -GetOriginForTransform(camera, state);
+                Matrix4x4 trans = Matrix4x4.CreateTranslation(offset.X, offset.Y, offset.Z);
+                Matrix4x4 scale = Matrix4x4.Multiply(trans, Matrix4x4.CreateScale(resize.X, resize.Y, resize.Z));
+                Matrix4x4 inv = Matrix4x4.Invert(trans, out Matrix4x4 i) ? i : Matrix4x4.Identity;
                 resizeMatrix = Matrix4x4.Multiply(scale, inv);
             }
             return resizeMatrix;
@@ -95,7 +95,7 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
 
         public TextureTransformationType GetTextureTransformationType(MapDocument doc)
         {
-            var tl = doc.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+            TransformationFlags tl = doc.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
             if (Handle == ResizeHandle.Center && tl.TextureLock) return TextureTransformationType.Uniform;
             if (Handle != ResizeHandle.Center && tl.TextureScaleLock) return TextureTransformationType.Scale;
             return TextureTransformationType.None;
@@ -105,8 +105,8 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
         {
             float x = 0;
             float y = 0;
-            var cstart = camera.Flatten(state.OrigStart);
-            var cend = camera.Flatten(state.OrigEnd);
+            Vector3 cstart = camera.Flatten(state.OrigStart);
+            Vector3 cend = camera.Flatten(state.OrigEnd);
             switch (Handle)
             {
                 case ResizeHandle.TopLeft:

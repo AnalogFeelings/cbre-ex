@@ -46,29 +46,29 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var objects = document.Selection.OfType<Solid>().ToList();
-            
+            List<Solid> objects = document.Selection.OfType<Solid>().ToList();
+
             // Prompt the user for the wall width. If more than 1 solid is selected, show a little warning notice.
-            var qf = new QuickForm(PromptTitle) {UseShortcutKeys = true};
+            QuickForm qf = new QuickForm(PromptTitle) {UseShortcutKeys = true};
             if (objects.Count > 1) qf.Label(String.Format(WarningMessage, objects.Count));
             qf.NumericUpDown("Width", PromptWallWidth, -1024, 1024, 0, 32);
             qf.OkCancel(OK, Cancel);
 
             if (await qf.ShowDialogAsync() != DialogResult.OK) return;
 
-            var width = (float) qf.Decimal("Width");
+            float width = (float) qf.Decimal("Width");
 
-            var ops = new List<IOperation>();
+            List<IOperation> ops = new List<IOperation>();
 
-            foreach (var obj in objects)
+            foreach (Solid obj in objects)
             {
-                var split = false;
-                var solid = obj;
+                bool split = false;
+                Solid solid = obj;
 
                 // Make a scaled version of the solid for the "inside" of the hollowed solid
-                var origin = solid.BoundingBox.Center;
-                var current = obj.BoundingBox.Dimensions;
-                var target = current - new Vector3(width, width, width) * 2; // Double the width to take from both sides
+                Vector3 origin = solid.BoundingBox.Center;
+                Vector3 current = obj.BoundingBox.Dimensions;
+                Vector3 target = current - new Vector3(width, width, width) * 2; // Double the width to take from both sides
 
                 // Ensure we don't have any invalid target sizes
                 if (target.X < 1) target.X = 1;
@@ -76,20 +76,20 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
                 if (target.Z < 1) target.Z = 1;
 
                 // Clone and scale the solid
-                var scale = Vector3.Divide(target, current);
-                var carver = (Solid) solid.Clone();
+                Vector3 scale = Vector3.Divide(target, current);
+                Solid carver = (Solid) solid.Clone();
                 carver.Transform(Matrix4x4.CreateTranslation(-origin) * Matrix4x4.CreateScale(scale) * Matrix4x4.CreateTranslation(origin));
 
                 // For a negative width, we want the original solid to be the inside instead
                 if (width < 0)
                 {
-                    var temp = carver;
+                    Solid temp = carver;
                     carver = solid;
                     solid = temp;
                 }
 
                 // Carve the outside solid with the inside solid
-                foreach (var plane in carver.Faces.Select(x => x.Plane))
+                foreach (DataStructures.Geometric.Plane plane in carver.Faces.Select(x => x.Plane))
                 {
                     // Split solid by plane
                     Solid back, front;

@@ -41,15 +41,15 @@ namespace CBRE.Shell.Settings.Editors
         {
             // Technically a hack, but meh we're going to be using a singleton here anyway because we're lazy.
             // The whole thing's internal so stop judging me
-            var register = BaseForm.HotkeyRegister;
+            HotkeyRegister register = BaseForm.HotkeyRegister;
 
             HotkeyList.BeginUpdate();
-            var idx = HotkeyList.SelectedIndices.Count == 0 ? 0 : HotkeyList.SelectedIndices[0];
+            int idx = HotkeyList.SelectedIndices.Count == 0 ? 0 : HotkeyList.SelectedIndices[0];
 
             HotkeyList.Items.Clear();
-            foreach (var hotkey in FilterHotkeys(register.GetHotkeys(), FilterBox.Text).OrderBy(x => x.Name))
+            foreach (IHotkey hotkey in FilterHotkeys(register.GetHotkeys(), FilterBox.Text).OrderBy(x => x.Name))
             {
-                var binding = _bindings.ContainsKey(hotkey.ID) ? _bindings[hotkey.ID] : hotkey.DefaultHotkey;
+                string binding = _bindings.ContainsKey(hotkey.ID) ? _bindings[hotkey.ID] : hotkey.DefaultHotkey;
                 HotkeyList.Items.Add(new ListViewItem(new[] {hotkey.Name, hotkey.Description, binding}) {Tag = hotkey});
             }
 
@@ -61,7 +61,7 @@ namespace CBRE.Shell.Settings.Editors
             HotkeyActionList.BeginUpdate();
             idx = HotkeyActionList.SelectedIndex;
             HotkeyActionList.Items.Clear();
-            foreach (var hotkey in register.GetHotkeys().OrderBy(x => x.Name))
+            foreach (IHotkey hotkey in register.GetHotkeys().OrderBy(x => x.Name))
             {
                 HotkeyActionList.Items.Add(new HotkeyWrapper(hotkey));
             }
@@ -94,7 +94,7 @@ namespace CBRE.Shell.Settings.Editors
 
         private void HotkeySetButtonClicked(object sender, EventArgs e)
         {
-            var key = HotkeyCombination.Text;
+            string key = HotkeyCombination.Text;
             if (HotkeyActionList.SelectedIndex < 0 || String.IsNullOrWhiteSpace(key)) return;
 
             if (_bindings.ContainsValue(key))
@@ -106,7 +106,7 @@ namespace CBRE.Shell.Settings.Editors
                 // }
             }
 
-            var def = ((HotkeyWrapper)HotkeyActionList.SelectedItem).Hotkey;
+            IHotkey def = ((HotkeyWrapper)HotkeyActionList.SelectedItem).Hotkey;
             _bindings[def.ID] = key;
             HotkeyCombination.Text = "";
 
@@ -118,7 +118,7 @@ namespace CBRE.Shell.Settings.Editors
         {
             if (HotkeyActionList.SelectedIndex < 0) return;
 
-            var def = ((HotkeyWrapper)HotkeyActionList.SelectedItem).Hotkey;
+            IHotkey def = ((HotkeyWrapper)HotkeyActionList.SelectedItem).Hotkey;
             _bindings[def.ID] = "";
             HotkeyCombination.Text = "";
 
@@ -129,7 +129,7 @@ namespace CBRE.Shell.Settings.Editors
         private void HotkeyResetButtonClicked(object sender, EventArgs e)
         {
             _bindings.Clear();
-            foreach (var hk in BaseForm.HotkeyRegister.GetHotkeys())
+            foreach (IHotkey hk in BaseForm.HotkeyRegister.GetHotkeys())
             {
                 if (!String.IsNullOrWhiteSpace(hk.DefaultHotkey))
                 {
@@ -144,8 +144,8 @@ namespace CBRE.Shell.Settings.Editors
         {
             if (HotkeyList.SelectedItems.Count == 1)
             {
-                var hk = (IHotkey) HotkeyList.SelectedItems[0].Tag;
-                var str = _bindings.ContainsKey(hk.ID) ? _bindings[hk.ID] : "";
+                IHotkey hk = (IHotkey) HotkeyList.SelectedItems[0].Tag;
+                string str = _bindings.ContainsKey(hk.ID) ? _bindings[hk.ID] : "";
 
                 HotkeyActionList.SelectedItem = new HotkeyWrapper(hk);
                 HotkeyCombination.Text = str;

@@ -19,11 +19,11 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         private Box GetRectangle(ICamera camera)
         {
-            var start = camera.Flatten(BoxState.Start);
-            var end = camera.Flatten(BoxState.End);
-            var box = new Box(start, end);
-            var wid = Math.Min(box.Width / 10, camera.PixelsToUnits(20));
-            var len = Math.Min(box.Length / 10, camera.PixelsToUnits(20));
+            Vector3 start = camera.Flatten(BoxState.Start);
+            Vector3 end = camera.Flatten(BoxState.End);
+            Box box = new Box(start, end);
+            float wid = Math.Min(box.Width / 10, camera.PixelsToUnits(20));
+            float len = Math.Min(box.Length / 10, camera.PixelsToUnits(20));
             switch (Handle)
             {
                 case ResizeHandle.TopLeft:
@@ -53,8 +53,8 @@ namespace CBRE.BspEditor.Tools.Draggable
             ViewportEvent e, Vector3 position)
         {
             const int padding = 2;
-            var box = GetRectangle(viewport.Viewport.Camera);
-            var c = position;
+            Box box = GetRectangle(viewport.Viewport.Camera);
+            Vector3 c = position;
             return c.X >= box.Start.X - padding && c.Y >= box.Start.Y - padding && c.Z >= box.Start.Z - padding
                    && c.X <= box.End.X + padding && c.Y <= box.End.Y + padding && c.Z <= box.End.Z + padding;
         
@@ -62,26 +62,26 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         protected override Vector3 GetResizeOrigin(MapViewport viewport, OrthographicCamera camera, Vector3 position)
         {
-            var st = camera.Flatten(BoxState.Start);
-            var ed = camera.Flatten(BoxState.End);
-            var points = new[] { st, ed, new Vector3(st.X, ed.Y, 0), new Vector3(ed.X, st.Y, 0) };
+            Vector3 st = camera.Flatten(BoxState.Start);
+            Vector3 ed = camera.Flatten(BoxState.End);
+            Vector3[] points = new[] { st, ed, new Vector3(st.X, ed.Y, 0), new Vector3(ed.X, st.Y, 0) };
             return points.OrderBy(x => (position - x).LengthSquared()).First();
         }
 
         public override void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
             if (HighlightedViewport != viewport) return;
-            
-            var b = GetRectangle(camera);
-            var start = camera.WorldToScreen(camera.Expand(b.Start));
-            var end = camera.WorldToScreen(camera.Expand(b.End));
+
+            Box b = GetRectangle(camera);
+            Vector3 start = camera.WorldToScreen(camera.Expand(b.Start));
+            Vector3 end = camera.WorldToScreen(camera.Expand(b.End));
 
             im.AddRectFilled(start.ToVector2(), end.ToVector2(), State.FillColour);
 
             if (Handle == ResizeHandle.Center && SnappedMoveOrigin != null)
             {
                 const int size = 4;
-                var orig = camera.WorldToScreen(camera.Expand(SnappedMoveOrigin.Value));
+                Vector3 orig = camera.WorldToScreen(camera.Expand(SnappedMoveOrigin.Value));
 
                 im.AddLine(new Vector2(orig.X - size, orig.Y - size), new Vector2(orig.X + size, orig.Y + size), Color.Yellow, 1, false);
                 im.AddLine(new Vector2(orig.X + size, orig.Y - size), new Vector2(orig.X - size, orig.Y + size), Color.Yellow, 1, false);

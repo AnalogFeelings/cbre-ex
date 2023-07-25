@@ -63,8 +63,8 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
         private void ShowPointsChanged(object sender, EventArgs e)
         {
             VertexPointTool.VisiblePoints v;
-            var sp = ShowPointsCheckbox.Checked;
-            var smp = ShowMidpointsCheckbox.Checked;
+            bool sp = ShowPointsCheckbox.Checked;
+            bool smp = ShowMidpointsCheckbox.Checked;
 
             if (sp && smp)
             {
@@ -123,7 +123,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
 
         private void Tick()
         {
-            var tick = DateTime.Now.Ticks / 10000;
+            long tick = DateTime.Now.Ticks / 10000;
             _remaining -= (tick - _lastTick);
             _lastTick = tick;
             if (_remaining <= 0) _timer.Stop();
@@ -146,12 +146,12 @@ namespace CBRE.BspEditor.Tools.Vertex.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            var val = _easing.Evaluate((_remaining * 1d) / FadeTime);
+            double val = _easing.Evaluate((_remaining * 1d) / FadeTime);
             val = Math.Min(1, Math.Max(0, val));
-            var a = (int) (val * 255);
-            var c = Color.FromArgb(a, ForeColor);
+            int a = (int) (val * 255);
+            Color c = Color.FromArgb(a, ForeColor);
             
-            using (var brush = new SolidBrush(c))
+            using (SolidBrush brush = new SolidBrush(c))
             {
                 e.Graphics.DrawString(Text, Font, brush, ClientRectangle);
             }

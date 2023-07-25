@@ -29,15 +29,15 @@ namespace CBRE.BspEditor.Tools.Texture
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var md = context.Get<MapDocument>("ActiveDocument");
+            MapDocument md = context.Get<MapDocument>("ActiveDocument");
             if (md == null) return;
-            using (var tb = new TextureBrowser(md))
+            using (TextureBrowser tb = new TextureBrowser(md))
             {
                 await tb.Initialise(_translation.Value);
                 if (tb.ShowDialog() == DialogResult.OK && !String.IsNullOrWhiteSpace(tb.SelectedTexture))
                 {
-                    var tex = tb.SelectedTexture;
-                    var at = new ActiveTexture {Name = tex};
+                    string tex = tb.SelectedTexture;
+                    ActiveTexture at = new ActiveTexture {Name = tex};
                     MapDocumentOperation.Perform(md, new TrivialOperation(x => x.Map.Data.Replace(at), x => x.Update(at)));
                 }
             }

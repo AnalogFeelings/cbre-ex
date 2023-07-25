@@ -40,7 +40,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("Origin");
+            SerialisedObject so = new SerialisedObject("Origin");
             so.Set("Location", Location);
             return so;
         }

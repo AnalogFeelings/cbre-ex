@@ -25,16 +25,16 @@ namespace CBRE.DataStructures.Geometric.Precision
         /// </summary>
         public Polyhedron(IEnumerable<Plane> planes)
         {
-            var polygons = new List<Polygon>();
-            
-            var list = planes.ToList();
-            for (var i = 0; i < list.Count; i++)
+            List<Polygon> polygons = new List<Polygon>();
+
+            List<Plane> list = planes.ToList();
+            for (int i = 0; i < list.Count; i++)
             {
                 // Split the polygon by all the other planes
-                var poly = new Polygon(list[i]);
-                for (var j = 0; j < list.Count; j++)
+                Polygon poly = new Polygon(list[i]);
+                for (int j = 0; j < list.Count; j++)
                 {
-                    if (i != j && poly.Split(list[j], out var back, out _))
+                    if (i != j && poly.Split(list[j], out Polygon back, out _))
                     {
                         poly = back;
                     }
@@ -43,10 +43,10 @@ namespace CBRE.DataStructures.Geometric.Precision
             }
 
             // Ensure all the faces point outwards
-            var origin = polygons.Aggregate(Vector3.Zero, (x, y) => x + y.Origin) / polygons.Count;
-            for (var i = 0; i < polygons.Count; i++)
+            Vector3 origin = polygons.Aggregate(Vector3.Zero, (x, y) => x + y.Origin) / polygons.Count;
+            for (int i = 0; i < polygons.Count; i++)
             {
-                var face = polygons[i];
+                Polygon face = polygons[i];
                 if (face.Plane.OnPlane(origin) >= 0) polygons[i] = new Polygon(face.Vertices.Reverse());
             }
 
@@ -65,7 +65,7 @@ namespace CBRE.DataStructures.Geometric.Precision
             back = front = null;
 
             // Check that this solid actually spans the plane
-            var classify = Polygons.Select(x => x.ClassifyAgainstPlane(plane)).Distinct().ToList();
+            List<PlaneClassification> classify = Polygons.Select(x => x.ClassifyAgainstPlane(plane)).Distinct().ToList();
             if (classify.All(x => x != PlaneClassification.Spanning))
             {
                 if (classify.Any(x => x == PlaneClassification.Back)) back = this;
@@ -73,12 +73,12 @@ namespace CBRE.DataStructures.Geometric.Precision
                 return false;
             }
 
-            var backPlanes = new List<Plane> { plane };
-            var frontPlanes = new List<Plane> { new Plane(-plane.Normal, -plane.DistanceFromOrigin) };
+            List<Plane> backPlanes = new List<Plane> { plane };
+            List<Plane> frontPlanes = new List<Plane> { new Plane(-plane.Normal, -plane.DistanceFromOrigin) };
 
-            foreach (var face in Polygons)
+            foreach (Polygon face in Polygons)
             {
-                var classification = face.ClassifyAgainstPlane(plane);
+                PlaneClassification classification = face.ClassifyAgainstPlane(plane);
                 if (classification != PlaneClassification.Back) frontPlanes.Add(face.Plane);
                 if (classification != PlaneClassification.Front) backPlanes.Add(face.Plane);
             }

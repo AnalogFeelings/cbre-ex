@@ -18,13 +18,13 @@ namespace CBRE.Common.Extensions
         {
             if (splitCharacters == null) splitCharacters = new[] { ' ', '\t' };
 
-            var result = new List<string>();
+            List<string> result = new List<string>();
 
             int i;
             for (i = 0; i < line.Length; i++)
             {
-                var split = line.IndexOfAny(splitCharacters, i);
-                var quote = line.IndexOf(quoteChar, i);
+                int split = line.IndexOfAny(splitCharacters, i);
+                int quote = line.IndexOf(quoteChar, i);
 
                 if (split < 0) split = line.Length;
                 if (quote < 0) quote = line.Length;
@@ -32,7 +32,7 @@ namespace CBRE.Common.Extensions
                 if (quote < split)
                 {
                     if (quote > i) result.Add(line.Substring(i, quote));
-                    var nextQuote = line.IndexOf(quoteChar, quote + 1);
+                    int nextQuote = line.IndexOf(quoteChar, quote + 1);
                     if (nextQuote < 0) nextQuote = line.Length;
                     result.Add(line.Substring(quote + 1, nextQuote - quote - 1));
                     i = nextQuote;

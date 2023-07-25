@@ -27,7 +27,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         {
             get
             {
-                var list = GetDraggables().ToList();
+                List<IDraggable> list = GetDraggables().ToList();
                 return list.Aggregate(Vector3.Zero, (a, b) => a + b.Origin) / list.Count();
             }
         }
@@ -36,7 +36,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         {
             get
             {
-                var list = GetDraggables().ToList();
+                List<IDraggable> list = GetDraggables().ToList();
                 return list.Aggregate(Vector3.Zero, (a, b) => a + b.ZIndex) / list.Count();
             }
         }

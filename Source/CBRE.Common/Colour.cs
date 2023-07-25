@@ -127,7 +127,7 @@ namespace CBRE.Common
         public static Color GetIdealForegroundColour(this Color color)
         {
             // https://stackoverflow.com/a/1855903
-            var luminance = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
+            double luminance = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
             return luminance > 0.5 ? Color.Black : Color.White;
         }
 

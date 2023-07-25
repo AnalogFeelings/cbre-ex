@@ -35,7 +35,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("DisplayFlags");
+            SerialisedObject so = new SerialisedObject("DisplayFlags");
             so.Set("HideNullTextures", HideNullTextures);
             so.Set("HideDisplacementSolids", HideDisplacementSolids);
             return so;

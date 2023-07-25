@@ -31,7 +31,7 @@ namespace CBRE.DataStructures.GameData
 
         public void Inherit(IEnumerable<GameDataObject> parents)
         {
-            foreach (var gdo in parents)
+            foreach (GameDataObject gdo in parents)
             {
                 MergeBehaviours(gdo.Behaviours);
                 MergeProperties(gdo.Properties);
@@ -41,20 +41,20 @@ namespace CBRE.DataStructures.GameData
 
         private void MergeInOuts(IEnumerable<IO> inOuts)
         {
-            var inc = 0;
-            foreach (var io in inOuts)
+            int inc = 0;
+            foreach (IO io in inOuts)
             {
-                var existing = InOuts.FirstOrDefault(x => x.IOType == io.IOType && x.Name == io.Name);
+                IO existing = InOuts.FirstOrDefault(x => x.IOType == io.IOType && x.Name == io.Name);
                 if (existing == null) InOuts.Insert(inc++, io);
             }
         }
 
         private void MergeProperties(IEnumerable<Property> properties)
         {
-            var inc = 0;
-            foreach (var p in properties)
+            int inc = 0;
+            foreach (Property p in properties)
             {
-                var existing = Properties.FirstOrDefault(x => x.Name == p.Name);
+                Property existing = Properties.FirstOrDefault(x => x.Name == p.Name);
                 if (existing != null) existing.Options.AddRange(p.Options.Where(x => !existing.Options.Contains(x)));
                 else Properties.Insert(inc++, p);
             }
@@ -62,10 +62,10 @@ namespace CBRE.DataStructures.GameData
 
         private void MergeBehaviours(IEnumerable<Behaviour> behaviours)
         {
-            var inc = 0;
-            foreach (var b in behaviours)
+            int inc = 0;
+            foreach (Behaviour b in behaviours)
             {
-                var existing = Behaviours.FirstOrDefault(x => x.Name == b.Name);
+                Behaviour existing = Behaviours.FirstOrDefault(x => x.Name == b.Name);
                 if (existing != null) existing.Values.AddRange(b.Values.Where(x => !existing.Values.Contains(x)));
                 else Behaviours.Insert(inc++, b);
             }

@@ -62,7 +62,7 @@ namespace CBRE.BspEditor.Tools.Texture
             set
             {
                 _document = new WeakReference<MapDocument>(value);
-                var precision = 4; // todo post-beta: environment-specific texture values precision
+                int precision = 4; // todo post-beta: environment-specific texture values precision
                                    // _document != null && _document.Game != null && _document.Game.Engine == Engine.Goldsource ? 2 : 4;
                 ScaleXValue.DecimalPlaces = ScaleYValue.DecimalPlaces = precision;
             }
@@ -109,7 +109,7 @@ namespace CBRE.BspEditor.Tools.Texture
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -164,7 +164,7 @@ namespace CBRE.BspEditor.Tools.Texture
         {
             if (!(e.ClickedItem.Tag is ClickAction)) return;
 
-            var action = (ClickAction) e.ClickedItem.Tag;
+            ClickAction action = (ClickAction) e.ClickedItem.Tag;
             LeftClickActionButton.Text = $@"{LeftClick}: {e.ClickedItem.Text}";
             Oy.Publish("BspEditor:TextureTool:SetLeftClickAction", action);
         }
@@ -173,7 +173,7 @@ namespace CBRE.BspEditor.Tools.Texture
         {
             if (!(e.ClickedItem.Tag is ClickAction)) return;
 
-            var action = (ClickAction) e.ClickedItem.Tag;
+            ClickAction action = (ClickAction) e.ClickedItem.Tag;
             RightClickActionButton.Text = $@"{RightClick}: {e.ClickedItem.Text}";
             Oy.Publish("BspEditor:TextureTool:SetRightClickAction", action);
         }
@@ -211,11 +211,11 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task SetDocument(IDocument doc)
         {
-            var md = doc as MapDocument;
+            MapDocument md = doc as MapDocument;
             Document = md;
             if (md != null)
             {
-                var tc = await md.Environment.GetTextureCollection();
+                Environment.TextureCollection tc = await md.Environment.GetTextureCollection();
                 SelectedTexturesList.Collection = tc;
                 RecentTexturesList.Collection = tc;
             }
@@ -232,7 +232,7 @@ namespace CBRE.BspEditor.Tools.Texture
             {
                 if (change.HasDataChanges && change.AffectedData.Any(x => x is ActiveTexture))
                 {
-                    var at = t.Map.Data.GetOne<ActiveTexture>()?.Name;
+                    string at = t.Map.Data.GetOne<ActiveTexture>()?.Name;
                     ActiveTextureChanged(at);
                 }
                 else if (change.HasObjectChanges && change.Updated.Intersect(GetFaceSelection().GetSelectedParents()).Any())
@@ -280,7 +280,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         public FaceSelection GetFaceSelection()
         {
-            var fs = Document.Map.Data.GetOne<FaceSelection>();
+            FaceSelection fs = Document.Map.Data.GetOne<FaceSelection>();
             if (fs == null)
             {
                 fs = new FaceSelection();
@@ -295,8 +295,8 @@ namespace CBRE.BspEditor.Tools.Texture
 
             _freeze = true;
 
-            var selection = sel.ToList();
-            var item = selection.FirstOrDefault();
+            List<string> selection = sel.ToList();
+            string item = selection.FirstOrDefault();
 
             if (selection.Any())
             {
@@ -311,18 +311,18 @@ namespace CBRE.BspEditor.Tools.Texture
                     .FirstOrDefault();
             }
 
-            var label = "";
-            var d = Document;
+            string label = "";
+            MapDocument d = Document;
             if (item != null && d != null)
             {
-                var tex = await d.Environment.GetTextureCollection();
-                var ti = await tex.GetTextureItem(item);
+                Environment.TextureCollection tex = await d.Environment.GetTextureCollection();
+                CBRE.Providers.Texture.TextureItem ti = await tex.GetTextureItem(item);
                 if (ti != null)
                 {
                     label = $"{ti.Name} ({ti.Width} x {ti.Height})";
                 }
 
-                var at = new ActiveTexture {Name = item};
+                ActiveTexture at = new ActiveTexture {Name = item};
                 await MapDocumentOperation.Perform(Document, new TrivialOperation(x => x.Map.Data.Replace(at), x => x.Update(at)));
             }
 
@@ -355,7 +355,7 @@ namespace CBRE.BspEditor.Tools.Texture
             UpdateRecentTextureList();
 
             // If the texture is in the list of selected faces, select the texture in that list
-            var sl = SelectedTexturesList.GetTextureList();
+            IEnumerable<string> sl = SelectedTexturesList.GetTextureList();
             if (sl.Any(x => String.Equals(x, item, StringComparison.InvariantCultureIgnoreCase)))
             {
                 SelectedTexturesList.SetHighlightedTextures(new[] { item });
@@ -380,28 +380,28 @@ namespace CBRE.BspEditor.Tools.Texture
             // The list of selected faces has changed - update the texture properties to match the selection
             _freeze = true;
 
-            var faces = GetFaceSelection();
+            FaceSelection faces = GetFaceSelection();
             _currentTextureProperties.Reset(faces);
 
-            var textures = new List<string>();
+            List<string> textures = new List<string>();
 
-            foreach (var face in faces)
+            foreach (Face face in faces)
             {
-                var tex = face.Texture;
+                Primitives.Texture tex = face.Texture;
 
-                var name = tex.Name;
+                string name = tex.Name;
                 if (textures.Any(x => String.Equals(x, name, StringComparison.InvariantCultureIgnoreCase))) continue;
                 
                 textures.Add(name);
             }
 
-            var labelText = "";
-            var d = Document;
+            string labelText = "";
+            MapDocument d = Document;
             if (textures.Any() && d != null)
             {
-                var t = textures[0];
-                var tc = await d.Environment.GetTextureCollection();
-                var ti = await tc.GetTextureItem(t);
+                string t = textures[0];
+                Environment.TextureCollection tc = await d.Environment.GetTextureCollection();
+                CBRE.Providers.Texture.TextureItem ti = await tc.GetTextureItem(t);
                 labelText = ti == null ? $"{t}" : $"{ti.Name} ({ti.Width} x {ti.Height})";
             }
             
@@ -466,9 +466,9 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void ApplyPropertyChanges(bool trivial)
         {
-            var edit = new Transaction();
+            Transaction edit = new Transaction();
 
-            var sel = GetFaceSelection();
+            FaceSelection sel = GetFaceSelection();
             if (trivial)
             {
                 // Remember the state before the last change
@@ -479,14 +479,14 @@ namespace CBRE.BspEditor.Tools.Texture
                 edit.Add(new TrivialOperation(
                     x =>
                     {
-                        foreach (var it in sel.GetSelectedFaces())
+                        foreach (KeyValuePair<IMapObject, Face> it in sel.GetSelectedFaces())
                         {
                             ApplyFaceValues(it.Value);
                         }
                     },
                     x =>
                     {
-                        foreach (var p in sel.GetSelectedParents())
+                        foreach (IMapObject p in sel.GetSelectedParents())
                         {
                             x.Update(p);
                         }
@@ -495,16 +495,16 @@ namespace CBRE.BspEditor.Tools.Texture
             }
             else
             {
-                foreach (var it in sel.GetSelectedFaces())
+                foreach (KeyValuePair<IMapObject, Face> it in sel.GetSelectedFaces())
                 {
                     // Restore the last committed values
                     if (_memoTextures != null && _memoTextures.ContainsKey(it.Value))
                     {
-                        var k = _memoTextures[it.Value];
+                        Primitives.Texture k = _memoTextures[it.Value];
                         it.Value.Texture.Unclone(k);
                     }
 
-                    var clone = (Face) it.Value.Clone();
+                    Face clone = (Face) it.Value.Clone();
                     ApplyFaceValues(clone);
 
                     edit.Add(new RemoveMapObjectData(it.Key.ID, it.Value));
@@ -520,21 +520,21 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void ApplyButtonClicked(object sender, EventArgs e)
         {
-            var item = GetFirstSelectedTexture();
+            string item = GetFirstSelectedTexture();
             ApplyTexture(item);
         }
 
         private async Task ApplyChanges(Func<IMapObject, Face, Task<bool>> apply)
         {
-            var sel = GetFaceSelection();
+            FaceSelection sel = GetFaceSelection();
 
-            var edit = new Transaction();
-            var found = false;
+            Transaction edit = new Transaction();
+            bool found = false;
 
-            foreach (var it in sel.GetSelectedFaces())
+            foreach (KeyValuePair<IMapObject, Face> it in sel.GetSelectedFaces())
             {
-                var clone = (Face)it.Value.Clone();
-                var result = await apply(it.Key, clone);
+                Face clone = (Face)it.Value.Clone();
+                bool result = await apply(it.Key, clone);
                 if (!result) continue;
 
                 found = true;
@@ -610,18 +610,18 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task Justify(BoxAlignMode mode, bool fit)
         {
-            var sel = GetFaceSelection();
+            FaceSelection sel = GetFaceSelection();
             if (sel.IsEmpty) return;
             
             Cloud cloud = null;
             if (ShouldTreatAsOne()) cloud = new Cloud(sel.GetSelectedFaces().SelectMany(x => x.Value.Vertices));
 
-            var tc = await Document.Environment.GetTextureCollection();
+            Environment.TextureCollection tc = await Document.Environment.GetTextureCollection();
             if (tc == null) return;
             
             await ApplyChanges(async (mo, f) =>
             {
-                var tex = await tc.GetTextureItem(f.Texture.Name);
+                CBRE.Providers.Texture.TextureItem tex = await tc.GetTextureItem(f.Texture.Name);
                 if (tex == null) return false;
 
                 if (fit) f.Texture.FitToPointCloud(tex.Width, tex.Height, cloud ?? new Cloud(f.Vertices), 1, 1);
@@ -659,7 +659,7 @@ namespace CBRE.BspEditor.Tools.Texture
         private void HideMaskCheckboxToggled(object sender, EventArgs e)
         {
             if (_freeze) return;
-            var data = Document.Map.Data.GetOne<HideFaceMask>() ?? new HideFaceMask();
+            HideFaceMask data = Document.Map.Data.GetOne<HideFaceMask>() ?? new HideFaceMask();
             data = new HideFaceMask {Hidden = !data.Hidden};
             MapDocumentOperation.Perform(Document, new TrivialOperation(x => x.Map.Data.Replace(data), x => x.Update(data)));
         }
@@ -725,7 +725,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private void FocusTextInControl(object sender, EventArgs e)
         {
-            var nud = sender as NumericUpDown;
+            NumericUpDown nud = sender as NumericUpDown;
             nud?.Select(0, nud.Text.Length);
         }
 
@@ -767,9 +767,9 @@ namespace CBRE.BspEditor.Tools.Texture
             public void Reset(IEnumerable<Face> faces)
             {
                 Reset();
-                var num = 0;
+                int num = 0;
                 AllAlignedToWorld = NoneAlignedToWorld = AllAlignedToFace = NoneAlignedToFace = true;
-                foreach (var face in faces)
+                foreach (Face face in faces)
                 {
                     if (face.Texture.IsAlignedToNormal(face.Plane.Normal)) NoneAlignedToFace = false;
                     else AllAlignedToFace = false;

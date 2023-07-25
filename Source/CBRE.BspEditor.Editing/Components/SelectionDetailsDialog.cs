@@ -62,7 +62,7 @@ namespace CBRE.BspEditor.Editing.Components
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -110,10 +110,10 @@ namespace CBRE.BspEditor.Editing.Components
 
                 SelectionTree.Nodes.Clear();
 
-                var doc = _context.Get<MapDocument>("ActiveDocument");
+                MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
                 if (doc != null)
                 {
-                    foreach (var root in doc.Selection.GetSelectedParents())
+                    foreach (IMapObject root in doc.Selection.GetSelectedParents())
                     {
                         SelectionTree.Nodes.Add(CreateNode(root));
                     }
@@ -126,11 +126,11 @@ namespace CBRE.BspEditor.Editing.Components
 
         private TreeNode CreateNode(IMapObject obj)
         {
-            var node = new TreeNode(GetNodeText(obj));
+            TreeNode node = new TreeNode(GetNodeText(obj));
 
-            foreach (var child in obj.Hierarchy)
+            foreach (IMapObject child in obj.Hierarchy)
             {
-                var c = CreateNode(child);
+                TreeNode c = CreateNode(child);
                 node.Nodes.Add(c);
             }
 
@@ -139,13 +139,13 @@ namespace CBRE.BspEditor.Editing.Components
 
         private string GetNodeText(IMapObject obj)
         {
-            var text = obj.ID + " - " + obj.GetType().Name;
+            string text = obj.ID + " - " + obj.GetType().Name;
 
-            var ed = obj.Data.GetOne<EntityData>();
+            EntityData ed = obj.Data.GetOne<EntityData>();
             if (ed != null)
             {
                 if (!String.IsNullOrWhiteSpace(ed.Name)) text += " - " + ed.Name;
-                var tn = ed.Get<string>("targetname") ?? ed.Get<string>("name");
+                string tn = ed.Get<string>("targetname") ?? ed.Get<string>("name");
                 if (!String.IsNullOrWhiteSpace(tn)) text += " - " + tn;
             }
 

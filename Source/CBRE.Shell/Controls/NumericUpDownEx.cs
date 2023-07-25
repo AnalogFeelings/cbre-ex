@@ -42,8 +42,8 @@ namespace CBRE.Shell.Controls
             if (e is HandledMouseEventArgs hme) hme.Handled = true;
 
             // Determine the increment
-            var wi = WheelIncrement == 0 ? Increment : WheelIncrement;
-            var inc = 0m;
+            decimal wi = WheelIncrement == 0 ? Increment : WheelIncrement;
+            decimal inc = 0m;
             if (e.Delta < 0) inc = -wi;
             else if (e.Delta > 0) inc = wi;
 

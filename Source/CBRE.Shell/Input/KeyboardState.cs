@@ -93,11 +93,11 @@ namespace CBRE.Shell.Input
         public static string KeysToString(Keys key)
         {
             // KeysConverter seems to ignore the invariant culture, manually replicate the results
-            var mods = key & Keys.Modifiers;
-            var keycode = key & Keys.KeyCode;
+            Keys mods = key & Keys.Modifiers;
+            Keys keycode = key & Keys.KeyCode;
             if (keycode == Keys.None) return "";
 
-            var str = keycode.ToString();
+            string str = keycode.ToString();
             if (KeyStringReplacements.ContainsKey(str)) str = KeyStringReplacements[str];
 
             // Modifier order: Ctrl+Alt+Shift+Key

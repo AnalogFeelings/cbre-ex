@@ -27,12 +27,12 @@ namespace CBRE.BspEditor.Modification.Operations.Tree
 
         public async Task<Change> Perform(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var par = document.Map.Root.FindByID(_parentId);
+            IMapObject par = document.Map.Root.FindByID(_parentId);
             _detatchedObjects = _idsToDetatch.Select(x => par.FindByID(x)).Where(x => x != null).ToList();
 
-            foreach (var o in _detatchedObjects)
+            foreach (IMapObject o in _detatchedObjects)
             {
                 // Remove parent
                 ch.Remove(o);
@@ -49,12 +49,12 @@ namespace CBRE.BspEditor.Modification.Operations.Tree
 
         public async Task<Change> Reverse(MapDocument document)
         {
-            var ch = new Change(document);
+            Change ch = new Change(document);
 
-            var par = document.Map.Root.FindByID(_parentId);
+            IMapObject par = document.Map.Root.FindByID(_parentId);
             _idsToDetatch = _detatchedObjects.Select(x => x.ID).ToList();
 
-            foreach (var o in _detatchedObjects)
+            foreach (IMapObject o in _detatchedObjects)
             {
                 // Add parent
                 ch.Add(o);

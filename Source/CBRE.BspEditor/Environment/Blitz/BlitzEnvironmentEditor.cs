@@ -136,7 +136,7 @@ namespace CBRE.BspEditor.Environment.Blitz
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
 
             grpDirectories.Text = strings.GetString(prefix, "Directories");
             grpFgds.Text = strings.GetString(prefix, "Settings");

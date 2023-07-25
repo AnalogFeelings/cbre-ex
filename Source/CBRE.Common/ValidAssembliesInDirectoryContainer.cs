@@ -21,10 +21,10 @@ namespace CBRE.Common
 
         private AggregateCatalog CreateInnerCatalog()
         {
-            var parts = new List<ComposablePartCatalog>();
+            List<ComposablePartCatalog> parts = new List<ComposablePartCatalog>();
 
-            var dir = _directory;
-            foreach (var dll in Directory.GetFiles(dir, "*.dll").Union(Directory.GetFiles(dir, "*.exe")))
+            string dir = _directory;
+            foreach (string dll in Directory.GetFiles(dir, "*.dll").Union(Directory.GetFiles(dir, "*.exe")))
             {
                 try
                 {

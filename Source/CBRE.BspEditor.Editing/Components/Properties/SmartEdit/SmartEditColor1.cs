@@ -19,7 +19,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
             _textBox.TextChanged += (sender, e) => OnValueChanged();
             Controls.Add(_textBox);
 
-            var btn = new Button { Image = Resources.Button_ColourPicker, Text = "", Margin = new Padding(1), Width = 24, Height = 24 };
+            Button btn = new Button { Image = Resources.Button_ColourPicker, Text = "", Margin = new Padding(1), Width = 24, Height = 24 };
             btn.Click += OpenColorPicker;
             Controls.Add(btn);
         }
@@ -33,7 +33,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
 
         private void OpenColorPicker(object sender, EventArgs e)
         {
-            var spl = _textBox.Text.Split(' ');
+            string[] spl = _textBox.Text.Split(' ');
             float r = 0, g = 0, b = 0;
             if (spl.Length >= 3)
             {
@@ -44,7 +44,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
             r *= 255;
             g *= 255;
             b *= 255;
-            using (var cd = new ColorDialog { Color = Color.FromArgb((int)r, (int)g, (int)b) })
+            using (ColorDialog cd = new ColorDialog { Color = Color.FromArgb((int)r, (int)g, (int)b) })
             {
                 if (cd.ShowDialog() == DialogResult.OK)
                 {

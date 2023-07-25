@@ -15,18 +15,18 @@ namespace CBRE.BspEditor.Editing.Components.Compile.Specification
 
         public async Task<IEnumerable<CompileSpecification>> GetSpecifications()
         {
-            var specs = new List<CompileSpecification>();
+            List<CompileSpecification> specs = new List<CompileSpecification>();
 
-            var specFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Specifications");
+            string specFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Specifications");
             if (!Directory.Exists(specFolder)) return specs;
 
-            foreach (var file in Directory.GetFiles(specFolder, "*.vdf"))
+            foreach (string file in Directory.GetFiles(specFolder, "*.vdf"))
             {
                 try
                 {
-                    using (var f = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (FileStream f = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        var gs = _parser.Deserialize(f).ToList();
+                        List<SerialisedObject> gs = _parser.Deserialize(f).ToList();
                         specs.AddRange(gs.Where(x => x.Name == "Specification").Select(CompileSpecification.Parse));
                     }
                 }

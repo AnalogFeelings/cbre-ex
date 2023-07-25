@@ -30,17 +30,17 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         public void Render(RenderContext context, IPipeline pipeline, IViewport viewport, CommandList cl)
         {
-            var builders = _sceneBuilder.BufferBuilders.ToList();
-            foreach (var buffer in builders)
+            List<BufferBuilder> builders = _sceneBuilder.BufferBuilders.ToList();
+            foreach (BufferBuilder buffer in builders)
             {
-                for (var i = 0; i < buffer.NumBuffers; i++)
+                for (int i = 0; i < buffer.NumBuffers; i++)
                 {
-                    var groups = buffer.IndirectBufferGroups[i].Where(x => x.Pipeline == pipeline.Type && !x.HasTransparency).Where(x => x.Camera == CameraType.Both || x.Camera == viewport.Camera.Type).ToList();
+                    List<BufferGroup> groups = buffer.IndirectBufferGroups[i].Where(x => x.Pipeline == pipeline.Type && !x.HasTransparency).Where(x => x.Camera == CameraType.Both || x.Camera == viewport.Camera.Type).ToList();
                     if (!groups.Any()) continue;
 
                     cl.SetVertexBuffer(0, buffer.VertexBuffers[i]);
                     cl.SetIndexBuffer(buffer.IndexBuffers[i], IndexFormat.UInt32);
-                    foreach (var bg in groups)
+                    foreach (BufferGroup bg in groups)
                     {
                         pipeline.Bind(context, cl, bg.Binding);
                         buffer.IndirectBuffers[i].DrawIndexed(cl, bg.Offset * IndSize, bg.Count, 20);
@@ -51,11 +51,11 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         public IEnumerable<ILocation> GetLocationObjects(IPipeline pipeline, IViewport viewport)
         {
-            foreach (var buffer in _sceneBuilder.BufferBuilders)
+            foreach (BufferBuilder buffer in _sceneBuilder.BufferBuilders)
             {
-                for (var i = 0; i < buffer.NumBuffers; i++)
+                for (int i = 0; i < buffer.NumBuffers; i++)
                 {
-                    foreach (var group in buffer.IndirectBufferGroups[i])
+                    foreach (BufferGroup group in buffer.IndirectBufferGroups[i])
                     {
                         if (group.Pipeline != pipeline.Type || !group.HasTransparency) continue;
                         if (group.Camera != CameraType.Both && group.Camera != viewport.Camera.Type) continue;
@@ -67,11 +67,11 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         public void Render(RenderContext context, IPipeline pipeline, IViewport viewport, CommandList cl, ILocation locationObject)
         {
-            var groupLocation = (GroupLocation) locationObject;
+            GroupLocation groupLocation = (GroupLocation) locationObject;
 
-            var buffer = groupLocation.Builder;
-            var i = groupLocation.Index;
-            var bg = groupLocation.Group;
+            BufferBuilder buffer = groupLocation.Builder;
+            int i = groupLocation.Index;
+            BufferGroup bg = groupLocation.Group;
 
             cl.SetVertexBuffer(0, buffer.VertexBuffers[i]);
             cl.SetIndexBuffer(buffer.IndexBuffers[i], IndexFormat.UInt32);

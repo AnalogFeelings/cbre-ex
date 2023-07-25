@@ -63,7 +63,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
 
         private FileSystemBrowserDialog CreateDialog(IFile root)
         {
-            var fs = new FileSystemBrowserDialog(
+            FileSystemBrowserDialog fs = new FileSystemBrowserDialog(
                 Property.VariableType == VariableType.Sound
                     ? root.GetChild("sound")
                     : root
@@ -88,13 +88,13 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
 
         private void OpenModelBrowser(object sender, EventArgs e)
         {
-            if (!_root.TryGetTarget(out var rt)) return;
+            if (!_root.TryGetTarget(out IFile rt)) return;
 
-            using (var fb = CreateDialog(rt))
+            using (FileSystemBrowserDialog fb = CreateDialog(rt))
             {
                 if (fb.ShowDialog() == DialogResult.OK && fb.SelectedFiles.Any())
                 {
-                    var f = fb.SelectedFiles.First();
+                    IFile f = fb.SelectedFiles.First();
                     _textBox.Text = GetPath(f);
                 }
             }
@@ -102,12 +102,12 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
 
         private void PreviewSelection(object sender, EventArgs e)
         {
-            if (!_root.TryGetTarget(out var rt)) return;
+            if (!_root.TryGetTarget(out IFile rt)) return;
 
-            var path = _textBox.Text;
+            string path = _textBox.Text;
             if (Property.VariableType == VariableType.Sound) path = "sound/" + path;
 
-            var file = rt.TraversePath(path);
+            IFile file = rt.TraversePath(path);
             if (file == null || !file.Exists) return;
 
             switch (file.Extension?.ToLower())
@@ -126,7 +126,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
             try
             {
                 ms = new MemoryStream();
-                using (var stream = audioFile.Open()) stream.CopyTo(ms);
+                using (Stream stream = audioFile.Open()) stream.CopyTo(ms);
                 ms.Seek(0, SeekOrigin.Begin);
             }
             catch (Exception e)
@@ -141,7 +141,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
                 {
                     try
                     {
-                        using (var player = new SoundPlayer(ms))
+                        using (SoundPlayer player = new SoundPlayer(ms))
                         {
                             player.PlaySync();
                         }
@@ -156,7 +156,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.SmartEdit
 
         private string GetPath(IFile file)
         {
-            var path = "";
+            string path = "";
             while (file != null && !(file is RootFile))
             {
                 if (Property.VariableType == VariableType.Sound && file.Name.ToLower() == "sound" && (file.Parent == null || file.Parent is RootFile)) break;

@@ -46,9 +46,9 @@ namespace CBRE.Shell.Controls
         protected override void OnMouseDown(MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Middle) return;
-            for (var i = 0; i < TabPages.Count; i++)
+            for (int i = 0; i < TabPages.Count; i++)
             {
-                var rect = e.Button == MouseButtons.Left ? GetCloseRect(i) : GetTabRect(i);
+                Rectangle rect = e.Button == MouseButtons.Left ? GetCloseRect(i) : GetTabRect(i);
                 if (!rect.Contains(e.Location)) continue;
                 OnRequestClose(i);
                 break;
@@ -67,10 +67,10 @@ namespace CBRE.Shell.Controls
         {
             if (!DesignMode && (m.Msg == WM_LBUTTONDOWN || m.Msg == WM_MBUTTONDOWN))
             {
-                var pt = PointToClient(Cursor.Position);
-                for (var i = 0; i < TabPages.Count; i++)
+                Point pt = PointToClient(Cursor.Position);
+                for (int i = 0; i < TabPages.Count; i++)
                 {
-                    var rect = m.Msg == WM_LBUTTONDOWN ? GetCloseRect(i) : GetTabRect(i);
+                    Rectangle rect = m.Msg == WM_LBUTTONDOWN ? GetCloseRect(i) : GetTabRect(i);
                     if (!rect.Contains(pt)) continue;
                     m.Msg = WM_NULL;
                     OnRequestClose(i);
@@ -89,32 +89,32 @@ namespace CBRE.Shell.Controls
         {
             if (!Visible) return;
 
-            using (var b = new SolidBrush(BackColor))
+            using (SolidBrush b = new SolidBrush(BackColor))
             {
                 g.FillRectangle(b, ClientRectangle);
             }
 
-            var display = new Rectangle(DisplayRectangle.Location, DisplayRectangle.Size);
+            Rectangle display = new Rectangle(DisplayRectangle.Location, DisplayRectangle.Size);
             if (TabPages.Count == 0) display.Y += 21;
 
-            var border = SystemInformation.Border3DSize.Width;
+            int border = SystemInformation.Border3DSize.Width;
             display.Inflate(border, border);
             g.DrawLine(SystemPens.ControlDark, display.X, display.Y, display.X + display.Width, display.Y);
 
-            var clip = g.Clip;
+            Region clip = g.Clip;
             g.SetClip(new Rectangle(display.Left, ClientRectangle.Top, display.Width, ClientRectangle.Height));
 
-            for (var i = 0; i < TabPages.Count; i++) RenderTab(g, i);
+            for (int i = 0; i < TabPages.Count; i++) RenderTab(g, i);
 
             g.Clip = clip;
         }
 
         private void RenderTab(Graphics g, int index)
         {
-            var rect = GetTabRect(index);
-            var closeRect = GetCloseRect(index);
-            var selected = SelectedIndex == index;
-            var tab = TabPages[index];
+            Rectangle rect = GetTabRect(index);
+            Rectangle closeRect = GetCloseRect(index);
+            bool selected = SelectedIndex == index;
+            TabPage tab = TabPages[index];
 
             Point[] points = new[]
             {
@@ -135,15 +135,15 @@ namespace CBRE.Shell.Controls
             };
 
             // Background
-            var p = PointToClient(MousePosition);
-            var hoverClose = closeRect.Contains(p);
-            var hover = rect.Contains(p);
-            var backColour = tab.BackColor;
+            Point p = PointToClient(MousePosition);
+            bool hoverClose = closeRect.Contains(p);
+            bool hover = rect.Contains(p);
+            Color backColour = tab.BackColor;
 
             if (selected) backColour = ControlPaint.Light(backColour, 1);
             else if (hover) backColour = ControlPaint.Light(backColour, 0.8f);
 
-            using (var b = new SolidBrush(backColour))
+            using (SolidBrush b = new SolidBrush(backColour))
             {
                 g.FillPolygon(b, selected ? points : pointsUnselected);
             }
@@ -153,7 +153,7 @@ namespace CBRE.Shell.Controls
             g.DrawPolygon(SystemPens.ControlDark, selected ? points : pointsUnselected);
             if (selected)
             {
-                using (var pen = new Pen(tab.BackColor))
+                using (Pen pen = new Pen(tab.BackColor))
                 {
                     g.DrawLine(pen, rect.Left, rect.Bottom, rect.Right, rect.Bottom);
                 }
@@ -167,13 +167,13 @@ namespace CBRE.Shell.Controls
             }
 
             // Text
-            var sf = new StringFormat(StringFormatFlags.NoWrap);
-            var textWidth = (int) g.MeasureString(tab.Text, Font, SizeF.Empty, sf).Width;
-            var textLeft = rect.X + 18;
-            var textRight = rect.Right - 26;
+            StringFormat sf = new StringFormat(StringFormatFlags.NoWrap);
+            int textWidth = (int) g.MeasureString(tab.Text, Font, SizeF.Empty, sf).Width;
+            int textLeft = rect.X + 18;
+            int textRight = rect.Right - 26;
             int offset = selected ? 4 : 6;
-            var textRect = new Rectangle(textLeft, rect.Y + offset, rect.Width - 26, rect.Height - 5);
-            using (var b = new SolidBrush(tab.ForeColor))
+            Rectangle textRect = new Rectangle(textLeft, rect.Y + offset, rect.Width - 26, rect.Height - 5);
+            using (SolidBrush b = new SolidBrush(tab.ForeColor))
             {
                 g.DrawString(tab.Text, Font, b, textRect, sf);
             }
@@ -181,7 +181,7 @@ namespace CBRE.Shell.Controls
             // Close icon
             int borderOffset = selected ? 1 : 3;
             int crossOffset = selected ? 0 : 2;
-            using (var pen = new Pen(tab.ForeColor))
+            using (Pen pen = new Pen(tab.ForeColor))
             {
                 if (hoverClose)
                 {
@@ -195,7 +195,7 @@ namespace CBRE.Shell.Controls
 
         private Rectangle GetCloseRect(int index)
         {
-            var rect = GetTabRect(index);
+            Rectangle rect = GetTabRect(index);
             return new Rectangle(rect.Right - 20, rect.Top + (rect.Height - 16) / 2, 16, 16);
         }
     }

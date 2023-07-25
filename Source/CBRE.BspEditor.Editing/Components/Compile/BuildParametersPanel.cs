@@ -36,16 +36,16 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             _data.Columns.Add("Value", typeof(object));
             
             _data.RowChanged += (s, e) => UpdatePreview();
-            
-            var flagColumn = new DataGridViewTextBoxColumn
+
+            DataGridViewTextBoxColumn flagColumn = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DataPropertyName = "Flag",
                 ReadOnly = true
             };
             dataTable.Columns.Add(flagColumn);
-            
-            var checkboxColumn = new DataGridViewCheckBoxColumn
+
+            DataGridViewCheckBoxColumn checkboxColumn = new DataGridViewCheckBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Width = 20,
@@ -53,7 +53,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             };
             dataTable.Columns.Add(checkboxColumn);
 
-            var nameColumn = new DataGridViewTextBoxColumn
+            DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Width = 5,
@@ -62,7 +62,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             };
             dataTable.Columns.Add(nameColumn);
 
-            var valueColumn = new DataGridViewTextBoxColumn
+            DataGridViewTextBoxColumn valueColumn = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DataPropertyName = "Value"
@@ -77,7 +77,7 @@ namespace CBRE.BspEditor.Editing.Components.Compile
             _tool = tool;
 
             _data.Rows.Clear();
-            foreach (var parameter in tool.Parameters)
+            foreach (CompileParameter parameter in tool.Parameters)
             {
                 _data.Rows.Add(parameter.Flag, false, parameter.Name, parameter.Value);
             }
@@ -88,14 +88,14 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
         private string GetArguments()
         {
-            var list = new List<string>();
+            List<string> list = new List<string>();
 
             foreach (DataRow row in ((DataTable) dataTable.DataSource).Rows)
             {
                 if (Convert.ToBoolean(row[1]))
                 {
-                    var key = Convert.ToString(row[0]);
-                    var val = Convert.ToString(row[3]).Trim();
+                    string key = Convert.ToString(row[0]);
+                    string val = Convert.ToString(row[3]).Trim();
                     list.Add(key);
                     if (val.Length > 0) list.Add(val);
                 }
@@ -106,19 +106,19 @@ namespace CBRE.BspEditor.Editing.Components.Compile
 
         private void SetArguments(string arguments)
         {
-            var kvs = arguments.SplitWithQuotes().ToList();
+            List<string> kvs = arguments.SplitWithQuotes().ToList();
 
             foreach (DataRow row in ((DataTable) dataTable.DataSource).Rows)
             {
-                var key = Convert.ToString(row[0]);
-                var idx = kvs.IndexOf(key);
+                string key = Convert.ToString(row[0]);
+                int idx = kvs.IndexOf(key);
 
                 if (idx >= 0)
                 {
-                    var val = "";
+                    string val = "";
                     if (idx < kvs.Count - 1)
                     {
-                        var next = kvs[idx + 1];
+                        string next = kvs[idx + 1];
                         if (next[0] != '-') val = next;
                     }
 

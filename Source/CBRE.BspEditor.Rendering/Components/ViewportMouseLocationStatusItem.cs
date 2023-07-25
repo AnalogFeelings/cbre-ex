@@ -27,10 +27,10 @@ namespace CBRE.BspEditor.Rendering.Components
 
         private Task UpdateValue(Vector3? value)
         {
-            var text = "";
+            string text = "";
             if (value.HasValue)
             {
-                var v = value.Value;
+                Vector3 v = value.Value;
                 text = $"{v.X:#0} {v.Y:#0} {v.Z:#0}";
             }
 

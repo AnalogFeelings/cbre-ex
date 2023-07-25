@@ -21,7 +21,7 @@ namespace CBRE.BspEditor.Rendering
 
         public void Increment(IEnumerable<T> instances)
         {
-            foreach (var i in instances) Increment(i);
+            foreach (T i in instances) Increment(i);
         }
 
         public bool Decrement(T instance)

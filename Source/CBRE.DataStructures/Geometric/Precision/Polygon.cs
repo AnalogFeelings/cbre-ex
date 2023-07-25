@@ -31,33 +31,33 @@ namespace CBRE.DataStructures.Geometric.Precision
         public Polygon(Plane plane, double radius = 1000000d)
         {
             // Get aligned up and right axes to the plane
-            var direction = plane.GetClosestAxisToNormal();
-            var tempV = direction == Vector3.UnitZ ? -Vector3.UnitY : -Vector3.UnitZ;
-            var up = tempV.Cross(plane.Normal).Normalise();
-            var right = plane.Normal.Cross(up).Normalise();
+            Vector3 direction = plane.GetClosestAxisToNormal();
+            Vector3 tempV = direction == Vector3.UnitZ ? -Vector3.UnitY : -Vector3.UnitZ;
+            Vector3 up = tempV.Cross(plane.Normal).Normalise();
+            Vector3 right = plane.Normal.Cross(up).Normalise();
 
-            var verts = new List<Vector3>
+            List<Vector3> verts = new List<Vector3>
             {
                 plane.PointOnPlane + right + up, // Top right
                 plane.PointOnPlane - right + up, // Top left
                 plane.PointOnPlane - right - up, // Bottom left
                 plane.PointOnPlane + right - up, // Bottom right
             };
-            
-            var origin = verts.Aggregate(Vector3.Zero, (x, y) => x + y) / verts.Count;
+
+            Vector3 origin = verts.Aggregate(Vector3.Zero, (x, y) => x + y) / verts.Count;
             Vertices = verts.Select(x => (x - origin).Normalise() * radius + origin).ToList();
         }
 
         public PlaneClassification ClassifyAgainstPlane(Plane p)
         {
-            var count = Vertices.Count;
-            var front = 0;
-            var back = 0;
-            var onplane = 0;
+            int count = Vertices.Count;
+            int front = 0;
+            int back = 0;
+            int onplane = 0;
 
-            foreach (var t in Vertices)
+            foreach (Vector3 t in Vertices)
             {
-                var test = p.OnPlane(t);
+                int test = p.OnPlane(t);
 
                 // Vertices on the plane are both in front and behind the plane in this context
                 if (test <= 0) back++;
@@ -97,11 +97,11 @@ namespace CBRE.DataStructures.Geometric.Precision
         public bool Split(Plane clip, out Polygon back, out Polygon front, out Polygon coplanarBack, out Polygon coplanarFront)
         {
             const double epsilon = NumericsExtensions.Epsilon;
-            
-            var distances = Vertices.Select(clip.EvalAtPoint).ToList();
+
+            List<double> distances = Vertices.Select(clip.EvalAtPoint).ToList();
             
             int cb = 0, cf = 0;
-            for (var i = 0; i < distances.Count; i++)
+            for (int i = 0; i < distances.Count; i++)
             {
                 if (distances[i] < -epsilon) cb++;
                 else if (distances[i] > epsilon) cf++;
@@ -133,12 +133,12 @@ namespace CBRE.DataStructures.Geometric.Precision
             }
 
             // Get the new front and back vertices
-            var backVerts = new List<Vector3>();
-            var frontVerts = new List<Vector3>();
+            List<Vector3> backVerts = new List<Vector3>();
+            List<Vector3> frontVerts = new List<Vector3>();
 
-            for (var i = 0; i < Vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                var j = (i + 1) % Vertices.Count;
+                int j = (i + 1) % Vertices.Count;
 
                 Vector3 s = Vertices[i], e = Vertices[j];
                 double sd = distances[i], ed = distances[j];
@@ -148,8 +148,8 @@ namespace CBRE.DataStructures.Geometric.Precision
 
                 if ((sd < 0 && ed > 0) || (ed < 0 && sd > 0))
                 {
-                    var t = sd / (sd - ed);
-                    var intersect = s * (1 - t) + e * t;
+                    double t = sd / (sd - ed);
+                    Vector3 intersect = s * (1 - t) + e * t;
 
                     backVerts.Add(intersect);
                     frontVerts.Add(intersect);

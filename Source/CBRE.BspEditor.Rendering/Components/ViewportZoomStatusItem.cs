@@ -30,7 +30,7 @@ namespace CBRE.BspEditor.Rendering.Components
 
         private Task UpdateValue(float value)
         {
-            var text = value <= 0 ? "" : $"{Zoom}: {value:#0.##}";
+            string text = value <= 0 ? "" : $"{Zoom}: {value:#0.##}";
             Text = text;
             TextChanged?.Invoke(this, Text);
             return Task.CompletedTask;

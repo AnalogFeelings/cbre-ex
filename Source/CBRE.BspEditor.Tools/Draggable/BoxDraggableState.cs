@@ -45,9 +45,9 @@ namespace CBRE.BspEditor.Tools.Draggable
 
         private void BoxStateChanged(object sender, EventArgs e)
         {
-            var box = State.Action == BoxAction.Idle || State.Start == null || State.End == null ? Box.Empty : new Box(State.Start, State.End);
+            Box box = State.Action == BoxAction.Idle || State.Start == null || State.End == null ? Box.Empty : new Box(State.Start, State.End);
 
-            var label = "";
+            string label = "";
             if (box != null && !box.IsEmpty()) label = box.Width.ToString("0") + " x " + box.Length.ToString("0") + " x " + box.Height.ToString("0");
             Oy.Publish("MapDocument:ToolStatus:UpdateText", label);
         }
@@ -73,7 +73,7 @@ namespace CBRE.BspEditor.Tools.Draggable
         public virtual IEnumerable<IDraggable> GetDraggables()
         {
             if (State.Action == BoxAction.Idle || State.Action == BoxAction.Drawing) yield break;
-            foreach (var draggable in BoxHandles.ToList())
+            foreach (IDraggable draggable in BoxHandles.ToList())
             {
                 yield return draggable;
             }
@@ -106,8 +106,8 @@ namespace CBRE.BspEditor.Tools.Draggable
             State.Action = BoxAction.Drawing;
             State.OrigStart = State.Start;
             State.OrigEnd = State.End;
-            var st = RememberedDimensions == null ? Vector3.Zero : camera.GetUnusedCoordinate(RememberedDimensions.Start);
-            var wid = RememberedDimensions == null ? Vector3.Zero : camera.GetUnusedCoordinate(RememberedDimensions.End - RememberedDimensions.Start);
+            Vector3 st = RememberedDimensions == null ? Vector3.Zero : camera.GetUnusedCoordinate(RememberedDimensions.Start);
+            Vector3 wid = RememberedDimensions == null ? Vector3.Zero : camera.GetUnusedCoordinate(RememberedDimensions.End - RememberedDimensions.Start);
             State.Start = Tool.SnapIfNeeded(camera.Expand(position) + st);
             State.End = State.Start + wid;
             base.StartDrag(document, viewport, camera, e, position);
@@ -133,24 +133,24 @@ namespace CBRE.BspEditor.Tools.Draggable
             if (ShouldDrawBox())
             {
                 // Draw a box around the point
-                var c = new Box(State.Start, State.End);
+                Box c = new Box(State.Start, State.End);
 
                 const uint numVertices = 4 * 6;
                 const uint numWireframeIndices = numVertices * 2;
 
-                var points = new VertexStandard[numVertices];
-                var indices = new uint[numWireframeIndices];
+                VertexStandard[] points = new VertexStandard[numVertices];
+                uint[] indices = new uint[numWireframeIndices];
 
-                var col = GetRenderBoxColour();
-                var colour = new Vector4(col.R, col.G, col.B, 255) / 255;
+                Color col = GetRenderBoxColour();
+                Vector4 colour = new Vector4(col.R, col.G, col.B, 255) / 255;
 
-                var vi = 0u;
-                var wi = 0u;
-                foreach (var face in c.GetBoxFaces())
+                uint vi = 0u;
+                uint wi = 0u;
+                foreach (Vector3[] face in c.GetBoxFaces())
                 {
-                    var offs = vi;
+                    uint offs = vi;
 
-                    foreach (var v in face)
+                    foreach (Vector3 v in face)
                     {
                         points[vi++] = new VertexStandard
                         {
@@ -168,7 +168,7 @@ namespace CBRE.BspEditor.Tools.Draggable
                     }
                 }
 
-                var groups = new[]
+                BufferGroup[] groups = new[]
                 {
                     new BufferGroup(PipelineType.Wireframe, CameraType.Perspective, 0, numWireframeIndices)
                 };
@@ -205,15 +205,15 @@ namespace CBRE.BspEditor.Tools.Draggable
         {
             if (ShouldDrawBox())
             {
-                var start = camera.WorldToScreen(Vector3.Min(State.Start, State.End));
-                var end = camera.WorldToScreen(Vector3.Max(State.Start, State.End));
+                Vector3 start = camera.WorldToScreen(Vector3.Min(State.Start, State.End));
+                Vector3 end = camera.WorldToScreen(Vector3.Max(State.Start, State.End));
                 DrawBox(viewport, camera, im, start, end);
             }
 
             if (ShouldDrawBoxText())
             {
-                var start = camera.WorldToScreen(Vector3.Min(State.Start, State.End));
-                var end = camera.WorldToScreen(Vector3.Max(State.Start, State.End));
+                Vector3 start = camera.WorldToScreen(Vector3.Min(State.Start, State.End));
+                Vector3 end = camera.WorldToScreen(Vector3.Max(State.Start, State.End));
                 DrawBoxText(viewport, camera, im, start, end);
             }
         }
@@ -234,23 +234,23 @@ namespace CBRE.BspEditor.Tools.Draggable
             if (start.Y < 0 || end.Y > camera.Height) return;
 
             // Find the width and height for the given projection
-            var st = camera.Flatten(State.Start);
-            var en = camera.Flatten(State.End);
+            Vector3 st = camera.Flatten(State.Start);
+            Vector3 en = camera.Flatten(State.End);
 
-            var widthText = (Math.Abs(Math.Round(en.X - st.X, 1))).ToString("0.##");
-            var heightText = (Math.Abs(Math.Round(en.Y - st.Y, 1))).ToString("0.##");
-            
+            string widthText = (Math.Abs(Math.Round(en.X - st.X, 1))).ToString("0.##");
+            string heightText = (Math.Abs(Math.Round(en.Y - st.Y, 1))).ToString("0.##");
+
             // Determine the size of the value strings
-            var mWidth = im.CalcTextSize(FontType.Large, widthText);
-            var mHeight = im.CalcTextSize(FontType.Large, heightText);
+            Vector2 mWidth = im.CalcTextSize(FontType.Large, widthText);
+            Vector2 mHeight = im.CalcTextSize(FontType.Large, heightText);
             
             const int padding = 6;
-            
+
             // Ensure the text is clamped inside the viewport
-            var vWidth = new Vector3((end.X + start.X - mWidth.X) / 2, end.Y - mWidth.Y - padding, 0);
+            Vector3 vWidth = new Vector3((end.X + start.X - mWidth.X) / 2, end.Y - mWidth.Y - padding, 0);
             vWidth = Vector3.Clamp(vWidth, Vector3.Zero, new Vector3(camera.Width - mWidth.X - padding, camera.Height - mHeight.Y - padding, 0));
-            
-            var vHeight = new Vector3(end.X + padding, (end.Y + start.Y - mHeight.Y) / 2, 0); 
+
+            Vector3 vHeight = new Vector3(end.X + padding, (end.Y + start.Y - mHeight.Y) / 2, 0); 
             vHeight = Vector3.Clamp(vHeight, new Vector3(0, mWidth.Y + padding, 0), new Vector3(camera.Width - mWidth.X - padding, camera.Height - mHeight.Y - padding, 0));
             
             // Draw the strings

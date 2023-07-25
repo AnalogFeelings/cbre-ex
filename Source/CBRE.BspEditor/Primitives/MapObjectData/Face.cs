@@ -37,7 +37,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
         {
             ID = obj.Get("ID", ID);
 
-            var t = obj.Children.FirstOrDefault(x => x.Name == "Texture");
+            SerialisedObject t = obj.Children.FirstOrDefault(x => x.Name == "Texture");
             Texture = new Texture();
             
             if (t != null)
@@ -75,31 +75,31 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public IMapElement Clone()
         {
-            var face = new Face(ID);
+            Face face = new Face(ID);
             CopyBase(face);
             return face;
         }
 
         public IMapElement Copy(UniqueNumberGenerator numberGenerator)
         {
-            var face = new Face(numberGenerator.Next("Face"));
+            Face face = new Face(numberGenerator.Next("Face"));
             CopyBase(face);
             return face;
         }
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("Face");
+            SerialisedObject so = new SerialisedObject("Face");
             so.Set("ID", ID);
 
-            var p = new SerialisedObject("Plane");
+            SerialisedObject p = new SerialisedObject("Plane");
             p.Set("Normal", Plane.Normal);
             p.Set("DistanceFromOrigin", Plane.DistanceFromOrigin);
             so.Children.Add(p);
 
             if (Texture != null)
             {
-                var t = new SerialisedObject("Texture");
+                SerialisedObject t = new SerialisedObject("Texture");
                 t.Set("Name", Texture.Name);
                 t.Set("Rotation", Texture.Rotation);
                 t.Set("UAxis", Texture.UAxis);
@@ -110,9 +110,9 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
                 t.Set("YShift", Texture.YShift);
                 so.Children.Add(t);
             }
-            foreach (var c in Vertices)
+            foreach (Vector3 c in Vertices)
             {
-                var v = new SerialisedObject("Vertex");
+                SerialisedObject v = new SerialisedObject("Vertex");
                 v.Set("Position", c);
                 so.Children.Add(v);
             }
@@ -126,10 +126,10 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
                 return Vertices.Select(x => Tuple.Create(x, 0f, 0f));
             }
 
-            var udiv = width * Texture.XScale;
-            var uadd = Texture.XShift / width;
-            var vdiv = height * Texture.YScale;
-            var vadd = Texture.YShift / height;
+            float udiv = width * Texture.XScale;
+            float uadd = Texture.XShift / width;
+            float vdiv = height * Texture.YScale;
+            float vadd = Texture.YShift / height;
 
             return Vertices.Select(x => Tuple.Create(x, x.Dot(Texture.UAxis) / udiv + uadd, x.Dot(Texture.VAxis) / vdiv + vadd));
         }
@@ -146,7 +146,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public virtual IEnumerable<Line> GetEdges()
         {
-            for (var i = 0; i < Vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
                 yield return new Line(Vertices[i], Vertices[(i + 1) % Vertices.Count]);
             }
@@ -209,7 +209,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
             public bool Remove(Vector3 item)
             {
-                var r = _list.Remove(item);
+                bool r = _list.Remove(item);
                 UpdatePlane();
                 return r;
             }
@@ -228,7 +228,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
             public void Transform(Func<Vector3, Vector3> tranform)
             {
-                for (var i = 0; i < _list.Count; i++)
+                for (int i = 0; i < _list.Count; i++)
                 {
                     _list[i] = tranform(_list[i]);
                 }

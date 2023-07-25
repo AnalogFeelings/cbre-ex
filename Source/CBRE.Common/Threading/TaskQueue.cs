@@ -53,7 +53,7 @@ namespace CBRE.Common.Threading
             {
                 Task resultTask;
 
-                if (_lastTask != null && _lastTask.TryGetTarget(out var lastTask))
+                if (_lastTask != null && _lastTask.TryGetTarget(out Task lastTask))
                 {
                     resultTask = lastTask.ContinueWith(async _ => await action());
                 }

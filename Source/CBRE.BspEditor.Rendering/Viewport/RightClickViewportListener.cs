@@ -27,7 +27,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         private async Task OpenMenu(ViewportEvent e)
         {
-            var mb = new RightClickMenuBuilder(Viewport, e);
+            RightClickMenuBuilder mb = new RightClickMenuBuilder(Viewport, e);
             await Oy.Publish("MapViewport:RightClick", mb);
             if (mb.Intercepted || mb.IsEmpty) return;
             mb.Populate(_contextMenu);

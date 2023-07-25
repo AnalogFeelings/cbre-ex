@@ -85,7 +85,7 @@ namespace CBRE.BspEditor.Documents
         /// </summary>
         private async Task<IEnvironment> GetEnvironment()
         {
-            var envs = _environments.Value.GetSerialisedEnvironments().ToList();
+            List<SerialisedEnvironment> envs = _environments.Value.GetSerialisedEnvironments().ToList();
             SerialisedEnvironment chosenEnvironment = null;
             if (envs.Count == 1)
             {
@@ -96,7 +96,7 @@ namespace CBRE.BspEditor.Documents
                 DialogResult result = DialogResult.Cancel;
                 await _shell.Value.InvokeAsync(() =>
                 {
-                    using (var esf = new EnvironmentSelectionForm(envs))
+                    using (EnvironmentSelectionForm esf = new EnvironmentSelectionForm(envs))
                     {
                         result = esf.ShowDialog();
                         if (result == DialogResult.OK) chosenEnvironment = esf.SelectedEnvironment;
@@ -112,10 +112,10 @@ namespace CBRE.BspEditor.Documents
         /// <inheritdoc />
         public async Task<IDocument> CreateBlank()
         {
-            var env = await GetEnvironment();
+            IEnvironment env = await GetEnvironment();
             if (env == null) return null;
 
-            var md =  new MapDocument(new Map(), env)
+            MapDocument md =  new MapDocument(new Map(), env)
             {
                 Name = string.Format(UntitledDocumentName, _untitled++),
                 HasUnsavedChanges = true
@@ -127,24 +127,24 @@ namespace CBRE.BspEditor.Documents
         /// <inheritdoc />
         public async Task<IDocument> Load(string location)
         {
-            var env = await GetEnvironment();
+            IEnvironment env = await GetEnvironment();
             if (env == null) return null;
 
             NotSupportedException ex = null;
-            using (var stream = File.Open(location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream stream = File.Open(location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                foreach (var provider in _providers.Where(x => CanLoad(x.Value, location)))
+                foreach (Lazy<IBspSourceProvider> provider in _providers.Where(x => CanLoad(x.Value, location)))
                 {
                     try
                     {
-                        var result = await provider.Value.Load(stream, env);
+                        BspFileLoadResult result = await provider.Value.Load(stream, env);
                         if (result.Map == null)
                         {
                             stream.Seek(0, SeekOrigin.Begin);
                             continue;
                         }
 
-                        var md = new MapDocument(result.Map, env) { FileName = location };
+                        MapDocument md = new MapDocument(result.Map, env) { FileName = location };
                         await ProcessAfterLoad(env, md, result);
                         return md;
                     }
@@ -175,16 +175,16 @@ namespace CBRE.BspEditor.Documents
         {
             await env.UpdateDocumentData(document);
 
-            foreach (var p in _processors.Select(x => x.Value).OrderBy(x => x.OrderHint))
+            foreach (IBspSourceProcessor p in _processors.Select(x => x.Value).OrderBy(x => x.OrderHint))
             {
                 await p.AfterLoad(document);
             }
 
             if (result.InvalidObjects.Any() || result.Messages.Any())
             {
-                var messages = new List<string>();
+                List<string> messages = new List<string>();
                 if (result.InvalidObjects.Any()) messages.Add(String.Format(InvalidObjectsWereDiscarded, result.InvalidObjects.Count));
-                foreach (var m in result.Messages) messages.Add(m);
+                foreach (string m in result.Messages) messages.Add(m);
                 _shell.Value.InvokeSync(() =>
                 {
                     MessageBox.Show(String.Join(System.Environment.NewLine, messages), LoadResultTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -201,20 +201,20 @@ namespace CBRE.BspEditor.Documents
         /// <inheritdoc />
         public async Task Save(IDocument document, string location)
         {
-            var map = (MapDocument) document;
+            MapDocument map = (MapDocument) document;
 
             await map.Environment.UpdateDocumentData(map);
 
             await ProcessBeforeSave(map);
 
-            using (var stream = new MemoryStream())
+            using (MemoryStream stream = new MemoryStream())
             {
-                foreach (var provider in _providers.Where(x => CanLoad(x.Value, location)))
+                foreach (Lazy<IBspSourceProvider> provider in _providers.Where(x => CanLoad(x.Value, location)))
                 {
                     try
                     {
                         await provider.Value.Save(stream, map.Map);
-                        using (var fs = File.Open(location, FileMode.Create, FileAccess.Write, FileShare.Read))
+                        using (FileStream fs = File.Open(location, FileMode.Create, FileAccess.Write, FileShare.Read))
                         {
                             stream.Seek(0, SeekOrigin.Begin);
                             await stream.CopyToAsync(fs);
@@ -238,7 +238,7 @@ namespace CBRE.BspEditor.Documents
         /// <param name="document">The document to process</param>
         private async Task ProcessBeforeSave(MapDocument document)
         {
-            foreach (var p in _processors.Select(x => x.Value).OrderBy(x => x.OrderHint))
+            foreach (IBspSourceProcessor p in _processors.Select(x => x.Value).OrderBy(x => x.OrderHint))
             {
                 await p.BeforeSave(document);
             }
@@ -248,7 +248,7 @@ namespace CBRE.BspEditor.Documents
         public DocumentPointer GetDocumentPointer(IDocument document)
         {
             if (!(document is MapDocument doc)) return null;
-            var so = new DocumentPointer(nameof(BspSourceDocumentLoader))
+            DocumentPointer so = new DocumentPointer(nameof(BspSourceDocumentLoader))
             {
                 FileName = doc.FileName
             };
@@ -259,29 +259,29 @@ namespace CBRE.BspEditor.Documents
         /// <inheritdoc />
         public async Task<IDocument> Load(DocumentPointer documentPointer)
         {
-            var fileName = documentPointer.FileName;
-            var envId = documentPointer.Get<string>("Environment");
+            string fileName = documentPointer.FileName;
+            string envId = documentPointer.Get<string>("Environment");
             if (String.IsNullOrWhiteSpace(fileName) || String.IsNullOrWhiteSpace(envId)) return null;
-            
-            var env = _environments.Value.GetEnvironment(envId);
+
+            IEnvironment env = _environments.Value.GetEnvironment(envId);
             if (env?.ID == null) return null;
 
             if (!File.Exists(fileName)) return null;
 
-            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                foreach (var provider in _providers.Where(x => CanLoad(x.Value, fileName)))
+                foreach (Lazy<IBspSourceProvider> provider in _providers.Where(x => CanLoad(x.Value, fileName)))
                 {
                     try
                     {
-                        var result = await provider.Value.Load(stream, env);
+                        BspFileLoadResult result = await provider.Value.Load(stream, env);
                         if (result.Map == null)
                         {
                             stream.Seek(0, SeekOrigin.Begin);
                             continue;
                         }
 
-                        var md = new MapDocument(result.Map, env) { FileName = fileName };
+                        MapDocument md = new MapDocument(result.Map, env) { FileName = fileName };
                         await ProcessAfterLoad(env, md, result);
                         return md;
                     }

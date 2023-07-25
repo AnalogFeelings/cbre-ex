@@ -26,7 +26,7 @@ namespace CBRE.Rendering.Pipelines
         {
             (_vertex, _geometry, _fragment) = context.ResourceLoader.LoadShadersGeometry("Billboard");
 
-            var pDesc = new GraphicsPipelineDescription
+            GraphicsPipelineDescription pDesc = new GraphicsPipelineDescription
             {
                 BlendState = BlendStateDescription.SingleAlphaBlend,
                 DepthStencilState = DepthStencilStateDescription.DepthOnlyLessEqual,
@@ -55,8 +55,8 @@ namespace CBRE.Rendering.Pipelines
 
         public void SetupFrame(RenderContext context, IViewport target)
         {
-            var view = target.Camera.View;
-            if (!Matrix4x4.Invert(view, out var invView)) invView = Matrix4x4.Identity;
+            Matrix4x4 view = target.Camera.View;
+            if (!Matrix4x4.Invert(view, out Matrix4x4 invView)) invView = Matrix4x4.Identity;
 
             context.Device.UpdateBuffer(_projectionBuffer, 0, new UniformProjection
             {
@@ -72,7 +72,7 @@ namespace CBRE.Rendering.Pipelines
             cl.SetPipeline(_pipeline);
             cl.SetGraphicsResourceSet(0, _projectionResourceSet);
 
-            foreach (var r in renderables)
+            foreach (IRenderable r in renderables)
             {
                 r.Render(context, this, target, cl);
             }
@@ -88,7 +88,7 @@ namespace CBRE.Rendering.Pipelines
 
         public void Bind(RenderContext context, CommandList cl, string binding)
         {
-            var tex = context.ResourceLoader.GetTexture(binding);
+            Resources.Texture tex = context.ResourceLoader.GetTexture(binding);
             tex?.BindTo(cl, 1);
         }
 

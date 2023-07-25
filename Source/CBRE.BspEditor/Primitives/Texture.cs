@@ -106,13 +106,13 @@ namespace CBRE.BspEditor.Primitives
         /// <param name="matrix">The matrix to transform the texture by</param>
         public void TransformUniform(Matrix4x4 matrix)
         {
-            #if DEBUG
+#if DEBUG
 
             // Validate that the transformation is indeed uniform.
             // If it's not, bail out.
 
-            var one = Vector3.Transform(Vector3.One, matrix);
-            var two = Vector3.Transform(Vector3.One * 2, matrix);
+            Vector3 one = Vector3.Transform(Vector3.One, matrix);
+            Vector3 two = Vector3.Transform(Vector3.One * 2, matrix);
             if (Math.Abs((two - one).Length() - Vector3.One.Length()) > 0.01f)
                 throw new InvalidOperationException("Transform isn't uniform!");
 
@@ -121,10 +121,10 @@ namespace CBRE.BspEditor.Primitives
             // If the determinant isn't 1, then we can't transform safely. (-1 is okay too)
             if (Math.Abs(matrix.GetDeterminant()) - 1 > 0.0001f) return;
 
-            var startU = Vector3.Transform(UAxis, matrix);
-            var startV = Vector3.Transform(VAxis, matrix);
+            Vector3 startU = Vector3.Transform(UAxis, matrix);
+            Vector3 startV = Vector3.Transform(VAxis, matrix);
 
-            var origin = Vector3.Transform(Vector3.Zero, matrix);
+            Vector3 origin = Vector3.Transform(Vector3.Zero, matrix);
             UAxis = (startU - origin).Normalise();
             VAxis = (startV - origin).Normalise();
 
@@ -142,12 +142,12 @@ namespace CBRE.BspEditor.Primitives
         /// <param name="matrix">The transformation matrix</param>
         public void TransformScale(Matrix4x4 matrix)
         {
-            var startU = Vector3.Transform(UAxis, matrix);
-            var startV = Vector3.Transform(VAxis, matrix);
+            Vector3 startU = Vector3.Transform(UAxis, matrix);
+            Vector3 startV = Vector3.Transform(VAxis, matrix);
 
-            var zero = Vector3.Transform(Vector3.Zero, matrix);
-            var deltaU = (startU - zero).Length();
-            var deltaV = (startV - zero).Length();
+            Vector3 zero = Vector3.Transform(Vector3.Zero, matrix);
+            float deltaU = (startU - zero).Length();
+            float deltaV = (startV - zero).Length();
 
             if (Math.Abs(deltaU) > 0.001f) XScale *= deltaU;
             if (Math.Abs(deltaV) > 0.001f) YScale *= deltaV;

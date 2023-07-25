@@ -86,7 +86,7 @@ namespace CBRE.Shell.Forms
         private Task ShowExceptionDialog(Exception obj)
         {
             this.InvokeLater(() => {
-                var ed = new ExceptionWindow(obj);
+                ExceptionWindow ed = new ExceptionWindow(obj);
                 ed.ShowDialog(this);
             });
             return Task.CompletedTask;
@@ -106,7 +106,7 @@ namespace CBRE.Shell.Forms
 
         private bool ShowException(Exception exception)
         {
-            var exData = GetExceptionData(exception);
+            string exData = GetExceptionData(exception);
             if (_shownExceptions.Contains(exData)) return false;
 
             _shownExceptions.Add(exData);
@@ -117,7 +117,7 @@ namespace CBRE.Shell.Forms
 
         private async Task InstanceOpened(IEnumerable<string> args)
         {
-            foreach (var arg in args.Skip(1))
+            foreach (string arg in args.Skip(1))
             {
                 Common.Logging.Log.Debug(nameof(Shell), $"Command line: `{arg}`");
                 if (!File.Exists(arg)) continue;
@@ -144,7 +144,7 @@ namespace CBRE.Shell.Forms
         {
             if (_openDocuments != null)
             {
-                foreach (var dp in _openDocuments)
+                foreach (LoadedDocument dp in _openDocuments)
                 {
                     await _documentRegister.Value.OpenDocument(dp.ToPointer(), dp.Loader);
                 }
@@ -157,12 +157,12 @@ namespace CBRE.Shell.Forms
             _openDocuments = new List<LoadedDocument>();
             lock (_lock)
             {
-                foreach (var d in _documentRegister.Value.OpenDocuments)
+                foreach (IDocument d in _documentRegister.Value.OpenDocuments)
                 {
-                    var pointer = _documentRegister.Value.GetDocumentPointer(d);
+                    DocumentPointer pointer = _documentRegister.Value.GetDocumentPointer(d);
                     if (pointer == null) continue;
 
-                    var dp = new LoadedDocument(pointer);
+                    LoadedDocument dp = new LoadedDocument(pointer);
                     _openDocuments.Add(dp);
                 }
             }
@@ -191,7 +191,7 @@ namespace CBRE.Shell.Forms
             
             // We've already asked the user if they want to save and they've either saved
             // or chosen to discard changes, so we force the close now.
-            foreach (var doc in _documentRegister.Value.OpenDocuments.ToList())
+            foreach (IDocument doc in _documentRegister.Value.OpenDocuments.ToList())
             {
                 await _documentRegister.Value.ForceCloseDocument(doc);
             }
@@ -216,12 +216,12 @@ namespace CBRE.Shell.Forms
 
         private async Task<bool> SaveUnsavedDocuments()
         {
-            var unsaved = _documentRegister.Value.OpenDocuments.Where(x => x.HasUnsavedChanges).ToList();
+            List<IDocument> unsaved = _documentRegister.Value.OpenDocuments.Where(x => x.HasUnsavedChanges).ToList();
             if (!unsaved.Any()) return true; // nothing unsaved
 
             DialogResult result;
 
-            using (var d = new SaveChangesForm(unsaved))
+            using (SaveChangesForm d = new SaveChangesForm(unsaved))
             {
                 d.Translate(_translation.Value);
                 d.Owner = this;
@@ -235,7 +235,7 @@ namespace CBRE.Shell.Forms
             if (result == DialogResult.No) return true;
 
             // Save changes and continue
-            foreach (var doc in unsaved)
+            foreach (IDocument doc in unsaved)
             {
                 await SaveDocument(doc);
             }
@@ -262,7 +262,7 @@ namespace CBRE.Shell.Forms
         {
             lock (_lock)
             {
-                var page = new TabPage
+                TabPage page = new TabPage
                 {
                     Text = document.Name,
                     Tag = document
@@ -279,10 +279,10 @@ namespace CBRE.Shell.Forms
         /// </summary>
         private void DocumentActivated(IDocument document)
         {
-            var tab = DocumentTabs.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Tag == document);
+            TabPage tab = DocumentTabs.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Tag == document);
             if (tab != null)
             {
-                var idx = DocumentTabs.TabPages.IndexOf(tab);
+                int idx = DocumentTabs.TabPages.IndexOf(tab);
                 if (idx >= 0) DocumentTabs.SelectedIndex = idx;
             }
 
@@ -294,7 +294,7 @@ namespace CBRE.Shell.Forms
             }
             else
             {
-                var currentControl = DocumentContainer.Controls.OfType<Control>().FirstOrDefault();
+                Control currentControl = DocumentContainer.Controls.OfType<Control>().FirstOrDefault();
                 if (currentControl != document.Control)
                 {
                     DocumentContainer.Controls.Clear();
@@ -311,7 +311,7 @@ namespace CBRE.Shell.Forms
         /// </summary>
         private Task CloseDocument(IDocument document)
         {
-            var page = DocumentTabs.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Tag == document);
+            TabPage page = DocumentTabs.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Tag == document);
             if (page != null) DocumentTabs.TabPages.Remove(page);
             return Task.CompletedTask;
         }
@@ -321,7 +321,7 @@ namespace CBRE.Shell.Forms
         /// </summary>
         private Task DocumentChanged(IDocument document)
         {
-            var page = DocumentTabs.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Tag == document);
+            TabPage page = DocumentTabs.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Tag == document);
             if (page != null && document != null)
             {
                 page.Text = document.Name;
@@ -342,10 +342,10 @@ namespace CBRE.Shell.Forms
         /// </summary>
         private async Task DocumentRequestClose(DocumentCloseMessage msg)
         {
-            var doc = msg.Document;
+            IDocument doc = msg.Document;
             if (doc.HasUnsavedChanges)
             {
-                var r = MessageBox.Show(this, String.Format(SaveChangesToFile, doc.Name), UnsavedChanges, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult r = MessageBox.Show(this, String.Format(SaveChangesToFile, doc.Name), UnsavedChanges, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (r == DialogResult.Cancel)
                 {
                     msg.Cancel();
@@ -367,15 +367,15 @@ namespace CBRE.Shell.Forms
         /// </summary>
         private async Task<bool> SaveDocument(IDocument doc)
         {
-            var filename = doc.FileName;
+            string filename = doc.FileName;
 
             if (String.IsNullOrWhiteSpace(filename) || !Directory.Exists(Path.GetDirectoryName(filename)))
             {
-                var filter = _documentRegister.Value.GetSupportedFileExtensions(doc)
+                List<string> filter = _documentRegister.Value.GetSupportedFileExtensions(doc)
                     .Select(x => x.Description + "|" + String.Join(";", x.Extensions.Select(ex => "*" + ex)))
                     .ToList();
 
-                using (var sfd = new SaveFileDialog {Filter = String.Join("|", filter)})
+                using (SaveFileDialog sfd = new SaveFileDialog {Filter = String.Join("|", filter)})
                 {
                     if (sfd.ShowDialog() != DialogResult.OK) return false;
                     filename = sfd.FileName;
@@ -387,7 +387,7 @@ namespace CBRE.Shell.Forms
 
         private Task OpenCommandBox(string obj)
         {
-            var cb = new CommandBox();
+            CommandBox cb = new CommandBox();
             cb.Location = new Point(Location.X + (Size.Width - cb.Width) / 2, Location.Y + (Size.Height - cb.Height) / 4);
             cb.StartPosition = FormStartPosition.Manual;
             cb.Show(this);
@@ -446,14 +446,14 @@ namespace CBRE.Shell.Forms
             {
                 Metadata = new Dictionary<string, string>();
                 Loader = pointer.Name;
-                foreach (var pp in pointer.Properties) Metadata[pp.Key] = pp.Value;
+                foreach (KeyValuePair<string, string> pp in pointer.Properties) Metadata[pp.Key] = pp.Value;
                 FileName = pointer.Get<string>("FileName");
             }
 
             public DocumentPointer ToPointer()
             {
-                var so = new DocumentPointer(Loader);
-                foreach (var m in Metadata) so.Set(m.Key, m.Value);
+                DocumentPointer so = new DocumentPointer(Loader);
+                foreach (KeyValuePair<string, string> m in Metadata) so.Set(m.Key, m.Value);
                 so.FileName = FileName;
                 return so;
             }

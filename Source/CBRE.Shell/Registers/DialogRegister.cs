@@ -22,7 +22,7 @@ namespace CBRE.Shell.Registers
         public async Task OnStartup()
         {
             // Register the exported dialogs
-            foreach (var export in _dialogs)
+            foreach (Lazy<IDialog> export in _dialogs)
             {
                 Log.Debug(nameof(DialogRegister), "Loaded: " + export.Value.GetType().FullName);
                 _components.Add(export.Value);
@@ -43,9 +43,9 @@ namespace CBRE.Shell.Registers
         {
             _shell.InvokeLater(() =>
             {
-                foreach (var c in _components)
+                foreach (IDialog c in _components)
                 {
-                    var vis = c.IsInContext(context);
+                    bool vis = c.IsInContext(context);
                     if (vis != c.Visible) c.SetVisible(context, vis);
                 }
             });

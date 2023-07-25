@@ -45,7 +45,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("Grid");
+            SerialisedObject so = new SerialisedObject("Grid");
             so.Set("SnapToGrid", SnapToGrid);
             return so;
         }

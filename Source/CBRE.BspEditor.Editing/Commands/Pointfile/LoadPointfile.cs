@@ -30,15 +30,15 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            using (var ofd = new OpenFileDialog())
+            using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Filter = "Pointfiles (*.lin, *.pts)|*.lin;*.pts";
                 ofd.InitialDirectory = Path.GetDirectoryName(document.FileName);
                 ofd.Multiselect = false;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
 
-                var file = ofd.FileName;
-                var text = File.ReadAllLines(file);
+                string file = ofd.FileName;
+                string[] text = File.ReadAllLines(file);
                 Pointfile point;
                 try
                 {
@@ -57,7 +57,7 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
 
                 if (point.Lines.Any())
                 {
-                    var start = point.Lines[0].Start;
+                    System.Numerics.Vector3 start = point.Lines[0].Start;
                     await Oy.Publish("MapDocument:Viewport:Focus2D", start);
                     await Oy.Publish("MapDocument:Viewport:Focus3D", start);
                 }

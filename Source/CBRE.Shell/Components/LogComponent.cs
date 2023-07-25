@@ -44,8 +44,8 @@ namespace CBRE.Shell.Components
         private Task AppendLog(LogMessage log)
         {
             _logs.Add(log);
-            var sb = new StringBuilder();
-            foreach (var lm in _logs.ToList())
+            StringBuilder sb = new StringBuilder();
+            foreach (LogMessage lm in _logs.ToList())
             {
                 sb.AppendFormat("{0} [{1}]: {2}\r\n", lm.Type, lm.Source, lm.Message);
             }
@@ -83,7 +83,7 @@ namespace CBRE.Shell.Components
 
             public List<LogMessage> ToList()
             {
-                var list = _data.ToList();
+                List<LogMessage> list = _data.ToList();
                 list.Reverse();
                 return list;
             }

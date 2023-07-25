@@ -19,7 +19,7 @@ namespace CBRE.Common.Shell.Settings
 
         public JsonSettingsStore(string json)
         {
-            var root = JObject.Parse(json);
+            JObject root = JObject.Parse(json);
             _keys = root.Properties().ToDictionary(x => x.Name, x => x);
         }
 
@@ -36,7 +36,7 @@ namespace CBRE.Common.Shell.Settings
         public object Get(Type type, string key, object defaultValue = null)
         {
             if (!_keys.ContainsKey(key)) return defaultValue;
-            var prop = _keys[key];
+            JProperty prop = _keys[key];
             try
             {
                 return prop.Value.ToObject(type);
@@ -54,7 +54,7 @@ namespace CBRE.Common.Shell.Settings
 
         public void Set<T>(string key, T value)
         {
-            var obj = value == null ? null : JToken.FromObject(value);
+            JToken obj = value == null ? null : JToken.FromObject(value);
             _keys[key] = new JProperty(key, obj);
         }
 

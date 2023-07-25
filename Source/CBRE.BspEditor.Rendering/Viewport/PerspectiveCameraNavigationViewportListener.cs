@@ -67,7 +67,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
         public void UpdateFrame(long frame)
         {
-            var currMillis = _lastMillis;
+            long currMillis = _lastMillis;
             _lastMillis = frame;
 
             if (currMillis == 0) return;
@@ -81,16 +81,16 @@ namespace CBRE.BspEditor.Rendering.Viewport
                 return;
             }
 
-            var seconds = (frame - currMillis) / 1000f;
-            var units = CameraNavigationViewportSettings.ForwardSpeed * seconds;
+            float seconds = (frame - currMillis) / 1000f;
+            float units = CameraNavigationViewportSettings.ForwardSpeed * seconds;
 
-            var down = KeyboardState.IsAnyKeyDown(Keys.W, Keys.A, Keys.S, Keys.D);
+            bool down = KeyboardState.IsAnyKeyDown(Keys.W, Keys.A, Keys.S, Keys.D);
             if (!down) _downMillis = 0;
             else if (_downMillis == 0) _downMillis = currMillis;
 
             if (CameraNavigationViewportSettings.TimeToTopSpeed > 0)
             {
-                var downFor = (frame - _downMillis) / (CameraNavigationViewportSettings.TimeToTopSpeed * 1000);
+                decimal downFor = (frame - _downMillis) / (CameraNavigationViewportSettings.TimeToTopSpeed * 1000);
                 if (downFor >= 0 && downFor < 1) units *= (float) _easing.Evaluate((double) downFor);
             }
 
@@ -102,11 +102,11 @@ namespace CBRE.BspEditor.Rendering.Viewport
 
             if (float.IsNaN(units) || float.IsInfinity(units) || units < 0.001f) units = 0;
 
-            var move = units;
-            var tilt = 2f;
+            float move = units;
+            float tilt = 2f;
 
             // These keys are used for hotkeys, don't want the 3D view to move about when trying to use hotkeys.
-            var ignore = !FreeLook && KeyboardState.IsAnyKeyDown(Keys.ShiftKey, Keys.ControlKey, Keys.Alt);
+            bool ignore = !FreeLook && KeyboardState.IsAnyKeyDown(Keys.ShiftKey, Keys.ControlKey, Keys.Alt);
             IfKey(Keys.W, () => Camera.Advance(move), ignore);
             IfKey(Keys.S, () => Camera.Advance(-move), ignore);
             IfKey(Keys.A, () => Camera.Strafe(-move), ignore);
@@ -115,8 +115,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
             IfKey(Keys.E, () => Camera.AscendAbsolute(-move), ignore);
 
             // Arrow keys are not really used for hotkeys all that much, so we allow shift+arrows to match Hammer's keys
-            var shiftDown = KeyboardState.IsKeyDown(Keys.ShiftKey);
-            var otherDown = KeyboardState.IsAnyKeyDown(Keys.ControlKey, Keys.Alt);
+            bool shiftDown = KeyboardState.IsKeyDown(Keys.ShiftKey);
+            bool otherDown = KeyboardState.IsAnyKeyDown(Keys.ControlKey, Keys.Alt);
 
             IfKey(Keys.Right, () => { if (shiftDown) Camera.Strafe(move); else Camera.Pan(-tilt); }, otherDown);
             IfKey(Keys.Left, () => { if (shiftDown) Camera.Strafe(-move); else Camera.Pan(tilt); }, otherDown);
@@ -181,18 +181,18 @@ namespace CBRE.BspEditor.Rendering.Viewport
             }
             else
             {
-                var left = Control.MouseButtons.HasFlag(MouseButtons.Left);
-                var right = Control.MouseButtons.HasFlag(MouseButtons.Right);
+                bool left = Control.MouseButtons.HasFlag(MouseButtons.Left);
+                bool right = Control.MouseButtons.HasFlag(MouseButtons.Right);
 
-                var activeTool = _context.Get<ITool>("ActiveTool");
+                ITool activeTool = _context.Get<ITool>("ActiveTool");
                 if (activeTool != null && activeTool.GetType().Name == "CameraTool")
                 {
                     FreeLook = left || right;
                 }
                 else
                 {
-                    var space = KeyboardState.IsKeyDown(Keys.Space);
-                    var req = CameraNavigationViewportSettings.Camera3DPanRequiresMouseClick;
+                    bool space = KeyboardState.IsKeyDown(Keys.Space);
+                    bool req = CameraNavigationViewportSettings.Camera3DPanRequiresMouseClick;
                     FreeLook = space && (!req || left || right);
                 }
             }
@@ -244,8 +244,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
             if (!Focus) return;
             if (PositionKnown && FreeLook)
             {
-                var dx = LastKnownX - e.X;
-                var dy = e.Y - LastKnownY;
+                int dx = LastKnownX - e.X;
+                int dy = e.Y - LastKnownY;
                 if (dx != 0 || dy != 0)
                 {
                     MouseMoved(e, dx, dy);
@@ -261,10 +261,10 @@ namespace CBRE.BspEditor.Rendering.Viewport
         {
             if (!FreeLook) return;
 
-            var left = Control.MouseButtons.HasFlag(MouseButtons.Left);
-            var right = Control.MouseButtons.HasFlag(MouseButtons.Right);
-            var updown = !left && right;
-            var forwardback = left && right;
+            bool left = Control.MouseButtons.HasFlag(MouseButtons.Left);
+            bool right = Control.MouseButtons.HasFlag(MouseButtons.Right);
+            bool updown = !left && right;
+            bool forwardback = left && right;
 
             if (CameraNavigationViewportSettings.InvertX) dx = -dx;
             if (CameraNavigationViewportSettings.InvertY) dy = -dy;
@@ -371,7 +371,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
             // If we're freelooking, consume any hotkeys using WASD/QE and ctrl or shift
             if (FreeLook)
             {
-                var k = (Keys) keys;
+                Keys k = (Keys) keys;
                 if (
                     k.HasFlag(Keys.W) || k.HasFlag(Keys.A) ||
                     k.HasFlag(Keys.S) || k.HasFlag(Keys.D) ||
@@ -399,8 +399,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
             if (CursorVisible) return;
             if (Viewport.Viewport != viewport) return;
 
-            var x = viewport.Width / 2;
-            var y = viewport.Height / 2;
+            int x = viewport.Width / 2;
+            int y = viewport.Height / 2;
             const int size = 3;
 
             im.AddRectFilled(new Vector2(x - 1, y - size - 1), new Vector2(x + 2, y + size + 2), Color.Black);

@@ -26,7 +26,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("SelectionOptions");
+            SerialisedObject so = new SerialisedObject("SelectionOptions");
             so.Set("IgnoreGrouping", IgnoreGrouping);
             return so;
         }

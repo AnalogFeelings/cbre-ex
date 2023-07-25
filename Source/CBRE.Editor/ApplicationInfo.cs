@@ -12,7 +12,7 @@ namespace CBRE.Editor
 
         public string GetApplicationSettingsFolder(string subfolder)
         {
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Name);
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Name);
             if (String.IsNullOrWhiteSpace(subfolder)) return path;
             return Path.Combine(path, subfolder);
         }

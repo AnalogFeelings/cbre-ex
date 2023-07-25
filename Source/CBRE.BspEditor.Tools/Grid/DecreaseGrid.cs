@@ -33,11 +33,11 @@ namespace CBRE.BspEditor.Tools.Grid
         {
             if (context.TryGet("ActiveDocument", out MapDocument doc))
             {
-                var activeGrid = doc.Map.Data.GetOne<GridData>();
-                var grid = activeGrid?.Grid;
+                GridData activeGrid = doc.Map.Data.GetOne<GridData>();
+                BspEditor.Grid.IGrid grid = activeGrid?.Grid;
                 if (grid != null)
                 {
-                    var operation = new TrivialOperation(x => grid.Spacing--, x => x.Update(activeGrid));
+                    TrivialOperation operation = new TrivialOperation(x => grid.Spacing--, x => x.Update(activeGrid));
                     await MapDocumentOperation.Perform(doc, operation);
                 }
             }

@@ -16,7 +16,7 @@ namespace CBRE.Packages.Zip
             _package = package;
             _stream = package.OpenFile(package.PackageFile);
             _files = new HashSet<string>();
-            foreach (var entry in package.GetEntries())
+            foreach (IPackageEntry entry in package.GetEntries())
             {
                 // File name
                 _files.Add(entry.FullName);
@@ -36,7 +36,7 @@ namespace CBRE.Packages.Zip
 
         public bool HasFile(string path)
         {
-            var entry = GetEntry(path);
+            ZipEntry entry = GetEntry(path);
             return entry != null;
         }
 
@@ -83,13 +83,13 @@ namespace CBRE.Packages.Zip
         private ZipEntry GetEntry(string path)
         {
             path = path.ToLowerInvariant();
-            var pe = _package.GetEntries().FirstOrDefault(x => x.FullName == path) as ZipEntry;
+            ZipEntry pe = _package.GetEntries().FirstOrDefault(x => x.FullName == path) as ZipEntry;
             return pe;
         }
 
         public Stream OpenFile(string path)
         {
-            var entry = GetEntry(path);
+            ZipEntry entry = GetEntry(path);
             if (entry == null) throw new FileNotFoundException();
             return new BufferedStream(entry.Entry.GetStream(_stream));
         }

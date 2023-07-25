@@ -56,9 +56,9 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task OpenTextureBrowser()
         {
-            if (!_document.TryGetTarget(out var doc)) return;
+            if (!_document.TryGetTarget(out MapDocument doc)) return;
 
-            using (var tb = new TextureBrowser(doc))
+            using (TextureBrowser tb = new TextureBrowser(doc))
             {
                 await tb.Initialise(_translation.Value);
                 tb.SetTextureList(await GetTextureList(doc));
@@ -78,7 +78,7 @@ namespace CBRE.BspEditor.Tools.Texture
 
         private async Task<IEnumerable<string>> GetTextureList(MapDocument doc)
         {
-            var tc = await doc.Environment.GetTextureCollection();
+            Environment.TextureCollection tc = await doc.Environment.GetTextureCollection();
             switch (Property.VariableType)
             {
                 case VariableType.Decal:

@@ -63,7 +63,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("Camera");
+            SerialisedObject so = new SerialisedObject("Camera");
             so.Set("EyePosition", EyePosition);
             so.Set("LookPosition", LookPosition);
             so.Set("IsActive", IsActive);

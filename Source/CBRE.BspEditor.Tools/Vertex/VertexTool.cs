@@ -58,7 +58,7 @@ namespace CBRE.BspEditor.Tools.Vertex
 
         public Task OnInitialise()
         {
-            foreach (var st in _subTools.OrderBy(x => x.Value.OrderHint))
+            foreach (Lazy<VertexSubtool> st in _subTools.OrderBy(x => x.Value.OrderHint))
             {
                 st.Value.Selection = _selection;
                 st.Value.Active = Children.Count == 0;
@@ -90,7 +90,7 @@ namespace CBRE.BspEditor.Tools.Vertex
             });
             yield return Oy.Subscribe<String>("VertexTool:Reset", async _ =>
             {
-                var document = GetDocument();
+                MapDocument document = GetDocument();
                 if (document != null) await _selection.Reset(document);
                 CurrentSubTool?.Update();
                 Invalidate();
@@ -100,35 +100,35 @@ namespace CBRE.BspEditor.Tools.Vertex
         public override async Task ToolSelected()
         {
             await SelectionChanged();
-            var ct = CurrentSubTool;
+            VertexSubtool ct = CurrentSubTool;
             if (ct != null) await ct.ToolSelected();
             await base.ToolSelected();
         }
 
         public override async Task ToolDeselected()
         {
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document != null)
             {
                 await _selection.Commit(document);
                 await _selection.Clear(document);
             }
 
-            var ct = CurrentSubTool;
+            VertexSubtool ct = CurrentSubTool;
             if (ct != null) await ct.ToolDeselected();
             await base.ToolDeselected();
         }
 
         private async Task SelectionChanged()
         {
-            var document = GetDocument();
+            MapDocument document = GetDocument();
             if (document != null)
             {
                 await _selection.Commit(document);
                 await _selection.Update(document);
             }
 
-            var ct = CurrentSubTool;
+            VertexSubtool ct = CurrentSubTool;
             if (ct != null) await ct.SelectionChanged();
             Invalidate();
         }
@@ -140,7 +140,7 @@ namespace CBRE.BspEditor.Tools.Vertex
             get { return Children.OfType<VertexSubtool>().FirstOrDefault(x => x.Active); }
             set
             {
-                foreach (var tool in Children.Where(x => x != value && x.Active))
+                foreach (BaseTool tool in Children.Where(x => x != value && x.Active))
                 {
                     tool.ToolDeselected();
                     tool.Active = false;
@@ -162,7 +162,7 @@ namespace CBRE.BspEditor.Tools.Vertex
             // Nothing was clicked, don't change the selection
             if (closestObject == null) return;
 
-            var operation = new Transaction();
+            Transaction operation = new Transaction();
 
             // Ctrl doesn't toggle selection, only adds to it.
             // Ctrl+clicking a selected solid will do nothing.
@@ -197,11 +197,11 @@ namespace CBRE.BspEditor.Tools.Vertex
         protected override void MouseDown(MapDocument document, MapViewport viewport, PerspectiveCamera camera, ViewportEvent e)
         {
             // First, get the ray that is cast from the clicked point along the viewport frustrum
-            var (start, end) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
-            var ray = new Line(start, end);
+            (Vector3 start, Vector3 end) = camera.CastRayFromScreen(new Vector3(e.X, e.Y, 0));
+            Line ray = new Line(start, end);
 
             // Grab all the elements that intersect with the ray
-            var closestObject = document.Map.Root.GetIntersectionsForVisibleObjects(ray)
+            Solid closestObject = document.Map.Root.GetIntersectionsForVisibleObjects(ray)
                 .Where(x => x.Object is Solid)
                 .Select(x => (Solid) x.Object)
                 .FirstOrDefault();
@@ -224,19 +224,19 @@ namespace CBRE.BspEditor.Tools.Vertex
         private IMapObject SelectionTest(MapDocument document, OrthographicCamera camera, ViewportEvent e)
         {
             // Create a box to represent the click, with a tolerance level
-            var unused = camera.GetUnusedCoordinate(new Vector3(100000, 100000, 100000));
-            var tolerance = 4 / camera.Zoom; // Selection tolerance of four pixels
-            var used = camera.Expand(new Vector3(tolerance, tolerance, 0));
-            var add = used + unused;
-            var click = camera.ScreenToWorld(e.X, e.Y);
-            var box = new Box(click - add, click + add);
+            Vector3 unused = camera.GetUnusedCoordinate(new Vector3(100000, 100000, 100000));
+            float tolerance = 4 / camera.Zoom; // Selection tolerance of four pixels
+            Vector3 used = camera.Expand(new Vector3(tolerance, tolerance, 0));
+            Vector3 add = used + unused;
+            Vector3 click = camera.ScreenToWorld(e.X, e.Y);
+            Box box = new Box(click - add, click + add);
             return GetLineIntersections(document, box).FirstOrDefault();
         }
 
         protected override void MouseDown(MapDocument document, MapViewport viewport, OrthographicCamera camera, ViewportEvent e)
         {
             // Get the first element that intersects with the box, selecting or deselecting as needed
-            var closestObject = SelectionTest(document, camera, e) as Solid;
+            Solid closestObject = SelectionTest(document, camera, e) as Solid;
             SelectObject(document, closestObject);
         }
 
@@ -249,7 +249,7 @@ namespace CBRE.BspEditor.Tools.Vertex
             // Force this work to happen on a new thread so waiting on it won't block the context
             Task.Run(async () =>
             {
-                foreach (var obj in _selection)
+                foreach (VertexSolid obj in _selection)
                 {
                     await Convert(builder, document, obj.Copy, resourceCollector);
                 }
@@ -263,46 +263,46 @@ namespace CBRE.BspEditor.Tools.Vertex
 
         private async Task Convert(BufferBuilder builder, MapDocument document, MutableSolid solid, ResourceCollector resourceCollector)
         {
-            var displayFlags = document.Map.Data.GetOne<DisplayFlags>();
-            var hideNull = displayFlags?.HideNullTextures == true;
+            DisplayFlags displayFlags = document.Map.Data.GetOne<DisplayFlags>();
+            bool hideNull = displayFlags?.HideNullTextures == true;
 
-            var faces = solid.Faces.Where(x => x.Vertices.Count > 2).ToList();
+            List<MutableFace> faces = solid.Faces.Where(x => x.Vertices.Count > 2).ToList();
 
             // Pack the vertices like this [ f1v1 ... f1vn ] ... [ fnv1 ... fnvn ]
-            var numVertices = (uint)faces.Sum(x => x.Vertices.Count);
+            uint numVertices = (uint)faces.Sum(x => x.Vertices.Count);
 
             // Pack the indices like this [ solid1 ... solidn ] [ wireframe1 ... wireframe n ]
-            var numSolidIndices = (uint)faces.Sum(x => (x.Vertices.Count - 2) * 3);
-            var numWireframeIndices = numVertices * 2;
+            uint numSolidIndices = (uint)faces.Sum(x => (x.Vertices.Count - 2) * 3);
+            uint numWireframeIndices = numVertices * 2;
 
-            var points = new VertexStandard[numVertices];
-            var indices = new uint[numSolidIndices + numWireframeIndices];
-            
-            var tint = Color.FromArgb(128, 255, 128).ToVector4();
+            VertexStandard[] points = new VertexStandard[numVertices];
+            uint[] indices = new uint[numSolidIndices + numWireframeIndices];
 
-            var tc = await document.Environment.GetTextureCollection();
+            Vector4 tint = Color.FromArgb(128, 255, 128).ToVector4();
 
-            var vi = 0u;
-            var si = 0u;
-            var wi = numSolidIndices;
-            foreach (var face in faces)
+            Environment.TextureCollection tc = await document.Environment.GetTextureCollection();
+
+            uint vi = 0u;
+            uint si = 0u;
+            uint wi = numSolidIndices;
+            foreach (MutableFace face in faces)
             {
-                var opacity = tc.GetOpacity(face.Texture.Name);
-                var t = await tc.GetTextureItem(face.Texture.Name);
-                var w = t?.Width ?? 0;
-                var h = t?.Height ?? 0;
+                float opacity = tc.GetOpacity(face.Texture.Name);
+                TextureItem t = await tc.GetTextureItem(face.Texture.Name);
+                int w = t?.Width ?? 0;
+                int h = t?.Height ?? 0;
 
-                var tintModifier = new Vector4(1, 1, 1, opacity);
+                Vector4 tintModifier = new Vector4(1, 1, 1, opacity);
 
-                var offs = vi;
-                var numFaceVerts = (uint)face.Vertices.Count;
+                uint offs = vi;
+                uint numFaceVerts = (uint)face.Vertices.Count;
 
-                var textureCoords = face.GetTextureCoordinates(w, h).ToList();
+                List<Tuple<Vector3, float, float>> textureCoords = face.GetTextureCoordinates(w, h).ToList();
 
-                var normal = face.Plane.Normal;
-                for (var i = 0; i < face.Vertices.Count; i++)
+                Vector3 normal = face.Plane.Normal;
+                for (int i = 0; i < face.Vertices.Count; i++)
                 {
-                    var v = face.Vertices[i];
+                    MutableVertex v = face.Vertices[i];
                     points[vi++] = new VertexStandard
                     {
                         Position = v.Position,
@@ -330,12 +330,12 @@ namespace CBRE.BspEditor.Tools.Vertex
                 }
             }
 
-            var groups = new List<BufferGroup>();
+            List<BufferGroup> groups = new List<BufferGroup>();
 
             uint texOffset = 0;
-            foreach (var f in faces)
+            foreach (MutableFace f in faces)
             {
-                var texInd = (uint)(f.Vertices.Count - 2) * 3;
+                uint texInd = (uint)(f.Vertices.Count - 2) * 3;
 
                 if (hideNull && tc.IsToolTexture(f.Texture.Name))
                 {
@@ -343,11 +343,11 @@ namespace CBRE.BspEditor.Tools.Vertex
                     continue;
                 }
 
-                var opacity = tc.GetOpacity(f.Texture.Name);
-                var t = await tc.GetTextureItem(f.Texture.Name);
-                var transparent = opacity < 0.95f || t?.Flags.HasFlag(TextureFlags.Transparent) == true;
+                float opacity = tc.GetOpacity(f.Texture.Name);
+                TextureItem t = await tc.GetTextureItem(f.Texture.Name);
+                bool transparent = opacity < 0.95f || t?.Flags.HasFlag(TextureFlags.Transparent) == true;
 
-                var texture = t == null ? string.Empty : $"{document.Environment.ID}::{f.Texture.Name}";
+                string texture = t == null ? string.Empty : $"{document.Environment.ID}::{f.Texture.Name}";
 
                 groups.Add(transparent
                     ? new BufferGroup(PipelineType.TexturedAlpha, CameraType.Perspective, f.Origin, texture, texOffset, texInd)

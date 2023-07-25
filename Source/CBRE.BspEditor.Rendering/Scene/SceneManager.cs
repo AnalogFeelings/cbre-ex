@@ -73,7 +73,7 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         private async Task DocumentChanged(Change change)
         {
-            if (_activeDocument.TryGetTarget(out var md) && change.Document == md)
+            if (_activeDocument.TryGetTarget(out MapDocument md) && change.Document == md)
             {
                 if (change.AffectedData.Any(x => x.AffectsRendering))
                 {
@@ -88,22 +88,22 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         private async Task SettingsChanged(object o)
         {
-            var doc = _activeDocument.TryGetTarget(out var md) ? md : null;
+            MapDocument doc = _activeDocument.TryGetTarget(out MapDocument md) ? md : null;
             await UpdateScene(doc, null);
         }
 
         private async Task DocumentActivated(IDocument doc)
         {
-            var md = doc as MapDocument;
+            MapDocument md = doc as MapDocument;
             _activeDocument = new WeakReference<MapDocument>(md);
             await UpdateScene(md, null);
         }
 
         private async Task DocumentClosed(IDocument doc)
         {
-            var envs = _documentRegister.OpenDocuments.OfType<MapDocument>().Select(x => x.Environment).ToHashSet();
+            HashSet<IEnvironment> envs = _documentRegister.OpenDocuments.OfType<MapDocument>().Select(x => x.Environment).ToHashSet();
             _resourceCollection.DisposeOtherEnvironments(envs);
-            if (_activeDocument.TryGetTarget(out var md) && md == doc)
+            if (_activeDocument.TryGetTarget(out MapDocument md) && md == doc)
             {
                 await UpdateScene(null, null);
             }
@@ -113,7 +113,7 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         private Task UpdateScene(MapDocument md, IEnumerable<IMapObject> affected)
         {
-            var waitTask = Task.CompletedTask;
+            Task waitTask = Task.CompletedTask;
             lock (_lock)
             {
                 if (_sceneBuilder == null)
@@ -127,7 +127,7 @@ namespace CBRE.BspEditor.Rendering.Scene
                 {
                     if (affected == null || md == null)
                     {
-                        foreach (var r in _sceneBuilder.GetAllRenderables())
+                        foreach (CBRE.Rendering.Renderables.IRenderable r in _sceneBuilder.GetAllRenderables())
                         {
                             _engine.Value.Remove(r);
                             if (r is IUpdateable u) _engine.Value.Remove(u);
@@ -137,7 +137,7 @@ namespace CBRE.BspEditor.Rendering.Scene
 
                     if (md != null)
                     {
-                        var resourceCollector = new ResourceCollector();
+                        ResourceCollector resourceCollector = new ResourceCollector();
                         waitTask = _converter.Value.Convert(md, _sceneBuilder, affected, resourceCollector)
                             .ContinueWith(t => HandleResources(md.Environment, resourceCollector));
                     }
@@ -149,14 +149,14 @@ namespace CBRE.BspEditor.Rendering.Scene
 
         private async Task HandleResources(IEnvironment environment, ResourceCollector resources)
         {
-            var add = resources.GetRenderablesToAdd().ToHashSet();
-            var rem = resources.GetRenderablesToRemove().ToHashSet();
+            HashSet<CBRE.Rendering.Renderables.IRenderable> add = resources.GetRenderablesToAdd().ToHashSet();
+            HashSet<CBRE.Rendering.Renderables.IRenderable> rem = resources.GetRenderablesToRemove().ToHashSet();
 
-            foreach (var r in add) _engine.Value.Add(r);
-            foreach (var r in add.OfType<IUpdateable>()) _engine.Value.Add(r);
+            foreach (CBRE.Rendering.Renderables.IRenderable r in add) _engine.Value.Add(r);
+            foreach (IUpdateable r in add.OfType<IUpdateable>()) _engine.Value.Add(r);
 
-            foreach (var r in rem.OfType<IUpdateable>()) _engine.Value.Remove(r);
-            foreach (var r in rem) _engine.Value.Remove(r);
+            foreach (IUpdateable r in rem.OfType<IUpdateable>()) _engine.Value.Remove(r);
+            foreach (CBRE.Rendering.Renderables.IRenderable r in rem) _engine.Value.Remove(r);
 
             await _resourceCollection.Upload(environment, resources);
         }

@@ -82,7 +82,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         private void ResetOrigin()
         {
-            var points = GetVisiblePoints().Where(x => x.IsSelected).Select(x => x.Position).ToList();
+            List<Vector3> points = GetVisiblePoints().Where(x => x.IsSelected).Select(x => x.Position).ToList();
             if (!points.Any()) points = GetVisiblePoints().Select(x => x.Position).ToList();
             if (!points.Any()) _origin.Position = Vector3.Zero;
             else _origin.Position = points.Aggregate(Vector3.Zero, (a, b) => a + b) / points.Count;
@@ -120,7 +120,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         private void Confirm()
         {
             if (_boxState.State.Action != BoxAction.Drawn) return;
-            var bbox = _boxState.State.GetSelectionBox();
+            Box bbox = _boxState.State.GetSelectionBox();
             if (bbox != null && !bbox.IsEmpty())
             {
                 SelectPointsInBox(bbox, KeyboardState.Ctrl);
@@ -162,16 +162,16 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         private void MovePoints(float value)
         {
-            var o = _origin.Position;
-            var solids = new List<VertexSolid>();
+            Vector3 o = _origin.Position;
+            List<VertexSolid> solids = new List<VertexSolid>();
 
             // Move each selected point by the computed offset from the origin
-            foreach (var p in GetVisiblePoints().Where(x => x.IsSelected).SelectMany(x => x.GetStandardPointList()).Distinct())
+            foreach (VertexPoint p in GetVisiblePoints().Where(x => x.IsSelected).SelectMany(x => x.GetStandardPointList()).Distinct())
             {
                 if (!solids.Contains(p.Solid)) solids.Add(p.Solid);
-                var orig = _originals[p];
-                var diff = orig - o;
-                var move = o + diff * value / 100;
+                Vector3 orig = _originals[p];
+                Vector3 diff = orig - o;
+                Vector3 move = o + diff * value / 100;
                 p.Move(move - p.Position);
             }
             UpdateSolids(solids);
@@ -194,7 +194,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         public override void Update()
         {
-            foreach (var v in _vertices.Values)
+            foreach (VertexList v in _vertices.Values)
             {
                 v.Update();
             }
@@ -205,7 +205,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         {
             if (!solids.Any()) return;
 
-            foreach (var solid in solids)
+            foreach (VertexSolid solid in solids)
             {
                 solid.IsDirty = true;
             }
@@ -215,9 +215,9 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         private async Task UpdateVertices()
         {
-            var existing = new Dictionary<VertexSolid, VertexList>(_vertices);
+            Dictionary<VertexSolid, VertexList> existing = new Dictionary<VertexSolid, VertexList>(_vertices);
             _vertices.Clear();
-            foreach (var solid in Selection)
+            foreach (VertexSolid solid in Selection)
             {
                 if (existing.ContainsKey(solid))
                 {
@@ -241,13 +241,13 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         protected override void MouseDown(MapDocument document, MapViewport viewport, PerspectiveCamera camera, ViewportEvent e)
         {
-            var toggle = KeyboardState.Ctrl;
+            bool toggle = KeyboardState.Ctrl;
 
-            var l = camera.EyeLocation;
-            var pos = new Vector3((float)l.X, (float)l.Y, (float)l.Z);
-            var p = new Vector3(e.X, e.Y, 0);
+            Vector3 l = camera.EyeLocation;
+            Vector3 pos = new Vector3((float)l.X, (float)l.Y, (float)l.Z);
+            Vector3 p = new Vector3(e.X, e.Y, 0);
             const int d = 5;
-            var clicked = (from point in GetVisiblePoints()
+            List<VertexPoint> clicked = (from point in GetVisiblePoints()
                 let c = viewport.Viewport.Camera.WorldToScreen(point.Position)
                 where c.Z <= 1
                 where p.X >= c.X - d && p.X <= c.X + d && p.Y >= c.Y - d && p.Y <= c.Y + d
@@ -260,7 +260,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         public bool SelectPointsInBox(Box box, bool toggle)
         {
-            var inBox = GetVisiblePoints().Where(x => box.Vector3IsInside(x.Position)).ToList();
+            List<VertexPoint> inBox = GetVisiblePoints().Where(x => box.Vector3IsInside(x.Position)).ToList();
             Select(inBox, toggle);
             return inBox.Any();
         }
@@ -269,8 +269,8 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
         {
             if (!points.Any()) return;
             if (!toggle) _vertices.SelectMany(x => x.Value.Points).ToList().ForEach(x => x.IsSelected = false);
-            var first = points[0];
-            var val = !toggle || !first.IsSelected;
+            VertexPoint first = points[0];
+            bool val = !toggle || !first.IsSelected;
             points.ForEach(x => x.IsSelected = val);
 
             Invalidate();
@@ -278,7 +278,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
         private void DeselectAll()
         {
-            foreach (var point in _vertices.SelectMany(x => x.Value.Points))
+            foreach (VertexPoint point in _vertices.SelectMany(x => x.Value.Points))
             {
                 point.IsSelected = false;
             }
@@ -304,10 +304,10 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
             public void Update()
             {
-                var selected = Points.Where(x => x.IsSelected).ToList();
+                List<VertexPoint> selected = Points.Where(x => x.IsSelected).ToList();
                 Points.Clear();
 
-                var copy = Solid.Copy;
+                MutableSolid copy = Solid.Copy;
 
                 var verts = copy.Faces.SelectMany(x => x.Vertices.Select(v => new { Location = v, Face = x })).ToList();
 
@@ -343,7 +343,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
             {
                 get
                 {
-                    var pos = Position;
+                    Vector3 pos = Position;
                     if (IsSelected) pos += Vector3.One * 1000000;
                     return pos;
                 }
@@ -365,7 +365,7 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
             {
                 // Midpoints are selected = pink, deselected = yellow
                 // Vertex points are selected = red, deselected = white
-                var c = (IsSelected ? Color.Red : Color.White);
+                Color c = (IsSelected ? Color.Red : Color.White);
                 return IsHighlighted ? c.Lighten() : c;
             }
             
@@ -417,10 +417,10 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
             public override void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
             {
                 const int size = 4;
-                
-                var spos = camera.WorldToScreen(Position);
 
-                var color = Color.FromArgb(255, GetColor());
+                Vector3 spos = camera.WorldToScreen(Position);
+
+                Color color = Color.FromArgb(255, GetColor());
                 im.AddRectOutlineOpaque(new Vector2(spos.X - size, spos.Y - size), new Vector2(spos.X + size, spos.Y + size), Color.Black, color);
             }
 
@@ -428,9 +428,9 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
             {
                 const int size = 4;
 
-                var spos = camera.WorldToScreen(Position);
+                Vector3 spos = camera.WorldToScreen(Position);
 
-                var color = Color.FromArgb(255, GetColor());
+                Color color = Color.FromArgb(255, GetColor());
                 im.AddRectOutlineOpaque(new Vector2(spos.X - size, spos.Y - size), new Vector2(spos.X + size, spos.Y + size), Color.Black, color);
             }
         }
@@ -453,12 +453,12 @@ namespace CBRE.BspEditor.Tools.Vertex.Tools
 
             public override void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
             {
-                var spos = camera.WorldToScreen(Position);
+                Vector3 spos = camera.WorldToScreen(Position);
 
                 const int inner = 4;
                 const int outer = 8;
-                
-                var col = Highlighted ? Color.DarkOrange : Color.LightBlue;
+
+                Color col = Highlighted ? Color.DarkOrange : Color.LightBlue;
                 im.AddCircle(spos.ToVector2(), inner, Color.AliceBlue);
                 im.AddCircle(spos.ToVector2(), outer, col);
             }

@@ -24,7 +24,7 @@ namespace CBRE.Shell.Forms
         /// </summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            var source = FromHandle(msg.HWnd);
+            Control source = FromHandle(msg.HWnd);
 
             // Check if we shouldn't treat this as a hotkey
             if (source != null && CheckIgnoreHotkey(source, keyData))
@@ -52,9 +52,9 @@ namespace CBRE.Shell.Forms
         /// <returns>True if this is a common textbox shortcut</returns>
         private bool IsTextBoxKey(Keys keyData)
         {
-            var ctrl = keyData.HasFlag(Keys.Control);
-            var shift = keyData.HasFlag(Keys.Shift);
-            var alt = keyData.HasFlag(Keys.Alt);
+            bool ctrl = keyData.HasFlag(Keys.Control);
+            bool shift = keyData.HasFlag(Keys.Shift);
+            bool alt = keyData.HasFlag(Keys.Alt);
 
             // All no-mod and shift combinations should be passed through
             if (!ctrl && !alt)

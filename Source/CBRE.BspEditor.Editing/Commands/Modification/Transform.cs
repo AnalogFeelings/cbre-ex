@@ -42,25 +42,25 @@ namespace CBRE.BspEditor.Editing.Commands.Modification
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var objects = document.Selection.GetSelectedParents().ToList();
-            var box = document.Selection.GetSelectionBoundingBox();
+            System.Collections.Generic.List<IMapObject> objects = document.Selection.GetSelectedParents().ToList();
+            DataStructures.Geometric.Box box = document.Selection.GetSelectionBoundingBox();
 
-            using (var dialog = new TransformDialog(box))
+            using (TransformDialog dialog = new TransformDialog(box))
             {
                 _translator.Value.Translate(dialog);
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        var transaction = new Transaction();
+                        Transaction transaction = new Transaction();
 
                         // Add the operation
-                        var transform = dialog.GetTransformation(box);
-                        var transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(transform, objects);
+                        System.Numerics.Matrix4x4 transform = dialog.GetTransformation(box);
+                        BspEditor.Modification.Operations.Mutation.Transform transformOperation = new BspEditor.Modification.Operations.Mutation.Transform(transform, objects);
                         transaction.Add(transformOperation);
 
                         // Check for texture transform
-                        var tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
+                        TransformationFlags tl = document.Map.Data.GetOne<TransformationFlags>() ?? new TransformationFlags();
                         if (dialog.Type == TransformDialog.TransformType.Rotate || dialog.Type == TransformDialog.TransformType.Translate)
                         {
                             if (tl.TextureLock) transaction.Add(new TransformTexturesUniform(transform, objects.SelectMany(x => x.FindAll())));

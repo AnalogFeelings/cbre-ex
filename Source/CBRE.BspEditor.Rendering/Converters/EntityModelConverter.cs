@@ -26,13 +26,13 @@ namespace CBRE.BspEditor.Rendering.Converters
 
         private EntityModel GetModelData(Entity e)
         {
-            var em = e.Data.GetOne<EntityModel>();
+            EntityModel em = e.Data.GetOne<EntityModel>();
             return em != null && em.ContentsReplaced ? em : null;
         }
 
         public Task Convert(BufferBuilder builder, MapDocument document, IMapObject obj, ResourceCollector resourceCollector)
         {
-            var em = obj.Data.GetOne<EntityModel>();
+            EntityModel em = obj.Data.GetOne<EntityModel>();
 
             if (em.ContentsReplaced && em.Renderable != null)
             {

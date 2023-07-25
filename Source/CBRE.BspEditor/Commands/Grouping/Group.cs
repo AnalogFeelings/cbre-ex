@@ -25,13 +25,13 @@ namespace CBRE.BspEditor.Commands.Grouping
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {
-            var sel = document.Selection.GetSelectedParents().ToList();
+            System.Collections.Generic.List<Primitives.MapObjects.IMapObject> sel = document.Selection.GetSelectedParents().ToList();
             if (sel.Count > 1)
             {
-                var group = new Primitives.MapObjects.Group(document.Map.NumberGenerator.Next("MapObject")) { IsSelected = true };
+                Primitives.MapObjects.Group group = new Primitives.MapObjects.Group(document.Map.NumberGenerator.Next("MapObject")) { IsSelected = true };
 
-                var tns = new Transaction();
-                foreach (var grp in sel.GroupBy(x => x.Hierarchy.Parent.ID))
+                Transaction tns = new Transaction();
+                foreach (IGrouping<long, Primitives.MapObjects.IMapObject> grp in sel.GroupBy(x => x.Hierarchy.Parent.ID))
                 {
                     tns.Add(new Detatch(grp.Key, grp));
                 }

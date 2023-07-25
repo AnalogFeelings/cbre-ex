@@ -31,7 +31,7 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <returns>The root node of this object's tree</returns>
         public static IMapObject GetRoot(this IMapObject obj)
         {
-            var p = obj;
+            IMapObject p = obj;
             while (p.Hierarchy.Parent != null) p = p.Hierarchy.Parent;
             return p;
         }
@@ -105,24 +105,24 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <returns>A list of all the descendants that match the test (including this node)</returns>
         public static List<IMapObject> Find(this IMapObject obj, Predicate<IMapObject> matcher, bool forceMatchIfParentMatches = false)
         {
-            var list = new List<IMapObject>();
+            List<IMapObject> list = new List<IMapObject>();
             obj.FindRecursive(list, matcher, forceMatchIfParentMatches);
             return list;
         }
 
         public static List<IMapObject> Collect(this IMapObject obj, Predicate<IMapObject> traverseNode, Predicate<IMapObject> includeNode)
         {
-            var list = new List<IMapObject>();
+            List<IMapObject> list = new List<IMapObject>();
 
             // Check if we're traversing this node at all
-            var t = traverseNode(obj);
+            bool t = traverseNode(obj);
             if (!t) return list;
 
             // Check if we should include this node
             if (includeNode(obj)) list.Add(obj);
 
             // Traverse and include child nodes
-            foreach (var ch in obj.Hierarchy)
+            foreach (IMapObject ch in obj.Hierarchy)
             {
                 list.AddRange(ch.Collect(traverseNode, includeNode));
             }
@@ -139,13 +139,13 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <param name="forceMatchIfParentMatches">If true and a parent matches the predicate, all children will be added regardless of match status.</param>
         private static void FindRecursive(this IMapObject obj, ICollection<IMapObject> items, Predicate<IMapObject> matcher, bool forceMatchIfParentMatches = false)
         {
-            var thisMatch = matcher(obj);
+            bool thisMatch = matcher(obj);
             if (thisMatch)
             {
                 items.Add(obj);
                 if (forceMatchIfParentMatches) matcher = x => true;
             }
-            foreach (var mo in obj.Hierarchy)
+            foreach (IMapObject mo in obj.Hierarchy)
             {
                 mo.FindRecursive(items, matcher, forceMatchIfParentMatches);
             }
@@ -160,13 +160,13 @@ namespace CBRE.BspEditor.Primitives.MapObjects
         /// <param name="forceMatchIfParentMatches">If true and a parent matches the predicate, all children will be modified regardless of match status.</param>
         public static void ForEach(this IMapObject obj, Predicate<IMapObject> matcher, Action<IMapObject> action, bool forceMatchIfParentMatches = false)
         {
-            var thisMatch = matcher(obj);
+            bool thisMatch = matcher(obj);
             if (thisMatch)
             {
                 action(obj);
                 if (forceMatchIfParentMatches) matcher = x => true;
             }
-            foreach (var mo in obj.Hierarchy)
+            foreach (IMapObject mo in obj.Hierarchy)
             {
                 mo.ForEach(matcher, action, forceMatchIfParentMatches);
             }

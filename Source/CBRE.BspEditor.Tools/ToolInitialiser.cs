@@ -17,7 +17,7 @@ namespace CBRE.BspEditor.Tools
 
         private Task MapViewportCreated(MapViewport viewport)
         {
-            var itl = new ToolViewportListener(viewport);
+            ToolViewportListener itl = new ToolViewportListener(viewport);
             viewport.Listeners.Add(itl);
             return Task.CompletedTask;
         }

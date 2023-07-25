@@ -71,7 +71,7 @@ namespace CBRE.Common
         {
             lock (_stream)
             {
-                var pos = _stream.Position;
+                long pos = _stream.Position;
                 _stream.Position = _offset + Position;
                 count = (int) Math.Min(count, _length - Position);
                 count = _stream.Read(buffer, offset, count);

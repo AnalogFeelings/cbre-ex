@@ -22,7 +22,7 @@ namespace CBRE.Common.Shell.Menu
 
         private Image GetResource()
         {
-            var prop = ResourceType?.GetProperty(ResourceName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+            PropertyInfo prop = ResourceType?.GetProperty(ResourceName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
             if (prop == null || !typeof(Image).IsAssignableFrom(prop.PropertyType)) return null;
             return prop.GetValue(null) as Image;
         }

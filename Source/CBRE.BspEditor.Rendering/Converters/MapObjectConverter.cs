@@ -28,11 +28,11 @@ namespace CBRE.BspEditor.Rendering.Converters
 
         public async Task Convert(MapDocument document, SceneBuilder builder, IEnumerable<IMapObject> affected, ResourceCollector resourceCollector)
         {
-            var objs = document.Map.Root.FindAll();
+            List<IMapObject> objs = document.Map.Root.FindAll();
             if (affected != null)
             {
-                var groups = affected.Select(x => x.ID / 200).ToHashSet();
-                foreach (var g in groups)
+                HashSet<long> groups = affected.Select(x => x.ID / 200).ToHashSet();
+                foreach (long g in groups)
                 {
                     resourceCollector.RemoveRenderables(builder.GetRenderablesForGroup(g));
                     builder.DeleteGroup(g);
@@ -40,23 +40,23 @@ namespace CBRE.BspEditor.Rendering.Converters
                 objs = objs.Where(x => groups.Contains(x.ID / 200)).ToList();
             }
 
-            var converters = _converters.Select(x => x.Value).OrderBy(x => (int) x.Priority).ToList();
-            var groupConverters = _groupConverters.Select(x => x.Value).OrderBy(x => (int) x.Priority).ToList();
+            List<IMapObjectSceneConverter> converters = _converters.Select(x => x.Value).OrderBy(x => (int) x.Priority).ToList();
+            List<IMapObjectGroupSceneConverter> groupConverters = _groupConverters.Select(x => x.Value).OrderBy(x => (int) x.Priority).ToList();
 
-            foreach (var g in objs.GroupBy(x => x.ID / 200))
+            foreach (IGrouping<long, IMapObject> g in objs.GroupBy(x => x.ID / 200))
             {
                 builder.EnsureGroupExists(g.Key);
-                var buffer = builder.GetBufferForGroup(g.Key);
-                var collector = new ResourceCollector();
+                CBRE.Rendering.Resources.BufferBuilder buffer = builder.GetBufferForGroup(g.Key);
+                ResourceCollector collector = new ResourceCollector();
 
-                foreach (var gc in groupConverters)
+                foreach (IMapObjectGroupSceneConverter gc in groupConverters)
                 {
                     gc.Convert(buffer, document, g, collector);
                 }
 
-                foreach (var obj in g)
+                foreach (IMapObject obj in g)
                 {
-                    foreach (var converter in converters)
+                    foreach (IMapObjectSceneConverter converter in converters)
                     {
                         if (!converter.Supports(obj)) continue;
                         await converter.Convert(buffer, document, obj, collector);

@@ -36,20 +36,20 @@ namespace CBRE.BspEditor.Editing.Commands.Pointfile
         public Task Convert(BufferBuilder builder, MapDocument document, IMapObject obj,
             ResourceCollector resourceCollector)
         {
-            var pointfile = GetPointfile(document);
+            Pointfile pointfile = GetPointfile(document);
             if (pointfile == null) return Task.FromResult(0);
 
-            var r = 1f;
-            var g = 0.5f;
-            var b = 0.5f;
-            var change = 0.5f / pointfile.Lines.Count;
+            float r = 1f;
+            float g = 0.5f;
+            float b = 0.5f;
+            float change = 0.5f / pointfile.Lines.Count;
 
-            var verts = new List<VertexStandard>();
-            var index = new List<uint>();
+            List<VertexStandard> verts = new List<VertexStandard>();
+            List<uint> index = new List<uint>();
             
-            for (var i = 0; i < pointfile.Lines.Count; i++)
+            for (int i = 0; i < pointfile.Lines.Count; i++)
             {
-                var line = pointfile.Lines[i];
+                DataStructures.Geometric.Line line = pointfile.Lines[i];
 
                 index.Add((uint) index.Count + 0);
                 index.Add((uint) index.Count + 1);

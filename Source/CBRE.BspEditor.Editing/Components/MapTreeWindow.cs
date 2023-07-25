@@ -69,7 +69,7 @@ namespace CBRE.BspEditor.Editing.Components
         public void Translate(ITranslationStringProvider strings)
         {
             CreateHandle();
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
             this.InvokeLater(() =>
             {
                 Text = strings.GetString(prefix, "Title");
@@ -99,8 +99,8 @@ namespace CBRE.BspEditor.Editing.Components
             this.InvokeLater(() =>
             {
                 if (doc == null || doc.Selection.IsEmpty) return;
-                var first = doc.Selection.GetSelectedParents().First();
-                var node = FindNodeWithTag(MapTree.Nodes.OfType<TreeNode>(), first);
+                IMapObject first = doc.Selection.GetSelectedParents().First();
+                TreeNode node = FindNodeWithTag(MapTree.Nodes.OfType<TreeNode>(), first);
                 if (node != null) MapTree.SelectedNode = node;
             });
         }
@@ -123,10 +123,10 @@ namespace CBRE.BspEditor.Editing.Components
 
         private TreeNode FindNodeWithTag(IEnumerable<TreeNode> nodes, object tag)
         {
-            foreach (var tn in nodes)
+            foreach (TreeNode tn in nodes)
             {
                 if (tn.Tag == tag) return tn;
-                var recurse = FindNodeWithTag(tn.Nodes.OfType<TreeNode>(), tag);
+                TreeNode recurse = FindNodeWithTag(tn.Nodes.OfType<TreeNode>(), tag);
                 if (recurse != null) return recurse;
             }
             return null;
@@ -134,7 +134,7 @@ namespace CBRE.BspEditor.Editing.Components
 
         private void RefreshNodes()
         {
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             RefreshNodes(doc);
         }
 
@@ -151,8 +151,8 @@ namespace CBRE.BspEditor.Editing.Components
 
         private void LoadMapNode(TreeNode parent, IMapObject obj)
         {
-            var text = GetNodeText(obj);
-            var node = new TreeNode(obj.GetType().Name + text) { Tag = obj };
+            string text = GetNodeText(obj);
+            TreeNode node = new TreeNode(obj.GetType().Name + text) { Tag = obj };
             if (obj is Root w)
             {
                 node.Nodes.AddRange(GetEntityNodes(w.Data.GetOne<EntityData>()).ToArray());
@@ -165,7 +165,7 @@ namespace CBRE.BspEditor.Editing.Components
             {
                 node.Nodes.AddRange(GetFaceNodes(s.Faces).ToArray());
             }
-            foreach (var mo in obj.Hierarchy)
+            foreach (IMapObject mo in obj.Hierarchy)
             {
                 LoadMapNode(node, mo);
             }
@@ -183,10 +183,10 @@ namespace CBRE.BspEditor.Editing.Components
             {
                 return " (" + mo.Hierarchy.HasChildren + " children)";
             }
-            var ed = mo.Data.GetOne<EntityData>();
+            EntityData ed = mo.Data.GetOne<EntityData>();
             if (ed != null)
             {
-                var targetName = ed.Get("targetname", "");
+                string targetName = ed.Get("targetname", "");
                 return ": " + ed.Name + (String.IsNullOrWhiteSpace(targetName) ? "" : " (" + targetName + ")");
             }
             return "";
@@ -201,29 +201,29 @@ namespace CBRE.BspEditor.Editing.Components
 
         private IEnumerable<TreeNode> GetFaceNodes(IEnumerable<Face> faces)
         {
-            var c = 0;
-            foreach (var face in faces)
+            int c = 0;
+            foreach (Face face in faces)
             {
-                var fnode = new TreeNode("Face " + c);
+                TreeNode fnode = new TreeNode("Face " + c);
                 c++;
-                var pnode = fnode.Nodes.Add($"Plane: {face.Plane.Normal} * {face.Plane.DistanceFromOrigin}");
+                TreeNode pnode = fnode.Nodes.Add($"Plane: {face.Plane.Normal} * {face.Plane.DistanceFromOrigin}");
                 pnode.Nodes.Add($"Normal: {face.Plane.Normal}");
                 pnode.Nodes.Add($"Distance: {face.Plane.DistanceFromOrigin}");
                 pnode.Nodes.Add($"A: {face.Plane.A}");
                 pnode.Nodes.Add($"B: {face.Plane.B}");
                 pnode.Nodes.Add($"C: {face.Plane.C}");
                 pnode.Nodes.Add($"D: {face.Plane.D}");
-                var tnode = fnode.Nodes.Add("Texture: " + face.Texture.Name);
+                TreeNode tnode = fnode.Nodes.Add("Texture: " + face.Texture.Name);
                 tnode.Nodes.Add($"U Axis: {face.Texture.UAxis}");
                 tnode.Nodes.Add($"V Axis: {face.Texture.VAxis}");
                 tnode.Nodes.Add($"Scale: X = {face.Texture.XScale}, Y = {face.Texture.YScale}");
                 tnode.Nodes.Add($"Offset: X = {face.Texture.XShift}, Y = {face.Texture.YShift}");
                 tnode.Nodes.Add("Rotation: " + face.Texture.Rotation);
-                var vnode = fnode.Nodes.Add($"Vertices: {face.Vertices.Count}");
-                var d = 0;
-                foreach (var vertex in face.Vertices)
+                TreeNode vnode = fnode.Nodes.Add($"Vertices: {face.Vertices.Count}");
+                int d = 0;
+                foreach (System.Numerics.Vector3 vertex in face.Vertices)
                 {
-                    var cnode = vnode.Nodes.Add("Vertex " + d + ": " + vertex);
+                    TreeNode cnode = vnode.Nodes.Add("Vertex " + d + ": " + vertex);
                     d++;
                 }
                 yield return fnode;
@@ -244,8 +244,8 @@ namespace CBRE.BspEditor.Editing.Components
             Properties.Items.Clear();
             if (MapTree.SelectedNode != null && MapTree.SelectedNode.Tag != null)
             {
-                var list = await GetTagProperties(MapTree.SelectedNode.Tag);
-                foreach (var kv in list)
+                IEnumerable<Tuple<string, string>> list = await GetTagProperties(MapTree.SelectedNode.Tag);
+                foreach (Tuple<string, string> kv in list)
                 {
                     Properties.Items.Add(new ListViewItem(new[] {kv.Item1, kv.Item2}));
                 }
@@ -255,25 +255,25 @@ namespace CBRE.BspEditor.Editing.Components
 
         private async Task<IEnumerable<Tuple<string, string>>> GetTagProperties(object tag)
         {
-            var list = new List<Tuple<string, string>>();
+            List<Tuple<string, string>> list = new List<Tuple<string, string>>();
             if (!(tag is long id)) return list;
 
-            var doc = _context.Get<MapDocument>("ActiveDocument");
+            MapDocument doc = _context.Get<MapDocument>("ActiveDocument");
             if (doc == null) return list;
 
-            var mo = doc.Map.Root.FindByID(id);
+            IMapObject mo = doc.Map.Root.FindByID(id);
             if (mo == null) return list;
 
-            var ed = mo.Data.GetOne<EntityData>();
+            EntityData ed = mo.Data.GetOne<EntityData>();
             if (ed == null) return list;
 
-            var gameData = await doc.Environment.GetGameData();
+            DataStructures.GameData.GameData gameData = await doc.Environment.GetGameData();
 
-            var gd = gameData.GetClass(ed.Name);
-            foreach (var prop in ed.Properties)
+            DataStructures.GameData.GameDataObject gd = gameData.GetClass(ed.Name);
+            foreach (KeyValuePair<string, string> prop in ed.Properties)
             {
-                var gdp = gd?.Properties.FirstOrDefault(x => String.Equals(x.Name, prop.Key, StringComparison.InvariantCultureIgnoreCase));
-                var key = gdp != null && !String.IsNullOrWhiteSpace(gdp.ShortDescription) ? gdp.ShortDescription : prop.Key;
+                DataStructures.GameData.Property gdp = gd?.Properties.FirstOrDefault(x => String.Equals(x.Name, prop.Key, StringComparison.InvariantCultureIgnoreCase));
+                string key = gdp != null && !String.IsNullOrWhiteSpace(gdp.ShortDescription) ? gdp.ShortDescription : prop.Key;
                 list.Add(Tuple.Create(key, prop.Value));
             }
             return list;

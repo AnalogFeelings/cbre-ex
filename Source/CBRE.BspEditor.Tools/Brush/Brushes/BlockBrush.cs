@@ -27,12 +27,12 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         public IEnumerable<IMapObject> Create(UniqueNumberGenerator idGenerator, Box box, string texture, int roundDecimals)
         {
-            var solid = new Solid(idGenerator.Next("MapObject"));
+            Solid solid = new Solid(idGenerator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(Colour.GetRandomBrushColour()));
 
-            foreach (var arr in box.GetBoxFaces())
+            foreach (System.Numerics.Vector3[] arr in box.GetBoxFaces())
             {
-                var face = new Face(idGenerator.Next("Face"))
+                Face face = new Face(idGenerator.Next("Face"))
                 {
                     Plane = new Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = texture }

@@ -41,9 +41,9 @@ namespace CBRE.Shell.Commands
 
         public async Task Invoke(IContext context, CommandParameters parameters)
         {
-            var filter = _loaders.Select(x => x.Value).Select(x => x.FileTypeDescription + "|" + String.Join(";", x.SupportedFileExtensions.SelectMany(e => e.Extensions).Select(e => "*" + e))).ToList();
+            List<string> filter = _loaders.Select(x => x.Value).Select(x => x.FileTypeDescription + "|" + String.Join(";", x.SupportedFileExtensions.SelectMany(e => e.Extensions).Select(e => "*" + e))).ToList();
             filter.Add("All files|*.*");
-            using (var ofd = new OpenFileDialog { Filter = String.Join("|", filter)})
+            using (OpenFileDialog ofd = new OpenFileDialog { Filter = String.Join("|", filter)})
             {
                 if (ofd.ShowDialog() != DialogResult.OK) return;
 

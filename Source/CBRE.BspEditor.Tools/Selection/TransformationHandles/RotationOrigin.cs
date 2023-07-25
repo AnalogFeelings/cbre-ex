@@ -35,12 +35,12 @@ namespace CBRE.BspEditor.Tools.Selection.TransformationHandles
 
         public override void Render(IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)
         {
-            var spos = camera.WorldToScreen(Position);
+            Vector3 spos = camera.WorldToScreen(Position);
 
             const float inner = 4;
             const float outer = 8;
 
-            var col = Highlighted ? Color.Red : Color.White;
+            Color col = Highlighted ? Color.Red : Color.White;
             im.AddCircle(spos.ToVector2(), inner, Color.Cyan);
             im.AddCircle(spos.ToVector2(), outer, col);
         }

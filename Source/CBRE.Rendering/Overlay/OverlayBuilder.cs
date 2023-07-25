@@ -32,8 +32,8 @@ namespace CBRE.Rendering.Overlay
 
         private void Resize()
         {
-            var vpw = Math.Max(1, _viewport.Width);
-            var vph = Math.Max(1, _viewport.Height);
+            int vpw = Math.Max(1, _viewport.Width);
+            int vph = Math.Max(1, _viewport.Height);
 
             _width = vpw;
             _height = vph;
@@ -45,24 +45,24 @@ namespace CBRE.Rendering.Overlay
         {
             Resize();
 
-            var min = Vector3.Zero;
-            var max = Vector3.Zero;
+            Vector3 min = Vector3.Zero;
+            Vector3 max = Vector3.Zero;
 
-            var oc = _viewport.Camera as OrthographicCamera;
-            var pc = _viewport.Camera as PerspectiveCamera;
+            OrthographicCamera oc = _viewport.Camera as OrthographicCamera;
+            PerspectiveCamera pc = _viewport.Camera as PerspectiveCamera;
 
             if (oc != null)
             {
-                var up = (Vector3.One - oc.Expand(new Vector3(1, 1, 0))) * 1000;
-                var tl = oc.ScreenToWorld(Vector3.Zero) + up;
-                var br = oc.ScreenToWorld(new Vector3(_width, _height, 0)) - up;
+                Vector3 up = (Vector3.One - oc.Expand(new Vector3(1, 1, 0))) * 1000;
+                Vector3 tl = oc.ScreenToWorld(Vector3.Zero) + up;
+                Vector3 br = oc.ScreenToWorld(new Vector3(_width, _height, 0)) - up;
                 min = Vector3.Min(tl, br);
                 max = Vector3.Max(tl, br);
             }
 
-            using (var renderer = new ImGui2DRenderer(_viewport, _controller))
+            using (ImGui2DRenderer renderer = new ImGui2DRenderer(_viewport, _controller))
             {
-                foreach (var b in builders)
+                foreach (IOverlayRenderable b in builders)
                 {
                     try
                     {
@@ -86,7 +86,7 @@ namespace CBRE.Rendering.Overlay
                 return;
             }
 
-            var diff = (frame - _lastFrame) / 1000f;
+            float diff = (frame - _lastFrame) / 1000f;
             ImGui.SetCurrentContext(_controller.Context);
             _controller.Update(diff);
             _lastFrame = frame;

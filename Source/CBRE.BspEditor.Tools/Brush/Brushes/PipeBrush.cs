@@ -46,11 +46,11 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         private Solid MakeSolid(UniqueNumberGenerator generator, IEnumerable<Vector3[]> faces, string texture, Color col)
         {
-            var solid = new Solid(generator.Next("MapObject"));
+            Solid solid = new Solid(generator.Next("MapObject"));
             solid.Data.Add(new ObjectColor(col));
-            foreach (var arr in faces)
+            foreach (Vector3[] arr in faces)
             {
-                var face = new Face(generator.Next("Face"))
+                Face face = new Face(generator.Next("Face"))
                 {
                     Plane = new Plane(arr[0], arr[1], arr[2]),
                     Texture = { Name = texture  }
@@ -64,30 +64,30 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
 
         public IEnumerable<IMapObject> Create(UniqueNumberGenerator generator, Box box, string texture, int roundDecimals)
         {
-            var wallWidth = (float) _wallWidth.GetValue();
+            float wallWidth = (float) _wallWidth.GetValue();
             if (wallWidth < 1) yield break;
-            var numSides = (int) _numSides.GetValue();
+            int numSides = (int) _numSides.GetValue();
             if (numSides < 3) yield break;
 
             // Very similar to the cylinder, except we have multiple solids this time
-            var width = box.Width;
-            var length = box.Length;
-            var height = box.Height;
-            var majorOut = width / 2;
-            var majorIn = majorOut - wallWidth;
-            var minorOut = length / 2;
-            var minorIn = minorOut - wallWidth;
-            var angle = 2 * Math.PI / numSides;
+            float width = box.Width;
+            float length = box.Length;
+            float height = box.Height;
+            float majorOut = width / 2;
+            float majorIn = majorOut - wallWidth;
+            float minorOut = length / 2;
+            float minorIn = minorOut - wallWidth;
+            double angle = 2 * Math.PI / numSides;
 
             // Calculate the X and Y points for the inner and outer ellipses
-            var outer = new Vector3[numSides];
-            var inner = new Vector3[numSides];
-            for (var i = 0; i < numSides; i++)
+            Vector3[] outer = new Vector3[numSides];
+            Vector3[] inner = new Vector3[numSides];
+            for (int i = 0; i < numSides; i++)
             {
-                var a = i * angle;
-                var xval = box.Center.X + majorOut * (float) Math.Cos(a);
-                var yval = box.Center.Y + minorOut * (float) Math.Sin(a);
-                var zval = box.Start.Z;
+                double a = i * angle;
+                float xval = box.Center.X + majorOut * (float) Math.Cos(a);
+                float yval = box.Center.Y + minorOut * (float) Math.Sin(a);
+                float zval = box.Start.Z;
                 outer[i] = new Vector3(xval, yval, zval).Round(roundDecimals);
                 xval = box.Center.X + majorIn * (float) Math.Cos(a);
                 yval = box.Center.Y + minorIn * (float) Math.Sin(a);
@@ -95,12 +95,12 @@ namespace CBRE.BspEditor.Tools.Brush.Brushes
             }
 
             // Create the solids
-            var colour = Colour.GetRandomBrushColour();
-            var z = new Vector3(0, 0, height).Round(roundDecimals);
-            for (var i = 0; i < numSides; i++)
+            Color colour = Colour.GetRandomBrushColour();
+            Vector3 z = new Vector3(0, 0, height).Round(roundDecimals);
+            for (int i = 0; i < numSides; i++)
             {
-                var faces = new List<Vector3[]>();
-                var next = (i + 1) % numSides;
+                List<Vector3[]> faces = new List<Vector3[]>();
+                int next = (i + 1) % numSides;
                 faces.Add(new[] { outer[i], outer[i] + z, outer[next] + z, outer[next] });
                 faces.Add(new[] { inner[next], inner[next] + z, inner[i] + z, inner[i] });
                 faces.Add(new[] { outer[next], outer[next] + z, inner[next] + z, inner[next] });

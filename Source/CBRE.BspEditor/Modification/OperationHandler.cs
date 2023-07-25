@@ -23,7 +23,7 @@ namespace CBRE.BspEditor.Modification
         {
             await _queue.Enqueue(async () =>
             {
-                var change = await operation.Operation.Perform(operation.Document);
+                Change change = await operation.Operation.Perform(operation.Document);
                 await SendChange(change);
             });
         }
@@ -32,7 +32,7 @@ namespace CBRE.BspEditor.Modification
         {
             await _queue.Enqueue(async () =>
             {
-                var change = await operation.Operation.Reverse(operation.Document);
+                Change change = await operation.Operation.Reverse(operation.Document);
                 await SendChange(change);
             });
         }

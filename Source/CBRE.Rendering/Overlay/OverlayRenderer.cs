@@ -61,7 +61,7 @@ namespace CBRE.Rendering.Overlay
 
         public void AddRect(Vector2 start, Vector2 end, Color color, bool antiAliased = false)
         {
-            var list = GetList();
+            ImDrawListPtr list = GetList();
             list.Flags = antiAliased ? ImDrawListFlags.AntiAliasedLines : 0;
             list.AddRect(start, end, color.ToImGuiColor());
             list.Flags = 0;
@@ -69,7 +69,7 @@ namespace CBRE.Rendering.Overlay
 
         public void AddRectFilled(Vector2 start, Vector2 end, Color color, bool antiAliased = false)
         {
-            var list = GetList();
+            ImDrawListPtr list = GetList();
             list.Flags = antiAliased ? ImDrawListFlags.AntiAliasedLines : 0;
             list.AddRectFilled(start, end, color.ToImGuiColor());
             list.Flags = 0;
@@ -77,9 +77,9 @@ namespace CBRE.Rendering.Overlay
 
         public void AddRectOutlineOpaque(Vector2 start, Vector2 end, Color outlineColor, Color fillColor, float outlineWidth = 1, bool antiAliased = false)
         {
-            var list = GetList(2);
+            ImDrawListPtr list = GetList(2);
             list.Flags = antiAliased ? ImDrawListFlags.AntiAliasedLines : 0;
-            var outl = new Vector2(outlineWidth, outlineWidth);
+            Vector2 outl = new Vector2(outlineWidth, outlineWidth);
             list.AddRectFilled(start, end, outlineColor.ToImGuiColor());
             list.AddRectFilled(start + outl, end - outl, fillColor.ToImGuiColor());
             list.Flags = 0;
@@ -87,7 +87,7 @@ namespace CBRE.Rendering.Overlay
 
         public void AddCircle(Vector2 center, float radius, Color color, bool antiAliased = true)
         {
-            var list = GetList();
+            ImDrawListPtr list = GetList();
             list.Flags = antiAliased ? ImDrawListFlags.AntiAliasedLines : 0;
             list.AddCircle(center, radius, color.ToImGuiColor());
             list.Flags = 0;
@@ -95,7 +95,7 @@ namespace CBRE.Rendering.Overlay
 
         public void AddCircleFilled(Vector2 center, float radius, Color color, bool antiAliased)
         {
-            var list = GetList();
+            ImDrawListPtr list = GetList();
             list.Flags = antiAliased ? ImDrawListFlags.AntiAliasedFill : 0;
             list.AddCircleFilled(center, radius, color.ToImGuiColor());
             list.Flags = 0;
@@ -109,12 +109,12 @@ namespace CBRE.Rendering.Overlay
                     return ImGui.CalcTextSize(text);
                 case FontType.Bold:
                     ImGui.PushFont(_controller.BoldFont);
-                    var bs = ImGui.CalcTextSize(text);
+                    Vector2 bs = ImGui.CalcTextSize(text);
                     ImGui.PopFont();
                     return bs;
                 case FontType.Large:
                     ImGui.PushFont(_controller.LargeFont);
-                    var ls = ImGui.CalcTextSize(text);
+                    Vector2 ls = ImGui.CalcTextSize(text);
                     ImGui.PopFont();
                     return ls;
                 default:
@@ -124,7 +124,7 @@ namespace CBRE.Rendering.Overlay
 
         public void AddText(Vector2 position, Color color, FontType type, string text)
         {
-            var list = GetList();
+            ImDrawListPtr list = GetList();
             switch (type)
             {
                 case FontType.Normal:
@@ -147,7 +147,7 @@ namespace CBRE.Rendering.Overlay
 
         public void AddLine(Vector2 start, Vector2 end, Color color, float width = 1, bool antiAliased = true)
         {
-            var list = GetList();
+            ImDrawListPtr list = GetList();
             list.Flags = antiAliased ? ImDrawListFlags.AntiAliasedLines : 0;
             list.AddLine(start, end, color.ToImGuiColor(), width);
             list.Flags = 0;

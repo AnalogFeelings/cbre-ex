@@ -39,7 +39,7 @@ namespace CBRE.BspEditor.Primitives.MapObjectData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("VisgroupHidden");
+            SerialisedObject so = new SerialisedObject("VisgroupHidden");
             so.Set("IsHidden", IsHidden);
             return so;
         }

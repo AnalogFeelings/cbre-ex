@@ -18,7 +18,7 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
 
         public Task Changed(Change change)
         {
-            var bounds = change.Document.Map.Data.OfType<CordonBounds>().FirstOrDefault();
+            CordonBounds bounds = change.Document.Map.Data.OfType<CordonBounds>().FirstOrDefault();
 
             // Trigger if cordon is on, or if it was just turned off in this change
             if (bounds != null && (bounds.Enabled || change.AffectedData.Contains(bounds)))
@@ -32,8 +32,8 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
 
         private void ShowAllObjects(Change change)
         {
-            var hidden = change.Document.Map.Root.Find(x => x.Data.OfType<CordonHidden>().Any()).ToList();
-            foreach (var o in hidden)
+            System.Collections.Generic.List<IMapObject> hidden = change.Document.Map.Root.Find(x => x.Data.OfType<CordonHidden>().Any()).ToList();
+            foreach (IMapObject o in hidden)
             {
                 o.Data.Remove(x => x is CordonHidden);
                 change.Add(o);
@@ -44,10 +44,10 @@ namespace CBRE.BspEditor.Modification.ChangeHandling
         {
             // Hide objects that are currently visible but shouldn't be
             // Show objects that are not currently visible but should be
-            foreach (var o in change.Document.Map.Root.FindAll())
+            foreach (IMapObject o in change.Document.Map.Root.FindAll())
             {
-                var shouldBeVisible = o.BoundingBox != null && o.BoundingBox.IntersectsWith(bounds);
-                var isCurrentlyVisible = !o.Data.OfType<CordonHidden>().Any();
+                bool shouldBeVisible = o.BoundingBox != null && o.BoundingBox.IntersectsWith(bounds);
+                bool isCurrentlyVisible = !o.Data.OfType<CordonHidden>().Any();
                 if (shouldBeVisible && !isCurrentlyVisible)
                 {
                     o.Data.Remove(x => x is CordonHidden);

@@ -32,10 +32,10 @@ namespace CBRE.BspEditor.Tools.Grid
         {
             if (context.TryGet("ActiveDocument", out MapDocument doc))
             {
-                var activeGrid = doc.Map.Data.GetOne<GridData>();
+                GridData activeGrid = doc.Map.Data.GetOne<GridData>();
                 if (activeGrid != null)
                 {
-                    var operation = new TrivialOperation(x => activeGrid.SnapToGrid = !activeGrid.SnapToGrid, x => x.Update(activeGrid));
+                    TrivialOperation operation = new TrivialOperation(x => activeGrid.SnapToGrid = !activeGrid.SnapToGrid, x => x.Update(activeGrid));
                     await MapDocumentOperation.Perform(doc, operation);
                 }
             }

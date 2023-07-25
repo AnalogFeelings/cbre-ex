@@ -61,7 +61,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         
         private async Task DocumentActivated(IDocument doc)
         {
-            var md = doc as MapDocument;
+            MapDocument md = doc as MapDocument;
 
             _activeDocument = new WeakReference<MapDocument>(md);
             Update(md);
@@ -93,7 +93,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
                 }
                 else
                 {
-                    var tree = GetItemHierarchies(document);
+                    List<VisgroupItem> tree = GetItemHierarchies(document);
                     this.InvokeLater(() => VisgroupPanel.Update(tree));
                 }
             });
@@ -101,11 +101,11 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private List<VisgroupItem> GetItemHierarchies(MapDocument document)
         {
-            var list = new List<VisgroupItem>();
+            List<VisgroupItem> list = new List<VisgroupItem>();
 
             // add user visgroups
-            var visgroups = document.Map.Data.Get<Primitives.MapData.Visgroup>().ToList();
-            foreach (var v in visgroups)
+            List<Primitives.MapData.Visgroup> visgroups = document.Map.Data.Get<Primitives.MapData.Visgroup>().ToList();
+            foreach (Primitives.MapData.Visgroup v in visgroups)
             {
                 list.Add(new VisgroupItem(v.Name)
                 {
@@ -115,28 +115,28 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
                 });
             }
 
-            var auto = new VisgroupItem(AutoVisgroups)
+            VisgroupItem auto = new VisgroupItem(AutoVisgroups)
             {
                 Disabled = true
             };
             list.Insert(0, auto);
 
             // add auto visgroups
-            var autoVisgroups = document.Map.Data.Get<AutomaticVisgroup>().ToList();
-            var parents = new Dictionary<string, VisgroupItem> {{"", auto}};
-            foreach (var av in autoVisgroups.OrderBy(x => x.Path.Length))
+            List<AutomaticVisgroup> autoVisgroups = document.Map.Data.Get<AutomaticVisgroup>().ToList();
+            Dictionary<string, VisgroupItem> parents = new Dictionary<string, VisgroupItem> {{"", auto}};
+            foreach (AutomaticVisgroup av in autoVisgroups.OrderBy(x => x.Path.Length))
             {
                 VisgroupItem parent = auto;
                 if (!parents.ContainsKey(av.Path))
                 {
-                    var path = new List<string>();
-                    foreach (var spl in av.Path.Split('/'))
+                    List<string> path = new List<string>();
+                    foreach (string spl in av.Path.Split('/'))
                     {
                         path.Add(spl);
-                        var seg = String.Join("/", path);
+                        string seg = String.Join("/", path);
                         if (!parents.ContainsKey(seg))
                         {
-                            var group = new VisgroupItem(_translation.GetString(spl))
+                            VisgroupItem group = new VisgroupItem(_translation.GetString(spl))
                             {
                                 Parent = parent,
                                 Disabled = true
@@ -159,12 +159,12 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
                 });
             }
 
-            for (var i = list.Count - 1; i >= 0; i--)
+            for (int i = list.Count - 1; i >= 0; i--)
             {
-                var v = list[i];
+                VisgroupItem v = list[i];
                 if (v.Tag != null) continue;
 
-                var children = list.Where(x => x.Parent == v).ToList();
+                List<VisgroupItem> children = list.Where(x => x.Parent == v).ToList();
                 if (children.All(x => x.CheckState == CheckState.Checked)) v.CheckState = CheckState.Checked;
                 else if (children.All(x => x.CheckState == CheckState.Unchecked)) v.CheckState = CheckState.Unchecked;
                 else v.CheckState = CheckState.Indeterminate;
@@ -175,13 +175,13 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
 
         private CheckState GetVisibilityCheckState(IEnumerable<IMapObject> objects)
         {
-            var bools = objects.Select(x => x.Data.GetOne<VisgroupHidden>()?.IsHidden ?? false);
+            IEnumerable<bool> bools = objects.Select(x => x.Data.GetOne<VisgroupHidden>()?.IsHidden ?? false);
             return GetCheckState(bools);
         }
 
         private CheckState GetCheckState(IEnumerable<bool> bools)
         {
-            var a = bools.Distinct().ToArray();
+            bool[] a = bools.Distinct().ToArray();
             if (a.Length == 0) return CheckState.Checked;
             if (a.Length == 1) return a[0] ? CheckState.Unchecked : CheckState.Checked;
             return CheckState.Indeterminate;
@@ -192,13 +192,13 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
             if (item?.Tag is Primitives.MapData.Visgroup v) return v.Objects;
             if (item?.Tag is AutomaticVisgroup av) return av.Objects;
 
-            var children = VisgroupPanel.GetAllItems().Where(x => x.Parent == item).SelectMany(GetVisgroupObjects);
+            IEnumerable<IMapObject> children = VisgroupPanel.GetAllItems().Where(x => x.Parent == item).SelectMany(GetVisgroupObjects);
             return new HashSet<IMapObject>(children);
         }
 
         private void SelectButtonClicked(object sender, EventArgs e)
         {
-            var sv = VisgroupPanel.SelectedVisgroup;
+            VisgroupItem sv = VisgroupPanel.SelectedVisgroup;
             if (sv != null && _activeDocument.TryGetTarget(out MapDocument md))
             {
                 MapDocumentOperation.Perform(md, new Transaction(new Deselect(md.Selection), new Select(GetVisgroupObjects(sv))));
@@ -214,7 +214,7 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         {
             if (_activeDocument.TryGetTarget(out MapDocument md))
             {
-                var objects = md.Map.Root.Find(x => x.Data.GetOne<VisgroupHidden>()?.IsHidden == true, true).ToList();
+                List<IMapObject> objects = md.Map.Root.Find(x => x.Data.GetOne<VisgroupHidden>()?.IsHidden == true, true).ToList();
                 if (objects.Any())
                 {
                     MapDocumentOperation.Perform(md, new TrivialOperation(
@@ -233,8 +233,8 @@ namespace CBRE.BspEditor.Editing.Components.Visgroup
         private void VisgroupToggled(object sender, VisgroupItem visgroup, CheckState state)
         {
             if (state == CheckState.Indeterminate) return;
-            var visible = state == CheckState.Checked;
-            var objects = GetVisgroupObjects(visgroup).SelectMany(x => x.FindAll()).ToList();
+            bool visible = state == CheckState.Checked;
+            List<IMapObject> objects = GetVisgroupObjects(visgroup).SelectMany(x => x.FindAll()).ToList();
             if (objects.Any() && _activeDocument.TryGetTarget(out MapDocument md))
             {
                 MapDocumentOperation.Perform(md, new TrivialOperation(

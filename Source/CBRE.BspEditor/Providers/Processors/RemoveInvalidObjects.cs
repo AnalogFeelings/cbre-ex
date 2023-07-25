@@ -15,11 +15,11 @@ namespace CBRE.BspEditor.Providers.Processors
         public Task AfterLoad(MapDocument document)
         {
             // empty groups need to be removed
-            var emptyGroups = new Queue<IMapObject>(document.Map.Root.Find(x => x is Group && !x.Hierarchy.HasChildren));
+            Queue<IMapObject> emptyGroups = new Queue<IMapObject>(document.Map.Root.Find(x => x is Group && !x.Hierarchy.HasChildren));
             while (emptyGroups.Any())
             {
-                var g = emptyGroups.Dequeue();
-                var par = g.Hierarchy.Parent;
+                IMapObject g = emptyGroups.Dequeue();
+                IMapObject par = g.Hierarchy.Parent;
                 g.Hierarchy.Parent = null;
 
                 // If the parent was a group and the parent is now empty, make sure it gets deleted recursively

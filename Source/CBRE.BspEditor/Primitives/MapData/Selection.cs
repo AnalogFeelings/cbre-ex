@@ -43,12 +43,12 @@ namespace CBRE.BspEditor.Primitives.MapData
         /// <returns>True if the selection has changed after updating.</returns>
         public bool Update(Change change)
         {
-            var changed = false;
+            bool changed = false;
 
             // Each of these operations is only adding or removing items,
             // so checking the count to detect changes is fine.
 
-            var c = _selectedObjects.Count;
+            int c = _selectedObjects.Count;
             _selectedObjects.UnionWith(change.Added.Where(x => x.IsSelected));
             _selectedObjects.UnionWith(change.Updated.Where(x => x.IsSelected));
             changed |= c != _selectedObjects.Count;
@@ -69,9 +69,9 @@ namespace CBRE.BspEditor.Primitives.MapData
         /// <returns>True if the selection has changed after updating</returns>
         public bool Update(MapDocument document)
         {
-            var changed = false;
+            bool changed = false;
 
-            var selected = document.Map.Root.Find(x => x.IsSelected).ToList();
+            List<IMapObject> selected = document.Map.Root.Find(x => x.IsSelected).ToList();
 
             if (_selectedObjects.Count != selected.Count) changed = true;
             _selectedObjects.ExceptWith(selected);
@@ -90,7 +90,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public IMapElement Clone()
         {
-            var c = new Selection();
+            Selection c = new Selection();
             c._selectedObjects.UnionWith(_selectedObjects);
             return c;
         }
@@ -102,7 +102,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public SerialisedObject ToSerialisedObject()
         {
-            var so = new SerialisedObject("Selection");
+            SerialisedObject so = new SerialisedObject("Selection");
             so.Set("SelectedObjects", String.Join(",", _selectedObjects.Select(x => Convert.ToString(x.ID, CultureInfo.InvariantCulture))));
             return so;
         }
@@ -124,7 +124,7 @@ namespace CBRE.BspEditor.Primitives.MapData
 
         public IEnumerable<IMapObject> GetSelectedParents()
         {
-            var sel = _selectedObjects.ToList();
+            List<IMapObject> sel = _selectedObjects.ToList();
             sel.SelectMany(x => x.Hierarchy).ToList().ForEach(x => sel.Remove(x));
             return sel.Where(x => x.Hierarchy.Parent != null);
         }

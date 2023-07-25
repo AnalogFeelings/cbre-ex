@@ -25,9 +25,9 @@ namespace CBRE.Packages.Pak
             Entries = new List<PakEntry>();
 
             // Read the data from the pak
-            using (var br = new BinaryReader(OpenFile(packageFile)))
+            using (BinaryReader br = new BinaryReader(OpenFile(packageFile)))
             {
-                var sig = br.ReadFixedLengthString(Encoding.ASCII, 4);
+                string sig = br.ReadFixedLengthString(Encoding.ASCII, 4);
                 if (sig != Signature) throw new PackageException("Unknown package signature: Expected '" + Signature + "', got '" + sig + "'.");
 
                 TreeOffset = br.ReadInt32();
@@ -47,12 +47,12 @@ namespace CBRE.Packages.Pak
         private void ReadPackageEntries(BinaryReader br)
         {
             br.BaseStream.Position = TreeOffset;
-            var numEntries = TreeLength / 64;
+            int numEntries = TreeLength / 64;
             for (int i = 0; i < numEntries; i++)
             {
-                var path = br.ReadFixedLengthString(Encoding.ASCII, 56).ToLowerInvariant();
-                var offset = br.ReadInt32();
-                var length = br.ReadInt32();
+                string path = br.ReadFixedLengthString(Encoding.ASCII, 56).ToLowerInvariant();
+                int offset = br.ReadInt32();
+                int length = br.ReadInt32();
                 Entries.Add(new PakEntry(this, path, offset, length));
             }
         }
@@ -70,7 +70,7 @@ namespace CBRE.Packages.Pak
 
         public byte[] ExtractEntry(IPackageEntry entry)
         {
-            using (var sr = new BinaryReader(OpenStream(entry)))
+            using (BinaryReader sr = new BinaryReader(OpenStream(entry)))
             {
                 return sr.ReadBytes((int) sr.BaseStream.Length);
             }
@@ -78,7 +78,7 @@ namespace CBRE.Packages.Pak
 
         public Stream OpenStream(IPackageEntry entry)
         {
-            var pe = entry as PakEntry;
+            PakEntry pe = entry as PakEntry;
             if (pe == null) throw new ArgumentException("This package is only compatible with PakEntry objects.");
             return new BufferedStream(new SubStream(OpenFile(PackageFile), pe.Offset, pe.Length) { CloseParentOnDispose = true });
         }
@@ -100,14 +100,14 @@ namespace CBRE.Packages.Pak
         {
             _folders = new Dictionary<string, HashSet<string>>();
             _files = new Dictionary<string, HashSet<string>>();
-            foreach (var entry in GetEntries())
+            foreach (IPackageEntry entry in GetEntries())
             {
-                var split = entry.FullName.Split('/');
-                var joined = "";
-                for (var i = 0; i < split.Length; i++)
+                string[] split = entry.FullName.Split('/');
+                string joined = "";
+                for (int i = 0; i < split.Length; i++)
                 {
-                    var sub = split[i];
-                    var name = joined.Length == 0 ? sub : joined + '/' + sub;
+                    string sub = split[i];
+                    string name = joined.Length == 0 ? sub : joined + '/' + sub;
                     if (i == split.Length - 1)
                     {
                         // File name
@@ -159,19 +159,19 @@ namespace CBRE.Packages.Pak
 
         public IEnumerable<string> SearchDirectories(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectDirectories(path) : GetDirectories(path);
+            IEnumerable<string> files = recursive ? CollectDirectories(path) : GetDirectories(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         public IEnumerable<string> SearchFiles(string path, string regex, bool recursive)
         {
-            var files = recursive ? CollectFiles(path) : GetFiles(path);
+            IEnumerable<string> files = recursive ? CollectFiles(path) : GetFiles(path);
             return files.Where(x => Regex.IsMatch(GetName(x), regex, RegexOptions.IgnoreCase));
         }
 
         private IEnumerable<string> CollectDirectories(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].Where(x => x.Length > 0));
@@ -182,7 +182,7 @@ namespace CBRE.Packages.Pak
 
         private IEnumerable<string> CollectFiles(string path)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             if (_folders.ContainsKey(path))
             {
                 files.AddRange(_folders[path].SelectMany(CollectFiles));
@@ -196,14 +196,14 @@ namespace CBRE.Packages.Pak
 
         private string GetName(string path)
         {
-            var idx = path.LastIndexOf('/');
+            int idx = path.LastIndexOf('/');
             if (idx < 0) return path;
             return path.Substring(idx + 1);
         }
 
         public Stream OpenFile(string path)
         {
-            var entry = GetEntry(path);
+            IPackageEntry entry = GetEntry(path);
             if (entry == null) throw new FileNotFoundException();
             return OpenStream(entry);
         }

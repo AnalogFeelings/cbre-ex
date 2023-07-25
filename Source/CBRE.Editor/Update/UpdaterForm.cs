@@ -24,7 +24,7 @@ namespace CBRE.Editor.Update
 
             InitializeComponent();
 
-            var prefix = GetType().FullName;
+            string prefix = GetType().FullName;
 
             Icon = Resources.CBRE;
             Text = translations.GetString(prefix + ".Title");
@@ -50,8 +50,8 @@ namespace CBRE.Editor.Update
         {
             StartButton.Enabled = false;
 
-            var tcs = new TaskCompletionSource<bool>();
-            var wc = new WebClient();
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+            WebClient wc = new WebClient();
 
             wc.Headers.Add(HttpRequestHeader.UserAgent, "LogicAndTrick/sledge");
             wc.Headers.Remove(HttpRequestHeader.Accept);

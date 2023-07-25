@@ -40,10 +40,10 @@ namespace CBRE.BspEditor.Tools.Grid
         {
             if (change.HasDataChanges && change.AffectedData.OfType<GridData>().Any())
             {
-                var grid = change.Document.Map.Data.GetOne<GridData>();
+                GridData grid = change.Document.Map.Data.GetOne<GridData>();
                 if (grid != null)
                 {
-                    var snap = grid.SnapToGrid ? Snap : NoSnap;
+                    string snap = grid.SnapToGrid ? Snap : NoSnap;
                     UpdateText(Grid + ": " + grid.Grid.Description + ", " + snap);
                 }
             }
