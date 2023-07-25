@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Tools", "Sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.BspEditor.Editing", "Source\CBRE.BspEditor.Editing\CBRE.BspEditor.Editing.csproj", "{D33E1027-1956-44C4-B920-85281F703704}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.SMFConverter", "Source\CBRE.SMFConverter\CBRE.SMFConverter.csproj", "{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (Extra)|Any CPU = Debug (Extra)|Any CPU
@@ -204,6 +206,18 @@ Global
 		{D33E1027-1956-44C4-B920-85281F703704}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D33E1027-1956-44C4-B920-85281F703704}.Release|x64.ActiveCfg = Release|x64
 		{D33E1027-1956-44C4-B920-85281F703704}.Release|x64.Build.0 = Release|x64
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug (Extra)|Any CPU.ActiveCfg = Debug (Extra)|Any CPU
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug (Extra)|Any CPU.Build.0 = Debug (Extra)|Any CPU
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug (Extra)|x64.ActiveCfg = Debug (Extra)|x64
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug (Extra)|x64.Build.0 = Debug (Extra)|x64
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug|x64.ActiveCfg = Debug|x64
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Debug|x64.Build.0 = Debug|x64
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Release|x64.ActiveCfg = Release|x64
+		{3B15B63B-4ADE-4AE5-90F2-ECF2E759D0C3}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
