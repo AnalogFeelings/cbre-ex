@@ -117,15 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label2.Text" xml:space="preserve">
-    <value>CBRE-EX is still in alpha, so unfortunately we will experience some bugs every now and then!
-Help us fix the issues by submitting this bug to our reporting system!
-
-Your privacy is important - the only information we upload is:
- - The error message
- - The version of CBRE-EX you are running
- - Your version of .NET and your operating system
- - The current time
- - Whatever you type below!</value>
-  </data>
 </root>
