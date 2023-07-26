@@ -11,7 +11,7 @@ using CBRE.BspEditor.Modification;
 using CBRE.BspEditor.Modification.Operations.Selection;
 using CBRE.BspEditor.Primitives.MapData;
 using CBRE.BspEditor.Primitives.MapObjects;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.BspEditor.Rendering.Viewport;
 using CBRE.BspEditor.Tools.Draggable;
 using CBRE.BspEditor.Tools.Properties;

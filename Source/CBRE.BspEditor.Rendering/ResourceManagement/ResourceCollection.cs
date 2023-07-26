@@ -15,7 +15,7 @@ using CBRE.Rendering.Engine;
 using CBRE.Rendering.Interfaces;
 using CBRE.Rendering.Resources;
 
-namespace CBRE.BspEditor.Rendering.Resources
+namespace CBRE.BspEditor.Rendering.ResourceManagement
 {
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]

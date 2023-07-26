@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using CBRE.BspEditor.Documents;
 using CBRE.BspEditor.Primitives.MapObjectData;
 using CBRE.BspEditor.Primitives.MapObjects;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.Common.Shell.Settings;
 using CBRE.DataStructures.Geometric;
 using CBRE.Rendering.Cameras;

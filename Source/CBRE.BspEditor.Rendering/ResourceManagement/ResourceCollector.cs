@@ -2,7 +2,7 @@
 using System.Linq;
 using CBRE.Rendering.Renderables;
 
-namespace CBRE.BspEditor.Rendering.Resources
+namespace CBRE.BspEditor.Rendering.ResourceManagement
 {
     public class ResourceCollector
     {

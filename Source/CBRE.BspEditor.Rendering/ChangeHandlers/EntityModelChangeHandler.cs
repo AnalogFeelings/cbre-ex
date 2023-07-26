@@ -7,7 +7,7 @@ using CBRE.BspEditor.Modification;
 using CBRE.BspEditor.Modification.ChangeHandling;
 using CBRE.BspEditor.Primitives.MapObjectData;
 using CBRE.BspEditor.Primitives.MapObjects;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.DataStructures.GameData;
 using CBRE.Rendering.Interfaces;
 

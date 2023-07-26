@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Windows.Forms;
 using CBRE.BspEditor.Documents;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.BspEditor.Rendering.Viewport;
 using CBRE.DataStructures.Geometric;
 using CBRE.Rendering.Cameras;

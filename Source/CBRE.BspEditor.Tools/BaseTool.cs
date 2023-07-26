@@ -9,7 +9,7 @@ using LogicAndTrick.Oy;
 using CBRE.BspEditor.Documents;
 using CBRE.BspEditor.Primitives.MapData;
 using CBRE.BspEditor.Primitives.MapObjects;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.BspEditor.Rendering.Viewport;
 using CBRE.Common.Shell.Components;
 using CBRE.Common.Shell.Context;

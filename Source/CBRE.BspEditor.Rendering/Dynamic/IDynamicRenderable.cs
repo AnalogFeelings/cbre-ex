@@ -1,4 +1,4 @@
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.Rendering.Resources;
 
 namespace CBRE.BspEditor.Rendering.Dynamic

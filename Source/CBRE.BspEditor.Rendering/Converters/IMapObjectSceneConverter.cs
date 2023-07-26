@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CBRE.BspEditor.Documents;
 using CBRE.BspEditor.Primitives.MapObjects;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.Rendering.Resources;
 
 namespace CBRE.BspEditor.Rendering.Converters

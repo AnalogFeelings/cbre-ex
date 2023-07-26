@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LogicAndTrick.Oy;
 using CBRE.BspEditor.Documents;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.BspEditor.Rendering.Viewport;
 using CBRE.BspEditor.Tools.Vertex.Controls;
 using CBRE.BspEditor.Tools.Vertex.Selection;

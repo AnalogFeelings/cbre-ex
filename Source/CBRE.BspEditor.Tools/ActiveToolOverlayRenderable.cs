@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using LogicAndTrick.Oy;
 using CBRE.BspEditor.Rendering.Dynamic;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.Common.Shell.Components;
 using CBRE.Common.Shell.Hooks;
 using CBRE.Rendering.Cameras;

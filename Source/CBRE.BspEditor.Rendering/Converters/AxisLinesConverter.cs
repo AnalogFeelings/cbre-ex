@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using CBRE.BspEditor.Documents;
 using CBRE.BspEditor.Primitives.MapObjects;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.Rendering.Cameras;
 using CBRE.Rendering.Pipelines;
 using CBRE.Rendering.Primitives;

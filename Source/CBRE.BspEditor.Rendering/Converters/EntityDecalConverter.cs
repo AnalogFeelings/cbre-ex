@@ -6,7 +6,7 @@ using CBRE.BspEditor.Documents;
 using CBRE.BspEditor.Primitives.MapObjectData;
 using CBRE.BspEditor.Primitives.MapObjects;
 using CBRE.BspEditor.Rendering.ChangeHandlers;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.DataStructures.Geometric;
 using CBRE.Rendering.Engine;
 using CBRE.Rendering.Resources;

@@ -13,7 +13,7 @@ using CBRE.BspEditor.Modification.Operations.Selection;
 using CBRE.BspEditor.Modification.Operations.Tree;
 using CBRE.BspEditor.Primitives.MapObjectData;
 using CBRE.BspEditor.Primitives.MapObjects;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.BspEditor.Rendering.Viewport;
 using CBRE.BspEditor.Tools.Properties;
 using CBRE.Common;

@@ -9,7 +9,7 @@ using CBRE.BspEditor.Environment;
 using CBRE.BspEditor.Modification;
 using CBRE.BspEditor.Primitives.MapObjects;
 using CBRE.BspEditor.Rendering.Converters;
-using CBRE.BspEditor.Rendering.Resources;
+using CBRE.BspEditor.Rendering.ResourceManagement;
 using CBRE.Common.Shell.Documents;
 using CBRE.Common.Shell.Hooks;
 using CBRE.Rendering.Engine;
