@@ -164,19 +164,19 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         private async Task ExportDocumentForBatch(MapDocument doc, string path, Box cordonBounds)
         {
-            string cordonTextureName = "BLACK"; // todo make this configurable
+            //string cordonTextureName = "BLACK"; // todo make this configurable
 
-            if (cordonBounds != null && !cordonBounds.IsEmpty())
-            {
-                doc = doc.CloneWithCordon(cordonBounds, cordonTextureName);
-            }
+            //if (cordonBounds != null && !cordonBounds.IsEmpty())
+            //{
+            //    doc = doc.CloneWithCordon(cordonBounds, cordonTextureName);
+            //}
 
-            await Oy.Publish("Command:Run", new CommandMessage("Internal:ExportDocument", new
-            {
-                Document = doc,
-                Path = path,
-                LoaderHint = nameof(MapBspSourceProvider)
-            }));
+            //await Oy.Publish("Command:Run", new CommandMessage("Internal:ExportDocument", new
+            //{
+            //    Document = doc,
+            //    Path = path,
+            //    LoaderHint = nameof(MapBspSourceProvider)
+            //}));
         }
 
         public Task<Batch> CreateBatch(IEnumerable<BatchArgument> arguments, BatchOptions options)
