@@ -22,7 +22,7 @@ namespace CBRE.BspEditor.Providers
 
         private static readonly IEnumerable<Type> SupportedTypes = new List<Type>
         {
-            // Just everything
+            // Supports everything.
             typeof(IMapObject),
             typeof(IMapObjectData),
             typeof(IMapData),
@@ -39,7 +39,7 @@ namespace CBRE.BspEditor.Providers
 
         public IEnumerable<FileExtensionInfo> SupportedFileExtensions { get; } = new[]
         {
-            new FileExtensionInfo("Sledge map format", ".smf"), 
+            new FileExtensionInfo("CBRE-EX map format", ".cxmf"), 
         };
 
         public async Task<BspFileLoadResult> Load(Stream stream, IEnvironment environment)
