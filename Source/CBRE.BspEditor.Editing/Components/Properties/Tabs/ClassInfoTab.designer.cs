@@ -31,7 +31,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDelete.Location = new System.Drawing.Point(71, 352);
+            this.btnDelete.Location = new System.Drawing.Point(74, 355);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(62, 23);
             this.btnDelete.TabIndex = 24;
@@ -43,7 +44,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnAdd.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(3, 352);
+            this.btnAdd.Location = new System.Drawing.Point(6, 355);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(6, 3, 3, 6);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(62, 23);
             this.btnAdd.TabIndex = 25;
@@ -55,9 +57,10 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // 
             this.pnlSmartEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlSmartEdit.Location = new System.Drawing.Point(399, 72);
+            this.pnlSmartEdit.Location = new System.Drawing.Point(399, 75);
+            this.pnlSmartEdit.Margin = new System.Windows.Forms.Padding(3, 3, 6, 3);
             this.pnlSmartEdit.Name = "pnlSmartEdit";
-            this.pnlSmartEdit.Size = new System.Drawing.Size(277, 123);
+            this.pnlSmartEdit.Size = new System.Drawing.Size(274, 126);
             this.pnlSmartEdit.TabIndex = 23;
             // 
             // btnSmartEdit
@@ -67,7 +70,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             this.btnSmartEdit.Checked = true;
             this.btnSmartEdit.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnSmartEdit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSmartEdit.Location = new System.Drawing.Point(139, 355);
+            this.btnSmartEdit.Location = new System.Drawing.Point(142, 358);
             this.btnSmartEdit.Name = "btnSmartEdit";
             this.btnSmartEdit.Size = new System.Drawing.Size(80, 19);
             this.btnSmartEdit.TabIndex = 22;
@@ -78,7 +81,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // btnPaste
             // 
             this.btnPaste.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPaste.Location = new System.Drawing.Point(139, 32);
+            this.btnPaste.Location = new System.Drawing.Point(142, 35);
             this.btnPaste.Name = "btnPaste";
             this.btnPaste.Size = new System.Drawing.Size(62, 23);
             this.btnPaste.TabIndex = 20;
@@ -88,7 +91,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // btnCopy
             // 
             this.btnCopy.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCopy.Location = new System.Drawing.Point(71, 32);
+            this.btnCopy.Location = new System.Drawing.Point(74, 35);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(62, 23);
             this.btnCopy.TabIndex = 21;
@@ -101,11 +104,12 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             this.txtHelp.BackColor = System.Drawing.SystemColors.Window;
             this.txtHelp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtHelp.Location = new System.Drawing.Point(399, 222);
+            this.txtHelp.Location = new System.Drawing.Point(399, 228);
+            this.txtHelp.Margin = new System.Windows.Forms.Padding(3, 3, 6, 3);
             this.txtHelp.Multiline = true;
             this.txtHelp.Name = "txtHelp";
             this.txtHelp.ReadOnly = true;
-            this.txtHelp.Size = new System.Drawing.Size(277, 124);
+            this.txtHelp.Size = new System.Drawing.Size(274, 121);
             this.txtHelp.TabIndex = 19;
             // 
             // lstKeyValues
@@ -121,10 +125,11 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             this.lstKeyValues.GridLines = true;
             this.lstKeyValues.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lstKeyValues.HideSelection = false;
-            this.lstKeyValues.Location = new System.Drawing.Point(3, 61);
+            this.lstKeyValues.Location = new System.Drawing.Point(6, 64);
+            this.lstKeyValues.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
             this.lstKeyValues.MultiSelect = false;
             this.lstKeyValues.Name = "lstKeyValues";
-            this.lstKeyValues.Size = new System.Drawing.Size(390, 285);
+            this.lstKeyValues.Size = new System.Drawing.Size(387, 285);
             this.lstKeyValues.TabIndex = 16;
             this.lstKeyValues.UseCompatibleStateImageBehavior = false;
             this.lstKeyValues.View = System.Windows.Forms.View.Details;
@@ -146,7 +151,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbClass.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbClass.FormattingEnabled = true;
-            this.cmbClass.Location = new System.Drawing.Point(71, 3);
+            this.cmbClass.Location = new System.Drawing.Point(74, 6);
+            this.cmbClass.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.cmbClass.Name = "cmbClass";
             this.cmbClass.Size = new System.Drawing.Size(322, 23);
             this.cmbClass.TabIndex = 15;
@@ -156,7 +162,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // 
             this.lblHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHelp.Location = new System.Drawing.Point(399, 198);
+            this.lblHelp.Location = new System.Drawing.Point(399, 204);
             this.lblHelp.Name = "lblHelp";
             this.lblHelp.Size = new System.Drawing.Size(45, 21);
             this.lblHelp.TabIndex = 12;
@@ -166,7 +172,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // lblKeyValues
             // 
             this.lblKeyValues.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblKeyValues.Location = new System.Drawing.Point(3, 32);
+            this.lblKeyValues.Location = new System.Drawing.Point(6, 35);
+            this.lblKeyValues.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
             this.lblKeyValues.Name = "lblKeyValues";
             this.lblKeyValues.Size = new System.Drawing.Size(62, 23);
             this.lblKeyValues.TabIndex = 13;
@@ -176,7 +183,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // lblClass
             // 
             this.lblClass.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblClass.Location = new System.Drawing.Point(3, 3);
+            this.lblClass.Location = new System.Drawing.Point(6, 6);
+            this.lblClass.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
             this.lblClass.Name = "lblClass";
             this.lblClass.Size = new System.Drawing.Size(45, 21);
             this.lblClass.TabIndex = 14;
@@ -190,7 +198,8 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             this.angAngles.AnglePropertyString = "-90 0 0";
             this.angAngles.Down = false;
             this.angAngles.LabelText = "Angles:";
-            this.angAngles.Location = new System.Drawing.Point(557, 3);
+            this.angAngles.Location = new System.Drawing.Point(554, 6);
+            this.angAngles.Margin = new System.Windows.Forms.Padding(3, 6, 6, 3);
             this.angAngles.Name = "angAngles";
             this.angAngles.ShowLabel = true;
             this.angAngles.ShowTextBox = true;
@@ -216,7 +225,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             this.Controls.Add(this.lblKeyValues);
             this.Controls.Add(this.lblClass);
             this.Name = "ClassInfoTab";
-            this.Size = new System.Drawing.Size(679, 378);
+            this.Size = new System.Drawing.Size(679, 384);
             this.ResumeLayout(false);
             this.PerformLayout();
 
