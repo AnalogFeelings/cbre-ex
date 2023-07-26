@@ -36,6 +36,7 @@
             // lblAngle
             // 
             this.lblAngle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAngle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAngle.Location = new System.Drawing.Point(75, 44);
             this.lblAngle.Name = "lblAngle";
             this.lblAngle.Size = new System.Drawing.Size(40, 20);
@@ -45,22 +46,24 @@
             // 
             // cmbAngles
             // 
+            this.cmbAngles.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbAngles.FormattingEnabled = true;
             this.cmbAngles.Items.AddRange(new object[] {
             "Up",
             "Down"});
             this.cmbAngles.Location = new System.Drawing.Point(3, 20);
             this.cmbAngles.Name = "cmbAngles";
-            this.cmbAngles.Size = new System.Drawing.Size(58, 21);
+            this.cmbAngles.Size = new System.Drawing.Size(58, 23);
             this.cmbAngles.TabIndex = 7;
             this.cmbAngles.SelectedIndexChanged += new System.EventHandler(this.CmbAnglesSelectedIndexChanged);
             this.cmbAngles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CmbAnglesKeyDown);
             // 
             // lblAngles
             // 
+            this.lblAngles.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAngles.Location = new System.Drawing.Point(3, 1);
             this.lblAngles.Name = "lblAngles";
-            this.lblAngles.Size = new System.Drawing.Size(45, 16);
+            this.lblAngles.Size = new System.Drawing.Size(58, 16);
             this.lblAngles.TabIndex = 6;
             this.lblAngles.Text = "Angles:";
             this.lblAngles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

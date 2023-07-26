@@ -83,22 +83,10 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             set => this.InvokeLater(() => lblHelp.Text = value);
         }
 
-        public string CommentsLabel
-        {
-            get => lblComments.Text;
-            set => this.InvokeLater(() => lblComments.Text = value);
-        }
-
         public string SmartEditButton
         {
             get => btnSmartEdit.Text;
             set => this.InvokeLater(() => btnSmartEdit.Text = value);
-        }
-
-        public string HelpButton
-        {
-            get => btnHelp.Text;
-            set => this.InvokeLater(() => btnHelp.Text = value);
         }
 
         public string CopyButton

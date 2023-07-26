@@ -57,7 +57,7 @@ namespace CBRE.BspEditor.Editing.Controls
             {
                 if (_angle == -1) return @"Up";
                 else if (_angle == -2) return @"Down";
-                return _angle.ToString();
+                return _angle.ToString() + "°";
             }
         }
 
