@@ -29,9 +29,9 @@
 	  "Name": "Run...",
 	  "Details": "Open the compile dialog"
 	},
-	"OpenSledgeWebsite": {
-	  "Name": "Sledge Website",
-	  "Details": "Go to the Sledge website."
+	"OpenBugReportSite": {
+	  "Name": "Report a bug...",
+	  "Details": "Report a bug in the GitHub repository."
 	},
 	"OpenEntityReport": {
 	  "Name": "Entity report",

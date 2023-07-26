@@ -16,10 +16,6 @@
 	  "Name": "A propos de CBRE-EX",
 	  "Details": "Voir les informations concernant cette application."
 	},
-	"OpenSledgeWebsite": {
-	  "Name": "Site internet de Sledge",
-	  "Details": "Aller sur le site internet de Sledge."
-	},
 	"OpenEntityReport": {
 	  "Name": "Rapport des entités",
 	  "Details": "Ouvre la fenêtre de rapport des entités."

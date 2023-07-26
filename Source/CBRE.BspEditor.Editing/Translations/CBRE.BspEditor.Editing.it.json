@@ -15,8 +15,6 @@
   "Commands.OpenCheckForProblemsDialog.Details": "Apre la finestra di verifica dei problemi.",
   "Commands.OpenCompileWindow.Name": "Compila...",
   "Commands.OpenCompileWindow.Details": "Apri la finestra di compilazione.",
-  "Commands.OpenSledgeWebsite.Name": "Sito web di Sledge",
-  "Commands.OpenSledgeWebsite.Details": "Vai al sito web di Sledge.",
   "Commands.OpenEntityReport.Name": "Riporto entità",
   "Commands.OpenEntityReport.Details": "Apre la finestra di riporto dell'entità.",
   "Commands.OpenMapTreeWindow.Name": "Mostra albero logico",
