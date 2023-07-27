@@ -1,8 +1,10 @@
+using CBRE.BspEditor.Rendering.Properties;
+using CBRE.Common.Shell.Commands;
+using LogicAndTrick.Oy;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
-using LogicAndTrick.Oy;
-using CBRE.Common.Shell.Commands;
 
 namespace CBRE.BspEditor.Rendering.Viewport
 {
@@ -20,22 +22,22 @@ namespace CBRE.BspEditor.Rendering.Viewport
             Viewport = viewport;
             Items = new List<ToolStripItem>
             {
-                new CommandItem("BspEditor:Edit:Paste"),
-                new CommandItem("BspEditor:Edit:PasteSpecial"),
+                new CommandItem("BspEditor:Edit:Paste", Resources.Menu_Paste),
+                new CommandItem("BspEditor:Edit:PasteSpecial", Resources.Menu_PasteSpecial),
                 new ToolStripSeparator(),
-                new CommandItem("BspEditor:Edit:Undo"),
-                new CommandItem("BspEditor:Edit:Redo")
+                new CommandItem("BspEditor:Edit:Undo", Resources.Menu_Undo),
+                new CommandItem("BspEditor:Edit:Redo", Resources.Menu_Redo)
             };
         }
 
-        public ToolStripMenuItem CreateCommandItem(string commandId, object parameters = null)
+        public ToolStripMenuItem CreateCommandItem(string commandId, Bitmap iconBitmap = null, object parameters = null)
         {
-            return new CommandItem(commandId, parameters);
+            return new CommandItem(commandId, iconBitmap, parameters);
         }
 
-        public ToolStripMenuItem AddCommand(string commandId, object parameters = null)
+        public ToolStripMenuItem AddCommand(string commandId, Bitmap iconBitmap = null, object parameters = null)
         {
-            ToolStripMenuItem mi = CreateCommandItem(commandId, parameters);
+            ToolStripMenuItem mi = CreateCommandItem(commandId, iconBitmap, parameters);
             Items.Add(mi);
             return mi;
         }
@@ -86,7 +88,7 @@ namespace CBRE.BspEditor.Rendering.Viewport
             private readonly string _commandID;
             private readonly object _parameters;
 
-            public CommandItem(string commandID, object parameters = null)
+            public CommandItem(string commandID, Bitmap iconBitmap = null, object parameters = null)
             {
                 _commandID = commandID;
                 _parameters = parameters;
@@ -95,6 +97,8 @@ namespace CBRE.BspEditor.Rendering.Viewport
                 Shell.Registers.CommandRegister register = Common.Container.Get<Shell.Registers.CommandRegister>();
                 ICommand cmd = register.Get(_commandID);
                 Text = cmd == null ? _commandID : cmd.Name;
+
+                base.Image = iconBitmap == null ? null : iconBitmap as Image;
             }
 
             private void RunCommand(object sender, EventArgs e)

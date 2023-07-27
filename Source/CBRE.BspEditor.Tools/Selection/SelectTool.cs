@@ -186,30 +186,30 @@ namespace CBRE.BspEditor.Tools.Selection
                 // Clicked inside the selection bounds
                 b.Clear();
 
-                b.AddCommand("BspEditor:Edit:Cut");
-                b.AddCommand("BspEditor:Edit:Copy");
-                b.AddCommand("BspEditor:Edit:Delete");
-                b.AddCommand("BspEditor:Edit:Paste");
-                b.AddCommand("BspEditor:Edit:PasteSpecial");
+                b.AddCommand("BspEditor:Edit:Cut", Resources.Menu_Cut);
+                b.AddCommand("BspEditor:Edit:Copy", Resources.Menu_Copy);
+                b.AddCommand("BspEditor:Edit:Delete", Resources.Menu_Delete);
+                b.AddCommand("BspEditor:Edit:Paste", Resources.Menu_Paste);
+                b.AddCommand("BspEditor:Edit:PasteSpecial", Resources.Menu_PasteSpecial);
                 b.AddSeparator();
 
-                b.AddCommand("BspEditor:Tools:Transform");
+                b.AddCommand("BspEditor:Tools:Transform", Resources.Menu_Transform);
                 b.AddSeparator();
 
-                b.AddCommand("BspEditor:Edit:Undo");
-                b.AddCommand("BspEditor:Edit:Redo");
+                b.AddCommand("BspEditor:Edit:Undo", Resources.Menu_Undo);
+                b.AddCommand("BspEditor:Edit:Redo", Resources.Menu_Redo);
                 b.AddSeparator();
 
-                b.AddCommand("BspEditor:Tools:Carve");
-                b.AddCommand("BspEditor:Tools:Hollow");
+                b.AddCommand("BspEditor:Tools:Carve", Resources.Menu_Carve);
+                b.AddCommand("BspEditor:Tools:Hollow", Resources.Menu_Hollow);
                 b.AddSeparator();
 
-                b.AddCommand("BspEditor:Edit:Group");
-                b.AddCommand("BspEditor:Edit:Ungroup");
+                b.AddCommand("BspEditor:Edit:Group", Resources.Menu_Group);
+                b.AddCommand("BspEditor:Edit:Ungroup", Resources.Menu_Ungroup);
                 b.AddSeparator();
 
-                b.AddCommand("BspEditor:Tools:TieToEntity");
-                b.AddCommand("BspEditor:Tools:MoveToWorld");
+                b.AddCommand("BspEditor:Tools:TieToEntity", Resources.Menu_TieToEntity);
+                b.AddCommand("BspEditor:Tools:MoveToWorld", Resources.Menu_TieToWorld);
                 b.AddSeparator();
 
                 if (b.Viewport.Is2D)
@@ -259,16 +259,16 @@ namespace CBRE.BspEditor.Tools.Selection
 
                     Vector3 axis = expand.X == 0 ? Vector3.UnitX : (expand.Y == 0 ? -Vector3.UnitY : Vector3.UnitZ);
 
-                    ToolStripMenuItem cw = b.CreateCommandItem("BspEditor:Tools:Rotate", new { Axis = axis, Angle = -90f });
+                    ToolStripMenuItem cw = b.CreateCommandItem("BspEditor:Tools:Rotate", parameters: new { Axis = axis, Angle = -90f });
                     cw.Text = Clockwise;
                     group.DropDownItems.Add(cw);
 
-                    ToolStripMenuItem acw = b.CreateCommandItem("BspEditor:Tools:Rotate", new { Axis = axis, Angle = 90f });
+                    ToolStripMenuItem acw = b.CreateCommandItem("BspEditor:Tools:Rotate", parameters: new { Axis = axis, Angle = 90f });
                     acw.Text = AntiClockwise;
                     group.DropDownItems.Add(acw);
                 }
 
-                b.AddCommand("BspEditor:Map:Properties");
+                b.AddCommand("BspEditor:Map:Properties", Resources.Menu_ObjectProperties);
             });
         }
 

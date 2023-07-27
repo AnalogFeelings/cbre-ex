@@ -113,9 +113,14 @@
     <Compile Include="Overlay\MapObject2DOverlayManager.cs" />
     <Compile Include="Overlay\ViewportTextOverlay.cs" />
     <Compile Include="Overlay\OverlayManager.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Renderer.cs" />
-    <Compile Include="Resources\ResourceCollection.cs" />
-    <Compile Include="Resources\ResourceCollector.cs" />
+    <Compile Include="ResourceManagement\ResourceCollection.cs" />
+    <Compile Include="ResourceManagement\ResourceCollector.cs" />
     <Compile Include="Scene\SceneBufferAllocationSidebarPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -176,6 +181,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="Resources\Menu_Paste.png" />
+    <Content Include="Resources\Menu_PasteSpecial.png" />
+    <Content Include="Resources\Menu_Redo.png" />
+    <Content Include="Resources\Menu_Undo.png" />
     <Content Include="Sprites\ent_light.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -214,6 +223,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Scene\SceneBufferAllocationSidebarPanel.resx">
       <DependentUpon>SceneBufferAllocationSidebarPanel.cs</DependentUpon>
     </EmbeddedResource>
