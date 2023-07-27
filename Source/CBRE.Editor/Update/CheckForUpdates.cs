@@ -23,7 +23,7 @@ namespace CBRE.Editor.Update
         private readonly ITranslationStringProvider _translation;
 
         public string Name { get; set; } = "Check for updates";
-        public string Details { get; set; } = "Check online for updates";
+        public string Details { get; set; } = "Check online for updates.";
 
         public string NoUpdatesTitle { get; set; } = "No updates found";
         public string NoUpdatesMessage { get; set; } = "This version of CBRE-EX is currently up-to-date.";

@@ -20,8 +20,8 @@ namespace CBRE.BspEditor.Editing.Commands
     [DefaultHotkey("Alt+Enter")]
     public class OpenObjectProperties : BaseCommand
     {
-        public override string Name { get; set; } = "Object properties";
-        public override string Details { get; set; } = "Open the object properties window";
+        public override string Name { get; set; } = "Properties";
+        public override string Details { get; set; } = "Open the object properties window.";
 
         protected override async Task Invoke(MapDocument document, CommandParameters parameters)
         {

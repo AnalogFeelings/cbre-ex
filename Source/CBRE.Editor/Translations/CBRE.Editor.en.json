@@ -21,7 +21,7 @@
 	},
 	"CheckForUpdates": {
 	  "Name": "Check for updates",
-	  "Details": "Check online for updates",
+	  "Details": "Check online for updates.",
 	  "NoUpdatesTitle": "No updates found",
 	  "NoUpdatesMessage": "This version of CBRE-EX is currently up-to-date.",
 	  "UpdateErrorTitle": "Update error",
