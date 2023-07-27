@@ -33,14 +33,17 @@
             this.btnEdit = new System.Windows.Forms.Button();
             this.VisgroupPanel = new CBRE.BspEditor.Editing.Components.Visgroup.VisgroupPanel();
             this.btnNew = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnShowAll
             // 
-            this.btnShowAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShowAll.Location = new System.Drawing.Point(104, 188);
+            this.btnShowAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShowAll.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnShowAll.Location = new System.Drawing.Point(100, 35);
             this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(95, 22);
+            this.btnShowAll.Size = new System.Drawing.Size(91, 23);
             this.btnShowAll.TabIndex = 5;
             this.btnShowAll.Tag = "ShowAll";
             this.btnShowAll.Text = "Show All";
@@ -49,10 +52,11 @@
             // 
             // btnSelect
             // 
-            this.btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSelect.Location = new System.Drawing.Point(3, 188);
+            this.btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSelect.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSelect.Location = new System.Drawing.Point(3, 35);
             this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(95, 22);
+            this.btnSelect.Size = new System.Drawing.Size(91, 23);
             this.btnSelect.TabIndex = 6;
             this.btnSelect.Tag = "Select";
             this.btnSelect.Text = "Select";
@@ -61,10 +65,11 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEdit.Location = new System.Drawing.Point(3, 165);
+            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEdit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEdit.Location = new System.Drawing.Point(3, 4);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(95, 22);
+            this.btnEdit.Size = new System.Drawing.Size(91, 23);
             this.btnEdit.TabIndex = 7;
             this.btnEdit.Tag = "Edit";
             this.btnEdit.Text = "Edit";
@@ -76,40 +81,60 @@
             this.VisgroupPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.VisgroupPanel.Location = new System.Drawing.Point(3, 3);
+            this.VisgroupPanel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VisgroupPanel.Location = new System.Drawing.Point(4, 3);
+            this.VisgroupPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.VisgroupPanel.Name = "VisgroupPanel";
             this.VisgroupPanel.SelectedVisgroup = null;
             this.VisgroupPanel.ShowCheckboxes = true;
-            this.VisgroupPanel.Size = new System.Drawing.Size(196, 160);
+            this.VisgroupPanel.Size = new System.Drawing.Size(192, 137);
             this.VisgroupPanel.TabIndex = 8;
             this.VisgroupPanel.VisgroupToggled += new CBRE.BspEditor.Editing.Components.Visgroup.VisgroupPanel.VisgroupToggledEventHandler(this.VisgroupToggled);
             this.VisgroupPanel.VisgroupSelected += new CBRE.BspEditor.Editing.Components.Visgroup.VisgroupPanel.VisgroupSelectedEventHandler(this.VisgroupSelected);
             // 
             // btnNew
             // 
-            this.btnNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNew.Location = new System.Drawing.Point(104, 165);
+            this.btnNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNew.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNew.Location = new System.Drawing.Point(100, 4);
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(95, 22);
+            this.btnNew.Size = new System.Drawing.Size(91, 23);
             this.btnNew.TabIndex = 9;
             this.btnNew.Tag = "New";
             this.btnNew.Text = "New";
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.NewButtonClicked);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.btnNew, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnEdit, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnSelect, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.btnShowAll, 1, 1);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 146);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(194, 63);
+            this.tableLayoutPanel1.TabIndex = 10;
+            // 
             // VisgroupSidebarPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnNew);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.VisgroupPanel);
-            this.Controls.Add(this.btnShowAll);
-            this.Controls.Add(this.btnSelect);
-            this.Controls.Add(this.btnEdit);
             this.MaximumSize = new System.Drawing.Size(0, 250);
             this.MinimumSize = new System.Drawing.Size(200, 165);
             this.Name = "VisgroupSidebarPanel";
             this.Size = new System.Drawing.Size(200, 212);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -121,5 +146,6 @@
         private System.Windows.Forms.Button btnEdit;
         private CBRE.BspEditor.Editing.Components.Visgroup.VisgroupPanel VisgroupPanel;
         private System.Windows.Forms.Button btnNew;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }
