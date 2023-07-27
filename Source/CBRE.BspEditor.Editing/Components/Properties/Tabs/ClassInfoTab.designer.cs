@@ -57,6 +57,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // 
             this.pnlSmartEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlSmartEdit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlSmartEdit.Location = new System.Drawing.Point(399, 75);
             this.pnlSmartEdit.Margin = new System.Windows.Forms.Padding(3, 3, 6, 3);
             this.pnlSmartEdit.Name = "pnlSmartEdit";
@@ -65,12 +66,11 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             // 
             // btnSmartEdit
             // 
-            this.btnSmartEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSmartEdit.AutoSize = true;
             this.btnSmartEdit.Checked = true;
             this.btnSmartEdit.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnSmartEdit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSmartEdit.Location = new System.Drawing.Point(142, 358);
+            this.btnSmartEdit.Location = new System.Drawing.Point(210, 38);
             this.btnSmartEdit.Name = "btnSmartEdit";
             this.btnSmartEdit.Size = new System.Drawing.Size(80, 19);
             this.btnSmartEdit.TabIndex = 22;
@@ -109,6 +109,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties.Tabs
             this.txtHelp.Multiline = true;
             this.txtHelp.Name = "txtHelp";
             this.txtHelp.ReadOnly = true;
+            this.txtHelp.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtHelp.Size = new System.Drawing.Size(274, 121);
             this.txtHelp.TabIndex = 19;
             // 
