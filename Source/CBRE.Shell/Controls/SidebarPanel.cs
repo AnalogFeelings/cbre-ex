@@ -95,15 +95,17 @@ namespace CBRE.Shell.Controls
                 e.Graphics.DrawLine(SystemPens.ControlLightLight, 0, 1, Width, 1);
                 if (_mouseIn)
                 {
-                    using (SolidBrush brush = new SolidBrush(BackColor.Darken()))
+                    using (SolidBrush brush = new SolidBrush(BackColor.Darken(30)))
                     {
                         e.Graphics.FillRectangle(brush, new Rectangle(0, 3, Width, Height - Padding.Vertical));
                     }
                 }
                 else
                 {
-                    using (SolidBrush brush = new SolidBrush(BackColor.Darken(10)))
+                    using (SolidBrush brush = new SolidBrush(BackColor.Darken(15)))
                     {
+                        e.Graphics.FillRectangle(brush, new Rectangle(0, 3, Width, Height - Padding.Vertical));
+                        brush.Color = BackColor.Darken(40);
                         e.Graphics.FillRectangle(brush, new Rectangle(0, Height - Padding.Vertical + 2, Width, 1));
                     }
                 }
