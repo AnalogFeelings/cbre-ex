@@ -16,7 +16,7 @@ namespace CBRE.BspEditor.Editing.Components
             LicenseLink.Click += (s, e) => OpenSite(LicenseLink.Text);
             ExtraLicenseLink.Click += (s, e) => OpenSite(ExtraLicenseLink.Text);
 
-            DescriptionLabel.Links.Add(211, 19, "http://logic-and-trick.com");
+            DescriptionLabel.Links.Add(214, 19, "http://logic-and-trick.com");
             DescriptionLabel.LinkClicked += (s, e) => OpenSite(e.Link.LinkData.ToString());
         }
 
