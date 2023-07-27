@@ -33,12 +33,15 @@
             this.SaveAllButton = new System.Windows.Forms.Button();
             this.DocumentList = new System.Windows.Forms.ListBox();
             this.UnsavedChangesLabel = new System.Windows.Forms.Label();
+            this.systemBitmap = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.systemBitmap)).BeginInit();
             this.SuspendLayout();
             // 
             // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CancelButton.Location = new System.Drawing.Point(269, 185);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
@@ -50,6 +53,7 @@
             // DiscardButton
             // 
             this.DiscardButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DiscardButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DiscardButton.Location = new System.Drawing.Point(188, 185);
             this.DiscardButton.Name = "DiscardButton";
             this.DiscardButton.Size = new System.Drawing.Size(75, 23);
@@ -61,6 +65,7 @@
             // SaveAllButton
             // 
             this.SaveAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveAllButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SaveAllButton.Location = new System.Drawing.Point(107, 185);
             this.SaveAllButton.Name = "SaveAllButton";
             this.SaveAllButton.Size = new System.Drawing.Size(75, 23);
@@ -74,23 +79,36 @@
             this.DocumentList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.DocumentList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DocumentList.FormattingEnabled = true;
             this.DocumentList.IntegralHeight = false;
-            this.DocumentList.Location = new System.Drawing.Point(12, 47);
+            this.DocumentList.ItemHeight = 15;
+            this.DocumentList.Location = new System.Drawing.Point(12, 56);
             this.DocumentList.Name = "DocumentList";
-            this.DocumentList.Size = new System.Drawing.Size(332, 132);
+            this.DocumentList.Size = new System.Drawing.Size(332, 123);
             this.DocumentList.TabIndex = 1;
             // 
             // UnsavedChangesLabel
             // 
             this.UnsavedChangesLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.UnsavedChangesLabel.Location = new System.Drawing.Point(12, 12);
+            this.UnsavedChangesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UnsavedChangesLabel.Location = new System.Drawing.Point(50, 12);
             this.UnsavedChangesLabel.Name = "UnsavedChangesLabel";
-            this.UnsavedChangesLabel.Size = new System.Drawing.Size(332, 32);
+            this.UnsavedChangesLabel.Size = new System.Drawing.Size(294, 32);
             this.UnsavedChangesLabel.TabIndex = 2;
             this.UnsavedChangesLabel.Text = "Some documents have unsaved changes. Would you like to save or discard these chan" +
     "ges?";
+            this.UnsavedChangesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // systemBitmap
+            // 
+            this.systemBitmap.Location = new System.Drawing.Point(12, 12);
+            this.systemBitmap.Margin = new System.Windows.Forms.Padding(3, 3, 3, 9);
+            this.systemBitmap.Name = "systemBitmap";
+            this.systemBitmap.Size = new System.Drawing.Size(32, 32);
+            this.systemBitmap.TabIndex = 14;
+            this.systemBitmap.TabStop = false;
             // 
             // SaveChangesForm
             // 
@@ -98,6 +116,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(356, 220);
+            this.Controls.Add(this.systemBitmap);
             this.Controls.Add(this.UnsavedChangesLabel);
             this.Controls.Add(this.DocumentList);
             this.Controls.Add(this.SaveAllButton);
@@ -111,6 +130,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Unsaved changes";
+            ((System.ComponentModel.ISupportInitialize)(this.systemBitmap)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -122,5 +142,6 @@
         private System.Windows.Forms.Button SaveAllButton;
         private System.Windows.Forms.ListBox DocumentList;
         private System.Windows.Forms.Label UnsavedChangesLabel;
+        private System.Windows.Forms.PictureBox systemBitmap;
     }
 }

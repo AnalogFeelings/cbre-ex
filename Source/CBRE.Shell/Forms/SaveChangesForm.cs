@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using CBRE.Common.Native;
 using CBRE.Common.Shell.Documents;
 using CBRE.Common.Translations;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace CBRE.Shell.Forms
 {
@@ -23,7 +20,13 @@ namespace CBRE.Shell.Forms
             {
                 DocumentList.Items.Add(document.Name + " *");
             }
-            
+
+            StockIconInfo stockIconInfo = new StockIconInfo();
+            stockIconInfo.cbSize = (uint)Marshal.SizeOf(typeof(StockIconInfo));
+            StockIcon.SHGetStockIconInfo(StockIconId.SIID_HELP, StockIconFlags.SHGSI_ICON | StockIconFlags.SHGSI_SHELLICONSIZE, ref stockIconInfo);
+
+            systemBitmap.Image = Icon.FromHandle(stockIconInfo.hIcon).ToBitmap();
+
             CreateHandle();
         }
 
@@ -47,12 +50,13 @@ namespace CBRE.Shell.Forms
 
         public void Translate(ITranslationStringProvider translation)
         {
-            this.InvokeLater(() => {
-               SaveAllButton.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".SaveAll");
-               DiscardButton.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".DiscardAll");
-               CancelButton.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".Cancel");
-               UnsavedChangesLabel.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".UnsavedChangesMessage");
-               Text = translation.GetString(typeof(SaveChangesForm).FullName + ".Title");
+            this.InvokeLater(() =>
+            {
+                SaveAllButton.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".SaveAll");
+                DiscardButton.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".DiscardAll");
+                CancelButton.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".Cancel");
+                UnsavedChangesLabel.Text = translation.GetString(typeof(SaveChangesForm).FullName + ".UnsavedChangesMessage");
+                Text = translation.GetString(typeof(SaveChangesForm).FullName + ".Title");
             });
         }
     }
