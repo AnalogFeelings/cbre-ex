@@ -157,6 +157,15 @@ namespace CBRE.BspEditor.Editing.Components
 
                     if (tex == null) continue;
 
+                    if(tex.Name.EndsWith(".jpg") || tex.Name.EndsWith(".jpeg"))
+                    {
+                        texUsage += tex.Width * tex.Height * 3; // JPEG is 24-bit.
+                    }
+                    else
+                    {
+                        // Assume its a PNG.
+                        texUsage += tex.Width * tex.Height * 4; // PNG is 32-bit.
+                    }
                 }
                 decimal textureMemoryMb = texUsage / (1024m * 1024m);
                 this.InvokeLater(() =>
