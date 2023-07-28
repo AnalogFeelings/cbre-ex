@@ -154,8 +154,9 @@ namespace CBRE.BspEditor.Editing.Components
                 foreach (string ut in uniqueTextures)
                 {
                     CBRE.Providers.Texture.TextureItem tex = await tc.GetTextureItem(ut);
-                    // todo BETA: Other engines: the texture size operation will need to be outsourced to the provider to properly calculate usage for non-24-bit textures
-                    texUsage += tex.Width * tex.Height * 3; // 3 bytes per pixel
+
+                    if (tex == null) continue;
+
                 }
                 decimal textureMemoryMb = texUsage / (1024m * 1024m);
                 this.InvokeLater(() =>
