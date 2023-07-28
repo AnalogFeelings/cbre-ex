@@ -40,10 +40,10 @@
             this.NumPointEntities = new System.Windows.Forms.Label();
             this.NumSolidEntities = new System.Windows.Forms.Label();
             this.NumUniqueTextures = new System.Windows.Forms.Label();
+            this.TextureMemoryValue = new System.Windows.Forms.Label();
             this.TexturePackagesUsedLabel = new System.Windows.Forms.Label();
             this.TexturePackages = new System.Windows.Forms.ListBox();
             this.CloseDialogButton = new System.Windows.Forms.Button();
-            this.TextureMemoryValue = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,8 +53,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 99F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 152F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 122F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129F));
             this.tableLayoutPanel1.Controls.Add(this.SolidsLabel, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.FacesLabel, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.PointEntitiesLabel, 0, 2);
@@ -76,115 +76,138 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(251, 122);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(251, 121);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // SolidsLabel
             // 
             this.SolidsLabel.AutoSize = true;
+            this.SolidsLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SolidsLabel.Location = new System.Drawing.Point(3, 0);
             this.SolidsLabel.Name = "SolidsLabel";
-            this.SolidsLabel.Size = new System.Drawing.Size(38, 13);
+            this.SolidsLabel.Size = new System.Drawing.Size(41, 13);
             this.SolidsLabel.TabIndex = 0;
             this.SolidsLabel.Text = "Solids:";
             // 
             // FacesLabel
             // 
             this.FacesLabel.AutoSize = true;
+            this.FacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FacesLabel.Location = new System.Drawing.Point(3, 20);
             this.FacesLabel.Name = "FacesLabel";
-            this.FacesLabel.Size = new System.Drawing.Size(39, 13);
+            this.FacesLabel.Size = new System.Drawing.Size(39, 15);
             this.FacesLabel.TabIndex = 0;
             this.FacesLabel.Text = "Faces:";
             // 
             // PointEntitiesLabel
             // 
             this.PointEntitiesLabel.AutoSize = true;
+            this.PointEntitiesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PointEntitiesLabel.Location = new System.Drawing.Point(3, 40);
             this.PointEntitiesLabel.Name = "PointEntitiesLabel";
-            this.PointEntitiesLabel.Size = new System.Drawing.Size(68, 13);
+            this.PointEntitiesLabel.Size = new System.Drawing.Size(79, 15);
             this.PointEntitiesLabel.TabIndex = 0;
-            this.PointEntitiesLabel.Text = "Point Entities";
+            this.PointEntitiesLabel.Text = "Point Entities:";
             // 
             // SolidEntitiesLabel
             // 
             this.SolidEntitiesLabel.AutoSize = true;
+            this.SolidEntitiesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SolidEntitiesLabel.Location = new System.Drawing.Point(3, 60);
             this.SolidEntitiesLabel.Name = "SolidEntitiesLabel";
-            this.SolidEntitiesLabel.Size = new System.Drawing.Size(67, 13);
+            this.SolidEntitiesLabel.Size = new System.Drawing.Size(77, 15);
             this.SolidEntitiesLabel.TabIndex = 0;
-            this.SolidEntitiesLabel.Text = "Solid Entities";
+            this.SolidEntitiesLabel.Text = "Solid Entities:";
             // 
             // UniqueTexturesLabel
             // 
             this.UniqueTexturesLabel.AutoSize = true;
+            this.UniqueTexturesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UniqueTexturesLabel.Location = new System.Drawing.Point(3, 80);
             this.UniqueTexturesLabel.Name = "UniqueTexturesLabel";
-            this.UniqueTexturesLabel.Size = new System.Drawing.Size(88, 13);
+            this.UniqueTexturesLabel.Size = new System.Drawing.Size(94, 15);
             this.UniqueTexturesLabel.TabIndex = 0;
             this.UniqueTexturesLabel.Text = "Unique Textures:";
             // 
             // TextureMemoryLabel
             // 
             this.TextureMemoryLabel.AutoSize = true;
+            this.TextureMemoryLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextureMemoryLabel.Location = new System.Drawing.Point(3, 100);
             this.TextureMemoryLabel.Name = "TextureMemoryLabel";
-            this.TextureMemoryLabel.Size = new System.Drawing.Size(86, 13);
+            this.TextureMemoryLabel.Size = new System.Drawing.Size(96, 15);
             this.TextureMemoryLabel.TabIndex = 0;
             this.TextureMemoryLabel.Text = "Texture Memory:";
             // 
             // NumSolids
             // 
             this.NumSolids.AutoSize = true;
-            this.NumSolids.Location = new System.Drawing.Point(102, 0);
+            this.NumSolids.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumSolids.Location = new System.Drawing.Point(125, 0);
             this.NumSolids.Name = "NumSolids";
-            this.NumSolids.Size = new System.Drawing.Size(37, 13);
+            this.NumSolids.Size = new System.Drawing.Size(37, 15);
             this.NumSolids.TabIndex = 0;
             this.NumSolids.Text = "12345";
             // 
             // NumFaces
             // 
             this.NumFaces.AutoSize = true;
-            this.NumFaces.Location = new System.Drawing.Point(102, 20);
+            this.NumFaces.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumFaces.Location = new System.Drawing.Point(125, 20);
             this.NumFaces.Name = "NumFaces";
-            this.NumFaces.Size = new System.Drawing.Size(37, 13);
+            this.NumFaces.Size = new System.Drawing.Size(37, 15);
             this.NumFaces.TabIndex = 0;
             this.NumFaces.Text = "12345";
             // 
             // NumPointEntities
             // 
             this.NumPointEntities.AutoSize = true;
-            this.NumPointEntities.Location = new System.Drawing.Point(102, 40);
+            this.NumPointEntities.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumPointEntities.Location = new System.Drawing.Point(125, 40);
             this.NumPointEntities.Name = "NumPointEntities";
-            this.NumPointEntities.Size = new System.Drawing.Size(37, 13);
+            this.NumPointEntities.Size = new System.Drawing.Size(37, 15);
             this.NumPointEntities.TabIndex = 0;
             this.NumPointEntities.Text = "12345";
             // 
             // NumSolidEntities
             // 
             this.NumSolidEntities.AutoSize = true;
-            this.NumSolidEntities.Location = new System.Drawing.Point(102, 60);
+            this.NumSolidEntities.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumSolidEntities.Location = new System.Drawing.Point(125, 60);
             this.NumSolidEntities.Name = "NumSolidEntities";
-            this.NumSolidEntities.Size = new System.Drawing.Size(37, 13);
+            this.NumSolidEntities.Size = new System.Drawing.Size(37, 15);
             this.NumSolidEntities.TabIndex = 0;
             this.NumSolidEntities.Text = "12345";
             // 
             // NumUniqueTextures
             // 
             this.NumUniqueTextures.AutoSize = true;
-            this.NumUniqueTextures.Location = new System.Drawing.Point(102, 80);
+            this.NumUniqueTextures.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumUniqueTextures.Location = new System.Drawing.Point(125, 80);
             this.NumUniqueTextures.Name = "NumUniqueTextures";
-            this.NumUniqueTextures.Size = new System.Drawing.Size(37, 13);
+            this.NumUniqueTextures.Size = new System.Drawing.Size(37, 15);
             this.NumUniqueTextures.TabIndex = 0;
             this.NumUniqueTextures.Text = "12345";
+            // 
+            // TextureMemoryValue
+            // 
+            this.TextureMemoryValue.AutoSize = true;
+            this.TextureMemoryValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextureMemoryValue.Location = new System.Drawing.Point(125, 100);
+            this.TextureMemoryValue.Name = "TextureMemoryValue";
+            this.TextureMemoryValue.Size = new System.Drawing.Size(37, 15);
+            this.TextureMemoryValue.TabIndex = 0;
+            this.TextureMemoryValue.Text = "12345";
             // 
             // TexturePackagesUsedLabel
             // 
             this.TexturePackagesUsedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TexturePackagesUsedLabel.AutoSize = true;
-            this.TexturePackagesUsedLabel.Location = new System.Drawing.Point(12, 137);
+            this.TexturePackagesUsedLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TexturePackagesUsedLabel.Location = new System.Drawing.Point(15, 139);
+            this.TexturePackagesUsedLabel.Margin = new System.Windows.Forms.Padding(3);
             this.TexturePackagesUsedLabel.Name = "TexturePackagesUsedLabel";
-            this.TexturePackagesUsedLabel.Size = new System.Drawing.Size(122, 13);
+            this.TexturePackagesUsedLabel.Size = new System.Drawing.Size(128, 15);
             this.TexturePackagesUsedLabel.TabIndex = 1;
             this.TexturePackagesUsedLabel.Text = "Texture packages used:";
             // 
@@ -192,17 +215,20 @@
             // 
             this.TexturePackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.TexturePackages.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TexturePackages.FormattingEnabled = true;
-            this.TexturePackages.Location = new System.Drawing.Point(12, 153);
+            this.TexturePackages.ItemHeight = 15;
+            this.TexturePackages.Location = new System.Drawing.Point(12, 160);
             this.TexturePackages.Name = "TexturePackages";
-            this.TexturePackages.Size = new System.Drawing.Size(251, 108);
+            this.TexturePackages.Size = new System.Drawing.Size(251, 94);
             this.TexturePackages.TabIndex = 2;
             // 
             // CloseDialogButton
             // 
             this.CloseDialogButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseDialogButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseDialogButton.Location = new System.Drawing.Point(188, 267);
+            this.CloseDialogButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CloseDialogButton.Location = new System.Drawing.Point(188, 257);
             this.CloseDialogButton.Name = "CloseDialogButton";
             this.CloseDialogButton.Size = new System.Drawing.Size(75, 23);
             this.CloseDialogButton.TabIndex = 3;
@@ -210,20 +236,11 @@
             this.CloseDialogButton.UseVisualStyleBackColor = true;
             this.CloseDialogButton.Click += new System.EventHandler(this.CloseButtonClicked);
             // 
-            // TextureMemoryValue
-            // 
-            this.TextureMemoryValue.AutoSize = true;
-            this.TextureMemoryValue.Location = new System.Drawing.Point(102, 100);
-            this.TextureMemoryValue.Name = "TextureMemoryValue";
-            this.TextureMemoryValue.Size = new System.Drawing.Size(37, 13);
-            this.TextureMemoryValue.TabIndex = 0;
-            this.TextureMemoryValue.Text = "12345";
-            // 
             // MapInformationDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(275, 300);
+            this.ClientSize = new System.Drawing.Size(275, 292);
             this.Controls.Add(this.CloseDialogButton);
             this.Controls.Add(this.TexturePackages);
             this.Controls.Add(this.TexturePackagesUsedLabel);
