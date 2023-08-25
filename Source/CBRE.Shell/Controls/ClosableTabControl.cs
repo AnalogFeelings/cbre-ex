@@ -116,23 +116,29 @@ namespace CBRE.Shell.Controls
             bool selected = SelectedIndex == index;
             TabPage tab = TabPages[index];
 
-            Point[] points = new[]
+            Point[] points;
+            if (selected)
             {
-                new Point(rect.Left, rect.Bottom),
-                new Point(rect.Left, rect.Top),
-                new Point(rect.Right, rect.Top),
-                new Point(rect.Right, rect.Bottom),
-                new Point(rect.Left, rect.Bottom)
-            };
-
-            Point[] pointsUnselected = new[]
+                points = new[]
+                {
+                    new Point(rect.Left, rect.Bottom),
+                    new Point(rect.Left, rect.Top),
+                    new Point(rect.Right, rect.Top),
+                    new Point(rect.Right, rect.Bottom),
+                    new Point(rect.Left, rect.Bottom)
+                };
+            }
+            else
             {
-                new Point(rect.Left, rect.Bottom),
-                new Point(rect.Left, rect.Top + 2),
-                new Point(rect.Right, rect.Top + 2),
-                new Point(rect.Right, rect.Bottom),
-                new Point(rect.Left, rect.Bottom)
-            };
+                points = new[]
+                {
+                    new Point(rect.Left, rect.Bottom),
+                    new Point(rect.Left, rect.Top + 2),
+                    new Point(rect.Right, rect.Top + 2),
+                    new Point(rect.Right, rect.Bottom),
+                    new Point(rect.Left, rect.Bottom)
+                };
+            }
 
             // Background
             Point p = PointToClient(MousePosition);
@@ -145,12 +151,12 @@ namespace CBRE.Shell.Controls
 
             using (SolidBrush b = new SolidBrush(backColour))
             {
-                g.FillPolygon(b, selected ? points : pointsUnselected);
+                g.FillPolygon(b, points);
             }
 
             // Border
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.DrawPolygon(SystemPens.ControlDark, selected ? points : pointsUnselected);
+            g.DrawPolygon(SystemPens.ControlDark, points);
             if (selected)
             {
                 using (Pen pen = new Pen(tab.BackColor))
@@ -159,23 +165,23 @@ namespace CBRE.Shell.Controls
                 }
             }
 
-            // Icon
+            int dirtyOffset = selected ? 8 : 10;
             if (tab.ImageKey == "Dirty")
-            {
-                int dirtyOffset = selected ? 8 : 10;
                 g.FillEllipse(Brushes.OrangeRed, rect.X + 8, rect.Y + dirtyOffset, 5, 5);
-            }
+            else
+                g.FillEllipse(SystemBrushes.GrayText, rect.X + 8, rect.Y + dirtyOffset, 5, 5);
 
             // Text
-            StringFormat sf = new StringFormat(StringFormatFlags.NoWrap);
-            int textWidth = (int) g.MeasureString(tab.Text, Font, SizeF.Empty, sf).Width;
-            int textLeft = rect.X + 18;
-            int textRight = rect.Right - 26;
-            int offset = selected ? 4 : 6;
-            Rectangle textRect = new Rectangle(textLeft, rect.Y + offset, rect.Width - 26, rect.Height - 5);
-            using (SolidBrush b = new SolidBrush(tab.ForeColor))
+            StringFormat stringFormat = new StringFormat(StringFormatFlags.NoWrap);
+            int textX = rect.X + 18;
+            int textY = rect.Y + (selected ? 4 : 6);
+            int textWidth = rect.Width - 26;
+            int textHeight = rect.Height - 5;
+
+            Rectangle textRect = new Rectangle(textX, textY, textWidth, textHeight);
+            using (SolidBrush b = new SolidBrush(selected ? tab.ForeColor : SystemColors.GrayText))
             {
-                g.DrawString(tab.Text, Font, b, textRect, sf);
+                g.DrawString(tab.Text, Font, b, textRect, stringFormat);
             }
 
             // Close icon
