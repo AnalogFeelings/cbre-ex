@@ -473,9 +473,6 @@
     <Content Include="Translations\CBRE.BspEditor.Editing.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Specifications\Goldsource.vdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="Translations\CBRE.BspEditor.Editing.fr.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
