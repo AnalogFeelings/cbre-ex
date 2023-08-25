@@ -13,15 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.FileSystem", "Source\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.QuickForms", "Source\CBRE.QuickForms\CBRE.QuickForms.csproj", "{7FED88F3-717C-408A-85D9-28DD125DB61A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7A0A29CF-B1A8-4451-AAD4-C05004214452}"
-	ProjectSection(SolutionItems) = preProject
-		Milestones.txt = Milestones.txt
-		NetworkingPlan.txt = NetworkingPlan.txt
-		Performance1.psess = Performance1.psess
-		Performance2.psess = Performance2.psess
-		TestSettings.testsettings = TestSettings.testsettings
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Packages", "Source\CBRE.Packages\CBRE.Packages.csproj", "{BB1AF818-8CCA-4BC8-A4A8-B7A0627B68DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Rendering", "Source\CBRE.Rendering\CBRE.Rendering.csproj", "{4DA7F88D-64FF-4036-8A11-6175169DA851}"
