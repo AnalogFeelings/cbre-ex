@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using CBRE.Common.Extensions;
 
@@ -47,10 +48,7 @@ namespace CBRE.Common.Transport
         /// <returns>The deserialised objects</returns>
         public IEnumerable<SerialisedObject> Deserialize(Stream serializationStream)
         {
-            using (StreamReader reader = new StreamReader(serializationStream, Encoding.UTF8, true, 1024, true))
-            {
-                return Parse(reader);
-            }
+            return Parse(serializationStream);
         }
 
         #region Printer
@@ -107,16 +105,19 @@ namespace CBRE.Common.Transport
         /// <summary>
         /// Parse a structure from a stream
         /// </summary>
-        /// <param name="reader">The TextReader to parse from</param>
+        /// <param name="serializationStream">The Stream to parse from</param>
         /// <returns>The parsed structure</returns>
-        public static IEnumerable<SerialisedObject> Parse(TextReader reader)
+        public static IEnumerable<SerialisedObject> Parse(Stream serializationStream)
         {
-            string line;
-            while ((line = CleanLine(reader.ReadLine())) != null)
+            using (StreamReader reader = new StreamReader(serializationStream, Encoding.UTF8, true, 1024, true))
             {
-                if (ValidStructStartString(line))
+                string line;
+                while ((line = CleanLine(reader.ReadLine())) != null)
                 {
-                    yield return ParseStructure(reader, line);
+                    if (ValidStructStartString(line))
+                    {
+                        yield return ParseStructure(reader, line);
+                    }
                 }
             }
         }
