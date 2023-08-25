@@ -110,9 +110,9 @@ namespace CBRE.BspEditor.Environment.Blitz
 
         private Task<GameData> MakeGameDataAsync()
         {
-            IEnumerable<string> entityFiles = string.IsNullOrWhiteSpace(EntityPath) ? 
-                Array.Empty<string>() : 
-                Directory.EnumerateFiles(EntityPath, "*.json");
+            IEnumerable<string> entityFiles = Directory.Exists(EntityPath) ?
+                Directory.EnumerateFiles(EntityPath, "*.json") :
+                Array.Empty<string>();
 
             return Task.FromResult(_blitzProvider.GetGameDataFromFiles(entityFiles));
         }
