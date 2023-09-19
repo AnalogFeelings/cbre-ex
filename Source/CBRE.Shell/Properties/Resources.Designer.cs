@@ -103,6 +103,16 @@ namespace CBRE.Shell.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Menu_Exit {
+            get {
+                object obj = ResourceManager.GetObject("Menu_Exit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Menu_Export {
             get {
                 object obj = ResourceManager.GetObject("Menu_Export", resourceCulture);

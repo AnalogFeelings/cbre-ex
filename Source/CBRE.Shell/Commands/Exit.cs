@@ -5,6 +5,7 @@ using CBRE.Common.Shell.Context;
 using CBRE.Common.Shell.Hotkeys;
 using CBRE.Common.Shell.Menu;
 using CBRE.Common.Translations;
+using CBRE.Shell.Properties;
 
 namespace CBRE.Shell.Commands
 {
@@ -13,6 +14,7 @@ namespace CBRE.Shell.Commands
     [CommandID("File:Exit")]
     [DefaultHotkey("Alt+F4")]
     [MenuItem("File", "", "Exit", "M")]
+    [MenuImage(typeof(Resources), nameof(Resources.Menu_Exit))]
     public class Exit : ICommand
     {
         private readonly Forms.Shell _shell;

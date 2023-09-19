@@ -93,6 +93,16 @@ namespace CBRE.BspEditor.Editing.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Menu_Bug {
+            get {
+                object obj = ResourceManager.GetObject("Menu_Bug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Menu_Carve {
             get {
                 object obj = ResourceManager.GetObject("Menu_Carve", resourceCulture);
@@ -146,16 +156,6 @@ namespace CBRE.BspEditor.Editing.Properties {
         internal static System.Drawing.Bitmap Menu_EntityReport {
             get {
                 object obj = ResourceManager.GetObject("Menu_EntityReport", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Menu_GitHub {
-            get {
-                object obj = ResourceManager.GetObject("Menu_GitHub", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
