@@ -63,16 +63,6 @@ namespace CBRE.BspEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DottedGrid {
-            get {
-                object obj = ResourceManager.GetObject("DottedGrid", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap File_Folder {
             get {
                 object obj = ResourceManager.GetObject("File_Folder", resourceCulture);

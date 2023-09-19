@@ -73,9 +73,9 @@ namespace CBRE.BspEditor.Editing.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CBRE_Large {
+        internal static System.Drawing.Bitmap CBRE_Icon {
             get {
-                object obj = ResourceManager.GetObject("CBRE_Large", resourceCulture);
+                object obj = ResourceManager.GetObject("CBRE_Icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

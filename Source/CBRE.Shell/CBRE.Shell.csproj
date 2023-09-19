@@ -44,7 +44,8 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>Resources\CBRE.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -177,6 +178,11 @@
     <Compile Include="Forms\TranslationForm.Designer.cs">
       <DependentUpon>TranslationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Editors\DefaultSettingEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -202,11 +208,6 @@
     </Compile>
     <Compile Include="Controls\SidebarPanel.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Registers\SidebarRegister.cs" />
     <Compile Include="Registers\StatusRegister.cs" />
@@ -316,8 +317,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings\Editors\DefaultSettingEditor.resx">
       <DependentUpon>DefaultSettingEditor.cs</DependentUpon>
@@ -354,14 +355,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\menu_close.png" />
-    <None Include="Resources\menu_new.png" />
-    <None Include="Resources\menu_open.png" />
-    <None Include="Resources\menu_save.png" />
-    <None Include="Resources\menu_saveas.png" />
+    <None Include="Resources\Arrow_Down.png" />
+    <None Include="Resources\Arrow_Up.png" />
+    <None Include="Resources\Menu_Close.png" />
+    <None Include="Resources\Menu_Export.png" />
+    <None Include="Resources\Menu_New.png" />
+    <None Include="Resources\Menu_Open.png" />
+    <None Include="Resources\Menu_Options.png" />
+    <None Include="Resources\Menu_Save.png" />
+    <None Include="Resources\Menu_SaveAs.png" />
     <None Include="Resources\CBRE.ico" />
-    <Content Include="Resources\Menu_Export.png" />
-    <Content Include="Resources\Menu_Options.png" />
     <Content Include="Translations\CBRE.Shell.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -371,12 +374,6 @@
     <Content Include="Translations\CBRE.Shell.it.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\arrow_down.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\arrow_up.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence">

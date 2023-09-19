@@ -93,16 +93,6 @@ namespace CBRE.BspEditor.Tools.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Menu_Cordon {
-            get {
-                object obj = ResourceManager.GetObject("Menu_Cordon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Menu_Cut {
             get {
                 object obj = ResourceManager.GetObject("Menu_Cut", resourceCulture);
@@ -313,26 +303,6 @@ namespace CBRE.BspEditor.Tools.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Tool_Cordon {
-            get {
-                object obj = ResourceManager.GetObject("Tool_Cordon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Tool_Decal {
-            get {
-                object obj = ResourceManager.GetObject("Tool_Decal", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Tool_Entity {
             get {
                 object obj = ResourceManager.GetObject("Tool_Entity", resourceCulture);
@@ -346,16 +316,6 @@ namespace CBRE.BspEditor.Tools.Properties {
         internal static System.Drawing.Bitmap Tool_Select {
             get {
                 object obj = ResourceManager.GetObject("Tool_Select", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Tool_Test {
-            get {
-                object obj = ResourceManager.GetObject("Tool_Test", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

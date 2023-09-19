@@ -181,10 +181,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="Resources\Menu_Paste.png" />
-    <Content Include="Resources\Menu_PasteSpecial.png" />
-    <Content Include="Resources\Menu_Redo.png" />
-    <Content Include="Resources\Menu_Undo.png" />
+    <None Include="Resources\Menu_Paste.png" />
+    <None Include="Resources\Menu_PasteSpecial.png" />
+    <None Include="Resources\Menu_Redo.png" />
+    <None Include="Resources\Menu_Undo.png" />
     <Content Include="Sprites\ent_light.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

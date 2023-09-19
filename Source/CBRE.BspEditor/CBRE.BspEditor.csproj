@@ -343,24 +343,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Resources\Menu_Copy.png" />
+    <None Include="Resources\Menu_Cut.png" />
+    <None Include="Resources\Menu_Delete.png" />
+    <None Include="Resources\Menu_Group.png" />
+    <None Include="Resources\Menu_NewWindow.png" />
+    <None Include="Resources\Menu_Paste.png" />
+    <None Include="Resources\Menu_SelectAll.png" />
+    <None Include="Resources\Menu_SelectNone.png" />
+    <None Include="Resources\Menu_Ungroup.png" />
+    <None Include="Resources\Menu_WindowSettings.png" />
+    <None Include="Resources\File_Folder.png" />
+    <None Include="Resources\File_Generic.png" />
+    <None Include="Resources\File_Mdl.png" />
+    <None Include="Resources\File_Mp3.png" />
+    <None Include="Resources\File_Txt.png" />
+    <None Include="Resources\File_Wav.png" />
     <None Include="Resources\SquareGrid.png" />
-    <Content Include="Resources\DottedGrid.png" />
-    <Content Include="Resources\Menu_Delete.png" />
-    <Content Include="Resources\File_Folder.png" />
-    <Content Include="Resources\File_Generic.png" />
-    <Content Include="Resources\File_Mdl.png" />
-    <Content Include="Resources\File_Mp3.png" />
-    <Content Include="Resources\File_Txt.png" />
-    <Content Include="Resources\File_Wav.png" />
-    <Content Include="Resources\Menu_Group.png" />
-    <Content Include="Resources\Menu_NewWindow.png" />
-    <Content Include="Resources\Menu_SelectNone.png" />
-    <Content Include="Resources\Menu_Copy.png" />
-    <Content Include="Resources\Menu_Cut.png" />
-    <Content Include="Resources\Menu_Paste.png" />
-    <Content Include="Resources\Menu_SelectAll.png" />
-    <Content Include="Resources\Menu_Ungroup.png" />
-    <Content Include="Resources\Menu_WindowSettings.png" />
     <Content Include="Translations\CBRE.BspEditor.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

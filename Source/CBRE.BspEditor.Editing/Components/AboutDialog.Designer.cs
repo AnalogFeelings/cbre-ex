@@ -48,7 +48,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::CBRE.BspEditor.Editing.Properties.Resources.CBRE_Large;
+            this.pictureBox1.Image = global::CBRE.BspEditor.Editing.Properties.Resources.CBRE_Icon;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(493, 235);

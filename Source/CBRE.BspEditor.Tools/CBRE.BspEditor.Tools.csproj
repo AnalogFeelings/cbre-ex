@@ -318,25 +318,33 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Resources\Cursor_Rotate.cur" />
-    <Content Include="Resources\Menu_Carve.png" />
-    <Content Include="Resources\Menu_Copy.png" />
-    <Content Include="Resources\Menu_Cordon.png" />
-    <Content Include="Resources\Menu_Cut.png" />
-    <Content Include="Resources\Menu_Delete.png" />
-    <Content Include="Resources\Menu_Group.png" />
-    <Content Include="Resources\Menu_Hollow.png" />
-    <Content Include="Resources\Menu_IgnoreGrouping.png" />
-    <Content Include="Resources\Menu_ObjectProperties.png" />
-    <Content Include="Resources\Menu_Paste.png" />
-    <Content Include="Resources\Menu_PasteSpecial.png" />
-    <Content Include="Resources\Menu_Redo.png" />
-    <Content Include="Resources\Menu_ReplaceTextures.png" />
-    <Content Include="Resources\Menu_TieToEntity.png" />
-    <Content Include="Resources\Menu_TieToWorld.png" />
-    <Content Include="Resources\Menu_Transform.png" />
-    <Content Include="Resources\Menu_Undo.png" />
-    <Content Include="Resources\Menu_Ungroup.png" />
-    <Content Include="Resources\Tool_VM.png" />
+    <None Include="Resources\Menu_IgnoreGrouping.png" />
+    <None Include="Resources\Menu_LargerGrid.png" />
+    <None Include="Resources\Menu_SmallerGrid.png" />
+    <None Include="Resources\Menu_SnapToGrid.png" />
+    <None Include="Resources\Menu_ReplaceTextures.png" />
+    <None Include="Resources\Tool_Brush.png" />
+    <None Include="Resources\Tool_Camera.png" />
+    <None Include="Resources\Tool_Clip.png" />
+    <None Include="Resources\Tool_Entity.png" />
+    <None Include="Resources\Tool_Select.png" />
+    <None Include="Resources\Menu_Copy.png" />
+    <None Include="Resources\Menu_Cut.png" />
+    <None Include="Resources\Menu_Delete.png" />
+    <None Include="Resources\Menu_Paste.png" />
+    <None Include="Resources\Menu_PasteSpecial.png" />
+    <None Include="Resources\Menu_Redo.png" />
+    <None Include="Resources\Menu_Transform.png" />
+    <None Include="Resources\Menu_Undo.png" />
+    <None Include="Resources\Menu_Carve.png" />
+    <None Include="Resources\Menu_Group.png" />
+    <None Include="Resources\Menu_Hollow.png" />
+    <None Include="Resources\Menu_ObjectProperties.png" />
+    <None Include="Resources\Menu_TieToEntity.png" />
+    <None Include="Resources\Menu_TieToWorld.png" />
+    <None Include="Resources\Menu_Ungroup.png" />
+    <None Include="Resources\Tool_Texture.png" />
+    <None Include="Resources\Tool_VM.png" />
     <Content Include="Translations\CBRE.BspEditor.Tools.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -403,28 +411,6 @@
     <EmbeddedResource Include="Vertex\Controls\VertexSidebarPanel.resx">
       <DependentUpon>VertexSidebarPanel.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Tool_Test.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Tool_Brush.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Tool_Select.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Tool_Camera.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Menu_LargerGrid.png" />
-    <Content Include="Resources\Menu_SmallerGrid.png" />
-    <Content Include="Resources\Menu_SnapToGrid.png" />
-    <Content Include="Resources\Tool_Clip.png" />
-    <Content Include="Resources\Tool_Cordon.png" />
-    <Content Include="Resources\Tool_Decal.png" />
-    <Content Include="Resources\Tool_Entity.png" />
-    <None Include="Resources\Tool_Texture.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LogicAndTrick.Oy">
