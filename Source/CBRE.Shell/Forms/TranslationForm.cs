@@ -1,12 +1,13 @@
-﻿using System;
+﻿using CBRE.Common.Shell;
+using CBRE.Common.Translations;
+using CBRE.Shell.Properties;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Data;
-using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
-using CBRE.Common.Shell;
-using CBRE.Common.Translations;
 
 namespace CBRE.Shell.Forms
 {
@@ -26,6 +27,8 @@ namespace CBRE.Shell.Forms
         public TranslationForm()
         {
             InitializeComponent();
+
+            Icon = Icon.FromHandle(Resources.Menu_Translate.GetHicon());
 
             _catalog = Common.Container.Get<TranslationStringsCatalog>();
             _appInfo = Common.Container.Get<IApplicationInfo>();
@@ -105,7 +108,7 @@ namespace CBRE.Shell.Forms
             dataGridView.ColumnHeadersVisible = false;
             dataGridView.RowHeadersVisible = false;
 
-            DataTable source = (DataTable) dataGridView.DataSource;
+            DataTable source = (DataTable)dataGridView.DataSource;
             source.Rows.Clear();
             if (lang != null && file != null)
             {
@@ -166,7 +169,7 @@ namespace CBRE.Shell.Forms
             {
                 if (alf.ShowDialog() == DialogResult.OK)
                 {
-                    Language lang = new Language(alf.Code) {Description = alf.Description, Inherit = "en"};
+                    Language lang = new Language(alf.Code) { Description = alf.Description, Inherit = "en" };
 
                     Wrapper<Language> w = new Wrapper<Language>(lang, lang.Description);
                     cmbLanguage.Items.Add(w);

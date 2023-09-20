@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using CBRE.BspEditor.Editing.Properties;
+using System.Diagnostics;
+using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -9,6 +11,8 @@ namespace CBRE.BspEditor.Editing.Components
         public AboutDialog()
         {
             InitializeComponent();
+
+            Icon = Icon.FromHandle(Resources.Menu_Help.GetHicon());
 
             VersionLabel.Text = VersionLabel.Text.Replace("(version)", Assembly.GetAssembly(typeof(AboutDialog)).GetName().Version.ToString(3));
 
