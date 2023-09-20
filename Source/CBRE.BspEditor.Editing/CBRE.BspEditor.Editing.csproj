@@ -443,7 +443,6 @@
     <None Include="Resources\Menu_CheckForProblems.png" />
     <None Include="Resources\Menu_GitHub.png" />
     <None Include="Resources\Menu_Hollow.png" />
-    <None Include="Resources\Menu_ShowInformation.png" />
     <None Include="Resources\Menu_PasteSpecial.png" />
     <None Include="Resources\Menu_Run.png" />
     <None Include="Resources\Menu_SnapSelection.png" />
@@ -474,6 +473,7 @@
     <None Include="Resources\Menu_Bug.png" />
     <None Include="Resources\Menu_Align.png" />
     <None Include="Resources\Menu_Help.png" />
+    <None Include="Resources\Menu_ShowInformation.png" />
     <Content Include="Translations\CBRE.BspEditor.Editing.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

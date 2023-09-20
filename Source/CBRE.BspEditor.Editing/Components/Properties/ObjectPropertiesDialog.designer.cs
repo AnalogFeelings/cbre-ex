@@ -90,11 +90,10 @@ namespace CBRE.BspEditor.Editing.Components.Properties
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ObjectPropertiesDialog";
-            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Object Properties";

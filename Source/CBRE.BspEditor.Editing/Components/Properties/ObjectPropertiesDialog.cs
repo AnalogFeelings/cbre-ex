@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ using CBRE.Common.Shell.Hooks;
 using CBRE.Common.Translations;
 using CBRE.Shell;
 using CBRE.Shell.Forms;
+using CBRE.BspEditor.Editing.Properties;
 
 namespace CBRE.BspEditor.Editing.Components.Properties
 {
@@ -96,6 +98,7 @@ namespace CBRE.BspEditor.Editing.Components.Properties
             _context = context.Value;
 
             InitializeComponent();
+            Icon = Icon.FromHandle(Resources.Menu_ObjectProperties.GetHicon());
             CreateHandle();
         }
 

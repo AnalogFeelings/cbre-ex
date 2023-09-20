@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Composition;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using LogicAndTrick.Oy;
-using CBRE.BspEditor.Documents;
+﻿using CBRE.BspEditor.Documents;
+using CBRE.BspEditor.Editing.Properties;
 using CBRE.BspEditor.Modification;
+using CBRE.BspEditor.Primitives.MapObjects;
 using CBRE.Common.Shell.Components;
 using CBRE.Common.Shell.Context;
 using CBRE.Common.Translations;
 using CBRE.Shell;
-using CBRE.BspEditor.Primitives.MapObjects;
+using LogicAndTrick.Oy;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.Composition;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CBRE.BspEditor.Editing.Components
 {
@@ -23,7 +25,7 @@ namespace CBRE.BspEditor.Editing.Components
     {
         [Import("Shell", typeof(Form))] private Lazy<Form> _parent;
         [Import] private IContext _context;
-        
+
         private List<Subscription> _subscriptions;
 
         #region Translations
@@ -44,6 +46,7 @@ namespace CBRE.BspEditor.Editing.Components
         public MapInformationDialog()
         {
             InitializeComponent();
+            Icon = Icon.FromHandle(Resources.Menu_ShowInformation.GetHicon());
             CreateHandle();
         }
 
@@ -54,7 +57,7 @@ namespace CBRE.BspEditor.Editing.Components
         }
 
         protected override void OnMouseEnter(EventArgs e)
-		{
+        {
             Focus();
             base.OnMouseEnter(e);
         }
@@ -157,7 +160,7 @@ namespace CBRE.BspEditor.Editing.Components
 
                     if (tex == null) continue;
 
-                    if(tex.Name.EndsWith(".jpg") || tex.Name.EndsWith(".jpeg"))
+                    if (tex.Name.EndsWith(".jpg") || tex.Name.EndsWith(".jpeg"))
                     {
                         texUsage += tex.Width * tex.Height * 3; // JPEG is 24-bit.
                     }
