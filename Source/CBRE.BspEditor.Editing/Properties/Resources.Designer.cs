@@ -83,6 +83,16 @@ namespace CBRE.BspEditor.Editing.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Menu_Align {
+            get {
+                object obj = ResourceManager.GetObject("Menu_Align", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Menu_AutosizeViews {
             get {
                 object obj = ResourceManager.GetObject("Menu_AutosizeViews", resourceCulture);
@@ -176,6 +186,16 @@ namespace CBRE.BspEditor.Editing.Properties {
         internal static System.Drawing.Bitmap Menu_GoToCoordinates {
             get {
                 object obj = ResourceManager.GetObject("Menu_GoToCoordinates", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Menu_Help {
+            get {
+                object obj = ResourceManager.GetObject("Menu_Help", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

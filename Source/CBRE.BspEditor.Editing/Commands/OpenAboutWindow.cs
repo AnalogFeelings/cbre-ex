@@ -13,7 +13,8 @@ namespace CBRE.BspEditor.Editing.Commands
     [Export(typeof(ICommand))]
     [MenuItem("Help", "", "About", "Z")]
     [CommandID("BspEditor:Help:About")]
-    [MenuImage(typeof(Resources), nameof(Resources.Menu_ShowInformation))]
+    [MenuImage(typeof(Resources), nameof(Resources.Menu_Help))]
+    [AllowToolbar(false)]
     public class OpenAboutWindow : ICommand
     {
         public string Name { get; set; } = "About CBRE-EX";

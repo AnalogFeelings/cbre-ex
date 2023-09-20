@@ -472,6 +472,8 @@
     <None Include="Resources\Menu_ShowBrushID.png" />
     <None Include="Resources\Menu_ShowHidden.png" />
     <None Include="Resources\Menu_Bug.png" />
+    <None Include="Resources\Menu_Align.png" />
+    <None Include="Resources\Menu_Help.png" />
     <Content Include="Translations\CBRE.BspEditor.Editing.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

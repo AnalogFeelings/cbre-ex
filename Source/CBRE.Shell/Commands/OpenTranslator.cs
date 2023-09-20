@@ -6,16 +6,19 @@ using CBRE.Common.Shell.Context;
 using CBRE.Common.Shell.Menu;
 using CBRE.Common.Translations;
 using CBRE.Shell.Forms;
+using CBRE.Shell.Properties;
 
 namespace CBRE.Shell.Commands
 {
     /// <summary>
     /// Opens the translator form
     /// </summary>
+    [AutoTranslate]
     [Export(typeof(ICommand))]
     [CommandID("Tools:Translator")]
     [MenuItem("Tools", "", "Settings", "B")]
-    [AutoTranslate]
+    [MenuImage(typeof(Resources), nameof(Resources.Menu_Translate))]
+    [AllowToolbar(false)]
     public class OpenTranslator : ICommand
     {
         private readonly Form _shell;

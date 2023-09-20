@@ -366,6 +366,7 @@
     <None Include="Resources\Menu_SaveAs.png" />
     <None Include="Resources\CBRE.ico" />
     <None Include="Resources\Menu_Exit.png" />
+    <None Include="Resources\Menu_Translate.png" />
     <Content Include="Translations\CBRE.Shell.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

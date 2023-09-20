@@ -15,6 +15,7 @@ namespace CBRE.Shell.Commands
     [DefaultHotkey("Alt+F4")]
     [MenuItem("File", "", "Exit", "M")]
     [MenuImage(typeof(Resources), nameof(Resources.Menu_Exit))]
+    [AllowToolbar(false)]
     public class Exit : ICommand
     {
         private readonly Forms.Shell _shell;

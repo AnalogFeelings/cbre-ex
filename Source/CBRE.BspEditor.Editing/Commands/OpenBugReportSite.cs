@@ -13,6 +13,7 @@ namespace CBRE.BspEditor.Editing.Commands
     [MenuItem("Help", "", "Links", "D")]
     [CommandID("BspEditor:Links:BugReport")]
     [MenuImage(typeof(Resources), nameof(Resources.Menu_Bug))]
+    [AllowToolbar(false)]
     public class OpenBugReportSite : ICommand
     {
         public string Name { get; set; } = "Report a bug...";

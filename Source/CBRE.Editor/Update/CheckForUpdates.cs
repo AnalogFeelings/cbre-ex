@@ -17,6 +17,7 @@ namespace CBRE.Editor.Update
     [MenuItem("Help", "", "Update", "B")]
     [CommandID("CBRE:Editor:CheckForUpdates")]
     [MenuImage(typeof(Resources), nameof(Resources.Menu_Update))]
+    [AllowToolbar(false)]
     public class CheckForUpdates : ICommand
     {
         private readonly Form _shell;
