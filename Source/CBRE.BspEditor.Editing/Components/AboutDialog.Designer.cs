@@ -34,7 +34,9 @@
             this.VersionLabel = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.CreditsBox = new System.Windows.Forms.RichTextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -79,24 +81,33 @@
             // CreditsBox
             // 
             this.CreditsBox.BackColor = System.Drawing.SystemColors.Window;
-            this.CreditsBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CreditsBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.CreditsBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CreditsBox.Location = new System.Drawing.Point(12, 298);
-            this.CreditsBox.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.CreditsBox.Location = new System.Drawing.Point(-1, -1);
+            this.CreditsBox.Margin = new System.Windows.Forms.Padding(0);
             this.CreditsBox.Name = "CreditsBox";
             this.CreditsBox.ReadOnly = true;
             this.CreditsBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.CreditsBox.Size = new System.Drawing.Size(493, 196);
+            this.CreditsBox.Size = new System.Drawing.Size(492, 192);
             this.CreditsBox.TabIndex = 13;
             this.CreditsBox.TabStop = false;
             this.CreditsBox.Text = resources.GetString("CreditsBox.Text");
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.CreditsBox);
+            this.panel1.Location = new System.Drawing.Point(12, 301);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(493, 193);
+            this.panel1.TabIndex = 14;
             // 
             // AboutDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(517, 506);
-            this.Controls.Add(this.CreditsBox);
+            this.ClientSize = new System.Drawing.Size(517, 508);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.label1);
@@ -109,6 +120,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About CBRE-EX";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -119,5 +131,6 @@
         private System.Windows.Forms.Label VersionLabel;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.RichTextBox CreditsBox;
+        private System.Windows.Forms.Panel panel1;
     }
 }
