@@ -8,6 +8,7 @@ namespace CBRE.BspEditor.Editing.Components
 {
     public partial class AboutDialog : Form
     {
+        // TODO: Add translation support.
         public AboutDialog()
         {
             InitializeComponent();
@@ -16,12 +17,11 @@ namespace CBRE.BspEditor.Editing.Components
 
             VersionLabel.Text = VersionLabel.Text.Replace("(version)", Assembly.GetAssembly(typeof(AboutDialog)).GetName().Version.ToString(3));
 
-            GitHubLink.Click += (s, e) => OpenSite(GitHubLink.Text);
-            LicenseLink.Click += (s, e) => OpenSite(LicenseLink.Text);
-            ExtraLicenseLink.Click += (s, e) => OpenSite(ExtraLicenseLink.Text);
+            CreditsBox.SelectAll();
+            CreditsBox.SelectionAlignment = HorizontalAlignment.Center;
+            CreditsBox.DeselectAll();
 
-            DescriptionLabel.Links.Add(214, 19, "http://logic-and-trick.com");
-            DescriptionLabel.LinkClicked += (s, e) => OpenSite(e.Link.LinkData.ToString());
+            CreditsBox.LinkClicked += (s, e) => OpenSite(e.LinkText);
         }
 
         private void OpenSite(string url)

@@ -117,16 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DescriptionLabel.Text" xml:space="preserve">
-    <value>A fork of CBRE by Analog Feelings that adds new QOL features.
+  <data name="CreditsBox.Text" xml:space="preserve">
+    <value>A fork of CBRE by Analog Feelings that greatly improves user experience.
 
-Thanks to all of the contributors who have helped with development!
+Thanks to all of the people who have helped with development!
 
-Licensed under the BSD-3-Clause license.
+CBRE-EX is licensed under the BSD-3-Clause license.
+https://github.com/AnalogFeelings/cbre-ex/blob/main/LICENSE
+CBRE-EX logo is based off The SCP Foundation logo.
+https://creativecommons.org/licenses/by-sa/3.0/
+CBRE-EX is free and open source software.
+https://github.com/AnalogFeelings/cbre-ex
 
 Based on Sledge by Daniel Walder
-logic-and-trick.com
-The original CBRE is a fork of Sledge
-created by juanjp600.</value>
+https://logic-and-trick.com
+The original CBRE was created by juanjp600.
+https://github.com/SCP-CBN/cbre
+Some icons made by Yusuke Kamiyamane
+https://p.yusukekamiyamane.com/</value>
   </data>
 </root>
