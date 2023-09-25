@@ -80,6 +80,8 @@ namespace CBRE.Shell.Forms
                     return fss;
                 });
                 LoadGroupList();
+
+                GroupList.SelectedNode = GroupList.TopNode;
             }
             base.OnVisibleChanged(e);
         }
