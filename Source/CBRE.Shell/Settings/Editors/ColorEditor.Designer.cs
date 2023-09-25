@@ -38,27 +38,29 @@
             // 
             this.ColorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ColorPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ColorPanel.Location = new System.Drawing.Point(224, 3);
+            this.ColorPanel.Location = new System.Drawing.Point(214, 2);
             this.ColorPanel.Name = "ColorPanel";
-            this.ColorPanel.Size = new System.Drawing.Size(53, 20);
+            this.ColorPanel.Size = new System.Drawing.Size(56, 23);
             this.ColorPanel.TabIndex = 3;
             this.ColorPanel.Click += new System.EventHandler(this.PickColor);
             // 
             // Label
             // 
             this.Label.AutoSize = true;
+            this.Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label.Location = new System.Drawing.Point(3, 6);
             this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(35, 13);
+            this.Label.Size = new System.Drawing.Size(38, 15);
             this.Label.TabIndex = 2;
             this.Label.Text = "label1";
             // 
             // HexBox
             // 
             this.HexBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.HexBox.Location = new System.Drawing.Point(296, 3);
+            this.HexBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HexBox.Location = new System.Drawing.Point(296, 2);
             this.HexBox.Name = "HexBox";
-            this.HexBox.Size = new System.Drawing.Size(51, 20);
+            this.HexBox.Size = new System.Drawing.Size(51, 23);
             this.HexBox.TabIndex = 4;
             this.HexBox.Text = "FFFFFF";
             this.HexBox.TextChanged += new System.EventHandler(this.UpdateHex);
@@ -68,9 +70,10 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(281, 6);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(276, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(14, 13);
+            this.label1.Size = new System.Drawing.Size(14, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "#";
             // 
@@ -83,7 +86,7 @@
             this.Controls.Add(this.ColorPanel);
             this.Controls.Add(this.Label);
             this.Name = "ColorEditor";
-            this.Size = new System.Drawing.Size(350, 26);
+            this.Size = new System.Drawing.Size(350, 29);
             this.ResumeLayout(false);
             this.PerformLayout();
 

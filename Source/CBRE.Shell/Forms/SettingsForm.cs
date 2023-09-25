@@ -169,8 +169,8 @@ namespace CBRE.Shell.Forms
                             // Add a separator
                             Label line = new Label
                             {
-                                Height = 1,
-                                BackColor = Color.FromArgb(128, Color.Black),
+                                Height = 2,
+                                BorderStyle = BorderStyle.Fixed3D,
                                 Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
                             };
                             SettingsPanel.Controls.Add(line);

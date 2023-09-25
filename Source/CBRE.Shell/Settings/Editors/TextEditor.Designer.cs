@@ -37,17 +37,19 @@
             // 
             this.Textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.Textbox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Textbox.Location = new System.Drawing.Point(86, 3);
             this.Textbox.Name = "Textbox";
-            this.Textbox.Size = new System.Drawing.Size(226, 20);
+            this.Textbox.Size = new System.Drawing.Size(226, 23);
             this.Textbox.TabIndex = 3;
             // 
             // Label
             // 
             this.Label.AutoSize = true;
-            this.Label.Location = new System.Drawing.Point(3, 6);
+            this.Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label.Location = new System.Drawing.Point(3, 7);
             this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(35, 13);
+            this.Label.Size = new System.Drawing.Size(38, 15);
             this.Label.TabIndex = 2;
             this.Label.Text = "label1";
             // 
@@ -55,9 +57,10 @@
             // 
             this.BrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.BrowseButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BrowseButton.Location = new System.Drawing.Point(318, 3);
             this.BrowseButton.Name = "BrowseButton";
-            this.BrowseButton.Size = new System.Drawing.Size(28, 20);
+            this.BrowseButton.Size = new System.Drawing.Size(29, 23);
             this.BrowseButton.TabIndex = 4;
             this.BrowseButton.Text = "...";
             this.BrowseButton.UseVisualStyleBackColor = true;
@@ -72,7 +75,7 @@
             this.Controls.Add(this.Textbox);
             this.Controls.Add(this.Label);
             this.Name = "TextEditor";
-            this.Size = new System.Drawing.Size(350, 26);
+            this.Size = new System.Drawing.Size(350, 31);
             this.ResumeLayout(false);
             this.PerformLayout();
 

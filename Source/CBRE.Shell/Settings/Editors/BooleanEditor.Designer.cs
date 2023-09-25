@@ -34,9 +34,10 @@
             // Checkbox
             // 
             this.Checkbox.AutoSize = true;
+            this.Checkbox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Checkbox.Location = new System.Drawing.Point(3, 3);
             this.Checkbox.Name = "Checkbox";
-            this.Checkbox.Size = new System.Drawing.Size(80, 17);
+            this.Checkbox.Size = new System.Drawing.Size(83, 19);
             this.Checkbox.TabIndex = 0;
             this.Checkbox.Text = "checkBox1";
             this.Checkbox.UseVisualStyleBackColor = true;

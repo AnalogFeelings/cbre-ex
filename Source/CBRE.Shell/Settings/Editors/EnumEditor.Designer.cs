@@ -37,17 +37,19 @@
             this.Combobox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Combobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Combobox.Location = new System.Drawing.Point(86, 3);
+            this.Combobox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Combobox.Location = new System.Drawing.Point(163, 3);
             this.Combobox.Name = "Combobox";
-            this.Combobox.Size = new System.Drawing.Size(261, 21);
+            this.Combobox.Size = new System.Drawing.Size(184, 23);
             this.Combobox.TabIndex = 3;
             // 
             // Label
             // 
             this.Label.AutoSize = true;
+            this.Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label.Location = new System.Drawing.Point(3, 6);
             this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(35, 13);
+            this.Label.Size = new System.Drawing.Size(38, 15);
             this.Label.TabIndex = 2;
             this.Label.Text = "label1";
             // 
@@ -58,7 +60,7 @@
             this.Controls.Add(this.Combobox);
             this.Controls.Add(this.Label);
             this.Name = "EnumEditor";
-            this.Size = new System.Drawing.Size(350, 26);
+            this.Size = new System.Drawing.Size(350, 30);
             this.ResumeLayout(false);
             this.PerformLayout();
 

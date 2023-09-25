@@ -39,18 +39,19 @@
             // 
             this.Slider.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Slider.Location = new System.Drawing.Point(44, 3);
+            this.Slider.Location = new System.Drawing.Point(47, 3);
             this.Slider.Name = "Slider";
-            this.Slider.Size = new System.Drawing.Size(241, 45);
+            this.Slider.Size = new System.Drawing.Size(238, 45);
             this.Slider.TabIndex = 3;
             this.Slider.ValueChanged += new System.EventHandler(this.SliderChanged);
             // 
             // Label
             // 
             this.Label.AutoSize = true;
-            this.Label.Location = new System.Drawing.Point(3, 6);
+            this.Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label.Location = new System.Drawing.Point(3, 5);
             this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(35, 13);
+            this.Label.Size = new System.Drawing.Size(38, 15);
             this.Label.TabIndex = 2;
             this.Label.Text = "label1";
             // 
@@ -58,9 +59,10 @@
             // 
             this.NumericBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NumericBox.DecimalPlaces = 2;
-            this.NumericBox.Location = new System.Drawing.Point(291, 6);
+            this.NumericBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumericBox.Location = new System.Drawing.Point(291, 3);
             this.NumericBox.Name = "NumericBox";
-            this.NumericBox.Size = new System.Drawing.Size(56, 20);
+            this.NumericBox.Size = new System.Drawing.Size(56, 23);
             this.NumericBox.TabIndex = 4;
             this.NumericBox.ValueChanged += new System.EventHandler(this.NumberChanged);
             // 
