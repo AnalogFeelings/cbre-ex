@@ -132,9 +132,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Content Include="CBRE.ico" />
     <None Include="Resources\CBRE.ico" />
     <None Include="Resources\Menu_Update.png" />
+    <Content Include="CBRE.ico" />
     <Content Include="Translations\CBRE.Editor.en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
