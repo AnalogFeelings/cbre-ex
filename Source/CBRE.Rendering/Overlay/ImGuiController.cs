@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Numerics;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using CBRE.Rendering.Engine;
 using ImGuiNET;
-using CBRE.Rendering.Engine;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 using Veldrid;
 
 namespace CBRE.Rendering.Overlay
@@ -35,10 +31,6 @@ namespace CBRE.Rendering.Overlay
         private ResourceSet _fontTextureResourceSet;
 
         private IntPtr _fontAtlasID = (IntPtr)1;
-        private bool _controlDown;
-        private bool _shiftDown;
-        private bool _altDown;
-        private bool _winKeyDown;
 
         private int _windowWidth;
         private int _windowHeight;
@@ -70,53 +62,13 @@ namespace CBRE.Rendering.Overlay
 
             ImGui.GetIO().Fonts.AddFontDefault();
 
-            string arial = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
-            string arialbd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arialbd.ttf");
-
-            ImFontConfig cfg = new ImFontConfig
-            {
-                FontDataOwnedByAtlas = 1,
-                OversampleH = 5,
-                OversampleV = 1,
-                PixelSnapH = 0,
-                GlyphMinAdvanceX = 0,
-                GlyphMaxAdvanceX = float.MaxValue,
-                RasterizerMultiply = 1.2f
-            };
-
-            if (File.Exists(arial))
-            {
-                unsafe
-                {
-                    DefaultFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(arial, 14, new ImFontConfigPtr(&cfg));
-                    LargeFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(arial, 24, new ImFontConfigPtr(&cfg));
-                }
-            }
-            else
-            {
-                DefaultFont = null;
-                LargeFont = null;
-            }
-
-            if (File.Exists(arialbd))
-            {
-                unsafe
-                {
-                    BoldFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(arialbd, 14, new ImFontConfigPtr(&cfg));
-                }
-            }
-            else
-            {
-                BoldFont = null;
-            }
-
             ImGuiStylePtr style = ImGui.GetStyle();
 
             style.WindowRounding = 0;
-            style.WindowPadding = Vector2.Zero;
-            style.WindowBorderSize = 0;
-            style.AntiAliasedFill = false;
-            style.AntiAliasedLines = false;
+            style.WindowPadding = Vector2.One;
+            style.WindowBorderSize = 1;
+            style.AntiAliasedFill = true;
+            style.AntiAliasedLines = true;
 
             CreateDeviceResources(gd, outputDescription);
 
@@ -145,15 +97,16 @@ namespace CBRE.Rendering.Overlay
             _vertexBuffer.Name = "ImGui.NET Vertex Buffer";
             _indexBuffer = factory.CreateBuffer(new BufferDescription(2000, BufferUsage.IndexBuffer | BufferUsage.Dynamic));
             _indexBuffer.Name = "ImGui.NET Index Buffer";
-            RecreateFontDeviceTexture(gd);
 
             _projMatrixBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer | BufferUsage.Dynamic));
             _projMatrixBuffer.Name = "ImGui.NET Projection Buffer";
-            
+
             byte[] vertexShaderBytes = ResourceLoader.GetEmbeddedShader("imgui.vert.hlsl");
             byte[] fragmentShaderBytes = ResourceLoader.GetEmbeddedShader("imgui.frag.hlsl");
             _vertexShader = factory.CreateShader(new ShaderDescription(ShaderStages.Vertex, vertexShaderBytes, "main"));
             _fragmentShader = factory.CreateShader(new ShaderDescription(ShaderStages.Fragment, fragmentShaderBytes, "main"));
+            _vertexShader.Name = "ImGui.NET Vertex Shader";
+            _fragmentShader.Name = "ImGui.NET Fragment Shader";
 
             VertexLayoutDescription[] vertexLayouts = new VertexLayoutDescription[]
             {
@@ -166,24 +119,29 @@ namespace CBRE.Rendering.Overlay
             _layout = factory.CreateResourceLayout(new ResourceLayoutDescription(
                 new ResourceLayoutElementDescription("ProjectionMatrixBuffer", ResourceKind.UniformBuffer, ShaderStages.Vertex),
                 new ResourceLayoutElementDescription("MainSampler", ResourceKind.Sampler, ShaderStages.Fragment)));
+            _layout.Name = "ImGui.NET Resource Layout";
             _textureLayout = factory.CreateResourceLayout(new ResourceLayoutDescription(
                 new ResourceLayoutElementDescription("MainTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment)));
+            _textureLayout.Name = "ImGui.NET Texture Layout";
 
             GraphicsPipelineDescription pd = new GraphicsPipelineDescription(
                 BlendStateDescription.SingleAlphaBlend,
                 new DepthStencilStateDescription(false, false, ComparisonKind.Always),
-                new RasterizerStateDescription(FaceCullMode.None, PolygonFillMode.Solid, FrontFace.Clockwise, false, true),
+                new RasterizerStateDescription(FaceCullMode.None, PolygonFillMode.Solid, FrontFace.Clockwise, true, true),
                 PrimitiveTopology.TriangleList,
                 new ShaderSetDescription(vertexLayouts, new[] { _vertexShader, _fragmentShader }),
                 new ResourceLayout[] { _layout, _textureLayout },
-                outputDescription);
+                outputDescription,
+                ResourceBindingModel.Default);
             _pipeline = factory.CreateGraphicsPipeline(ref pd);
+            _pipeline.Name = "ImGui.NET Pipeline";
 
             _mainResourceSet = factory.CreateResourceSet(new ResourceSetDescription(_layout,
                 _projMatrixBuffer,
                 gd.PointSampler));
+            _mainResourceSet.Name = "ImGui.NET Main Resource Set";
 
-            _fontTextureResourceSet = factory.CreateResourceSet(new ResourceSetDescription(_textureLayout, _fontTextureView));
+            RecreateFontDeviceTexture(gd);
         }
 
         /// <summary>
@@ -195,6 +153,7 @@ namespace CBRE.Rendering.Overlay
             if (!_setsByView.TryGetValue(textureView, out ResourceSetInfo rsi))
             {
                 ResourceSet resourceSet = factory.CreateResourceSet(new ResourceSetDescription(_textureLayout, textureView));
+                resourceSet.Name = $"ImGui.NET {textureView.Name} Resource Set";
                 rsi = new ResourceSetInfo(GetNextImGuiBindingID(), resourceSet);
 
                 _setsByView.Add(textureView, rsi);
@@ -220,6 +179,7 @@ namespace CBRE.Rendering.Overlay
             if (!_autoViewsByTexture.TryGetValue(texture, out TextureView textureView))
             {
                 textureView = factory.CreateTextureView(texture);
+                textureView.Name = $"ImGui.NET {texture.Name} View";
                 _autoViewsByTexture.Add(texture, textureView);
                 _ownedResources.Add(textureView);
             }
@@ -254,46 +214,6 @@ namespace CBRE.Rendering.Overlay
             _lastAssignedID = 100;
         }
 
-        private byte[] LoadEmbeddedShaderCode(ResourceFactory factory, string name, ShaderStages stage)
-        {
-            switch (factory.BackendType)
-            {
-                case GraphicsBackend.Direct3D11:
-                    {
-                        string resourceName = name + ".hlsl.bytes";
-                        return GetEmbeddedResourceBytes(resourceName);
-                    }
-                case GraphicsBackend.OpenGL:
-                    {
-                        string resourceName = name + ".glsl";
-                        return GetEmbeddedResourceBytes(resourceName);
-                    }
-                case GraphicsBackend.Vulkan:
-                    {
-                        string resourceName = name + ".spv";
-                        return GetEmbeddedResourceBytes(resourceName);
-                    }
-                case GraphicsBackend.Metal:
-                    {
-                        string resourceName = name + ".metallib";
-                        return GetEmbeddedResourceBytes(resourceName);
-                    }
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        private byte[] GetEmbeddedResourceBytes(string resourceName)
-        {
-            Assembly assembly = typeof(ImGuiController).Assembly;
-            using (Stream s = assembly.GetManifestResourceStream(resourceName))
-            {
-                byte[] ret = new byte[s.Length];
-                s.Read(ret, 0, (int)s.Length);
-                return ret;
-            }
-        }
-
         /// <summary>
         /// Recreates the device texture used to render text.
         /// </summary>
@@ -301,12 +221,12 @@ namespace CBRE.Rendering.Overlay
         {
             ImGuiIOPtr io = ImGui.GetIO();
             // Build
-            byte* pixels;
-            int width, height, bytesPerPixel;
-            io.Fonts.GetTexDataAsRGBA32(out pixels, out width, out height, out bytesPerPixel);
+            io.Fonts.GetTexDataAsRGBA32(out byte* pixels, out int width, out int height, out int bytesPerPixel);
+
             // Store our identifier
             io.Fonts.SetTexID(_fontAtlasID);
 
+            _fontTexture?.Dispose();
             _fontTexture = gd.ResourceFactory.CreateTexture(TextureDescription.Texture2D(
                 (uint)width,
                 (uint)height,
@@ -327,7 +247,10 @@ namespace CBRE.Rendering.Overlay
                 1,
                 0,
                 0);
-            _fontTextureView = gd.ResourceFactory.CreateTextureView(_fontTexture);
+
+            _fontTextureResourceSet?.Dispose();
+            _fontTextureResourceSet = gd.ResourceFactory.CreateResourceSet(new ResourceSetDescription(_textureLayout, _fontTexture));
+            _fontTextureResourceSet.Name = "ImGui.NET Font Texture Resource Set";
 
             io.Fonts.ClearTexData();
         }
@@ -378,7 +301,7 @@ namespace CBRE.Rendering.Overlay
             io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
         }
 
-        private void RenderImDrawData(ImDrawDataPtr draw_data, GraphicsDevice gd, CommandList cl)
+        private unsafe void RenderImDrawData(ImDrawDataPtr draw_data, GraphicsDevice gd, CommandList cl)
         {
             uint vertexOffsetInVertices = 0;
             uint indexOffsetInElements = 0;
@@ -388,29 +311,31 @@ namespace CBRE.Rendering.Overlay
                 return;
             }
 
-            uint totalVBSize = (uint)(draw_data.TotalVtxCount * Unsafe.SizeOf<ImDrawVert>());
+            uint totalVBSize = (uint)(draw_data.TotalVtxCount * sizeof(ImDrawVert));
             if (totalVBSize > _vertexBuffer.SizeInBytes)
             {
-                gd.DisposeWhenIdle(_vertexBuffer);
+                _vertexBuffer.Dispose();
                 _vertexBuffer = gd.ResourceFactory.CreateBuffer(new BufferDescription((uint)(totalVBSize * 1.5f), BufferUsage.VertexBuffer | BufferUsage.Dynamic));
+                _vertexBuffer.Name = $"ImGui.NET Vertex Buffer";
             }
 
             uint totalIBSize = (uint)(draw_data.TotalIdxCount * sizeof(ushort));
             if (totalIBSize > _indexBuffer.SizeInBytes)
             {
-                gd.DisposeWhenIdle(_indexBuffer);
+                _indexBuffer.Dispose();
                 _indexBuffer = gd.ResourceFactory.CreateBuffer(new BufferDescription((uint)(totalIBSize * 1.5f), BufferUsage.IndexBuffer | BufferUsage.Dynamic));
+                _indexBuffer.Name = $"ImGui.NET Index Buffer";
             }
 
             for (int i = 0; i < draw_data.CmdListsCount; i++)
             {
-                ImDrawListPtr cmd_list = draw_data.CmdListsRange[i];
+                ImDrawListPtr cmd_list = draw_data.CmdLists[i];
 
                 cl.UpdateBuffer(
                     _vertexBuffer,
-                    vertexOffsetInVertices * (uint)Unsafe.SizeOf<ImDrawVert>(),
+                    vertexOffsetInVertices * (uint)sizeof(ImDrawVert),
                     cmd_list.VtxBuffer.Data,
-                    (uint)(cmd_list.VtxBuffer.Size * Unsafe.SizeOf<ImDrawVert>()));
+                    (uint)(cmd_list.VtxBuffer.Size * sizeof(ImDrawVert)));
 
                 cl.UpdateBuffer(
                     _indexBuffer,
@@ -422,8 +347,8 @@ namespace CBRE.Rendering.Overlay
                 indexOffsetInElements += (uint)cmd_list.IdxBuffer.Size;
             }
 
-            // Setup orthographic projection matrix into our constant buffer
             ImGuiIOPtr io = ImGui.GetIO();
+
             Matrix4x4 mvp = Matrix4x4.CreateOrthographicOffCenter(
                 0f,
                 io.DisplaySize.X,
@@ -439,14 +364,14 @@ namespace CBRE.Rendering.Overlay
             cl.SetPipeline(_pipeline);
             cl.SetGraphicsResourceSet(0, _mainResourceSet);
 
-            draw_data.ScaleClipRects(io.DisplayFramebufferScale);
+            draw_data.ScaleClipRects(ImGui.GetIO().DisplayFramebufferScale);
 
             // Render command lists
             int vtx_offset = 0;
             int idx_offset = 0;
             for (int n = 0; n < draw_data.CmdListsCount; n++)
             {
-                ImDrawListPtr cmd_list = draw_data.CmdListsRange[n];
+                ImDrawListPtr cmd_list = draw_data.CmdLists[n];
                 for (int cmd_i = 0; cmd_i < cmd_list.CmdBuffer.Size; cmd_i++)
                 {
                     ImDrawCmdPtr pcmd = cmd_list.CmdBuffer[cmd_i];
@@ -475,11 +400,11 @@ namespace CBRE.Rendering.Overlay
                             (uint)(pcmd.ClipRect.Z - pcmd.ClipRect.X),
                             (uint)(pcmd.ClipRect.W - pcmd.ClipRect.Y));
 
-                        cl.DrawIndexed(pcmd.ElemCount, 1, (uint)idx_offset, vtx_offset, 0);
+                        cl.DrawIndexed(pcmd.ElemCount, 1, pcmd.IdxOffset + (uint)idx_offset, (int)(pcmd.VtxOffset + vtx_offset), 0);
                     }
-
-                    idx_offset += (int)pcmd.ElemCount;
                 }
+
+                idx_offset += cmd_list.IdxBuffer.Size;
                 vtx_offset += cmd_list.VtxBuffer.Size;
             }
         }
