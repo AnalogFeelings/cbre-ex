@@ -8,6 +8,7 @@ using CBRE.Editor.Rendering.Arrays;
 using CBRE.Editor.Rendering.Shaders;
 using CBRE.Editor.UI;
 using CBRE.Extensions;
+using CBRE.Localization;
 using CBRE.UI;
 using OpenTK;
 using System;
@@ -20,7 +21,7 @@ namespace CBRE.Editor.Rendering.Renderers
 {
     public class ModernRenderer : IRenderer
     {
-        public string Name { get { return "OpenGL 2.1 Renderer"; } }
+        public string Name { get { return Local.LocalString("renderer"); } }
         public Document Document { get { return _document; } set { _document = value; } }
 
         private Document _document;

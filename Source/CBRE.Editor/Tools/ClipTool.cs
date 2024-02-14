@@ -4,6 +4,7 @@ using CBRE.Editor.Actions.MapObjects.Operations;
 using CBRE.Editor.Properties;
 using CBRE.Graphics;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK;
@@ -59,7 +60,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetName()
         {
-            return "Clip Tool";
+            return Local.LocalString("tool.clip");
         }
 
         public override HotkeyTool? GetHotkeyToolType()
@@ -69,9 +70,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetContextualHelp()
         {
-            return "*Click* and drag to define the clipping plane.\n" +
-                   "*Click* and drag any of the three points to change the orientation of the plane.\n" +
-                   "Press *enter* to cut the selected solids along the clipping plane.";
+            return Local.LocalString("tool.clip.help");
         }
 
         private ClipState GetStateAtPoint(int x, int y, Viewport2D viewport)
@@ -225,7 +224,7 @@ namespace CBRE.Editor.Tools
         {
             List<Solid> objects = Document.Selection.GetSelectedObjects().OfType<Solid>().ToList();
             Plane plane = new Plane(_clipPlanePoint1, _clipPlanePoint2, _clipPlanePoint3);
-            Document.PerformAction("Perform Clip", new Clip(objects, plane, _side != ClipSide.Back, _side != ClipSide.Front));
+            Document.PerformAction(Local.LocalString("tool.clip.perform"), new Clip(objects, plane, _side != ClipSide.Back, _side != ClipSide.Front));
         }
 
         public override void Render(ViewportBase viewport)

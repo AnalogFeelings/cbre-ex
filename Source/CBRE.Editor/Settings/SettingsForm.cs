@@ -1,5 +1,6 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.Editor.Extensions;
+using CBRE.Localization;
 using CBRE.QuickForms;
 using CBRE.Settings;
 using CBRE.Settings.Models;
@@ -64,7 +65,7 @@ namespace CBRE.Editor.Settings
         {
             new ColourPreset
             {
-                Name = "CBRE-EX Default",
+                Name = Local.LocalString("preset.color.cbre"),
                 Background = Color.Black,
                 Grid = Color.FromArgb(75, 75, 75),
                 ZeroAxes = Color.FromArgb(0, 100, 100),
@@ -78,7 +79,7 @@ namespace CBRE.Editor.Settings
             },
             new ColourPreset
             {
-                Name = "Hammer 3",
+                Name = Local.LocalString("preset.color.hammer3"),
                 Background = Color.Black,
                 Grid = Color.FromArgb(81, 81, 81),
                 ZeroAxes = Color.FromArgb(0, 100, 100),
@@ -92,7 +93,7 @@ namespace CBRE.Editor.Settings
             },
             new ColourPreset
             {
-                Name = "Hammer 4",
+                Name = Local.LocalString("preset.color.hammer4"),
                 Background = Color.Black,
                 Grid = Color.FromArgb(81, 81, 81),
                 ZeroAxes = Color.FromArgb(0, 100, 100),
@@ -106,7 +107,7 @@ namespace CBRE.Editor.Settings
             },
             new ColourPreset
             {
-                Name = "GtkRadiant",
+                Name = Local.LocalString("preset.color.gtkradiant"),
                 Background = Color.White,
                 Grid = Color.FromArgb(191, 191, 191),
                 ZeroAxes = Color.FromArgb(127, 127, 127),
@@ -120,7 +121,7 @@ namespace CBRE.Editor.Settings
             },
             new ColourPreset
             {
-                Name = "QuArK",
+                Name = Local.LocalString("preset.color.quark"),
                 Background = Color.FromArgb(232, 220, 184),
                 Grid = Color.FromArgb(208, 208, 255),
                 ZeroAxes = Color.FromArgb(166, 202, 240),
@@ -134,7 +135,7 @@ namespace CBRE.Editor.Settings
             },
             new ColourPreset
             {
-                Name = "Unreal Editor",
+                Name = Local.LocalString("preset.color.unreal_editor"),
                 Background = Color.FromArgb(163, 163, 163),
                 Grid = Color.FromArgb(145, 145, 145),
                 ZeroAxes = Color.FromArgb(119, 119, 119),
@@ -507,69 +508,69 @@ namespace CBRE.Editor.Settings
 
         private void SettingsFormLoad(object sender, EventArgs e)
         {
-            AddHeading("General Settings");
-            AddSetting(() => CBRE.Settings.General.CheckUpdatesOnStartup, "Check for updates on startup");
-            AddSetting(() => CBRE.Settings.General.EnableDiscordPresence, "Enable Discord rich presence");
+            AddHeading(Local.LocalString("setting.general.general"));
+            AddSetting(() => CBRE.Settings.General.CheckUpdatesOnStartup, Local.LocalString("setting.general.check_for_updates"));
+            AddSetting(() => CBRE.Settings.General.EnableDiscordPresence, Local.LocalString("setting.general.discord_rich_presence"));
 
-            AddHeading("Object Creation");
-            AddSetting(() => CBRE.Settings.Select.SwitchToSelectAfterCreation, "Switch to selection tool after brush creation");
-            AddSetting(() => CBRE.Settings.Select.SwitchToSelectAfterEntity, "Switch to selection tool after entity creation");
-            AddSetting(() => CBRE.Settings.Select.SelectCreatedBrush, "Automatically select created brush");
-            AddSetting(() => CBRE.Settings.Select.SelectCreatedEntity, "Automatically select created entity");
-            AddSetting(() => CBRE.Settings.Select.DeselectOthersWhenSelectingCreation, "Deselect other objects when automatically selecting created items");
-            AddSetting(() => CBRE.Settings.Select.ResetBrushTypeOnCreation, "Reset to block brush type after creating brush");
-            AddSetting(() => CBRE.Settings.Select.KeepVisgroupsWhenCloning, "Keep visgroups when cloning");
+            AddHeading(Local.LocalString("setting.object"));
+            AddSetting(() => CBRE.Settings.Select.SwitchToSelectAfterCreation, Local.LocalString("setting.object.switch_after_create_brush"));
+            AddSetting(() => CBRE.Settings.Select.SwitchToSelectAfterEntity, Local.LocalString("setting.object.switch_after_create_entity"));
+            AddSetting(() => CBRE.Settings.Select.SelectCreatedBrush, Local.LocalString("setting.object.auto_select_brush"));
+            AddSetting(() => CBRE.Settings.Select.SelectCreatedEntity, Local.LocalString("setting.object.auto_select_entity"));
+            AddSetting(() => CBRE.Settings.Select.DeselectOthersWhenSelectingCreation, Local.LocalString("setting.object.deselect_when_auto_select"));
+            AddSetting(() => CBRE.Settings.Select.ResetBrushTypeOnCreation, Local.LocalString("setting.object.reset_after_create_brush"));
+            AddSetting(() => CBRE.Settings.Select.KeepVisgroupsWhenCloning, Local.LocalString("setting.object.keep_visgroups_when_clone"));
 
-            AddHeading("Multiple Files");
-            AddSetting(() => CBRE.Settings.View.LoadSession, "Load previously opened files on startup");
-            AddSetting(() => CBRE.Settings.View.KeepCameraPositions, "Keep current camera positions when switching between maps");
-            AddSetting(() => CBRE.Settings.View.KeepSelectedTool, "Keep current selected tool when switching between maps");
+            AddHeading(Local.LocalString("setting.multiple_files"));
+            AddSetting(() => CBRE.Settings.View.LoadSession, Local.LocalString("setting.multiple_files.load_previous_on_startup"));
+            AddSetting(() => CBRE.Settings.View.KeepCameraPositions, Local.LocalString("setting.multiple_files.keep_campos_when_switch"));
+            AddSetting(() => CBRE.Settings.View.KeepSelectedTool, Local.LocalString("setting.multiple_files.keep_tool_when_switch"));
 
-            AddHeading("Lightmapping");
-            AddSetting(() => CBRE.Settings.Exporting.ShowModelBakingWarning, "Show model baking performance warning");
+            AddHeading(Local.LocalString("setting.lightmap"));
+            AddSetting(() => CBRE.Settings.Exporting.ShowModelBakingWarning, Local.LocalString("setting.lightmap.show_performance_warn"));
 
-            AddHeading("Textures");
-            AddSetting(() => CBRE.Settings.Select.ApplyTextureImmediately, "Apply texture immediately after browsing in the texture application tool");
+            AddHeading(Local.LocalString("setting.textures"));
+            AddSetting(() => CBRE.Settings.Select.ApplyTextureImmediately, Local.LocalString("setting.textures.apply_after_browse"));
 
-            AddHeading("Rendering");
-            AddSetting(() => CBRE.Settings.View.ViewportAntiAliasing, "Viewport anti-alising");
-            AddSetting(() => CBRE.Settings.View.DisableToolTextureTransparency, "Disable tool texture transparency");
-            AddSetting(() => CBRE.Settings.View.GloballyDisableTransparency, "Disable transparent textures globally");
-            AddSetting(() => CBRE.Settings.View.DisableModelRendering, "Disable model rendering");
-            AddSetting(() => CBRE.Settings.View.DisableSpriteRendering, "Disable sprite rendering");
+            AddHeading(Local.LocalString("setting.render"));
+            AddSetting(() => CBRE.Settings.View.ViewportAntiAliasing, Local.LocalString("setting.render.antialising"));
+            AddSetting(() => CBRE.Settings.View.DisableToolTextureTransparency, Local.LocalString("setting.render.disable_tool_transparent"));
+            AddSetting(() => CBRE.Settings.View.GloballyDisableTransparency, Local.LocalString("setting.render.disable_transparent_global"));
+            AddSetting(() => CBRE.Settings.View.DisableModelRendering, Local.LocalString("setting.render.disable_model_render"));
+            AddSetting(() => CBRE.Settings.View.DisableSpriteRendering, Local.LocalString("setting.render.disable_sprite_render"));
 
-            AddHeading("Center Handles");
-            AddSetting(() => CBRE.Settings.Select.DrawCenterHandles, "Render brush center handles");
-            AddSetting(() => CBRE.Settings.Select.CenterHandlesActiveViewportOnly, "Render center handles only in active viewport");
-            AddSetting(() => CBRE.Settings.Select.CenterHandlesFollowCursor, "Render center handles only near cursor position");
-            AddSetting(() => CBRE.Settings.Select.BoxSelectByCenterHandlesOnly, "Selection box selects by center handles only");
-            AddSetting(() => CBRE.Settings.Select.ClickSelectByCenterHandlesOnly, "Clicking in 2D view selects by center handles only");
+            AddHeading(Local.LocalString("setting.handle"));
+            AddSetting(() => CBRE.Settings.Select.DrawCenterHandles, Local.LocalString("setting.handle.render_brush"));
+            AddSetting(() => CBRE.Settings.Select.CenterHandlesActiveViewportOnly, Local.LocalString("setting.handle.render_active"));
+            AddSetting(() => CBRE.Settings.Select.CenterHandlesFollowCursor, Local.LocalString("setting.handle.render_near_cursor"));
+            AddSetting(() => CBRE.Settings.Select.BoxSelectByCenterHandlesOnly, Local.LocalString("setting.handle.select_by_handles"));
+            AddSetting(() => CBRE.Settings.Select.ClickSelectByCenterHandlesOnly, Local.LocalString("setting.handle.click_select_by_handles"));
 
-            AddHeading("Interaction");
-            AddSetting(() => CBRE.Settings.Select.DoubleClick3DAction, "Action to perform when double-clicking an object in the 3D view");
-            AddSetting(() => CBRE.Settings.Select.OpenObjectPropertiesWhenCreatingEntity, "Open object properties when creating an entity");
+            AddHeading(Local.LocalString("setting.interact"));
+            AddSetting(() => CBRE.Settings.Select.DoubleClick3DAction, Local.LocalString("setting.interact.double_click_action"));
+            AddSetting(() => CBRE.Settings.Select.OpenObjectPropertiesWhenCreatingEntity, Local.LocalString("setting.interact.open_properties_when_create"));
 
-            AddHeading("2D Vertices");
-            AddSetting(() => CBRE.Settings.View.Draw2DVertices, "Render vertices in 2D views");
-            AddSetting(() => CBRE.Settings.View.VertexPointSize, 1, 10, "Vertex point size");
-            AddSetting(() => CBRE.Settings.View.OverrideVertexColour, "Override vertex colour (defaults to the brush colour)");
-            AddSetting(() => CBRE.Settings.View.VertexOverrideColour, "Vertex override colour");
+            AddHeading(Local.LocalString("setting.vertices"));
+            AddSetting(() => CBRE.Settings.View.Draw2DVertices, Local.LocalString("setting.vertices.render_in_2d"));
+            AddSetting(() => CBRE.Settings.View.VertexPointSize, 1, 10, Local.LocalString("setting.vertices.point_size"));
+            AddSetting(() => CBRE.Settings.View.OverrideVertexColour, Local.LocalString("setting.vertices.override_color"));
+            AddSetting(() => CBRE.Settings.View.VertexOverrideColour, Local.LocalString("setting.vertices.vertex_override_color"));
 
-            AddHeading("Selection Box");
-            AddSetting(() => CBRE.Settings.Select.AutoSelectBox, "Automatically select when box is drawn");
-            AddSetting(() => CBRE.Settings.View.DrawBoxText, "Draw selection box size in the viewport");
-            AddSetting(() => CBRE.Settings.View.DrawBoxDashedLines, "Draw selection box with dashed lines");
-            AddSetting(() => CBRE.Settings.View.ScrollWheelZoomMultiplier, 1.01m, 10, 2, 0.1m, "Scroll wheel zoom multiplier (default 1.20)");
-            AddSetting(() => CBRE.Settings.View.SelectionBoxBackgroundOpacity, 0, 128, "Selection box background opacity");
+            AddHeading(Local.LocalString("setting.selection"));
+            AddSetting(() => CBRE.Settings.Select.AutoSelectBox, Local.LocalString("setting.selection.select_when_drawn"));
+            AddSetting(() => CBRE.Settings.View.DrawBoxText, Local.LocalString("setting.selection.draw_box_size"));
+            AddSetting(() => CBRE.Settings.View.DrawBoxDashedLines, Local.LocalString("setting.selection.draw_dashed_lines"));
+            AddSetting(() => CBRE.Settings.View.ScrollWheelZoomMultiplier, 1.01m, 10, 2, 0.1m, Local.LocalString("setting.selection.scroll_wheel_zoom"));
+            AddSetting(() => CBRE.Settings.View.SelectionBoxBackgroundOpacity, 0, 128, Local.LocalString("setting.selection.box_background_opacity"));
 
-            AddHeading("Camera");
-            AddSetting(() => CBRE.Settings.View.Camera2DPanRequiresMouseClick, "Require mouse click to enable panning in 2D viewports when holding spacebar");
-            AddSetting(() => CBRE.Settings.View.Camera3DPanRequiresMouseClick, "Require mouse click to enable free-look in 3D viewports when holding spacebar");
+            AddHeading(Local.LocalString("setting.camera"));
+            AddSetting(() => CBRE.Settings.View.Camera2DPanRequiresMouseClick, Local.LocalString("setting.camera.click_to_enable_panning"));
+            AddSetting(() => CBRE.Settings.View.Camera3DPanRequiresMouseClick, Local.LocalString("setting.camera.click_to_enable_freelook"));
 
-            AddHeading("Undo Stack");
-            AddSetting(() => CBRE.Settings.Select.UndoStackSize, 1, 1000, "Undo stack size (High value may cause out of memory situations)");
-            AddSetting(() => CBRE.Settings.Select.SkipSelectionInUndoStack, "Fast-forward selection operations when performing undo/redo (selection, deselection)");
-            AddSetting(() => CBRE.Settings.Select.SkipVisibilityInUndoStack, "Fast-forward visibility operations when performing undo/redo (visgroup visibility, quick show/hide)");
+            AddHeading(Local.LocalString("setting.undo"));
+            AddSetting(() => CBRE.Settings.Select.UndoStackSize, 1, 1000, Local.LocalString("setting.undo.stack_size"));
+            AddSetting(() => CBRE.Settings.Select.SkipSelectionInUndoStack, Local.LocalString("setting.undo.fast_forward_selection"));
+            AddSetting(() => CBRE.Settings.Select.SkipVisibilityInUndoStack, Local.LocalString("setting.undo.fast_forward_visibility"));
 
             // 2D Views
             CrosshairCursorIn2DViews.Checked = CBRE.Settings.View.CrosshairCursorIn2DViews;
@@ -977,7 +978,7 @@ namespace CBRE.Editor.Settings
                                                               def.Name,
                                                               def.Description,
                                                               String.IsNullOrWhiteSpace(hotkey.HotkeyString)
-                                                                  ? "<unassigned>"
+                                                                  ? Local.LocalString("setting.hotkey.unassigned")
                                                                   : hotkey.HotkeyString
                                                           })
                 { Tag = hotkey });
@@ -1008,19 +1009,18 @@ namespace CBRE.Editor.Settings
 
         private void EditHotkey(Hotkey hk)
         {
-            using (QuickForm qf = new QuickForm("Enter New Hotkey")
-                .Item(new HotkeyQuickFormItem("Hotkey", hk.HotkeyString))
+            using (QuickForm qf = new QuickForm(Local.LocalString("setting.hotkey.enter_new"))
+                .Item(new HotkeyQuickFormItem(Local.LocalString("setting.hotkey.hotkey"), hk.HotkeyString))
                 .OkCancel())
             {
                 if (qf.ShowDialog() != DialogResult.OK) return;
-                string key = qf.String("Hotkey");
+                string key = qf.String(Local.LocalString("setting.hotkey.hotkey"));
                 if (String.IsNullOrWhiteSpace(key)) return;
 
                 Hotkey conflict = _hotkeys.FirstOrDefault(x => x.HotkeyString == key && x != hk);
                 if (conflict != null)
                 {
-                    if (MessageBox.Show(key + " is already assigned to \"" + Hotkeys.GetHotkeyDefinition(conflict.ID) + "\".\n" +
-                                        "Continue anyway?", "Conflict Detected", MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show(Local.LocalString("setting.hotkey.assigned", key, Hotkeys.GetHotkeyDefinition(conflict.ID)), Local.LocalString("setting.hotkey.conflict"), MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         return;
                     }
@@ -1074,8 +1074,7 @@ namespace CBRE.Editor.Settings
             Hotkey conflict = _hotkeys.FirstOrDefault(x => x.HotkeyString == key);
             if (conflict != null)
             {
-                if (MessageBox.Show(key + " is already assigned to \"" + Hotkeys.GetHotkeyDefinition(conflict.ID) + "\".\n" +
-                                    "Continue anyway?", "Conflict Detected", MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show(Local.LocalString("setting.hotkey.assigned", key, Hotkeys.GetHotkeyDefinition(conflict.ID)), Local.LocalString("setting.hotkey.conflict"), MessageBoxButtons.YesNo) == DialogResult.No)
                 {
                     return;
                 }

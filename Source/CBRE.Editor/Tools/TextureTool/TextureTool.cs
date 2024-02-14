@@ -9,6 +9,7 @@ using CBRE.Editor.Documents;
 using CBRE.Editor.History;
 using CBRE.Editor.Properties;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using CBRE.Settings;
 using CBRE.UI;
@@ -95,7 +96,7 @@ namespace CBRE.Editor.Tools.TextureTool
                 f.Texture.XShift = rand.Next(min, max + 1); // Upper bound is exclusive
                 f.CalculateTextureCoordinates(true);
             };
-            Document.PerformAction("Randomise X shift values", new EditFace(Document.Selection.GetSelectedFaces(), action, false));
+            Document.PerformAction(Local.LocalString("tool.random_x_shift"), new EditFace(Document.Selection.GetSelectedFaces(), action, false));
         }
 
         private void RandomiseYShiftValues(object sender, int min, int max)
@@ -108,7 +109,7 @@ namespace CBRE.Editor.Tools.TextureTool
                 f.Texture.YShift = rand.Next(min, max + 1); // Upper bound is exclusive
                 f.CalculateTextureCoordinates(true);
             };
-            Document.PerformAction("Randomise Y shift values", new EditFace(Document.Selection.GetSelectedFaces(), action, false));
+            Document.PerformAction(Local.LocalString("tool.random_y_shift"), new EditFace(Document.Selection.GetSelectedFaces(), action, false));
         }
 
         private void TextureJustified(object sender, JustifyMode justifymode, bool treatasone)
@@ -157,7 +158,7 @@ namespace CBRE.Editor.Tools.TextureTool
                 face.CalculateTextureCoordinates(false);
             };
             // When the texture changes, the entire list needs to be regenerated, can't do a partial update.
-            Document.PerformAction("Apply texture", new EditFace(Document.Selection.GetSelectedFaces(), action, true));
+            Document.PerformAction(Local.LocalString("tool.apply_texture"), new EditFace(Document.Selection.GetSelectedFaces(), action, true));
 
             Mediator.Publish(EditorMediator.TextureSelected, texture);
         }
@@ -171,7 +172,7 @@ namespace CBRE.Editor.Tools.TextureTool
                 face.CalculateTextureCoordinates(false);
             };
 
-            Document.PerformAction("Align texture", new EditFace(Document.Selection.GetSelectedFaces(), action, false));
+            Document.PerformAction(Local.LocalString("tool.align_texture"), new EditFace(Document.Selection.GetSelectedFaces(), action, false));
         }
 
         private void TexturePropertyChanged(object sender, TextureApplicationForm.CurrentTextureProperties properties)
@@ -188,7 +189,7 @@ namespace CBRE.Editor.Tools.TextureTool
                 face.CalculateTextureCoordinates(false);
             };
 
-            Document.PerformAction("Modify texture properties", new EditFace(Document.Selection.GetSelectedFaces(), action, false));
+            Document.PerformAction(Local.LocalString("tool.modify_texture_properties"), new EditFace(Document.Selection.GetSelectedFaces(), action, false));
         }
 
         private void TextureChanged(object sender, TextureItem texture)
@@ -203,7 +204,7 @@ namespace CBRE.Editor.Tools.TextureTool
 
         public override string GetName()
         {
-            return "Texture Application Tool";
+            return Local.LocalString("tool.texture.tool");
         }
 
         public override HotkeyTool? GetHotkeyToolType()
@@ -213,14 +214,12 @@ namespace CBRE.Editor.Tools.TextureTool
 
         public override string GetContextualHelp()
         {
-            return "*Click* a face to select it\n" +
-                   "*Ctrl+Click* to select multiple\n" +
-                   "*Shift+Click* to select all faces of a solid";
+            return Local.LocalString("tool.texture.help");
         }
 
         public override IEnumerable<KeyValuePair<string, Control>> GetSidebarControls()
         {
-            yield return new KeyValuePair<string, Control>("Texture Power Tools", _sidebarPanel);
+            yield return new KeyValuePair<string, Control>(Local.LocalString("tool.texture.power"), _sidebarPanel);
         }
 
         public override void ToolSelected(bool preventHistory)
@@ -230,7 +229,7 @@ namespace CBRE.Editor.Tools.TextureTool
 
             if (!preventHistory)
             {
-                Document.History.AddHistoryItem(new HistoryAction("Switch selection mode", new ChangeToFaceSelectionMode(GetType(), Document.Selection.GetSelectedObjects())));
+                Document.History.AddHistoryItem(new HistoryAction(Local.LocalString("tool.texture.switch_selection"), new ChangeToFaceSelectionMode(GetType(), Document.Selection.GetSelectedObjects())));
                 IEnumerable<MapObject> currentSelection = Document.Selection.GetSelectedObjects();
                 Document.Selection.SwitchToFaceSelection();
                 IEnumerable<Solid> newSelection = Document.Selection.GetSelectedFaces().Select(x => x.Parent);
@@ -259,7 +258,7 @@ namespace CBRE.Editor.Tools.TextureTool
 
             if (!preventHistory)
             {
-                Document.History.AddHistoryItem(new HistoryAction("Switch selection mode", new ChangeToObjectSelectionMode(GetType(), selected)));
+                Document.History.AddHistoryItem(new HistoryAction(Local.LocalString("tool.texture.switch_selection"), new ChangeToObjectSelectionMode(GetType(), selected)));
                 IEnumerable<Solid> currentSelection = Document.Selection.GetSelectedFaces().Select(x => x.Parent);
                 Document.Selection.SwitchToObjectSelection();
                 IEnumerable<MapObject> newSelection = Document.Selection.GetSelectedObjects();
@@ -408,7 +407,7 @@ namespace CBRE.Editor.Tools.TextureTool
             }
             if (!ac.IsEmpty())
             {
-                Document.PerformAction("Texture selection", ac);
+                Document.PerformAction(Local.LocalString("tool.texture.selection"), ac);
             }
         }
 
@@ -460,7 +459,7 @@ namespace CBRE.Editor.Tools.TextureTool
                             face.Texture.Texture = removeFaceTexture.GetTexture();
                             face.CalculateTextureCoordinates(false);
                         };
-                        Document.PerformAction("Apply texture", new EditFace(faces, action, true));
+                        Document.PerformAction(Local.LocalString("tool.apply_texture"), new EditFace(faces, action, true));
                         Mediator.Publish(EditorMediator.TextureSelected, faces[0]);
                     }
                     return HotkeyInterceptResult.Abort;

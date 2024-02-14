@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.FileSystem
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.FileSystem
 {
     partial class FileSystemBrowserDialog
     {
@@ -51,7 +53,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FileSystemBrowserDialog";
-            this.Text = "File System Browser";
+            this.Text = Local.LocalString("browser");
             this.ResumeLayout(false);
 
         }

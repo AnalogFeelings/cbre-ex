@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -14,7 +15,7 @@ namespace CBRE.DataStructures.MapObjects
         public World(long id) : base(id)
         {
             Paths = new List<Path>();
-            EntityData = new EntityData { Name = "worldspawn" };
+            EntityData = new EntityData { Name = Local.LocalString("data.world") };
         }
 
         protected World(SerializationInfo info, StreamingContext context) : base(info, context)

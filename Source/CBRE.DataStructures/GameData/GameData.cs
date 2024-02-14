@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CBRE.Localization;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,25 +39,25 @@ namespace CBRE.DataStructures.GameData
 
                     if (customEntity == null)
                     {
-                        CustomEntityErrors.Add($"[{jsonFilename}] Could not deserialize into valid custom entity. Skipping.");
+                        CustomEntityErrors.Add(Local.LocalString("error.data.deserialize_into_entity", jsonFilename));
                         continue;
                     }
                 }
                 catch (Exception)
                 {
-                    CustomEntityErrors.Add($"[{jsonFilename}] Could not deserialize into valid custom entity. Skipping.");
+                    CustomEntityErrors.Add(Local.LocalString("error.data.deserialize_into_entity", jsonFilename));
                     continue;
                 }
 
                 if (string.IsNullOrEmpty(customEntity.Name))
                 {
-                    CustomEntityErrors.Add($"[{jsonFilename}] Entity class has no valid name. Skipping.");
+                    CustomEntityErrors.Add(Local.LocalString("error.data.no_valid_name", jsonFilename));
 
                     continue;
                 }
                 if (Classes.Any(x => x.Name == customEntity.Name))
                 {
-                    CustomEntityErrors.Add($"[{jsonFilename}] Entity class with name \"{customEntity.Name}\" already exists. Skipping.");
+                    CustomEntityErrors.Add(Local.LocalString("error.data.already_exist", jsonFilename, customEntity.Name));
 
                     continue;
                 }
@@ -66,13 +67,13 @@ namespace CBRE.DataStructures.GameData
                 {
                     if (string.IsNullOrEmpty(customProperty.Name))
                     {
-                        CustomEntityErrors.Add($"[{jsonFilename}] Property has no valid name. Skipping property.");
+                        CustomEntityErrors.Add(Local.LocalString("error.data.property_no_valid_name", jsonFilename));
 
                         continue;
                     }
                     if (!Enum.TryParse(customProperty.Type, out VariableType varType))
                     {
-                        CustomEntityErrors.Add($"[{jsonFilename}] Could not read type of property \"{customProperty.Name}\". Skipping property.");
+                        CustomEntityErrors.Add(Local.LocalString("error.data.property_cant_read_type", jsonFilename, customProperty.Name));
 
                         continue;
                     }
@@ -92,7 +93,7 @@ namespace CBRE.DataStructures.GameData
                 {
                     if (!customEntity.Properties.Any(x => x.Name == "file"))
                     {
-                        CustomEntityErrors.Add($"[{jsonFilename}] UseModelRendering is set to true, but the required \"file\" property is missing. It will not use models.");
+                        CustomEntityErrors.Add(Local.LocalString("error.data.file_property_missing", jsonFilename));
                     }
                     else
                     {
@@ -103,51 +104,51 @@ namespace CBRE.DataStructures.GameData
                 Classes.Add(gameDataObj);
             }
 
-            GameDataObject lightDataObj = new GameDataObject("light", "Point light source.", ClassType.Point);
-            lightDataObj.Properties.Add(new Property("color", VariableType.Color255) { ShortDescription = "Color", DefaultValue = "255 255 255" });
-            lightDataObj.Properties.Add(new Property("intensity", VariableType.Float) { ShortDescription = "Intensity", DefaultValue = "1.0" });
-            lightDataObj.Properties.Add(new Property("range", VariableType.Float) { ShortDescription = "Range", DefaultValue = "1.0" });
-            lightDataObj.Properties.Add(new Property("hassprite", VariableType.Bool) { ShortDescription = "Has sprite", DefaultValue = "Yes" });
+            GameDataObject lightDataObj = new GameDataObject("light", Local.LocalString("data.light"), ClassType.Point);
+            lightDataObj.Properties.Add(new Property("color", VariableType.Color255) { ShortDescription = Local.LocalString("data.light.color"), DefaultValue = "255 255 255" });
+            lightDataObj.Properties.Add(new Property("intensity", VariableType.Float) { ShortDescription = Local.LocalString("data.light.intensity"), DefaultValue = "1.0" });
+            lightDataObj.Properties.Add(new Property("range", VariableType.Float) { ShortDescription = Local.LocalString("data.light.range"), DefaultValue = "1.0" });
+            lightDataObj.Properties.Add(new Property("hassprite", VariableType.Bool) { ShortDescription = Local.LocalString("data.light.hassprite"), DefaultValue = "Yes" });
             lightDataObj.Behaviours.Add(new Behaviour("sprite", "sprites/lightbulb"));
             Classes.Add(lightDataObj);
 
-            GameDataObject spotlightDataObj = new GameDataObject("spotlight", "Self-explanatory.", ClassType.Point);
-            spotlightDataObj.Properties.Add(new Property("color", VariableType.Color255) { ShortDescription = "Color", DefaultValue = "255 255 255" });
-            spotlightDataObj.Properties.Add(new Property("intensity", VariableType.Float) { ShortDescription = "Intensity", DefaultValue = "1.0" });
-            spotlightDataObj.Properties.Add(new Property("range", VariableType.Float) { ShortDescription = "Range", DefaultValue = "1.0" });
-            spotlightDataObj.Properties.Add(new Property("hassprite", VariableType.Bool) { ShortDescription = "Has sprite", DefaultValue = "Yes" });
-            spotlightDataObj.Properties.Add(new Property("innerconeangle", VariableType.Float) { ShortDescription = "Inner cone angle", DefaultValue = "45" });
-            spotlightDataObj.Properties.Add(new Property("outerconeangle", VariableType.Float) { ShortDescription = "Outer cone angle", DefaultValue = "90" });
-            spotlightDataObj.Properties.Add(new Property("angles", VariableType.Vector) { ShortDescription = "Rotation", DefaultValue = "0 0 0" });
+            GameDataObject spotlightDataObj = new GameDataObject("spotlight", Local.LocalString("data.spotlight"), ClassType.Point);
+            spotlightDataObj.Properties.Add(new Property("color", VariableType.Color255) { ShortDescription = Local.LocalString("data.light.color"), DefaultValue = "255 255 255" });
+            spotlightDataObj.Properties.Add(new Property("intensity", VariableType.Float) { ShortDescription = Local.LocalString("data.spotlight.intensity"), DefaultValue = "1.0" });
+            spotlightDataObj.Properties.Add(new Property("range", VariableType.Float) { ShortDescription = Local.LocalString("data.spotlight.range"), DefaultValue = "1.0" });
+            spotlightDataObj.Properties.Add(new Property("hassprite", VariableType.Bool) { ShortDescription = Local.LocalString("data.spotlight.hassprite"), DefaultValue = "Yes" });
+            spotlightDataObj.Properties.Add(new Property("innerconeangle", VariableType.Float) { ShortDescription = Local.LocalString("data.spotlight.innerconeangle"), DefaultValue = "45" });
+            spotlightDataObj.Properties.Add(new Property("outerconeangle", VariableType.Float) { ShortDescription = Local.LocalString("data.spotlight.outerconeangle"), DefaultValue = "90" });
+            spotlightDataObj.Properties.Add(new Property("angles", VariableType.Vector) { ShortDescription = Local.LocalString("data.model.angles"), DefaultValue = "0 0 0" });
             spotlightDataObj.Behaviours.Add(new Behaviour("sprite", "sprites/spotlight"));
             Classes.Add(spotlightDataObj);
 
-            GameDataObject waypointDataObj = new GameDataObject("waypoint", "AI waypoint.", ClassType.Point);
+            GameDataObject waypointDataObj = new GameDataObject("waypoint", Local.LocalString("data.waypoint"), ClassType.Point);
             waypointDataObj.Behaviours.Add(new Behaviour("sprite", "sprites/waypoint"));
             Classes.Add(waypointDataObj);
 
-            GameDataObject soundEmitterDataObj = new GameDataObject("soundemitter", "Self-explanatory.", ClassType.Point);
-            soundEmitterDataObj.Properties.Add(new Property("sound", VariableType.Integer) { ShortDescription = "Ambience index", DefaultValue = "1" });
+            GameDataObject soundEmitterDataObj = new GameDataObject("soundemitter", Local.LocalString("data.soundemitter"), ClassType.Point);
+            soundEmitterDataObj.Properties.Add(new Property("sound", VariableType.Integer) { ShortDescription = Local.LocalString("data.soundemitter.sound"), DefaultValue = "1" });
             soundEmitterDataObj.Behaviours.Add(new Behaviour("sprite", "sprites/speaker"));
             Classes.Add(soundEmitterDataObj);
 
-            GameDataObject modelDataObj = new GameDataObject("model", "Self-explanatory.", ClassType.Point);
-            modelDataObj.Properties.Add(new Property("file", VariableType.String) { ShortDescription = "File", DefaultValue = "" });
-            modelDataObj.Properties.Add(new Property("angles", VariableType.Vector) { ShortDescription = "Rotation", DefaultValue = "0 0 0" });
-            modelDataObj.Properties.Add(new Property("scale", VariableType.Vector) { ShortDescription = "Scale", DefaultValue = "1 1 1" });
+            GameDataObject modelDataObj = new GameDataObject("model", Local.LocalString("data.model"), ClassType.Point);
+            modelDataObj.Properties.Add(new Property("file", VariableType.String) { ShortDescription = Local.LocalString("data.model.file"), DefaultValue = "" });
+            modelDataObj.Properties.Add(new Property("angles", VariableType.Vector) { ShortDescription = Local.LocalString("data.model.angles"), DefaultValue = "0 0 0" });
+            modelDataObj.Properties.Add(new Property("scale", VariableType.Vector) { ShortDescription = Local.LocalString("data.model.scale"), DefaultValue = "1 1 1" });
             modelDataObj.Behaviours.Add(new Behaviour("sprite", "sprites/model"));
             modelDataObj.Behaviours.Add(new Behaviour("useModels"));
             Classes.Add(modelDataObj);
 
-            GameDataObject screenDataObj = new GameDataObject("screen", "Savescreen.", ClassType.Point);
-            screenDataObj.Properties.Add(new Property("imgpath", VariableType.String) { ShortDescription = "Image Path", DefaultValue = "" });
+            GameDataObject screenDataObj = new GameDataObject("screen", Local.LocalString("data.screen"), ClassType.Point);
+            screenDataObj.Properties.Add(new Property("imgpath", VariableType.String) { ShortDescription = Local.LocalString("data.screen.imgpath"), DefaultValue = "" });
             screenDataObj.Behaviours.Add(new Behaviour("sprite", "sprites/screen"));
             Classes.Add(screenDataObj);
 
-            GameDataObject noShadowObj = new GameDataObject("noshadow", "Disables shadow casting for this brush.", ClassType.Solid);
+            GameDataObject noShadowObj = new GameDataObject("noshadow", Local.LocalString("data.noshadow"), ClassType.Solid);
             Classes.Add(noShadowObj);
 
-            Property p = new Property("position", VariableType.Vector) { ShortDescription = "Position", DefaultValue = "0 0 0" };
+            Property p = new Property("position", VariableType.Vector) { ShortDescription = Local.LocalString("data.position"), DefaultValue = "0 0 0" };
             foreach (GameDataObject gdo in Classes)
             {
                 if (gdo.ClassType != ClassType.Solid)
@@ -168,7 +169,7 @@ namespace CBRE.DataStructures.GameData
             while (unresolved.Any())
             {
                 List<GameDataObject> resolve = unresolved.Where(x => x.BaseClasses.All(resolved.Contains)).ToList();
-                if (!resolve.Any()) throw new Exception("Circular dependencies: " + String.Join(", ", unresolved.Select(x => x.Name)));
+                if (!resolve.Any()) throw new Exception(Local.LocalString("exception.circular_dependencies", String.Join(", ", unresolved.Select(x => x.Name))));
                 resolve.ForEach(x => x.Inherit(Classes.Where(y => x.BaseClasses.Contains(y.Name))));
                 unresolved.RemoveAll(resolve.Contains);
                 resolved.AddRange(resolve.Select(x => x.Name));

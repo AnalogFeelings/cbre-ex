@@ -1,6 +1,7 @@
 ﻿using CBRE.Common.Easings;
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.Transformations;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,12 +141,12 @@ namespace CBRE.DataStructures.MapObjects
 
         public void CalculatePoints()
         {
-            if (Vertices.Count != 4) throw new Exception("Displacement must have four vertices.");
+            if (Vertices.Count != 4) throw new Exception(Local.LocalString("exception.displacement_four_vertices"));
 
             Vertex startVertex = Vertices
                 .OrderBy(x => (x.Location - StartPosition).VectorMagnitude())
                 .FirstOrDefault(x => x.Location.EquivalentTo(StartPosition, 0.5m));
-            if (startVertex == null) throw new Exception("Unable to locate displacement start position.");
+            if (startVertex == null) throw new Exception(Local.LocalString("exception.unable_locate_displacement_start"));
 
             int index = Vertices.IndexOf(startVertex);
             List<Coordinate> corners = new List<Coordinate>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
@@ -43,13 +44,13 @@ namespace CBRE.Editor
 		{
 			StackTrace st = new StackTrace();
 			StackFrame[] frames = st.GetFrames() ?? new StackFrame[0];
-			string msg = "Unhandled exception";
+			string msg = Local.LocalString("exception.unhandled");
 			foreach (StackFrame frame in frames)
 			{
 				System.Reflection.MethodBase method = frame.GetMethod();
 				msg += "\r\n    " + method.ReflectedType.FullName + "." + method.Name;
 			}
-			Logging.Logger.ShowException(new Exception(msg, ex), "Unhandled exception");
+			Logging.Logger.ShowException(new Exception(msg, ex), Local.LocalString("exception.unhandled"));
 		}
 	}
 }

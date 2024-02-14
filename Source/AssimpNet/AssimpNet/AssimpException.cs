@@ -20,6 +20,7 @@
 * THE SOFTWARE.
 */
 
+using CBRE.Localization;
 using System;
 
 namespace Assimp
@@ -48,7 +49,7 @@ namespace Assimp
         /// <param name="paramName">Name of the param.</param>
         /// <param name="msg">The error message.</param>
         public AssimpException(String paramName, String msg)
-            : base("Parameter: " + paramName + " Error: " + msg) { }
+            : base(Local.LocalString("exception.assimp", paramName, msg)) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssimpException"/> class.

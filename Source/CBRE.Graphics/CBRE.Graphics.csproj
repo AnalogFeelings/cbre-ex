@@ -80,6 +80,13 @@
       <Project>{5D414AC8-8B93-489F-9960-877923400FED}</Project>
       <Name>CBRE.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CBRE.Localization\CBRE.Localization.csproj">
+      <Project>{68fa12f2-c380-4c51-a1f6-24840684090f}</Project>
+      <Name>CBRE.Localization</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

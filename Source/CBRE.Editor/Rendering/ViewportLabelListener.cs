@@ -1,5 +1,6 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.Editor.Documents;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK.Graphics;
@@ -42,33 +43,50 @@ namespace CBRE.Editor.Rendering
                 switch (dir)
                 {
                     case Viewport2D.ViewDirection.Top:
-                        _text = "Top (x/z)";
+                        _text = Local.LocalString("viewpoint.top_xz");
                         break;
                     case Viewport2D.ViewDirection.Front:
-                        _text = "Front (z/y)";
+                        _text = Local.LocalString("viewpoint.front_zy");
                         break;
                     case Viewport2D.ViewDirection.Side:
-                        _text = "Side (x/y)";
+                        _text = Local.LocalString("viewpoint.side_xy");
                         break;
                 }
             }
             else if (Viewport is Viewport3D)
             {
                 Viewport3D.ViewType type = ((Viewport3D)Viewport).Type;
-                _text = type.ToString();
+                switch (type)
+                {
+                    case Viewport3D.ViewType.Lightmapped:
+                        _text = Local.LocalString("viewpoint.lightmapped");
+                        break;
+                    case Viewport3D.ViewType.Textured:
+                        _text = Local.LocalString("viewpoint.textured");
+                        break;
+                    case Viewport3D.ViewType.Wireframe:
+                        _text = Local.LocalString("viewpoint.wireframe");
+                        break;
+                    case Viewport3D.ViewType.Flat:
+                        _text = Local.LocalString("viewpoint.flat");
+                        break;
+                    case Viewport3D.ViewType.Shaded:
+                        _text = Local.LocalString("viewpoint.shaded");
+                        break;
+                };
             }
             if (_menu != null) _menu.Dispose();
             _menu = new ContextMenu(new[]
                                         {
-                                            CreateMenu("3D Lightmapped", Viewport3D.ViewType.Lightmapped, null),
-                                            CreateMenu("3D Textured", Viewport3D.ViewType.Textured, null),
-                                            CreateMenu("3D Shaded", Viewport3D.ViewType.Shaded, null),
-                                            CreateMenu("3D Flat", Viewport3D.ViewType.Flat, null),
-                                            CreateMenu("3D Wireframe", Viewport3D.ViewType.Wireframe, null),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.3d_lightmap"), Viewport3D.ViewType.Lightmapped, null),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.3d_textured"), Viewport3D.ViewType.Textured, null),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.3d_shaded"), Viewport3D.ViewType.Shaded, null),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.3d_flat"), Viewport3D.ViewType.Flat, null),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.3d_wireframe"), Viewport3D.ViewType.Wireframe, null),
                                             new MenuItem("-"),
-                                            CreateMenu("2D Top (x/z)", null, Viewport2D.ViewDirection.Top),
-                                            CreateMenu("2D Side (x/y)", null, Viewport2D.ViewDirection.Side),
-                                            CreateMenu("2D Front (z/y)", null, Viewport2D.ViewDirection.Front),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.2d_top"), null, Viewport2D.ViewDirection.Top),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.2d_side"), null, Viewport2D.ViewDirection.Side),
+                                            CreateMenu(Local.LocalString("menu.viewpoint.2d_front"), null, Viewport2D.ViewDirection.Front),
                                             new MenuItem("-"),
                                             ScreenshotMenuItem()
                                         });
@@ -76,7 +94,7 @@ namespace CBRE.Editor.Rendering
 
         private MenuItem ScreenshotMenuItem()
         {
-            MenuItem menu = new MenuItem("Take Screenshot...");
+            MenuItem menu = new MenuItem(Local.LocalString("menu.viewpoint.screenshot"));
             menu.Click += (s, e) => Mediator.Publish(HotkeysMediator.ScreenshotViewport, Viewport);
             return menu;
         }

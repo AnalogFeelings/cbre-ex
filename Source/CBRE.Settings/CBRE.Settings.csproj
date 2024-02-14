@@ -84,12 +84,17 @@
     <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CBRE.Localization\CBRE.Localization.csproj">
+      <Project>{68fa12f2-c380-4c51-a1f6-24840684090f}</Project>
+      <Name>CBRE.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CBRE.Providers\CBRE.Providers.csproj">
       <Project>{C7BD4AC8-1F8D-4520-AF2D-D279C0601AB4}</Project>
       <Name>CBRE.Providers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Settings.vdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

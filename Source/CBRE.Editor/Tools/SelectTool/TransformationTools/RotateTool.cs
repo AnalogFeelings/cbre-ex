@@ -1,6 +1,7 @@
 ﻿using CBRE.Editor.Documents;
 using CBRE.Editor.Tools.Widgets;
 using CBRE.Extensions;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK;
@@ -31,7 +32,7 @@ namespace CBRE.Editor.Tools.SelectTool.TransformationTools
 
         public override string GetTransformName()
         {
-            return "Rotate";
+            return Local.LocalString("tool.rotate");
         }
 
         public override Cursor CursorForHandle(BaseBoxTool.ResizeHandle handle)

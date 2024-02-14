@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using CBRE.Localization;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,7 +142,7 @@ namespace CBRE.Graphics.Arrays
 
         protected void StartSubset(int groupId)
         {
-            if (_subsetState.ContainsKey(groupId)) throw new Exception("Cannot start two subsets for the same group.");
+            if (_subsetState.ContainsKey(groupId)) throw new Exception(Local.LocalString("exception.cannot_start_two_subsets"));
 
             if (!_indices.ContainsKey(groupId)) _indices.Add(groupId, new List<uint>());
             List<uint> list = _indices[groupId];
@@ -151,7 +152,7 @@ namespace CBRE.Graphics.Arrays
 
         protected void PushSubset<T>(int groupId, T context) where T : class
         {
-            if (!_subsetState.ContainsKey(groupId)) throw new Exception("No subset exists for this group.");
+            if (!_subsetState.ContainsKey(groupId)) throw new Exception(Local.LocalString("exception.no_subset"));
 
             int ss = _subsetState[groupId];
             _subsetState.Remove(groupId);

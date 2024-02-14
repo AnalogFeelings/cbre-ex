@@ -22,6 +22,7 @@
 
 using Assimp.Configs;
 using Assimp.Unmanaged;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -204,10 +205,10 @@ namespace Assimp
             CheckDisposed();
 
             if (stream == null || stream.CanRead != true)
-                throw new AssimpException("stream", "Can't read from the stream it's null or write-only");
+                throw new AssimpException("stream", Local.LocalString("exception.assimp.cant_read_stream"));
 
             if (String.IsNullOrEmpty(formatHint))
-                throw new AssimpException("formatHint", "Format hint is null or empty");
+                throw new AssimpException("formatHint", Local.LocalString("exception.assimp.format_hint_null_empty"));
 
             IntPtr ptr = IntPtr.Zero;
             PrepareImport();
@@ -217,7 +218,7 @@ namespace Assimp
                 ptr = AssimpLibrary.Instance.ImportFileFromStream(stream, PostProcessSteps.None, formatHint, m_propStore);
 
                 if (ptr == IntPtr.Zero)
-                    throw new AssimpException("Error importing file: " + AssimpLibrary.Instance.GetErrorString());
+                    throw new AssimpException(Local.LocalString("exception.assimp.importing_file", AssimpLibrary.Instance.GetErrorString()));
 
                 TransformScene(ptr);
 
@@ -272,13 +273,13 @@ namespace Assimp
             CheckDisposed();
 
             if (buffer == IntPtr.Zero)
-                throw new AssimpException("buffer", "Pointer to memory location must not be zero.");
+                throw new AssimpException("buffer", Local.LocalString("exception.assimp.pointer_zero"));
 
             if (length <= 0)
-                throw new AssimpException("length", "Length of buffer must be greater than zero.");
+                throw new AssimpException("length", Local.LocalString("exception.assimp.buffer_length"));
 
             if (String.IsNullOrEmpty(formatHint))
-                throw new AssimpException("formatHint", "Format hint is null or empty");
+                throw new AssimpException("formatHint", Local.LocalString("exception.assimp.format_hint_null_empty"));
 
             IntPtr ptr = IntPtr.Zero;
             PrepareImport();
@@ -288,7 +289,7 @@ namespace Assimp
                 ptr = AssimpLibrary.Instance.ImportFileFromMemory(buffer, length, PostProcessSteps.None, formatHint, m_propStore);
 
                 if (ptr == IntPtr.Zero)
-                    throw new AssimpException("Error importing file: " + AssimpLibrary.Instance.GetErrorString());
+                    throw new AssimpException(Local.LocalString("exception.assimp.importing_file", AssimpLibrary.Instance.GetErrorString()));
 
                 TransformScene(ptr);
 
@@ -350,7 +351,7 @@ namespace Assimp
             }
             else if (String.IsNullOrEmpty(file) || !File.Exists(file))
             {
-                throw new FileNotFoundException("Filename was null or could not be found", file);
+                throw new FileNotFoundException(Local.LocalString("exception.assimp.filename_not_found"), file);
             }
 
             PrepareImport();
@@ -360,7 +361,7 @@ namespace Assimp
                 ptr = AssimpLibrary.Instance.ImportFile(file, PostProcessSteps.None, fileIO, m_propStore);
 
                 if (ptr == IntPtr.Zero)
-                    throw new AssimpException("Error importing file: " + AssimpLibrary.Instance.GetErrorString());
+                    throw new AssimpException(Local.LocalString("exception.assimp.importing_file", AssimpLibrary.Instance.GetErrorString()));
 
                 TransformScene(ptr);
 
@@ -420,7 +421,7 @@ namespace Assimp
             IntPtr scenePtr = IntPtr.Zero;
 
             if (scene == null)
-                throw new ArgumentNullException("scene", "Scene must exist.");
+                throw new ArgumentNullException("scene", Local.LocalString("exception.assimp.scene_must_exist"));
 
             try
             {
@@ -471,7 +472,7 @@ namespace Assimp
             IntPtr scenePtr = IntPtr.Zero;
 
             if (scene == null)
-                throw new ArgumentNullException("scene", "Scene must exist.");
+                throw new ArgumentNullException("scene", Local.LocalString("exception.assimp.scene_must_exist"));
 
             try
             {
@@ -551,7 +552,7 @@ namespace Assimp
             }
             else if (String.IsNullOrEmpty(inputFilename) || !File.Exists(inputFilename))
             {
-                throw new FileNotFoundException("Filename was null or could not be found", inputFilename);
+                throw new FileNotFoundException(Local.LocalString("exception.assimp.filename_not_found"), inputFilename);
             }
 
             PrepareImport();
@@ -561,7 +562,7 @@ namespace Assimp
                 ptr = AssimpLibrary.Instance.ImportFile(inputFilename, PostProcessSteps.None, fileIO, m_propStore);
 
                 if (ptr == IntPtr.Zero)
-                    throw new AssimpException("Error importing file: " + AssimpLibrary.Instance.GetErrorString());
+                    throw new AssimpException(Local.LocalString("exception.assimp.importing_file", AssimpLibrary.Instance.GetErrorString()));
 
                 TransformScene(ptr);
 
@@ -639,7 +640,7 @@ namespace Assimp
             }
             else if (String.IsNullOrEmpty(inputFilename) || !File.Exists(inputFilename))
             {
-                throw new FileNotFoundException("Filename was null or could not be found", inputFilename);
+                throw new FileNotFoundException(Local.LocalString("exception.assimp.filename_not_found"), inputFilename);
             }
 
             PrepareImport();
@@ -649,7 +650,7 @@ namespace Assimp
                 ptr = AssimpLibrary.Instance.ImportFile(inputFilename, PostProcessSteps.None, fileIO, m_propStore);
 
                 if (ptr == IntPtr.Zero)
-                    throw new AssimpException("Error importing file: " + AssimpLibrary.Instance.GetErrorString());
+                    throw new AssimpException(Local.LocalString("exception.assimp.importing_file", AssimpLibrary.Instance.GetErrorString()));
 
                 TransformScene(ptr);
 
@@ -723,10 +724,10 @@ namespace Assimp
             CheckDisposed();
 
             if (inputStream == null || inputStream.CanRead != true)
-                throw new AssimpException("stream", "Can't read from the stream it's null or write-only");
+                throw new AssimpException("stream", Local.LocalString("exception.assimp.cant_read_stream"));
 
             if (String.IsNullOrEmpty(importFormatHint))
-                throw new AssimpException("formatHint", "Format hint is null or empty");
+                throw new AssimpException("formatHint", Local.LocalString("exception.assimp.format_hint_null_empty"));
 
             IntPtr ptr = IntPtr.Zero;
             PrepareImport();
@@ -736,7 +737,7 @@ namespace Assimp
                 ptr = AssimpLibrary.Instance.ImportFileFromStream(inputStream, importProcessSteps, importFormatHint, m_propStore);
 
                 if (ptr == IntPtr.Zero)
-                    throw new AssimpException("Error importing file: " + AssimpLibrary.Instance.GetErrorString());
+                    throw new AssimpException(Local.LocalString("exception.assimp.importing_file", AssimpLibrary.Instance.GetErrorString()));
 
                 TransformScene(ptr);
 
@@ -805,10 +806,10 @@ namespace Assimp
             CheckDisposed();
 
             if (inputStream == null || inputStream.CanRead != true)
-                throw new AssimpException("stream", "Can't read from the stream it's null or write-only");
+                throw new AssimpException("stream", Local.LocalString("exception.assimp.cant_read_stream"));
 
             if (String.IsNullOrEmpty(importFormatHint))
-                throw new AssimpException("formatHint", "Format hint is null or empty");
+                throw new AssimpException("formatHint", Local.LocalString("exception.assimp.format_hint_null_empty"));
 
             IntPtr ptr = IntPtr.Zero;
             PrepareImport();
@@ -818,7 +819,7 @@ namespace Assimp
                 ptr = AssimpLibrary.Instance.ImportFileFromStream(inputStream, importProcessSteps, importFormatHint, m_propStore);
 
                 if (ptr == IntPtr.Zero)
-                    throw new AssimpException("Error importing file: " + AssimpLibrary.Instance.GetErrorString());
+                    throw new AssimpException(Local.LocalString("exception.assimp.importing_file", AssimpLibrary.Instance.GetErrorString()));
 
                 TransformScene(ptr);
 
@@ -1020,7 +1021,7 @@ namespace Assimp
         private void CheckDisposed()
         {
             if (m_isDisposed)
-                throw new ObjectDisposedException("Assimp Context has been disposed.");
+                throw new ObjectDisposedException(Local.LocalString("exception.assimp.disposed"));
         }
 
         //Build import transformation matrix

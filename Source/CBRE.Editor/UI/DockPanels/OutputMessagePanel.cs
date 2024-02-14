@@ -1,4 +1,5 @@
 ﻿using CBRE.Common.Mediator;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -42,8 +43,8 @@ namespace CBRE.Editor.UI.DockPanels
 
         private void CompileStarted()
         {
-            if (_words.ContainsKey("Compile")) _words["Compile"].Clear();
-            if (_currentType == "Compile") OutputBox.Clear();
+            if (_words.ContainsKey(Local.LocalString("output.type"))) _words[Local.LocalString("output.type")].Clear();
+            if (_currentType == Local.LocalString("output.type")) OutputBox.Clear();
         }
 
         private void OutputMessage(string type, string text)

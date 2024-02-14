@@ -1,4 +1,5 @@
-﻿using Pastel;
+﻿using CBRE.Localization;
+using Pastel;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -31,10 +32,10 @@ namespace CBRE.Updater
 			string FriendlyCbreProcess = args[1].Replace(".exe", "");
 			string PackageFilename = args[2];
 
-			Console.Title = "CBRE-EX Updater";
+			Console.Title = Local.LocalString("updater.title");
 			if (Environment.OSVersion.Version.Major < 10) ConsoleExtensions.Disable();
 
-			Log($"Waiting until {"CBRE-EX".Pastel(Color.LimeGreen)} shuts down...", LogSeverity.MESSAGE);
+			Log(Local.LocalString("log.updater.wait", "CBRE-EX".Pastel(Color.LimeGreen)), LogSeverity.MESSAGE);
 
 			while (true)
 			{
@@ -44,13 +45,13 @@ namespace CBRE.Updater
 				else break;
 			}
 
-			Log($"Installing {"CBRE-EX".Pastel(Color.LimeGreen)} {$"v{NewVersion}".Pastel(Color.Lime)}", LogSeverity.MESSAGE);
+			Log(Local.LocalString("log.updater.install", "CBRE-EX".Pastel(Color.LimeGreen), NewVersion.Pastel(Color.Lime)), LogSeverity.MESSAGE);
 
 			try
 			{
-				if (!File.Exists(PackageFilename)) throw new FileNotFoundException($"The update package was not found. Expected a file called \"{PackageFilename}\" in this directory.");
+				if (!File.Exists(PackageFilename)) throw new FileNotFoundException(Local.LocalString("error.updater.package_not_found", PackageFilename));
 
-				Log($"Extracting {PackageFilename.Pastel(Color.LimeGreen)} to Temp directory...", LogSeverity.MESSAGE);
+				Log(Local.LocalString("log.updater.extract", PackageFilename.Pastel(Color.LimeGreen)), LogSeverity.MESSAGE);
 				if (Directory.Exists("Temp")) Directory.Delete("Temp", true);
 
 				ZipFile.ExtractToDirectory(PackageFilename, "Temp");
@@ -60,7 +61,7 @@ namespace CBRE.Updater
 
 				foreach (DirectoryInfo Dir in TempSubdirs)
 				{
-					Log($"Copying updated directory \"{Dir.Name.Pastel(Color.Lime)}\" and its contents to existing install...", LogSeverity.MESSAGE);
+					Log(Local.LocalString("log.updater.copy", Dir.Name.Pastel(Color.Lime)), LogSeverity.MESSAGE);
 					CopyDirectory(Dir.FullName, Path.Combine(TargetDirectory, Dir.Name), true);
 				}
 
@@ -69,16 +70,16 @@ namespace CBRE.Updater
 				{
 					if (File.Name == CurrentFilename || File.Name == "Pastel.dll" || File.Name == Path.GetFileNameWithoutExtension(CurrentFilename) + ".pdb") continue;
 
-					Log($"Copying updated file \"{File.Name.Pastel(Color.Lime)}\" to existing install...", LogSeverity.MESSAGE);
+					Log(Local.LocalString("log.updater.copy.file", File.Name.Pastel(Color.Lime)), LogSeverity.MESSAGE);
 					File.CopyTo(Path.Combine(TargetDirectory, File.Name), true);
 				}
 
-				Log($"Cleaning up left over files...", LogSeverity.MESSAGE);
+				Log(Local.LocalString("log.updater.clean"), LogSeverity.MESSAGE);
 
 				Directory.Delete("Temp", true);
 				File.Delete(PackageFilename);
 
-				Log($"Done! Starting CBRE-EX...", LogSeverity.MESSAGE);
+				Log(Local.LocalString("log.updater.done"), LogSeverity.MESSAGE);
 
 				ProcessStartInfo editorProcess = new ProcessStartInfo(args[1]);
 				editorProcess.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -89,7 +90,7 @@ namespace CBRE.Updater
 			}
 			catch (Exception ex)
 			{
-				Log($"Error! {ex.Message.Pastel(Color.IndianRed)}", LogSeverity.ERROR);
+				Log(Local.LocalString("error.updater.error", ex.Message.Pastel(Color.IndianRed)), LogSeverity.ERROR);
 
 				Thread.Sleep(Timeout.Infinite);
 			}

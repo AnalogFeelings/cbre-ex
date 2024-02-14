@@ -2,6 +2,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Documents;
 using CBRE.Editor.Tools.Widgets;
+using CBRE.Localization;
 using CBRE.UI;
 using OpenTK;
 using System;
@@ -29,7 +30,7 @@ namespace CBRE.Editor.Tools.SelectTool.TransformationTools
 
         public override string GetTransformName()
         {
-            return "Resize";
+            return Local.LocalString("tool.resize");
         }
 
         public override Cursor CursorForHandle(BaseBoxTool.ResizeHandle handle)

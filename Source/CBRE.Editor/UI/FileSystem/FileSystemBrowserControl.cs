@@ -1,4 +1,5 @@
 ﻿using CBRE.FileSystem;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,8 +60,8 @@ namespace CBRE.Editor.UI.FileSystem
 
         public string FilterText
         {
-            get { return FilterLabel.Text == "(none)" ? "" : FilterLabel.Text; }
-            set { FilterLabel.Text = value == "" ? "(none)" : value; }
+            get { return FilterLabel.Text == Local.LocalString("filetype.none") ? "" : FilterLabel.Text; }
+            set { FilterLabel.Text = value == "" ? Local.LocalString("filetype.none") : value; }
         }
 
         public string Filter

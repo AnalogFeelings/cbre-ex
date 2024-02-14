@@ -1,6 +1,7 @@
 ﻿using CBRE.Common;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Documents;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -88,7 +89,7 @@ namespace CBRE.Editor.Visgroups
             {
                 ID = GetNewID(),
                 Colour = Colour.GetRandomLightColour(),
-                Name = "New Group",
+                Name = Local.LocalString("visgroup_edit.new_group"),
                 Visible = true
             };
             _visgroups.Add(newGroup);

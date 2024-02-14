@@ -9,6 +9,7 @@ using CBRE.Editor.Actions.MapObjects.Selection;
 using CBRE.Editor.Properties;
 using CBRE.Editor.UI;
 using CBRE.Editor.UI.Sidebar;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK.Graphics.OpenGL;
@@ -50,14 +51,12 @@ namespace CBRE.Editor.Tools
 
         public override string GetName()
         {
-            return "Entity Tool";
+            return Local.LocalString("tool.entity");
         }
 
         public override string GetContextualHelp()
         {
-            return "In the 3D view, *click* a face to place an entity there.\n" +
-                   "In the 2D view, *click* to place a point and press *enter* to create.\n" +
-                   "*Right click* in the 2D view to quickly choose and create any entity type.";
+            return Local.LocalString("tool.entity.help");
         }
 
         public override IEnumerable<KeyValuePair<string, Control>> GetSidebarControls()
@@ -240,7 +239,7 @@ namespace CBRE.Editor.Tools
                 action = new ActionCollection(new ChangeSelection(new MapObject[0], Document.Selection.GetSelectedObjects()), action);
             }
 
-            Document.PerformAction("Create entity: " + gd.Name, action);
+            Document.PerformAction(Local.LocalString("tool.entity.create", gd.Name), action);
             if (Select.SwitchToSelectAfterEntity)
             {
                 Mediator.Publish(HotkeysMediator.SwitchTool, HotkeyTool.Selection);

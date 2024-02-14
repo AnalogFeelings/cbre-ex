@@ -20,6 +20,7 @@
 * THE SOFTWARE.
 */
 
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -163,13 +164,13 @@ namespace Assimp
         public override long Write(byte[] dataToWrite, long count)
         {
             if (dataToWrite == null)
-                throw new ArgumentOutOfRangeException("dataToWrite", "Data to write cannot be null.");
+                throw new ArgumentOutOfRangeException("dataToWrite", Local.LocalString("exception.assimp.data_null"));
 
             if (count < 0 || dataToWrite.Length < count)
-                throw new ArgumentOutOfRangeException("count", "Number of bytes to write is greater than data size.");
+                throw new ArgumentOutOfRangeException("count", Local.LocalString("exception.assimp.bytes_greater_than_data"));
 
             if (m_fileStream == null || !m_fileStream.CanWrite)
-                throw new IOException("Stream is not writable.");
+                throw new IOException(Local.LocalString("exception.assimp.stream_not_writable"));
 
             m_fileStream.Write(dataToWrite, (int)m_fileStream.Position, (int)count);
 
@@ -179,13 +180,13 @@ namespace Assimp
         public override long Read(byte[] dataRead, long count)
         {
             if (dataRead == null)
-                throw new ArgumentOutOfRangeException("dataRead", "Array to store data in cannot be null.");
+                throw new ArgumentOutOfRangeException("dataRead", Local.LocalString("exception.assimp.array_cannot_null"));
 
             if (count < 0 || dataRead.Length < count)
-                throw new ArgumentOutOfRangeException("count", "Number of bytes to read is greater than data store size.");
+                throw new ArgumentOutOfRangeException("count", Local.LocalString("exception.assimp.read_greater_than_store"));
 
             if (m_fileStream == null || !m_fileStream.CanRead)
-                throw new IOException("Stream is not readable.");
+                throw new IOException(Local.LocalString("exception.assimp.stream_not_readable"));
 
             m_fileStream.Read(dataRead, (int)m_fileStream.Position, (int)count);
 
@@ -195,7 +196,7 @@ namespace Assimp
         public override ReturnCode Seek(long offset, Origin seekOrigin)
         {
             if (m_fileStream == null || !m_fileStream.CanSeek)
-                throw new IOException("Stream does not support seeking.");
+                throw new IOException(Local.LocalString("exception.assimp.stream_not_support_seeking"));
 
             SeekOrigin orig = SeekOrigin.Begin;
             switch (seekOrigin)

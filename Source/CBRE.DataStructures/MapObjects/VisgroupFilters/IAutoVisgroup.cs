@@ -1,4 +1,5 @@
 ﻿using CBRE.DataStructures.GameData;
+using CBRE.Localization;
 using System;
 using System.Linq;
 
@@ -82,8 +83,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class BrushEntitiesVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Entities"; } }
-        public string Name { get { return "Brush Entities"; } }
+        public string Group { get { return Local.LocalString("visgroup.entities"); } }
+        public string Name { get { return Local.LocalString("visgroup.entities.brush"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Entity && ((Entity)x).GameData != null && ((Entity)x).GameData.ClassType == ClassType.Solid;
@@ -92,8 +93,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class PointEntitiesVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Entities"; } }
-        public string Name { get { return "Point Entities"; } }
+        public string Group { get { return Local.LocalString("visgroup.entities"); } }
+        public string Name { get { return Local.LocalString("visgroup.entities.point"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Entity && ((Entity)x).GameData != null && ((Entity)x).GameData.ClassType != ClassType.Solid;
@@ -102,8 +103,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class TriggersVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Entities"; } }
-        public string Name { get { return "Triggers"; } }
+        public string Group { get { return Local.LocalString("visgroup.entities"); } }
+        public string Name { get { return Local.LocalString("visgroup.entities.triggers"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Entity && x.GetEntityData().Name.StartsWith("trigger_");
@@ -112,8 +113,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class LightsVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Entities"; } }
-        public string Name { get { return "Lights"; } }
+        public string Group { get { return Local.LocalString("visgroup.entities"); } }
+        public string Name { get { return Local.LocalString("visgroup.entities.lights"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Entity && x.GetEntityData().Name.StartsWith("light");
@@ -122,8 +123,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class NodesVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Entities"; } }
-        public string Name { get { return "Nodes"; } }
+        public string Group { get { return Local.LocalString("visgroup.entities"); } }
+        public string Name { get { return Local.LocalString("visgroup.entities.nodes"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Entity && x.GetEntityData().Name.Contains("_node");
@@ -132,8 +133,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class HintVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Tool Brushes"; } }
-        public string Name { get { return "Hint"; } }
+        public string Group { get { return Local.LocalString("visgroup.tool_brushes"); } }
+        public string Name { get { return Local.LocalString("visgroup.tool_brushes.hint"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && ((Solid)x).Faces.Any(y => String.Equals(y.Texture.Name, "hint", StringComparison.OrdinalIgnoreCase));
@@ -142,8 +143,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class OriginVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Tool Brushes"; } }
-        public string Name { get { return "Origin"; } }
+        public string Group { get { return Local.LocalString("visgroup.tool_brushes"); } }
+        public string Name { get { return Local.LocalString("visgroup.tool_brushes.origin"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && ((Solid)x).Faces.Any(y => String.Equals(y.Texture.Name, "origin", StringComparison.OrdinalIgnoreCase));
@@ -152,8 +153,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class SkipVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Tool Brushes"; } }
-        public string Name { get { return "Skip"; } }
+        public string Group { get { return Local.LocalString("visgroup.tool_brushes"); } }
+        public string Name { get { return Local.LocalString("visgroup.tool_brushes.skip"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && ((Solid)x).Faces.Any(y => String.Equals(y.Texture.Name, "skip", StringComparison.OrdinalIgnoreCase));
@@ -162,8 +163,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class TriggerVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Tool Brushes"; } }
-        public string Name { get { return "Trigger"; } }
+        public string Group { get { return Local.LocalString("visgroup.tool_brushes"); } }
+        public string Name { get { return Local.LocalString("visgroup.tool_brushes.trigger"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && ((Solid)x).Faces.Any(y => String.Equals(y.Texture.Name, "aaatrigger", StringComparison.OrdinalIgnoreCase));
@@ -172,8 +173,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class BevelVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "Tool Brushes"; } }
-        public string Name { get { return "Bevel"; } }
+        public string Group { get { return Local.LocalString("visgroup.tool_brushes"); } }
+        public string Name { get { return Local.LocalString("visgroup.tool_brushes.bevel"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && ((Solid)x).Faces.Any(y => String.Equals(y.Texture.Name, "bevel", StringComparison.OrdinalIgnoreCase));
@@ -182,8 +183,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class BrushesVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "World Geometry"; } }
-        public string Name { get { return "Brushes"; } }
+        public string Group { get { return Local.LocalString("visgroup.world_geometry"); } }
+        public string Name { get { return Local.LocalString("visgroup.world_geometry.brushes"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && x.FindClosestParent(y => y is Entity) == null;
@@ -192,8 +193,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class NullVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "World Geometry"; } }
-        public string Name { get { return "Null"; } }
+        public string Group { get { return Local.LocalString("visgroup.world_geometry"); } }
+        public string Name { get { return Local.LocalString("visgroup.world_geometry.null"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && x.FindClosestParent(y => y is Entity) == null && ((Solid)x).Faces.Any(y => String.Equals(y.Texture.Name, "null", StringComparison.OrdinalIgnoreCase));
@@ -202,8 +203,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class SkyVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "World Geometry"; } }
-        public string Name { get { return "Sky"; } }
+        public string Group { get { return Local.LocalString("visgroup.world_geometry"); } }
+        public string Name { get { return Local.LocalString("visgroup.world_geometry.sky"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && x.FindClosestParent(y => y is Entity) == null && ((Solid)x).Faces.Any(y => String.Equals(y.Texture.Name, "sky", StringComparison.OrdinalIgnoreCase));
@@ -212,8 +213,8 @@ namespace CBRE.DataStructures.MapObjects.VisgroupFilters
 
     public class WaterVisgroupFilter : IVisgroupFilter
     {
-        public string Group { get { return "World Geometry"; } }
-        public string Name { get { return "Water"; } }
+        public string Group { get { return Local.LocalString("visgroup.world_geometry"); } }
+        public string Name { get { return Local.LocalString("visgroup.world_geometry.water"); } }
         public bool IsMatch(MapObject x)
         {
             return x is Solid && x.FindClosestParent(y => y is Entity) == null && ((Solid)x).Faces.Any(y => y.Texture.Name.StartsWith("!"));

@@ -2,6 +2,7 @@ using CBRE.Common;
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Brushes.Controls;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,12 +14,12 @@ namespace CBRE.Editor.Brushes
 
         public TetrahedronBrush()
         {
-            _useCentroid = new BooleanControl(this) { LabelText = "Top vertex at centroid", Checked = false };
+            _useCentroid = new BooleanControl(this) { LabelText = Local.LocalString("brush.top_vertex_centroid"), Checked = false };
         }
 
         public string Name
         {
-            get { return "Tetrahedron"; }
+            get { return Local.LocalString("brush.tetrahedron"); }
         }
 
         public bool CanRound { get { return true; } }

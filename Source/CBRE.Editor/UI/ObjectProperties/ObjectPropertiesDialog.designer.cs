@@ -6,6 +6,8 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using CBRE.Localization;
+
 namespace CBRE.Editor.UI.ObjectProperties
 {
     partial class ObjectPropertiesDialog
@@ -152,7 +154,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.ClassInfoTab.Padding = new System.Windows.Forms.Padding(3);
             this.ClassInfoTab.Size = new System.Drawing.Size(674, 378);
             this.ClassInfoTab.TabIndex = 0;
-            this.ClassInfoTab.Text = "Class Info";
+            this.ClassInfoTab.Text = Local.LocalString("object_properties.tab.class_info");
             this.ClassInfoTab.UseVisualStyleBackColor = true;
             // 
             // ChangingClassWarning
@@ -163,8 +165,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.ChangingClassWarning.Name = "ChangingClassWarning";
             this.ChangingClassWarning.Size = new System.Drawing.Size(306, 30);
             this.ChangingClassWarning.TabIndex = 11;
-            this.ChangingClassWarning.Text = "Changing class - click \"Change\" or \"Cancel\" to continue.\r\nThe object will not be " +
-    "affected until you click \"Apply\".\r\n";
+            this.ChangingClassWarning.Text = Local.LocalString("object_properties.warning");
             this.ChangingClassWarning.Visible = false;
             // 
             // CancelClassChangeButton
@@ -174,7 +175,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.CancelClassChangeButton.Name = "CancelClassChangeButton";
             this.CancelClassChangeButton.Size = new System.Drawing.Size(61, 23);
             this.CancelClassChangeButton.TabIndex = 10;
-            this.CancelClassChangeButton.Text = "Cancel";
+            this.CancelClassChangeButton.Text = Local.LocalString("cancel");
             this.CancelClassChangeButton.UseVisualStyleBackColor = true;
             this.CancelClassChangeButton.Click += new System.EventHandler(this.CancelClassChange);
             // 
@@ -184,7 +185,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.DeletePropertyButton.Name = "DeletePropertyButton";
             this.DeletePropertyButton.Size = new System.Drawing.Size(75, 23);
             this.DeletePropertyButton.TabIndex = 10;
-            this.DeletePropertyButton.Text = "Delete";
+            this.DeletePropertyButton.Text = Local.LocalString("delete");
             this.DeletePropertyButton.UseVisualStyleBackColor = true;
             this.DeletePropertyButton.Click += new System.EventHandler(this.RemovePropertyClicked);
             // 
@@ -194,7 +195,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.AddPropertyButton.Name = "AddPropertyButton";
             this.AddPropertyButton.Size = new System.Drawing.Size(75, 23);
             this.AddPropertyButton.TabIndex = 10;
-            this.AddPropertyButton.Text = "Add";
+            this.AddPropertyButton.Text = Local.LocalString("add");
             this.AddPropertyButton.UseVisualStyleBackColor = true;
             this.AddPropertyButton.Click += new System.EventHandler(this.AddPropertyClicked);
             // 
@@ -205,7 +206,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.ConfirmClassChangeButton.Name = "ConfirmClassChangeButton";
             this.ConfirmClassChangeButton.Size = new System.Drawing.Size(61, 23);
             this.ConfirmClassChangeButton.TabIndex = 10;
-            this.ConfirmClassChangeButton.Text = "Change";
+            this.ConfirmClassChangeButton.Text = Local.LocalString("change");
             this.ConfirmClassChangeButton.UseVisualStyleBackColor = true;
             this.ConfirmClassChangeButton.Click += new System.EventHandler(this.ConfirmClassChange);
             // 
@@ -226,7 +227,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.SmartEditButton.Name = "SmartEditButton";
             this.SmartEditButton.Size = new System.Drawing.Size(71, 25);
             this.SmartEditButton.TabIndex = 8;
-            this.SmartEditButton.Text = "Smart Edit";
+            this.SmartEditButton.Text = Local.LocalString("object_properties.smart_edit");
             this.SmartEditButton.UseVisualStyleBackColor = true;
             this.SmartEditButton.CheckedChanged += new System.EventHandler(this.SmartEditToggled);
             // 
@@ -236,7 +237,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.PasteKeyValues.Name = "PasteKeyValues";
             this.PasteKeyValues.Size = new System.Drawing.Size(44, 23);
             this.PasteKeyValues.TabIndex = 7;
-            this.PasteKeyValues.Text = "Paste";
+            this.PasteKeyValues.Text = Local.LocalString("paste");
             this.PasteKeyValues.UseVisualStyleBackColor = true;
             // 
             // CopyKeyValues
@@ -245,7 +246,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.CopyKeyValues.Name = "CopyKeyValues";
             this.CopyKeyValues.Size = new System.Drawing.Size(44, 23);
             this.CopyKeyValues.TabIndex = 7;
-            this.CopyKeyValues.Text = "Copy";
+            this.CopyKeyValues.Text = Local.LocalString("copy");
             this.CopyKeyValues.UseVisualStyleBackColor = true;
             // 
             // CommentsTextbox
@@ -275,7 +276,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.HelpButton.Name = "HelpButton";
             this.HelpButton.Size = new System.Drawing.Size(75, 23);
             this.HelpButton.TabIndex = 4;
-            this.HelpButton.Text = "Help";
+            this.HelpButton.Text = Local.LocalString("info.help");
             this.HelpButton.UseVisualStyleBackColor = true;
             // 
             // KeyValuesList
@@ -300,13 +301,13 @@ namespace CBRE.Editor.UI.ObjectProperties
             // columnHeader1
             // 
             this.columnHeader1.Tag = "";
-            this.columnHeader1.Text = "Property Name";
+            this.columnHeader1.Text = Local.LocalString("object_properties.property_name");
             this.columnHeader1.Width = 120;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Tag = "";
-            this.columnHeader2.Text = "Value";
+            this.columnHeader2.Text = Local.LocalString("object_properties.value");
             this.columnHeader2.Width = 272;
             // 
             // Class
@@ -324,7 +325,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(266, 21);
             this.label4.TabIndex = 1;
-            this.label4.Text = "Comments:";
+            this.label4.Text = Local.LocalString("object_properties.comments");
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label3
@@ -333,7 +334,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(266, 21);
             this.label3.TabIndex = 1;
-            this.label3.Text = "Help:";
+            this.label3.Text = Local.LocalString("object_properties.help");
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label5
@@ -343,7 +344,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 15);
             this.label5.TabIndex = 1;
-            this.label5.Text = "Keyvalues";
+            this.label5.Text = Local.LocalString("object_properties.keyvalues");
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label1
@@ -353,7 +354,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(34, 15);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Class";
+            this.label1.Text = Local.LocalString("object_properties.class");
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Angles
@@ -379,7 +380,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.OutputsTab.Padding = new System.Windows.Forms.Padding(3);
             this.OutputsTab.Size = new System.Drawing.Size(674, 378);
             this.OutputsTab.TabIndex = 1;
-            this.OutputsTab.Text = "Outputs";
+            this.OutputsTab.Text = Local.LocalString("object_properties.tab.outputs");
             this.OutputsTab.UseVisualStyleBackColor = true;
             // 
             // OutputDelete
@@ -397,7 +398,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.OutputPaste.Name = "OutputPaste";
             this.OutputPaste.Size = new System.Drawing.Size(75, 23);
             this.OutputPaste.TabIndex = 6;
-            this.OutputPaste.Text = "Paste";
+            this.OutputPaste.Text = Local.LocalString("delete");
             this.OutputPaste.UseVisualStyleBackColor = true;
             // 
             // OutputCopy
@@ -406,7 +407,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.OutputCopy.Name = "OutputCopy";
             this.OutputCopy.Size = new System.Drawing.Size(75, 23);
             this.OutputCopy.TabIndex = 6;
-            this.OutputCopy.Text = "Copy";
+            this.OutputCopy.Text = Local.LocalString("copy");
             this.OutputCopy.UseVisualStyleBackColor = true;
             // 
             // OutputAdd
@@ -415,7 +416,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.OutputAdd.Name = "OutputAdd";
             this.OutputAdd.Size = new System.Drawing.Size(75, 23);
             this.OutputAdd.TabIndex = 6;
-            this.OutputAdd.Text = "Add";
+            this.OutputAdd.Text = Local.LocalString("add");
             this.OutputAdd.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -436,7 +437,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.groupBox1.Size = new System.Drawing.Size(320, 169);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Edit Entry";
+            this.groupBox1.Text = Local.LocalString("object_properties.edit_entry");
             // 
             // OutputOnce
             // 
@@ -444,7 +445,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.OutputOnce.Name = "OutputOnce";
             this.OutputOnce.Size = new System.Drawing.Size(104, 20);
             this.OutputOnce.TabIndex = 3;
-            this.OutputOnce.Text = "Once Only";
+            this.OutputOnce.Text = Local.LocalString("object_properties.once_only");
             this.OutputOnce.UseVisualStyleBackColor = true;
             // 
             // OutputDelay
@@ -472,7 +473,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(90, 15);
             this.label10.TabIndex = 0;
-            this.label10.Text = "Delay (seconds)";
+            this.label10.Text = Local.LocalString("object_properties.delay_secs");
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OutputParameter
@@ -489,7 +490,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(109, 15);
             this.label9.TabIndex = 0;
-            this.label9.Text = "Parameter Override";
+            this.label9.Text = Local.LocalString("object_properties.parameter_override");
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OutputInputName
@@ -506,7 +507,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(35, 15);
             this.label8.TabIndex = 0;
-            this.label8.Text = "Input";
+            this.label8.Text = Local.LocalString("object_properties.input");
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OutputTargetName
@@ -523,7 +524,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(74, 15);
             this.label7.TabIndex = 0;
-            this.label7.Text = "Target Name";
+            this.label7.Text = Local.LocalString("object_properties.target_name");
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OutputName
@@ -540,7 +541,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 15);
             this.label6.TabIndex = 0;
-            this.label6.Text = "Output Name";
+            this.label6.Text = Local.LocalString("object_properties.output_name");
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OutputsList
@@ -563,31 +564,31 @@ namespace CBRE.Editor.UI.ObjectProperties
             // 
             // columnHeader5
             // 
-            this.columnHeader5.Text = "Output Name";
+            this.columnHeader5.Text = Local.LocalString("object_properties.output_name");
             this.columnHeader5.Width = 92;
             // 
             // columnHeader6
             // 
-            this.columnHeader6.Text = "Target";
+            this.columnHeader6.Text = Local.LocalString("object_properties.target_name");
             this.columnHeader6.Width = 91;
             // 
             // columnHeader8
             // 
-            this.columnHeader8.Text = "Input";
+            this.columnHeader8.Text = Local.LocalString("object_properties.input");
             this.columnHeader8.Width = 101;
             // 
             // columnHeader9
             // 
-            this.columnHeader9.Text = "Parameter";
+            this.columnHeader9.Text = Local.LocalString("object_properties.parameter");
             this.columnHeader9.Width = 103;
             // 
             // columnHeader7
             // 
-            this.columnHeader7.Text = "Delay";
+            this.columnHeader7.Text = Local.LocalString("object_properties.delay");
             // 
             // columnHeader10
             // 
-            this.columnHeader10.Text = "Only Once";
+            this.columnHeader10.Text = Local.LocalString("object_properties.once_only");
             this.columnHeader10.Width = 79;
             // 
             // InputsTab
@@ -598,7 +599,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.InputsTab.Padding = new System.Windows.Forms.Padding(3);
             this.InputsTab.Size = new System.Drawing.Size(674, 378);
             this.InputsTab.TabIndex = 2;
-            this.InputsTab.Text = "Inputs";
+            this.InputsTab.Text = Local.LocalString("object_properties.tab.inputs");
             this.InputsTab.UseVisualStyleBackColor = true;
             // 
             // InputsList
@@ -621,31 +622,31 @@ namespace CBRE.Editor.UI.ObjectProperties
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "Source";
+            this.columnHeader4.Text = Local.LocalString("object_properties.source");
             this.columnHeader4.Width = 91;
             // 
             // columnHeader3
             // 
-            this.columnHeader3.Text = "Output Name";
+            this.columnHeader3.Text = Local.LocalString("object_properties.output_name");
             this.columnHeader3.Width = 92;
             // 
             // columnHeader11
             // 
-            this.columnHeader11.Text = "Input";
+            this.columnHeader11.Text = Local.LocalString("object_properties.input");
             this.columnHeader11.Width = 101;
             // 
             // columnHeader12
             // 
-            this.columnHeader12.Text = "Parameter";
+            this.columnHeader12.Text = Local.LocalString("object_properties.parameter");
             this.columnHeader12.Width = 103;
             // 
             // columnHeader13
             // 
-            this.columnHeader13.Text = "Delay";
+            this.columnHeader13.Text = Local.LocalString("object_properties.delay");
             // 
             // columnHeader14
             // 
-            this.columnHeader14.Text = "Only Once";
+            this.columnHeader14.Text = Local.LocalString("object_properties.once_only");
             this.columnHeader14.Width = 79;
             // 
             // FlagsTab
@@ -656,7 +657,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.FlagsTab.Padding = new System.Windows.Forms.Padding(3);
             this.FlagsTab.Size = new System.Drawing.Size(674, 378);
             this.FlagsTab.TabIndex = 3;
-            this.FlagsTab.Text = "Flags";
+            this.FlagsTab.Text = Local.LocalString("object_properties.tab.flags");
             this.FlagsTab.UseVisualStyleBackColor = true;
             // 
             // FlagsTable
@@ -678,7 +679,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.VisgroupTab.Padding = new System.Windows.Forms.Padding(3);
             this.VisgroupTab.Size = new System.Drawing.Size(674, 378);
             this.VisgroupTab.TabIndex = 4;
-            this.VisgroupTab.Text = "Visgroup";
+            this.VisgroupTab.Text = Local.LocalString("object_properties.tab.visgroup");
             this.VisgroupTab.UseVisualStyleBackColor = true;
             // 
             // EditVisgroupsButton
@@ -688,7 +689,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.EditVisgroupsButton.Name = "EditVisgroupsButton";
             this.EditVisgroupsButton.Size = new System.Drawing.Size(98, 23);
             this.EditVisgroupsButton.TabIndex = 3;
-            this.EditVisgroupsButton.Text = "Edit Visgroups";
+            this.EditVisgroupsButton.Text = Local.LocalString("object_properties.edit_visgroups");
             this.EditVisgroupsButton.UseVisualStyleBackColor = true;
             this.EditVisgroupsButton.Click += new System.EventHandler(this.EditVisgroupsClicked);
             // 
@@ -699,7 +700,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(104, 15);
             this.label11.TabIndex = 1;
-            this.label11.Text = "Member of group:";
+            this.label11.Text = Local.LocalString("object_properties.member_of_group");
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // VisgroupPanel
@@ -723,7 +724,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
-            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Text = Local.LocalString("cancel");
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.CancelButtonClicked);
             // 
@@ -733,7 +734,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 2;
-            this.OkButton.Text = "OK";
+            this.OkButton.Text = Local.LocalString("ok");
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButtonClicked);
             // 
@@ -743,7 +744,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
-            this.button1.Text = "Apply";
+            this.button1.Text = Local.LocalString("apply");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.ApplyButtonClicked);
             // 
@@ -763,7 +764,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Object Properties";
+            this.Text = Local.LocalString("object_properties");
             this.Tabs.ResumeLayout(false);
             this.ClassInfoTab.ResumeLayout(false);
             this.ClassInfoTab.PerformLayout();

@@ -2,6 +2,7 @@
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.DataStructures.Transformations;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using System;
 using System.Collections.Generic;
@@ -477,7 +478,7 @@ namespace CBRE.Providers.Map
                 {
                     if (name == "terrain")
                     {
-                        MapProvider.warnings = "This map contains displacements, which are currently not supported. The map will appear incomplete.";
+                        MapProvider.warnings = Local.LocalString("exception.3dw_unsupported_displacements");
                     }
                     br.BaseStream.Seek(size, SeekOrigin.Current);
                 }
@@ -516,7 +517,7 @@ namespace CBRE.Providers.Map
 
         protected override void SaveToStream(Stream stream, DataStructures.MapObjects.Map map, DataStructures.GameData.GameData gameData, TextureCollection textureCollection)
         {
-            throw new NotImplementedException("don't save to 3dw, ew");
+            throw new NotImplementedException(Local.LocalString("exception.3dw_nosave"));
         }
 
         protected override IEnumerable<MapFeature> GetFormatFeatures()

@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.Tools.VMTool
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.Tools.VMTool
 {
     partial class ScaleControl
     {
@@ -43,7 +45,7 @@
 			this.button6.Name = "button6";
 			this.button6.Size = new System.Drawing.Size(48, 23);
 			this.button6.TabIndex = 12;
-			this.button6.Text = "Reset";
+			this.button6.Text = Local.LocalString("reset");
 			this.button6.UseVisualStyleBackColor = true;
 			// 
 			// DistanceValue
@@ -85,7 +87,7 @@
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(102, 15);
 			this.label4.TabIndex = 9;
-			this.label4.Text = "Scale distance (%)";
+			this.label4.Text = Local.LocalString("tool.scale_distance");
 			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// ResetDistanceButton
@@ -106,7 +108,7 @@
 			this.ResetOriginButton.Name = "ResetOriginButton";
 			this.ResetOriginButton.Size = new System.Drawing.Size(75, 23);
 			this.ResetOriginButton.TabIndex = 15;
-			this.ResetOriginButton.Text = "Reset Origin";
+			this.ResetOriginButton.Text = Local.LocalString("tool.scale_distance.reset");
 			this.ResetOriginButton.UseVisualStyleBackColor = true;
 			this.ResetOriginButton.Click += new System.EventHandler(this.ResetOriginClicked);
 			// 

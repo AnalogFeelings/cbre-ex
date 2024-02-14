@@ -4,6 +4,7 @@ using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Operations;
 using CBRE.Editor.Actions.MapObjects.Selection;
 using CBRE.Editor.Documents;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using System;
 using System.Collections.Generic;
@@ -132,7 +133,7 @@ namespace CBRE.Editor.UI
             if (String.IsNullOrWhiteSpace(text))
             {
                 image.Image = null;
-                info.Text = "No Image";
+                info.Text = Local.LocalString("texture.no_image");
                 return;
             }
 
@@ -148,7 +149,7 @@ namespace CBRE.Editor.UI
                 image.Image = bmp.Bitmap;
             }
 
-            string format = item.Flags.HasFlag(TextureFlags.Missing) ? "Invalid texture" : "{0} x {1}";
+            string format = item.Flags.HasFlag(TextureFlags.Missing) ? Local.LocalString("texture.invalid_texture") : "{0} x {1}";
             info.Text = string.Format(format, item.Width, item.Height);
         }
     }

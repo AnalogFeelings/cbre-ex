@@ -3,6 +3,7 @@ using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Brushes.Controls;
 using CBRE.Extensions;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,12 +15,12 @@ namespace CBRE.Editor.Brushes
 
         public CylinderBrush()
         {
-            _numSides = new NumericControl(this) { LabelText = "Number of sides" };
+            _numSides = new NumericControl(this) { LabelText = Local.LocalString("brush.sides") };
         }
 
         public string Name
         {
-            get { return "Cylinder"; }
+            get { return Local.LocalString("brush.cylinder"); }
         }
 
         public bool CanRound { get { return true; } }

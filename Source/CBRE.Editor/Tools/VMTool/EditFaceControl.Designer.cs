@@ -1,4 +1,7 @@
-﻿namespace CBRE.Editor.Tools.VMTool
+﻿using CBRE.Localization;
+using System.Text.RegularExpressions;
+
+namespace CBRE.Editor.Tools.VMTool
 {
     partial class EditFaceControl
     {
@@ -49,7 +52,7 @@
 			this.BevelButton.Name = "BevelButton";
 			this.BevelButton.Size = new System.Drawing.Size(50, 23);
 			this.BevelButton.TabIndex = 9;
-			this.BevelButton.Text = "Bevel";
+			this.BevelButton.Text = Local.LocalString("bevel");
 			this.BevelButton.UseVisualStyleBackColor = true;
 			this.BevelButton.Click += new System.EventHandler(this.BevelButtonClicked);
 			// 
@@ -62,7 +65,7 @@
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(111, 15);
 			this.label5.TabIndex = 3;
-			this.label5.Text = "With Selected Faces";
+			this.label5.Text = Local.LocalString("tool.with_selected_faces");
 			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// BevelValue
@@ -97,7 +100,7 @@
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(33, 15);
 			this.label7.TabIndex = 6;
-			this.label7.Text = "units";
+			this.label7.Text = Regex.Split(Local.LocalString("tool.bevel_by"), "{.}")[1].Trim();
 			this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label6
@@ -109,7 +112,7 @@
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(51, 15);
 			this.label6.TabIndex = 7;
-			this.label6.Text = "Bevel by";
+			this.label6.Text = Regex.Split(Local.LocalString("tool.bevel_by"), "{.}")[0].Trim();
 			this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// PokeFaceButton
@@ -120,7 +123,7 @@
 			this.PokeFaceButton.Name = "PokeFaceButton";
 			this.PokeFaceButton.Size = new System.Drawing.Size(50, 23);
 			this.PokeFaceButton.TabIndex = 9;
-			this.PokeFaceButton.Text = "Poke";
+			this.PokeFaceButton.Text = Local.LocalString("poke");
 			this.PokeFaceButton.UseVisualStyleBackColor = true;
 			this.PokeFaceButton.Click += new System.EventHandler(this.PokeFaceButtonClicked);
 			// 
@@ -133,7 +136,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(49, 15);
 			this.label1.TabIndex = 7;
-			this.label1.Text = "Poke by";
+			this.label1.Text = Regex.Split(Local.LocalString("tool.poke_by"), "{.}")[0].Trim();
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// label2
@@ -145,7 +148,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(33, 15);
 			this.label2.TabIndex = 6;
-			this.label2.Text = "units";
+			this.label2.Text = Regex.Split(Local.LocalString("tool.bevel_by"), "{.}")[1].Trim();
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// PokeFaceCount

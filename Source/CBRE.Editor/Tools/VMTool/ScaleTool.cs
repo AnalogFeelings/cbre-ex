@@ -1,6 +1,7 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.DataStructures.Geometric;
 using CBRE.Graphics;
+using CBRE.Localization;
 using CBRE.UI;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -97,16 +98,12 @@ namespace CBRE.Editor.Tools.VMTool
 
         public override string GetName()
         {
-            return "Scale";
+            return Local.LocalString("data.model.scale");
         }
 
         public override string GetContextualHelp()
         {
-            return
-@"*Click* a vertex to select all points under the cursor.
- - Hold *control* to select multiple points.
- - Hold *shift* to only select the topmost point.
-Move the origin point around by *clicking and dragging* it.";
+            return Local.LocalString("tool.scale_distance.help");
         }
 
         public override void ToolSelected(bool preventHistory)

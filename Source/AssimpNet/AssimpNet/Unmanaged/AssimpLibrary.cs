@@ -20,6 +20,7 @@
 * THE SOFTWARE.
 */
 
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -132,7 +133,7 @@ namespace Assimp.Unmanaged
         public void LoadLibrary()
         {
             if (IsLibraryLoaded)
-                throw new AssimpException("Assimp library already loaded.");
+                throw new AssimpException(Local.LocalString("exception.assimp.loaded"));
 
             AssimpLibraryImplementation impl = AssimpDefaultLibraryPath.CreateRuntimeImplementation();
             String libPath = (IntPtr.Size == 8) ? impl.DefaultLibraryPath64Bit : impl.DefaultLibraryPath32Bit;
@@ -154,7 +155,7 @@ namespace Assimp.Unmanaged
         public void LoadLibrary(String libPath)
         {
             if (IsLibraryLoaded)
-                throw new AssimpException("Assimp library already loaded.");
+                throw new AssimpException(Local.LocalString("exception.assimp.loaded"));
 
             AssimpLibraryImplementation impl = AssimpDefaultLibraryPath.CreateRuntimeImplementation();
             impl.LoadAssimpLibrary(libPath);
@@ -1608,7 +1609,7 @@ namespace Assimp.Unmanaged
                 return null;
 
             if (IsDisposed)
-                throw new ObjectDisposedException("AssimpLibrary has been disposed");
+                throw new ObjectDisposedException(Local.LocalString("exception.assimp.library_disposed"));
 
             IntPtr procAddr = NativeGetProcAddress(m_libraryHandle, functionName);
 
@@ -1716,9 +1717,9 @@ namespace Assimp.Unmanaged
                 int hr = Marshal.GetHRForLastWin32Error();
                 Exception innerException = Marshal.GetExceptionForHR(hr);
                 if (innerException != null)
-                    throw new AssimpException("Error loading unmanaged library from path: " + path + ", see inner exception for details.\n" + innerException.Message, innerException);
+                    throw new AssimpException(Local.LocalString("exception.assimp.unmanaged_library_details", path) + "\n" + innerException.Message, innerException);
                 else
-                    throw new AssimpException("Error loading unmanaged library from path: " + path);
+                    throw new AssimpException(Local.LocalString("exception.assimp.unmanaged_library", path));
             }
 
             return libraryHandle;
@@ -1784,9 +1785,9 @@ namespace Assimp.Unmanaged
                 IntPtr errPtr = dlerror();
                 String msg = Marshal.PtrToStringAnsi(errPtr);
                 if (!String.IsNullOrEmpty(msg))
-                    throw new AssimpException("Error loading unmanaged library from path: " + path + ", error detail:\n" + msg);
+                    throw new AssimpException(Local.LocalString("exception.assimp.unmanaged_library_error_details", path, msg));
                 else
-                    throw new AssimpException("Error loading unmanaged library from path: " + path);
+                    throw new AssimpException(Local.LocalString("exception.assimp.unmanaged_library", path));
             }
 
             return libraryHandle;

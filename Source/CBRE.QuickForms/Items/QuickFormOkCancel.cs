@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -29,7 +30,7 @@ namespace CBRE.QuickForms.Items
             b1.Click += qf.Close;
             b1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             b1.Width = 80;
-            b1.Text = "OK";
+            b1.Text = Local.LocalString("ok");
             b1.DialogResult = DialogResult.OK;
             Location(b1, qf, false);
             b1.Location = new Point(qf.ClientSize.Width - (QuickForm.ItemPadding + b1.Width) * 2, b1.Location.Y);

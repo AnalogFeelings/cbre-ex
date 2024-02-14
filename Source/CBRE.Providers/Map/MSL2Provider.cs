@@ -4,6 +4,7 @@ using CBRE.DataStructures.MapObjects;
 using CBRE.DataStructures.Transformations;
 using CBRE.Extensions;
 using CBRE.FileSystem;
+using CBRE.Localization;
 using CBRE.Providers.Model;
 using CBRE.Providers.Texture;
 using System;
@@ -615,7 +616,7 @@ namespace CBRE.Providers.Map
 
         protected override void SaveToStream(Stream stream, DataStructures.MapObjects.Map map, DataStructures.GameData.GameData gameData, TextureCollection textureCollection)
         {
-            throw new NotImplementedException("don't save to msl, ew");
+            throw new NotImplementedException(Local.LocalString("exception.msl_nosave"));
         }
 
         protected override IEnumerable<MapFeature> GetFormatFeatures()

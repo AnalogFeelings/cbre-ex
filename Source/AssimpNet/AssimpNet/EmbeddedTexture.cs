@@ -21,6 +21,7 @@
 */
 
 using Assimp.Unmanaged;
+using CBRE.Localization;
 using System;
 
 namespace Assimp
@@ -199,7 +200,7 @@ namespace Assimp
             m_nonCompressedData = uncompressedData;
 
             if ((m_width * m_height) == NonCompressedDataSize)
-                throw new ArgumentException("Texel data size does not match width * height.");
+                throw new ArgumentException(Local.LocalString("exception.assimp.texel_data_not_match"));
 
             m_isCompressed = false;
             m_compressedFormatHint = null;

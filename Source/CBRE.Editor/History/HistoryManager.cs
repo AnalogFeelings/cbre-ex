@@ -1,5 +1,6 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.Editor.Documents;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -29,9 +30,9 @@ namespace CBRE.Editor.History
             {
                 TotalActionsSinceLastSave++;
                 TotalActionsSinceLastAutoSave++;
-                if (!Editor.Instance.Text.Contains(" *UNSAVED CHANGES*"))
+                if (!Editor.Instance.Text.Contains(Local.LocalString("document.unsaved_changes")))
                 {
-                    Editor.Instance.Text += " *UNSAVED CHANGES*";
+                    Editor.Instance.Text += " " + Local.LocalString("document.unsaved_changes");
                     Editor.Instance.DocumentTabs.TabPages[Editor.Instance.DocumentTabs.SelectedIndex].Text += "*";
                 }
             }
@@ -72,7 +73,7 @@ namespace CBRE.Editor.History
                 TotalActionsSinceLastAutoSave -= modifiesCount;
                 TabPage tabPage = Editor.Instance.DocumentTabs.TabPages[Editor.Instance.DocumentTabs.SelectedIndex];
                 tabPage.Text = tabPage.Text.Replace("*", "");
-                Editor.Instance.Text = Editor.Instance.Text.Replace(" *UNSAVED CHANGES*", "");
+                Editor.Instance.Text = Editor.Instance.Text.Replace(" " + Local.LocalString("document.unsaved_changes"), "");
             }
             Mediator.Publish(EditorMediator.HistoryChanged);
         }

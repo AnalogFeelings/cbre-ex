@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CBRE.Common.Extensions;
+using CBRE.Localization;
 
 namespace CBRE.Editor.Compiling
 {
@@ -147,7 +148,7 @@ namespace CBRE.Editor.Compiling
                         br.Write(flag);
                         br.WriteB3DString(texName);
 
-                        if (vertCount > UInt16.MaxValue) throw new Exception("Vertex overflow: " + texName);
+                        if (vertCount > UInt16.MaxValue) throw new Exception(Local.LocalString("error.export.vertex_overflow_2", texName));
                         br.Write((Int32)vertCount);
                         foreach (LMFace face in tLmFaces)
                         {
@@ -197,7 +198,7 @@ namespace CBRE.Editor.Compiling
                         br.Write(flag);
                         br.WriteB3DString(texName);
 
-                        if (vertCount > UInt16.MaxValue) throw new Exception("Vertex overflow!");
+                        if (vertCount > UInt16.MaxValue) throw new Exception(Local.LocalString("error.export.vertex_overflow"));
                         br.Write((Int32)vertCount);
                         foreach (Face face in tTrptFaces)
                         {
@@ -244,7 +245,7 @@ namespace CBRE.Editor.Compiling
                     triCount += face.GetTriangleIndices().Count() / 3;
                 }
 
-                if (vertCount > UInt16.MaxValue) throw new Exception("Vertex overflow!");
+                if (vertCount > UInt16.MaxValue) throw new Exception(Local.LocalString("error.export.vertex_overflow"));
                 br.Write((Int32)vertCount);
                 foreach (Face face in invisibleCollisionFaces)
                 {
@@ -373,7 +374,7 @@ namespace CBRE.Editor.Compiling
             br.Dispose();
             stream.Dispose();
 
-            form.ProgressLog.Invoke((MethodInvoker)(() => form.ProgressLog.AppendText("\nDone!")));
+            form.ProgressLog.Invoke((MethodInvoker)(() => form.ProgressLog.AppendText("\n" + Local.LocalString("progress.export.done"))));
             form.ProgressBar.Invoke((MethodInvoker)(() => form.ProgressBar.Value = 10000));
         }
 
@@ -383,9 +384,7 @@ namespace CBRE.Editor.Compiling
             Property mapProperty = entity.EntityData.Properties.FirstOrDefault(x => x.Key == property.Name);
 
             if (mapProperty == default(Property))
-                throw new Exception($"A property with the key \"{property.Name}\" was not found in the EntityData for the custom entity of type \"{entity.ClassName}\" at " +
-                                    $"position ({entity.Origin.X}, {entity.Origin.Y}, {entity.Origin.Z}). " +
-                                    $"Make sure the custom entity's properties match it's JSON file definition.");
+                throw new Exception(Local.LocalString("error.export.property_not_found", property.Name, entity.ClassName, entity.Origin.X, entity.Origin.Y, entity.Origin.Z));
             
             switch (property.VariableType)
             {

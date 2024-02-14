@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.DockPanels
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.DockPanels
 {
     partial class OutputMessagePanel
     {
@@ -39,10 +41,10 @@
             this.OutputType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.OutputType.FormattingEnabled = true;
             this.OutputType.Items.AddRange(new object[] {
-            "Compile"});
+            Local.LocalString("output.type")});
             this.OutputType.Location = new System.Drawing.Point(79, 3);
             this.OutputType.Name = "OutputType";
-            this.OutputType.Size = new System.Drawing.Size(121, 21);
+            this.OutputType.Size = new System.Drawing.Size(121, 20);
             this.OutputType.TabIndex = 0;
             this.OutputType.SelectedIndexChanged += new System.EventHandler(this.OutputTypeChanged);
             // 
@@ -54,10 +56,10 @@
             this.OutputBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.OutputBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.OutputBox.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OutputBox.Location = new System.Drawing.Point(3, 30);
+            this.OutputBox.Location = new System.Drawing.Point(3, 28);
             this.OutputBox.Name = "OutputBox";
             this.OutputBox.ReadOnly = true;
-            this.OutputBox.Size = new System.Drawing.Size(706, 196);
+            this.OutputBox.Size = new System.Drawing.Size(706, 181);
             this.OutputBox.TabIndex = 1;
             this.OutputBox.Text = "This is the output window";
             // 
@@ -66,30 +68,30 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.Size = new System.Drawing.Size(77, 12);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Show output:";
+            this.label1.Text = Local.LocalString("output.show");
             // 
             // ClearButton
             // 
             this.ClearButton.Location = new System.Drawing.Point(206, 3);
             this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(42, 21);
+            this.ClearButton.Size = new System.Drawing.Size(62, 19);
             this.ClearButton.TabIndex = 3;
-            this.ClearButton.Text = "Clear";
+            this.ClearButton.Text = Local.LocalString("clear");
             this.ClearButton.UseVisualStyleBackColor = true;
             this.ClearButton.Click += new System.EventHandler(this.ClearButtonClicked);
             // 
             // OutputMessagePanel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.OutputBox);
             this.Controls.Add(this.OutputType);
             this.Name = "OutputMessagePanel";
-            this.Size = new System.Drawing.Size(712, 229);
+            this.Size = new System.Drawing.Size(712, 211);
             this.ResumeLayout(false);
             this.PerformLayout();
 

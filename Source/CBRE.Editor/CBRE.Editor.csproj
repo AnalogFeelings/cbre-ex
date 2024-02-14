@@ -71,6 +71,9 @@
     <OutputPath>bin\x86\Release\</OutputPath>
     <Optimize>true</Optimize>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -913,6 +916,10 @@
       <Project>{614d4144-8920-4975-ac67-dbba5cb1eb43}</Project>
       <Name>CBRE.Graphics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CBRE.Localization\CBRE.Localization.csproj">
+      <Project>{68fa12f2-c380-4c51-a1f6-24840684090f}</Project>
+      <Name>CBRE.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CBRE.Providers\CBRE.Providers.csproj">
       <Project>{c7bd4ac8-1f8d-4520-af2d-d279c0601ab4}</Project>
       <Name>CBRE.Providers</Name>
@@ -939,5 +946,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <LargeAddressAware>true</LargeAddressAware>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>mkdir Localization
+copy /y $(ProjectDir)\..\CBRE.Localization\Localization\*.json $(TargetDir)\Localization\*.json</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -1,6 +1,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Operations;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace CBRE.Editor.Problems
                 .OfType<Solid>()
                 .Where(x => x.HasChildren))
             {
-                yield return new Problem(GetType(), map, new[] { solid }, Fix, "Solid has children", "A solid with children was found. A solid cannot have any contents. Fixing the issue will move the children outside of the solid's group.");
+                yield return new Problem(GetType(), map, new[] { solid }, Fix, Local.LocalString("document.solid_children"), Local.LocalString("document.solid_children.description"));
             }
         }
 

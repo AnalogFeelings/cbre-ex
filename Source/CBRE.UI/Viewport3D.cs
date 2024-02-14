@@ -1,8 +1,10 @@
 ﻿using CBRE.DataStructures.Geometric;
 using CBRE.Graphics;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System.ComponentModel;
 using Matrix = CBRE.Graphics.Helpers.Matrix;
 
 namespace CBRE.UI

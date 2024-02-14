@@ -3,6 +3,7 @@ using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Brushes.Controls;
 using CBRE.Extensions;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -26,22 +27,22 @@ namespace CBRE.Editor.Brushes
 
         public TorusBrush()
         {
-            _crossSides = new NumericControl(this) { LabelText = "Cross sec. sides" };
-            _crossRadius = new NumericControl(this) { LabelText = "Ring width", Minimum = 16, Maximum = 1024, Value = 32, Precision = 1 };
-            _crossStartAngle = new NumericControl(this) { LabelText = "Cross sec. start", Minimum = 0, Maximum = 359, Value = 0 };
-            _crossMakeHollow = new BooleanControl(this) { LabelText = "Make hollow", Checked = false };
-            _crossArc = new NumericControl(this) { LabelText = "Cross sec. arc", Minimum = 1, Maximum = 360, Value = 360, Enabled = false };
-            _crossWallWidth = new NumericControl(this) { LabelText = "Hollow wall width", Minimum = 1, Maximum = 1024, Value = 16, Precision = 1, Enabled = false };
-            _ringSides = new NumericControl(this) { LabelText = "Ring sides" };
-            _ringArc = new NumericControl(this) { LabelText = "Ring arc", Minimum = 1, Maximum = 1080, Value = 360 };
-            _ringStartAngle = new NumericControl(this) { LabelText = "Ring start", Minimum = 0, Maximum = 359, Value = 0 };
-            _rotationHeight = new NumericControl(this) { LabelText = "Rotation height", Minimum = -1024, Maximum = 1024, Value = 0, Precision = 1 };
+            _crossSides = new NumericControl(this) { LabelText = Local.LocalString("brush.cross_sides") };
+            _crossRadius = new NumericControl(this) { LabelText = Local.LocalString("brush.ring_width"), Minimum = 16, Maximum = 1024, Value = 32, Precision = 1 };
+            _crossStartAngle = new NumericControl(this) { LabelText = Local.LocalString("brush.cross_start"), Minimum = 0, Maximum = 359, Value = 0 };
+            _crossMakeHollow = new BooleanControl(this) { LabelText = Local.LocalString("brush.make_hollow"), Checked = false };
+            _crossArc = new NumericControl(this) { LabelText = Local.LocalString("brush.cross_arc"), Minimum = 1, Maximum = 360, Value = 360, Enabled = false };
+            _crossWallWidth = new NumericControl(this) { LabelText = Local.LocalString("brush.hollow_wall_width"), Minimum = 1, Maximum = 1024, Value = 16, Precision = 1, Enabled = false };
+            _ringSides = new NumericControl(this) { LabelText = Local.LocalString("brush.ring_sides") };
+            _ringArc = new NumericControl(this) { LabelText = Local.LocalString("brush.ring_arc"), Minimum = 1, Maximum = 1080, Value = 360 };
+            _ringStartAngle = new NumericControl(this) { LabelText = Local.LocalString("brush.ring_start"), Minimum = 0, Maximum = 359, Value = 0 };
+            _rotationHeight = new NumericControl(this) { LabelText = Local.LocalString("brush.rotation_height"), Minimum = -1024, Maximum = 1024, Value = 0, Precision = 1 };
             _crossMakeHollow.ValuesChanged += (s, b) => _crossWallWidth.Enabled = _crossArc.Enabled = _crossMakeHollow.GetValue();
         }
 
         public string Name
         {
-            get { return "Torus"; }
+            get { return Local.LocalString("brush.torus"); }
         }
 
         public bool CanRound { get { return true; } }
@@ -163,13 +164,15 @@ namespace CBRE.Editor.Brushes
                     for (int j = 0; j < crossSides; j++)
                     {
                         int nextj = j + 1;
-                        List<Coordinate[]> faces = new List<Coordinate[]>();
-                        faces.Add(new[] { outerPoints[j], outerPoints[nextj], nextOuterPoints[nextj], nextOuterPoints[j] }.Select(x => x + vertical).ToArray());
-                        faces.Add(new[] { nextInnerPoints[j], nextInnerPoints[nextj], innerPoints[nextj], innerPoints[j] }.Select(x => x + vertical).ToArray());
-                        faces.Add(new[] { innerPoints[nextj], nextInnerPoints[nextj], nextOuterPoints[nextj], outerPoints[nextj] }.Select(x => x + vertical).ToArray());
-                        faces.Add(new[] { outerPoints[j], nextOuterPoints[j], nextInnerPoints[j], innerPoints[j] }.Select(x => x + vertical).ToArray());
-                        faces.Add(new[] { innerPoints[j], innerPoints[nextj], outerPoints[nextj], outerPoints[j] }.Select(x => x + vertical).ToArray());
-                        faces.Add(new[] { nextOuterPoints[j], nextOuterPoints[nextj], nextInnerPoints[nextj], nextInnerPoints[j] }.Select(x => x + vertical).ToArray());
+                        List<Coordinate[]> faces = new List<Coordinate[]>
+                        {
+                            new[] { outerPoints[j], outerPoints[nextj], nextOuterPoints[nextj], nextOuterPoints[j] }.Select(x => x + vertical).ToArray(),
+                            new[] { nextInnerPoints[j], nextInnerPoints[nextj], innerPoints[nextj], innerPoints[j] }.Select(x => x + vertical).ToArray(),
+                            new[] { innerPoints[nextj], nextInnerPoints[nextj], nextOuterPoints[nextj], outerPoints[nextj] }.Select(x => x + vertical).ToArray(),
+                            new[] { outerPoints[j], nextOuterPoints[j], nextInnerPoints[j], innerPoints[j] }.Select(x => x + vertical).ToArray(),
+                            new[] { innerPoints[j], innerPoints[nextj], outerPoints[nextj], outerPoints[j] }.Select(x => x + vertical).ToArray(),
+                            new[] { nextOuterPoints[j], nextOuterPoints[nextj], nextInnerPoints[nextj], nextInnerPoints[j] }.Select(x => x + vertical).ToArray()
+                        };
                         yield return MakeSolid(generator, faces, texture, colour);
                     }
                 }

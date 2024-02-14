@@ -38,7 +38,7 @@
             this.TextLabel.Dock = System.Windows.Forms.DockStyle.Left;
             this.TextLabel.Location = new System.Drawing.Point(0, 0);
             this.TextLabel.Name = "TextLabel";
-            this.TextLabel.Size = new System.Drawing.Size(28, 13);
+            this.TextLabel.Size = new System.Drawing.Size(29, 12);
             this.TextLabel.TabIndex = 0;
             this.TextLabel.Text = "Text";
             // 
@@ -53,19 +53,19 @@
             this.ArrowImage.Image = global::CBRE.Editor.Properties.Resources.Arrow_Up;
             this.ArrowImage.Location = new System.Drawing.Point(148, 0);
             this.ArrowImage.Name = "ArrowImage";
-            this.ArrowImage.Size = new System.Drawing.Size(16, 16);
+            this.ArrowImage.Size = new System.Drawing.Size(16, 15);
             this.ArrowImage.TabIndex = 2;
             this.ArrowImage.UseVisualStyleBackColor = true;
             this.ArrowImage.Click += new System.EventHandler(this.LabelClick);
             // 
             // CollapsingLabel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.ArrowImage);
             this.Controls.Add(this.TextLabel);
             this.Name = "CollapsingLabel";
-            this.Size = new System.Drawing.Size(164, 16);
+            this.Size = new System.Drawing.Size(164, 15);
             this.ResumeLayout(false);
             this.PerformLayout();
 

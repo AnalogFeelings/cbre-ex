@@ -99,6 +99,10 @@
       <Project>{614D4144-8920-4975-AC67-DBBA5CB1EB43}</Project>
       <Name>CBRE.Graphics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CBRE.Localization\CBRE.Localization.csproj">
+      <Project>{68FA12F2-C380-4C51-A1F6-24840684090F}</Project>
+      <Name>CBRE.Localization</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assimp32.dll">
@@ -108,6 +112,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Map\RMF22.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

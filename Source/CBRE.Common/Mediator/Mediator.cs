@@ -1,3 +1,4 @@
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +21,7 @@ namespace CBRE.Common.Mediator
             {
                 StackTrace st = new StackTrace();
                 StackFrame[] frames = st.GetFrames() ?? new StackFrame[0];
-                string msg = "Mediator exception: " + message + "(" + parameter + ")";
+                string msg = Local.LocalString("exception.mediator", message, parameter);
                 foreach (StackFrame frame in frames)
                 {
                     MethodBase method = frame.GetMethod();

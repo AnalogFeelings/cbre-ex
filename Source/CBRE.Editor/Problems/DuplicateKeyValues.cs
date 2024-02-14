@@ -1,6 +1,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Entities;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +21,7 @@ namespace CBRE.Editor.Problems
                                                                  select g;
                 if (dupes.Any())
                 {
-                    yield return new Problem(GetType(), map, new[] { entity }, Fix, "Entity has duplicate keys", "This entity has the same key specified multiple times. Entity keys should be unique. Fixing the problem will remove the duplicate key.");
+                    yield return new Problem(GetType(), map, new[] { entity }, Fix, Local.LocalString("document.duplicate_key"), Local.LocalString("document.duplicate_key.description"));
                 }
             }
         }

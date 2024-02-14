@@ -29,6 +29,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CBRE.Editor.Logging;
 using Path = System.IO.Path;
+using CBRE.Localization;
 
 namespace CBRE.Editor.Documents
 {
@@ -115,11 +116,7 @@ namespace CBRE.Editor.Documents
 
             if (allEntities.Any(x => x.GameData == null))
             {
-                MessageBox.Show("CBRE-EX has found some unknown entities in this map file.\n" +
-                                "They will not be exported, and they will appear as a small colored cube in the 3D viewport.\n" +
-                                "Please, ask the creator of this map for the appropriate JSON files for this map.", 
-                    "Warning!", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Local.LocalString("warning.document.unknown_entity"), Local.LocalString("warning.title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             HelperManager = new HelperManager(this);
@@ -202,7 +199,7 @@ namespace CBRE.Editor.Documents
                     string filter = String.Join("|", FileTypeRegistration.GetSupportedExtensions()
                         .Where(x => x.CanSave).Select(x => x.Description + " (*" + x.Extension + ")|*" + x.Extension));
                     string[] all = FileTypeRegistration.GetSupportedExtensions().Where(x => x.CanSave).Select(x => "*" + x.Extension).ToArray();
-                    sfd.Filter = "All supported formats (" + String.Join(", ", all) + ")|" + String.Join(";", all) + "|" + filter;
+                    sfd.Filter = Local.LocalString("filetype.all") + " (" + String.Join(", ", all) + ")|" + String.Join(";", all) + "|" + filter;
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         path = sfd.FileName;
@@ -352,13 +349,13 @@ namespace CBRE.Editor.Documents
             {
                 StackTrace st = new StackTrace();
                 StackFrame[] frames = st.GetFrames() ?? new StackFrame[0];
-                string msg = "Action exception: " + name + " (" + action + ")";
+                string msg = Local.LocalString("exception.document.action", name, action);
                 foreach (StackFrame frame in frames)
                 {
                     System.Reflection.MethodBase method = frame.GetMethod();
                     msg += "\r\n    " + method.ReflectedType.FullName + "." + method.Name;
                 }
-                Logging.Logger.ShowException(new Exception(msg, ex), "Error performing action");
+                Logger.ShowException(new Exception(msg, ex), Local.LocalString("error.document.perform_action"));
             }
 
             HistoryAction history = new HistoryAction(name, action);

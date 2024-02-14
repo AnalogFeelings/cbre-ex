@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -62,7 +63,7 @@ namespace CBRE.DataStructures.Geometric
 
         public MatrixF(params float[] values)
         {
-            if (values.Length != 16) throw new Exception("A MatrixF must be 16 values long.");
+            if (values.Length != 16) throw new Exception(Local.LocalString("exception.matrixf_16_values"));
             Values = values;
         }
 
@@ -141,7 +142,7 @@ namespace CBRE.DataStructures.Geometric
                 // check for singular MatrixF
                 if (Math.Abs(pivot - 0) < 0.0001)
                 {
-                    throw new InvalidOperationException("MatrixF is singular and cannot be inverted.");
+                    throw new InvalidOperationException(Local.LocalString("exception.matrixf_singular_cannot_inverted"));
                 }
 
                 // Scale row so it has a unit diagonal

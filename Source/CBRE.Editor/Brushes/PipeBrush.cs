@@ -3,6 +3,7 @@ using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Brushes.Controls;
 using CBRE.Extensions;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -16,13 +17,13 @@ namespace CBRE.Editor.Brushes
 
         public PipeBrush()
         {
-            _numSides = new NumericControl(this) { LabelText = "Number of sides" };
-            _wallWidth = new NumericControl(this) { LabelText = "Wall width", Minimum = 1, Maximum = 1024, Value = 32, Precision = 1 };
+            _numSides = new NumericControl(this) { LabelText = Local.LocalString("brush.sides") };
+            _wallWidth = new NumericControl(this) { LabelText = Local.LocalString("brush.width"), Minimum = 1, Maximum = 1024, Value = 32, Precision = 1 };
         }
 
         public string Name
         {
-            get { return "Pipe"; }
+            get { return Local.LocalString("brush.pipe"); }
         }
 
         public bool CanRound { get { return true; } }

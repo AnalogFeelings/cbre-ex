@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CBRE.Localization;
 using Microsoft.VisualBasic.Devices;
 using Microsoft.Win32;
 
@@ -73,11 +74,11 @@ namespace CBRE.Editor.Logging
                             if (version.Build >= 22000) os = $"Windows 11";
                             else os = $"Windows 10";
                             break;
-                        default: os = "Unknown"; break;
+                        default: os = Local.LocalString("info.os.unknown"); break;
                     }
                     break;
                 default:
-                    os = "Unknown";
+                    os = Local.LocalString("info.os.unknown");
                     break;
             }
             os += $" (NT {version.Major}.{version.Minor}, Build {version.Build})";
@@ -104,8 +105,8 @@ namespace CBRE.Editor.Logging
             }
             catch (Exception)
             {
-                ProcessorName = "Unknown Processor";
-                AvailableMemory = "Unknown";
+                ProcessorName = Local.LocalString("info.processor.unknown");
+                AvailableMemory = Local.LocalString("info.avail_memory.unknown");
             }
 
             List<Exception> list = new List<Exception>();

@@ -24,6 +24,7 @@ http://stackoverflow.com/questions/616718/how-do-i-get-common-file-type-icons-in
 http://stackoverflow.com/questions/1599235/how-do-i-fetch-the-folder-icon-on-windows-7-using-shell32-shgetfileinfo
 */
 
+using CBRE.Localization;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace CBRE.Editor.UI.FileSystem
         public class IconNotFoundException : Exception
         {
             public IconNotFoundException(string fileName, int index, Exception innerException)
-                : base(string.Format("Icon with Id = {0} wasn't found in file {1}", index, fileName), innerException)
+                : base(Local.LocalString("exception.icon_not_found", index, fileName), innerException)
             {
             }
         }
@@ -49,7 +50,7 @@ namespace CBRE.Editor.UI.FileSystem
         public class UnableToExtractIconsException : Exception
         {
             public UnableToExtractIconsException(string fileName, int firstIconIndex, int iconCount)
-                : base(string.Format("Tryed to extract {2} icons starting from the one with id {1} from the \"{0}\" file but failed", fileName, firstIconIndex, iconCount))
+                : base(Local.LocalString("exception.icon_extract_failed", fileName, firstIconIndex, iconCount))
             {
             }
         }
@@ -430,7 +431,7 @@ namespace CBRE.Editor.UI.FileSystem
         public static Icon IconFromExtensionUsingRegistry(string extension, SystemIconSize size)
         {
             if (extension == null) throw new ArgumentNullException("extension");
-            if (extension.Length == 0 || extension == ".") throw new ArgumentException("Empty extension", "extension");
+            if (extension.Length == 0 || extension == ".") throw new ArgumentException(Local.LocalString("exception.empty_extension"), "extension");
 
             if (extension[0] != '.') extension = '.' + extension;
 
@@ -443,7 +444,7 @@ namespace CBRE.Editor.UI.FileSystem
         public static Icon IconFromExtension(string extension, SystemIconSize size)
         {
             if (extension == null) throw new ArgumentNullException("extension");
-            if (extension.Length == 0 || extension == ".") throw new ArgumentException("Empty extension", "extension");
+            if (extension.Length == 0 || extension == ".") throw new ArgumentException(Local.LocalString("exception.empty_extension"), "extension");
 
             if (extension[0] != '.') extension = '.' + extension;
 
@@ -489,7 +490,7 @@ namespace CBRE.Editor.UI.FileSystem
             string regString, out string fileName, out int index)
         {
             if (regString == null) throw new ArgumentNullException("regString");
-            if (regString.Length == 0) throw new ArgumentException("Empty regString", "regString");
+            if (regString.Length == 0) throw new ArgumentException(Local.LocalString("exception.empty_regstring"), "regString");
 
             index = 0;
             string[] strArr = regString.Replace("\"", "").Split(',');

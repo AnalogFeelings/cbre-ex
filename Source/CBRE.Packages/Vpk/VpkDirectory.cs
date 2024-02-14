@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace CBRE.Packages.Vpk
 
             string nameWithoutExt = Path.GetFileNameWithoutExtension(packageFile.Name);
             string ext = Path.GetExtension(packageFile.Name);
-            if (!nameWithoutExt.EndsWith(DirString)) throw new PackageException("This is not a valid VPK directory file.");
+            if (!nameWithoutExt.EndsWith(DirString)) throw new PackageException(Local.LocalString("exception.invalid_vpk"));
 
             string baseName = nameWithoutExt.Substring(0, nameWithoutExt.Length - DirString.Length);
 
@@ -50,7 +51,7 @@ namespace CBRE.Packages.Vpk
             using (BinaryReader br = new BinaryReader(OpenFile(packageFile)))
             {
                 uint sig = br.ReadUInt32();
-                if (sig != Signature) throw new PackageException("Unknown package signature: Expected 0x" + Signature.ToString("x8") + ", got 0x" + sig.ToString("x8") + ".");
+                if (sig != Signature) throw new PackageException(Local.LocalString("exception.unknown_package_signature.hex", Signature.ToString("x8"), sig.ToString("x8")));
 
                 Version = br.ReadUInt32();
                 TreeLength = br.ReadUInt32();
@@ -67,7 +68,7 @@ namespace CBRE.Packages.Vpk
                         br.ReadInt32(); // Unknown4
                         break;
                     default:
-                        throw new PackageException("Unknown version number: Expected 1 or 2, got " + Version + ".");
+                        throw new PackageException(Local.LocalString("exception.unknown_version", Version));
                 }
 
                 // Read all the entries from the vpk
@@ -108,7 +109,7 @@ namespace CBRE.Packages.Vpk
             uint entryOffset = br.ReadUInt32(); // If archive directory, relative to END of directory structure
             uint entryLength = br.ReadUInt32(); // If 0, preload data contains the entire file
             ushort terminator = br.ReadUInt16();
-            if (terminator != VpkEntry.EntryTerminator) throw new PackageException("Invalid terminator. Expected " + VpkEntry.EntryTerminator.ToString("x8") + ", got " + terminator.ToString("x8") + ".");
+            if (terminator != VpkEntry.EntryTerminator) throw new PackageException(Local.LocalString("exception.invalid_terminator", VpkEntry.EntryTerminator.ToString("x8"), terminator.ToString("x8")));
 
             byte[] preloadData = br.ReadBytes(preloadBytes);
             return new VpkEntry(this, path.ToLowerInvariant(), crc, preloadData, archiveIndex, entryOffset, entryLength);
@@ -136,7 +137,7 @@ namespace CBRE.Packages.Vpk
         public Stream OpenStream(IPackageEntry entry)
         {
             VpkEntry pe = entry as VpkEntry;
-            if (pe == null) throw new ArgumentException("This package is only compatible with VpkEntry objects.");
+            if (pe == null) throw new ArgumentException(Local.LocalString("exception.only_compatible_vpkentry"));
             return new BufferedStream(new VpkEntryStream(pe, this));
         }
 

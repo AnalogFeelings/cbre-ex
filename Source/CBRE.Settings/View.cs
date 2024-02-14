@@ -5,15 +5,10 @@ namespace CBRE.Settings
 {
     public enum AntiAliasingOption
     {
-        [Description("No anti-aliasing")]
         None = 0,
-        [Description("2 samples")]
         TwoSamples = 2,
-        [Description("4 samples")]
         FourSamples = 4,
-        [Description("8 samples")]
         EightSamples = 8,
-        [Description("16 samples")]
         SixteenSamples = 16
     }
     

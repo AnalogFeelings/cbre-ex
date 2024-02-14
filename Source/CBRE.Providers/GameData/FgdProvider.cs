@@ -1,4 +1,5 @@
 ﻿using CBRE.DataStructures.GameData;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +24,7 @@ namespace CBRE.Providers.GameData
 
         protected override DataStructures.GameData.GameData GetFromFile(string filename)
         {
-            if (!File.Exists(filename)) throw new ProviderException("File does not exist: " + filename);
+            if (!File.Exists(filename)) throw new ProviderException(Local.LocalString("exception.file_not_exist", filename));
             CurrentFile = filename;
             DataStructures.GameData.GameData parsed = base.GetFromFile(filename);
             CurrentFile = null;
@@ -80,7 +81,7 @@ namespace CBRE.Providers.GameData
                 }
                 else
                 {
-                    throw new ProviderException("Unable to include a file when not reading from a file.");
+                    throw new ProviderException(Local.LocalString("exception.unable_include_when_not_reading"));
                 }
             }
             else if (type.Equals("mapsize", StringComparison.OrdinalIgnoreCase))
@@ -99,7 +100,7 @@ namespace CBRE.Providers.GameData
                 iterator.MoveNext();
                 while (iterator.Current.Type != LexType.CloseBracket)
                 {
-                    Assert(iterator.Current, iterator.Current.IsValueOrString(), "Expected value type, got " + iterator.Current.Type + ".");
+                    Assert(iterator.Current, iterator.Current.IsValueOrString(), Local.LocalString("exception.expected_value_type", iterator.Current.Type));
                     string exclusion = iterator.Current.GetValue();
                     gd.MaterialExclusions.Add(exclusion);
                     iterator.MoveNext();
@@ -110,7 +111,7 @@ namespace CBRE.Providers.GameData
                 Expect(iterator, LexType.Equals);
 
                 iterator.MoveNext();
-                Assert(iterator.Current, iterator.Current.IsValueOrString(), "Expected value type, got " + iterator.Current.Type + ".");
+                Assert(iterator.Current, iterator.Current.IsValueOrString(), Local.LocalString("exception.expected_value_type", iterator.Current.Type));
                 string sectionName = iterator.Current.GetValue();
                 AutoVisgroupSection sect = new AutoVisgroupSection { Name = sectionName };
 
@@ -118,7 +119,7 @@ namespace CBRE.Providers.GameData
                 iterator.MoveNext();
                 while (iterator.Current.Type != LexType.CloseBracket)
                 {
-                    Assert(iterator.Current, iterator.Current.IsValueOrString(), "Expected value type, got " + iterator.Current.Type + ".");
+                    Assert(iterator.Current, iterator.Current.IsValueOrString(), Local.LocalString("exception.expected_value_type", iterator.Current.Type));
                     string groupName = iterator.Current.GetValue();
                     AutoVisgroup grp = new AutoVisgroup { Name = groupName };
 
@@ -126,7 +127,7 @@ namespace CBRE.Providers.GameData
                     iterator.MoveNext();
                     while (iterator.Current.Type != LexType.CloseBracket)
                     {
-                        Assert(iterator.Current, iterator.Current.IsValueOrString(), "Expected value type, got " + iterator.Current.Type + ".");
+                        Assert(iterator.Current, iterator.Current.IsValueOrString(), Local.LocalString("exception.expected_value_type", iterator.Current.Type));
                         string entity = iterator.Current.GetValue();
                         grp.EntityNames.Add(entity);
                         iterator.MoveNext();
@@ -157,7 +158,7 @@ namespace CBRE.Providers.GameData
                         // @PointClass {halfgridsnap} base(Targetname)
                         continue;
                     }
-                    Assert(iterator.Current, iterator.Current.Type == LexType.OpenParen, "Unexpected " + iterator.Current.Type);
+                    Assert(iterator.Current, iterator.Current.Type == LexType.OpenParen, Local.LocalString("exception.unexpected", iterator.Current.Type));
                     iterator.MoveNext();
                     while (iterator.Current.Type != LexType.CloseParen)
                     {
@@ -166,14 +167,14 @@ namespace CBRE.Providers.GameData
                         if (iterator.Current.Type != LexType.Comma)
                         {
                             Assert(iterator.Current, iterator.Current.Type == LexType.Value || iterator.Current.Type == LexType.String,
-                                "Unexpected " + iterator.Current.Type + ".");
+                                Local.LocalString("exception.unexpected", iterator.Current.Type));
                             string value = iterator.Current.Value;
                             if (iterator.Current.Type == LexType.String) value = value.Trim('"');
                             bh.Values.Add(value);
                         }
                         iterator.MoveNext();
                     }
-                    Assert(iterator.Current, iterator.Current.Type == LexType.CloseParen, "Unexpected " + iterator.Current.Type);
+                    Assert(iterator.Current, iterator.Current.Type == LexType.CloseParen, Local.LocalString("exception.unexpected", iterator.Current.Type));
                     // Treat base behaviour as a special case
                     if (bh.Name == "base")
                     {
@@ -186,7 +187,7 @@ namespace CBRE.Providers.GameData
                     iterator.MoveNext();
                 }
                 // = class_name : "Descr" + "iption" [
-                Assert(iterator.Current, iterator.Current.Type == LexType.Equals, "Expected equals, got " + iterator.Current.Type);
+                Assert(iterator.Current, iterator.Current.Type == LexType.Equals, Local.LocalString("exception.expected_equals", iterator.Current.Type));
                 Expect(iterator, LexType.Value);
                 gdo.Name = iterator.Current.Value;
                 iterator.MoveNext();
@@ -197,7 +198,7 @@ namespace CBRE.Providers.GameData
                     iterator.MoveNext();
                     gdo.Description = ParsePlusString(iterator);
                 }
-                Assert(iterator.Current, iterator.Current.Type == LexType.OpenBracket, "Unexpected " + iterator.Current.Type);
+                Assert(iterator.Current, iterator.Current.Type == LexType.OpenBracket, Local.LocalString("exception.unexpected", iterator.Current.Type));
 
                 // Parsing:
                 // name(type) : "Desc" : "Default" : "Long Desc" = [ ... ]
@@ -206,7 +207,7 @@ namespace CBRE.Providers.GameData
                 iterator.MoveNext();
                 while (iterator.Current.Type != LexType.CloseBracket)
                 {
-                    Assert(iterator.Current, iterator.Current.Type == LexType.Value, "Unexpected " + iterator.Current.Type);
+                    Assert(iterator.Current, iterator.Current.Type == LexType.Value, Local.LocalString("exception.unexpected", iterator.Current.Type));
                     string pt = iterator.Current.Value;
                     if (pt == "input" || pt == "output") // IO
                     {
@@ -271,7 +272,7 @@ namespace CBRE.Providers.GameData
                                 }
                                 else
                                 {
-                                    Assert(iterator.Current, iterator.Current.Type == LexType.Value, "Unexpected " + iterator.Current.Type);
+                                    Assert(iterator.Current, iterator.Current.Type == LexType.Value, Local.LocalString("exception.unexpected", iterator.Current.Type));
                                     prop.DefaultValue = iterator.Current.Value;
                                 }
                                 iterator.MoveNext();
@@ -299,7 +300,7 @@ namespace CBRE.Providers.GameData
 
                                 // Some FGDs use values for property descriptions instead of strings
                                 iterator.MoveNext();
-                                Assert(iterator.Current, iterator.Current.IsValueOrString(), "Choices value must be value or string type.");
+                                Assert(iterator.Current, iterator.Current.IsValueOrString(), Local.LocalString("exception.must_be_value_string"));
                                 if (iterator.Current.Type == LexType.String)
                                 {
                                     opt.Description = ParsePlusString(iterator);
@@ -320,13 +321,13 @@ namespace CBRE.Providers.GameData
                                 opt.On = iterator.Current.Value == "1";
                                 iterator.MoveNext();
                             }
-                            Assert(iterator.Current, iterator.Current.Type == LexType.CloseBracket, "Unexpected " + iterator.Current.Type);
+                            Assert(iterator.Current, iterator.Current.Type == LexType.CloseBracket, Local.LocalString("exception.unexpected", iterator.Current.Type));
                             iterator.MoveNext();
                         }
                         gdo.Properties.Add(prop);
                     }
                 }
-                Assert(iterator.Current, iterator.Current.Type == LexType.CloseBracket, "Unexpected " + iterator.Current.Type);
+                Assert(iterator.Current, iterator.Current.Type == LexType.CloseBracket, Local.LocalString("exception.unexpected", iterator.Current.Type));
                 gd.Classes.Add(gdo);
             }
         }
@@ -345,7 +346,7 @@ namespace CBRE.Providers.GameData
                 if (iterator.Current.Type != LexType.Plus)
                 {
                     if (plustime) break;
-                    Assert(iterator.Current, iterator.Current.Type == LexType.String, "Unexpected " + iterator.Current.Type);
+                    Assert(iterator.Current, iterator.Current.Type == LexType.String, Local.LocalString("exception.unexpected", iterator.Current.Type));
                     result += iterator.Current.Value.Trim('"');
                 }
                 else
@@ -366,8 +367,7 @@ namespace CBRE.Providers.GameData
             {
                 return ct;
             }
-            throw new ProviderException("Unable to parse FGD. Invalid class type: " + type + ".\n" +
-                                        "On line " + obj.LineNumber + ", character " + obj.CharacterNumber);
+            throw new ProviderException(Local.LocalString("exception.unable_parse_fgd_class", type, obj.LineNumber, obj.CharacterNumber));
         }
 
         private static VariableType ParseVariableType(LexObject obj)
@@ -378,8 +378,7 @@ namespace CBRE.Providers.GameData
             {
                 return vt;
             }
-            throw new ProviderException("Unable to parse FGD. Invalid variable type: " + type + ".\n" +
-                                        "On line " + obj.LineNumber + ", character " + obj.CharacterNumber);
+            throw new ProviderException(Local.LocalString("exception.unable_parse_fgd_variable", type, obj.LineNumber, obj.CharacterNumber));
         }
 
         private static void Expect(IEnumerator<LexObject> iterator, LexType lexType)
@@ -387,8 +386,7 @@ namespace CBRE.Providers.GameData
             iterator.MoveNext();
             if (iterator.Current.Type != lexType)
             {
-                throw new ProviderException("Unable to parse FGD. Expected " + lexType + ", got " + iterator.Current.Type + ".\n" +
-                                            "On line " + iterator.Current.LineNumber + ", character " + iterator.Current.CharacterNumber);
+                throw new ProviderException(Local.LocalString("exception.unable_parse_fgd_lex", lexType, iterator.Current.Type, iterator.Current.LineNumber, iterator.Current.CharacterNumber));
             }
         }
 
@@ -396,8 +394,7 @@ namespace CBRE.Providers.GameData
         {
             if (!value)
             {
-                throw new ProviderException("Unable to parse FGD. " + error.Trim() + "\n" +
-                                            "On line " + obj.LineNumber + ", character " + obj.CharacterNumber);
+                throw new ProviderException(Local.LocalString("exception.unable_parse_fgd", error.Trim(), obj.LineNumber, obj.CharacterNumber));
             }
         }
 

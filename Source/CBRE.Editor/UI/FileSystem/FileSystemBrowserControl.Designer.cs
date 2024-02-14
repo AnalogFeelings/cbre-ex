@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.FileSystem
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.FileSystem
 {
     partial class FileSystemBrowserControl
     {
@@ -47,9 +49,10 @@
             this.FileList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.FileList.Location = new System.Drawing.Point(3, 34);
+            this.FileList.HideSelection = false;
+            this.FileList.Location = new System.Drawing.Point(3, 31);
             this.FileList.Name = "FileList";
-            this.FileList.Size = new System.Drawing.Size(467, 339);
+            this.FileList.Size = new System.Drawing.Size(467, 313);
             this.FileList.SmallImageList = this.FileImages;
             this.FileList.TabIndex = 0;
             this.FileList.UseCompatibleStateImageBehavior = false;
@@ -68,28 +71,28 @@
             this.LocationTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LocationTextbox.Enabled = false;
-            this.LocationTextbox.Location = new System.Drawing.Point(57, 8);
+            this.LocationTextbox.Location = new System.Drawing.Point(57, 7);
             this.LocationTextbox.Name = "LocationTextbox";
-            this.LocationTextbox.Size = new System.Drawing.Size(372, 20);
+            this.LocationTextbox.Size = new System.Drawing.Size(372, 21);
             this.LocationTextbox.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 11);
+            this.label1.Location = new System.Drawing.Point(3, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 13);
+            this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Location";
+            this.label1.Text = Local.LocalString("browser.location");
             // 
             // UpButton
             // 
             this.UpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpButton.Location = new System.Drawing.Point(435, 8);
+            this.UpButton.Location = new System.Drawing.Point(435, 7);
             this.UpButton.Name = "UpButton";
-            this.UpButton.Size = new System.Drawing.Size(35, 20);
+            this.UpButton.Size = new System.Drawing.Size(35, 18);
             this.UpButton.TabIndex = 3;
-            this.UpButton.Text = "Up";
+            this.UpButton.Text = Local.LocalString("browser.up");
             this.UpButton.UseVisualStyleBackColor = true;
             this.UpButton.Click += new System.EventHandler(this.UpButtonClicked);
             // 
@@ -98,40 +101,40 @@
             this.SelectionTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SelectionTextbox.Enabled = false;
-            this.SelectionTextbox.Location = new System.Drawing.Point(57, 379);
+            this.SelectionTextbox.Location = new System.Drawing.Point(57, 350);
             this.SelectionTextbox.Name = "SelectionTextbox";
-            this.SelectionTextbox.Size = new System.Drawing.Size(413, 20);
+            this.SelectionTextbox.Size = new System.Drawing.Size(413, 21);
             this.SelectionTextbox.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(2, 382);
+            this.label2.Location = new System.Drawing.Point(2, 353);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 13);
+            this.label2.Size = new System.Drawing.Size(53, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Selected";
+            this.label2.Text = Local.LocalString("browser.selected");
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(395, 405);
+            this.button1.Location = new System.Drawing.Point(395, 374);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 21);
             this.button1.TabIndex = 4;
-            this.button1.Text = "OK";
+            this.button1.Text = Local.LocalString("ok");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OkButtonClicked);
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(314, 405);
+            this.button2.Location = new System.Drawing.Point(314, 374);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(75, 21);
             this.button2.TabIndex = 4;
-            this.button2.Text = "Cancel";
+            this.button2.Text = Local.LocalString("cancel");
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.CancelButtonClicked);
             // 
@@ -139,25 +142,25 @@
             // 
             this.FilterLabelStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.FilterLabelStart.AutoSize = true;
-            this.FilterLabelStart.Location = new System.Drawing.Point(3, 410);
+            this.FilterLabelStart.Location = new System.Drawing.Point(3, 378);
             this.FilterLabelStart.Name = "FilterLabelStart";
-            this.FilterLabelStart.Size = new System.Drawing.Size(51, 13);
+            this.FilterLabelStart.Size = new System.Drawing.Size(77, 12);
             this.FilterLabelStart.TabIndex = 5;
-            this.FilterLabelStart.Text = "File Filter:";
+            this.FilterLabelStart.Text = Local.LocalString("browser.filter");
             // 
             // FilterLabel
             // 
             this.FilterLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.FilterLabel.AutoSize = true;
-            this.FilterLabel.Location = new System.Drawing.Point(60, 410);
+            this.FilterLabel.Location = new System.Drawing.Point(81, 378);
             this.FilterLabel.Name = "FilterLabel";
-            this.FilterLabel.Size = new System.Drawing.Size(37, 13);
+            this.FilterLabel.Size = new System.Drawing.Size(41, 12);
             this.FilterLabel.TabIndex = 5;
-            this.FilterLabel.Text = "(none)";
+            this.FilterLabel.Text = Local.LocalString("filetype.none");
             // 
             // FileSystemBrowserControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.FilterLabel);
             this.Controls.Add(this.FilterLabelStart);
@@ -170,7 +173,7 @@
             this.Controls.Add(this.LocationTextbox);
             this.Controls.Add(this.FileList);
             this.Name = "FileSystemBrowserControl";
-            this.Size = new System.Drawing.Size(473, 434);
+            this.Size = new System.Drawing.Size(473, 401);
             this.ResumeLayout(false);
             this.PerformLayout();
 

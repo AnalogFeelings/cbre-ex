@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
     partial class UpdaterForm
     {
@@ -56,8 +58,6 @@
             this.headerLabel.Name = "headerLabel";
             this.headerLabel.Size = new System.Drawing.Size(387, 32);
             this.headerLabel.TabIndex = 1;
-            this.headerLabel.Text = "Version (version) of CBRE-EX is available.\r\nWould you like to download and instal" +
-    "l it?";
             this.headerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // noButton
@@ -68,7 +68,7 @@
             this.noButton.Name = "noButton";
             this.noButton.Size = new System.Drawing.Size(75, 23);
             this.noButton.TabIndex = 1;
-            this.noButton.Text = "No";
+            this.noButton.Text = Local.LocalString("no");
             this.noButton.UseVisualStyleBackColor = true;
             this.noButton.Click += new System.EventHandler(this.noButton_Click);
             // 
@@ -80,7 +80,7 @@
             this.yesButton.Name = "yesButton";
             this.yesButton.Size = new System.Drawing.Size(75, 23);
             this.yesButton.TabIndex = 0;
-            this.yesButton.Text = "Yes";
+            this.yesButton.Text = Local.LocalString("yes");
             this.yesButton.UseVisualStyleBackColor = true;
             this.yesButton.Click += new System.EventHandler(this.yesButton_Click);
             // 
@@ -102,7 +102,7 @@
             this.groupBox1.Size = new System.Drawing.Size(425, 215);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Changelog";
+            this.groupBox1.Text = Local.LocalString("updater.changelog");
             // 
             // changelogBox
             // 
@@ -122,7 +122,7 @@
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(377, 22);
             this.statusLabel.TabIndex = 7;
-            this.statusLabel.Text = "Status: Idle";
+            this.statusLabel.Text = Local.LocalString("updater.status.idle");
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // UpdaterForm
@@ -143,7 +143,7 @@
             this.MinimizeBox = false;
             this.Name = "UpdaterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "CBRE-EX Update Checker";
+            this.Text = Local.LocalString("updater");
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.systemBitmap)).EndInit();
             this.groupBox1.ResumeLayout(false);

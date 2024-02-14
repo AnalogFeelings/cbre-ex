@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CBRE.Common.Extensions;
+using CBRE.Localization;
 using CBRE.UI.Native;
 
 namespace CBRE.Editor.UI
@@ -36,7 +37,7 @@ namespace CBRE.Editor.UI
 
 			systemBitmap.Image = Icon.FromHandle(StockIconInfo.hIcon).ToBitmap();
 
-			headerLabel.Text = headerLabel.Text.Replace("(version)", VersionString);
+			headerLabel.Text = Local.LocalString("updater.header", VersionString);
 
 			changelogBox.Text = Description.Trim();
 		}
@@ -63,7 +64,7 @@ namespace CBRE.Editor.UI
 					
 					string DownloadedChecksum = await Client.GetStringAsync(ChecksumAsset.DownloadUrl);
 
-					if (string.IsNullOrWhiteSpace(DownloadedChecksum)) throw new Exception("The checksum file was empty.");
+					if (string.IsNullOrWhiteSpace(DownloadedChecksum)) throw new Exception(Local.LocalString("exception.checksum_empty"));
 
 					Progress<float> fileProgress = new Progress<float>();
 
@@ -72,7 +73,7 @@ namespace CBRE.Editor.UI
 						int roundedProgress = (int)Math.Round(progress);
 
 						downloadProgress.Value = roundedProgress;
-						statusLabel.Text = $"Status: Downloading {roundedProgress}%";
+						statusLabel.Text = Local.LocalString("updater.status.downloading", roundedProgress);
 					};
 
 					using (FileStream fileStream = File.Create(PackageAsset.Filename))
@@ -80,7 +81,7 @@ namespace CBRE.Editor.UI
 						await Client.DownloadDataAsync(PackageAsset.DownloadUrl, fileStream, fileProgress);
 					}
 
-					statusLabel.Text = "Status: Verifying...";
+					statusLabel.Text = Local.LocalString("updater.status.verifying");
 
 					using (SHA256 Hasher = SHA256.Create())
 					{
@@ -91,7 +92,7 @@ namespace CBRE.Editor.UI
 							byte[] Sha256Hash = Hasher.ComputeHash(Stream);
 							ConvertedChecksum = BitConverter.ToString(Sha256Hash).Replace("-", "").ToLowerInvariant();
 
-							if (DownloadedChecksum != ConvertedChecksum) throw new Exception("Verification failed. Update package is most probably corrupted.");
+							if (DownloadedChecksum != ConvertedChecksum) throw new Exception(Local.LocalString("exception.update_package_corrupted"));
 						}
 					}
 
@@ -113,10 +114,9 @@ namespace CBRE.Editor.UI
 				this.noButton.Enabled = true;
 				this.yesButton.Enabled = true;
 				this.downloadProgress.Value = 0;
-				statusLabel.Text = "Status: Idle";
+				statusLabel.Text = Local.LocalString("updater.status.idle");
 
-				MessageBox.Show("An error has ocurred while downloading and verifying the update package:\n\n" +
-							   $"{ex.Message}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(Local.LocalString("error.package", ex.Message), Local.LocalString("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 				if (File.Exists(PackageAsset.Filename)) File.Delete(PackageAsset.Filename);
 				if (File.Exists(ChecksumAsset.Filename)) File.Delete(ChecksumAsset.Filename);

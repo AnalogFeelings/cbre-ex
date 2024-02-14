@@ -1,7 +1,9 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -26,7 +28,7 @@ namespace CBRE.Packages.Pak
             using (BinaryReader br = new BinaryReader(OpenFile(packageFile)))
             {
                 string sig = br.ReadFixedLengthString(Encoding.ASCII, 4);
-                if (sig != Signature) throw new PackageException("Unknown package signature: Expected '" + Signature + "', got '" + sig + "'.");
+                if (sig != Signature) throw new PackageException(Local.LocalString("exception.unknown_package_signature", Signature, sig));
 
                 TreeOffset = br.ReadInt32();
                 TreeLength = br.ReadInt32();
@@ -77,7 +79,7 @@ namespace CBRE.Packages.Pak
         public Stream OpenStream(IPackageEntry entry)
         {
             PakEntry pe = entry as PakEntry;
-            if (pe == null) throw new ArgumentException("This package is only compatible with PakEntry objects.");
+            if (pe == null) throw new ArgumentException(Local.LocalString("exception.only_compatible_pakentry"));
             return new BufferedStream(new SubStream(OpenFile(PackageFile), pe.Offset, pe.Length) { CloseParentOnDispose = true });
         }
 

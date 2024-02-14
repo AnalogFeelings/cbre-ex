@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
 	partial class AngleControl
     {
@@ -40,15 +42,15 @@
             this.lblAngle.Name = "lblAngle";
             this.lblAngle.Size = new System.Drawing.Size(40, 20);
             this.lblAngle.TabIndex = 0;
-            this.lblAngle.Text = "Angle";
+            this.lblAngle.Text = Local.LocalString("object_properties.angle");
             this.lblAngle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // cmbAngles
             // 
             this.cmbAngles.FormattingEnabled = true;
             this.cmbAngles.Items.AddRange(new object[] {
-            "Up",
-            "Down"});
+            Local.LocalString("object_properties.angle.up"),
+            Local.LocalString("object_properties.angle.down")});
             this.cmbAngles.Location = new System.Drawing.Point(3, 20);
             this.cmbAngles.Name = "cmbAngles";
             this.cmbAngles.Size = new System.Drawing.Size(58, 21);
@@ -62,7 +64,7 @@
             this.lblAngles.Name = "lblAngles";
             this.lblAngles.Size = new System.Drawing.Size(45, 16);
             this.lblAngles.TabIndex = 6;
-            this.lblAngles.Text = "Angles:";
+            this.lblAngles.Text = Local.LocalString("object_properties.angle");
             this.lblAngles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // AngleControl

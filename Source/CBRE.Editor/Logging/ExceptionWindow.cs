@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CBRE.Common.Mediator;
+using CBRE.Localization;
 using CBRE.UI.Native;
 
 namespace CBRE.Editor.Logging
@@ -17,14 +18,14 @@ namespace CBRE.Editor.Logging
         {
             ExceptionInfo = info;
             
-            LogText = "CBRE-EX has encountered an error it couldn't recover from. Details are found below.\n" +
+            LogText = Local.LocalString("error.cant_recover") + "\n" +
                       "-----------------------------------------------------------------------------------\n" +
-                      $"System Processor: {info.ProcessorName}\n" +
-                      $"Available Memory: {info.AvailableMemory}\n" +
-                      $"Operating System: {info.OperatingSystem}\n" +
-                      $".NET Version: {info.RuntimeVersion}\n" +
-                      $"CBRE-EX Version: {info.ApplicationVersion}\n" +
-                      "-----------------------------------ERROR MESSAGE-----------------------------------\n" +
+                      Local.LocalString("info.processor", $"System Processor: {info.ProcessorName}\n") +
+                      Local.LocalString("info.avail_memory", $"{info.AvailableMemory}\n") +
+                      Local.LocalString("info.os", $"{info.OperatingSystem}\n") +
+                      Local.LocalString("info.dotnet", $"{info.RuntimeVersion}\n") +
+                      Local.LocalString("info.version", $"{info.ApplicationVersion}\n") +
+                      "-----------------------------------" + Local.LocalString("error.message") + "-----------------------------------\n" +
                       info.FullStackTrace;
             
             InitializeComponent();
@@ -50,11 +51,11 @@ namespace CBRE.Editor.Logging
                 {
                     sw.Write(LogText);
                 }
-                HeaderLabel.Text += $"Information has been written to \"Logs\\Exceptions\\{fn}.txt\".";
+                HeaderLabel.Text += Local.LocalString("log.Information_written_to", $"\"Logs\\Exceptions\\{fn}.txt\"");
             }
             catch (Exception e)
             {
-                HeaderLabel.Text += $"Couldn't write error log: {e.Message}.";
+                HeaderLabel.Text += Local.LocalString("log.could_not_write_errorlog", e.Message);
             }
 
             FullError.SelectionLength = 0;

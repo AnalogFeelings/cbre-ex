@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
     partial class TextureBrowser
     {
@@ -94,7 +96,7 @@
 	        this.SortDescendingCheckbox.Name = "SortDescendingCheckbox";
 	        this.SortDescendingCheckbox.Size = new System.Drawing.Size(111, 19);
 	        this.SortDescendingCheckbox.TabIndex = 10;
-	        this.SortDescendingCheckbox.Text = "Sort descending";
+	        this.SortDescendingCheckbox.Text = Local.LocalString("texture_browser.sort_descending");
 	        this.SortDescendingCheckbox.UseVisualStyleBackColor = true;
 	        this.SortDescendingCheckbox.CheckedChanged += new System.EventHandler(this.SortDescendingCheckboxChanged);
 	        // 
@@ -119,7 +121,7 @@
 	        this.label3.Name = "label3";
 	        this.label3.Size = new System.Drawing.Size(44, 15);
 	        this.label3.TabIndex = 8;
-	        this.label3.Text = "Sort By";
+	        this.label3.Text = Local.LocalString("texture_browser.sort_by");
 	        // 
 	        // SizeCombo
 	        // 
@@ -141,7 +143,7 @@
 	        this.TextureSizeLabel.Name = "TextureSizeLabel";
 	        this.TextureSizeLabel.Size = new System.Drawing.Size(27, 15);
 	        this.TextureSizeLabel.TabIndex = 6;
-	        this.TextureSizeLabel.Text = "Size";
+	        this.TextureSizeLabel.Text = Local.LocalString("sidebar.size");
 	        this.TextureSizeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 	        // 
 	        // TextureNameLabel
@@ -152,7 +154,7 @@
 	        this.TextureNameLabel.Name = "TextureNameLabel";
 	        this.TextureNameLabel.Size = new System.Drawing.Size(39, 15);
 	        this.TextureNameLabel.TabIndex = 6;
-	        this.TextureNameLabel.Text = "Name";
+	        this.TextureNameLabel.Text = Local.LocalString("entity_report.name");
 	        this.TextureNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 	        // 
 	        // button2
@@ -163,7 +165,7 @@
 	        this.button2.Name = "button2";
 	        this.button2.Size = new System.Drawing.Size(75, 23);
 	        this.button2.TabIndex = 5;
-	        this.button2.Text = "Replace";
+	        this.button2.Text = Local.LocalString("replace");
 	        this.button2.UseVisualStyleBackColor = true;
 	        // 
 	        // SelectButton
@@ -174,7 +176,7 @@
 	        this.SelectButton.Name = "SelectButton";
 	        this.SelectButton.Size = new System.Drawing.Size(75, 23);
 	        this.SelectButton.TabIndex = 5;
-	        this.SelectButton.Text = "Select";
+	        this.SelectButton.Text = Local.LocalString("select");
 	        this.SelectButton.UseVisualStyleBackColor = true;
 	        this.SelectButton.Click += new System.EventHandler(this.SelectButtonClicked);
 	        // 
@@ -186,7 +188,7 @@
 	        this.UsedTexturesOnlyBox.Name = "UsedTexturesOnlyBox";
 	        this.UsedTexturesOnlyBox.Size = new System.Drawing.Size(123, 19);
 	        this.UsedTexturesOnlyBox.TabIndex = 4;
-	        this.UsedTexturesOnlyBox.Text = "Used textures only";
+	        this.UsedTexturesOnlyBox.Text = Local.LocalString("texture_browser.used_textures_only");
 	        this.UsedTexturesOnlyBox.UseVisualStyleBackColor = true;
 	        this.UsedTexturesOnlyBox.CheckedChanged += new System.EventHandler(this.UsedTexturesOnlyChanged);
 	        // 
@@ -198,7 +200,7 @@
 	        this.label2.Name = "label2";
 	        this.label2.Size = new System.Drawing.Size(27, 15);
 	        this.label2.TabIndex = 2;
-	        this.label2.Text = "Size";
+	        this.label2.Text = Local.LocalString("sidebar.size");
 	        // 
 	        // FilterTextbox
 	        // 
@@ -218,7 +220,7 @@
 	        this.label1.Name = "label1";
 	        this.label1.Size = new System.Drawing.Size(33, 15);
 	        this.label1.TabIndex = 0;
-	        this.label1.Text = "Filter";
+	        this.label1.Text = Local.LocalString("entity_report.filter");
 	        // 
 	        // FavouritesTree
 	        // 
@@ -259,7 +261,7 @@
 	        this.DeleteFavouriteFolderButton.Name = "DeleteFavouriteFolderButton";
 	        this.DeleteFavouriteFolderButton.Size = new System.Drawing.Size(103, 23);
 	        this.DeleteFavouriteFolderButton.TabIndex = 3;
-	        this.DeleteFavouriteFolderButton.Text = "Delete Folder";
+	        this.DeleteFavouriteFolderButton.Text = Local.LocalString("texture_browser.delete_folder");
 	        this.DeleteFavouriteFolderButton.UseVisualStyleBackColor = true;
 	        this.DeleteFavouriteFolderButton.Click += new System.EventHandler(this.DeleteFavouriteFolderButtonClicked);
 	        // 
@@ -272,7 +274,7 @@
 	        this.RemoveFavouriteItemButton.Name = "RemoveFavouriteItemButton";
 	        this.RemoveFavouriteItemButton.Size = new System.Drawing.Size(217, 23);
 	        this.RemoveFavouriteItemButton.TabIndex = 3;
-	        this.RemoveFavouriteItemButton.Text = "Remove Selection From Folder";
+	        this.RemoveFavouriteItemButton.Text = Local.LocalString("texture_browser.remove_selection");
 	        this.RemoveFavouriteItemButton.UseVisualStyleBackColor = true;
 	        this.RemoveFavouriteItemButton.Click += new System.EventHandler(this.RemoveFavouriteItemButtonClicked);
 	        // 
@@ -285,7 +287,7 @@
 	        this.AddFavouriteFolderButton.Name = "AddFavouriteFolderButton";
 	        this.AddFavouriteFolderButton.Size = new System.Drawing.Size(108, 23);
 	        this.AddFavouriteFolderButton.TabIndex = 3;
-	        this.AddFavouriteFolderButton.Text = "Add Folder";
+	        this.AddFavouriteFolderButton.Text = Local.LocalString("texture_browser.add_folder");
 	        this.AddFavouriteFolderButton.UseVisualStyleBackColor = true;
 	        this.AddFavouriteFolderButton.Click += new System.EventHandler(this.AddFavouriteFolderButtonClicked);
 	        // 
@@ -297,7 +299,7 @@
 	        this.label4.Name = "label4";
 	        this.label4.Size = new System.Drawing.Size(188, 15);
 	        this.label4.TabIndex = 2;
-	        this.label4.Text = "Favourite Textures (drag and drop)";
+	        this.label4.Text = Local.LocalString("texture_browser.favourite_textures");
 	        // 
 	        // TextureList
 	        // 
@@ -329,7 +331,7 @@
 	        this.MinimizeBox = false;
 	        this.MinimumSize = new System.Drawing.Size(960, 640);
 	        this.Name = "TextureBrowser";
-	        this.Text = "Texture Browser";
+	        this.Text = Local.LocalString("texture_browser");
 	        this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 	        this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextureBrowserKeyDown);
 	        this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextureBrowserKeyPress);

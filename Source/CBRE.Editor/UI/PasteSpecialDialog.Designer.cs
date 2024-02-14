@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
     partial class PasteSpecialDialog
     {
@@ -88,7 +90,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(147, 15);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Number of copies to paste";
+			this.label1.Text = Local.LocalString("paste_special.number");
 			// 
 			// NumCopies
 			// 
@@ -124,7 +126,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(220, 101);
 			this.groupBox1.TabIndex = 2;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Start Point";
+			this.groupBox1.Text = Local.LocalString("paste_special.start_point");
 			// 
 			// StartSelection
 			// 
@@ -133,7 +135,7 @@
 			this.StartSelection.Name = "StartSelection";
 			this.StartSelection.Size = new System.Drawing.Size(203, 19);
 			this.StartSelection.TabIndex = 0;
-			this.StartSelection.Text = "Start at center of current selection";
+			this.StartSelection.Text = Local.LocalString("paste_special.start_point.center_of_current");
 			this.StartSelection.UseVisualStyleBackColor = true;
 			// 
 			// StartOriginal
@@ -145,7 +147,7 @@
 			this.StartOriginal.Size = new System.Drawing.Size(155, 19);
 			this.StartOriginal.TabIndex = 0;
 			this.StartOriginal.TabStop = true;
-			this.StartOriginal.Text = "Start at center of original";
+			this.StartOriginal.Text = Local.LocalString("paste_special.start_point.center_of_original");
 			this.StartOriginal.UseVisualStyleBackColor = true;
 			// 
 			// StartOrigin
@@ -155,7 +157,7 @@
 			this.StartOrigin.Name = "StartOrigin";
 			this.StartOrigin.Size = new System.Drawing.Size(123, 19);
 			this.StartOrigin.TabIndex = 0;
-			this.StartOrigin.Text = "Start at map origin";
+			this.StartOrigin.Text = Local.LocalString("paste_special.start_point.map_origin");
 			this.StartOrigin.UseVisualStyleBackColor = true;
 			// 
 			// groupBox2
@@ -169,7 +171,7 @@
 			this.groupBox2.Size = new System.Drawing.Size(215, 101);
 			this.groupBox2.TabIndex = 3;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Grouping";
+			this.groupBox2.Text = Local.LocalString("paste_special.grouping");
 			// 
 			// GroupAll
 			// 
@@ -178,7 +180,7 @@
 			this.GroupAll.Name = "GroupAll";
 			this.GroupAll.Size = new System.Drawing.Size(110, 19);
 			this.GroupAll.TabIndex = 0;
-			this.GroupAll.Text = "Group all copies";
+			this.GroupAll.Text = Local.LocalString("paste_special.grouping.all");
 			this.GroupAll.UseVisualStyleBackColor = true;
 			// 
 			// GroupIndividual
@@ -190,7 +192,7 @@
 			this.GroupIndividual.Size = new System.Drawing.Size(150, 19);
 			this.GroupIndividual.TabIndex = 0;
 			this.GroupIndividual.TabStop = true;
-			this.GroupIndividual.Text = "Group individual copies";
+			this.GroupIndividual.Text = Local.LocalString("paste_special.grouping.individual");
 			this.GroupIndividual.UseVisualStyleBackColor = true;
 			// 
 			// GroupNone
@@ -200,7 +202,7 @@
 			this.GroupNone.Name = "GroupNone";
 			this.GroupNone.Size = new System.Drawing.Size(93, 19);
 			this.GroupNone.TabIndex = 0;
-			this.GroupNone.Text = "No grouping";
+			this.GroupNone.Text = Local.LocalString("paste_special.grouping.no");
 			this.GroupNone.UseVisualStyleBackColor = true;
 			// 
 			// groupBox3
@@ -223,7 +225,7 @@
 			this.groupBox3.Size = new System.Drawing.Size(220, 104);
 			this.groupBox3.TabIndex = 4;
 			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Offset (accumulative)";
+			this.groupBox3.Text = Local.LocalString("paste_special.offset");
 			// 
 			// OffsetY
 			// 
@@ -286,7 +288,7 @@
 			this.SourceOffsetZButton.Name = "SourceOffsetZButton";
 			this.SourceOffsetZButton.Size = new System.Drawing.Size(70, 23);
 			this.SourceOffsetZButton.TabIndex = 13;
-			this.SourceOffsetZButton.Text = "Source";
+			this.SourceOffsetZButton.Text = Local.LocalString("object_properties.source");
 			this.SourceOffsetZButton.UseVisualStyleBackColor = true;
 			// 
 			// ZeroOffsetZButton
@@ -306,7 +308,7 @@
 			this.SourceOffsetYButton.Name = "SourceOffsetYButton";
 			this.SourceOffsetYButton.Size = new System.Drawing.Size(70, 23);
 			this.SourceOffsetYButton.TabIndex = 13;
-			this.SourceOffsetYButton.Text = "Source";
+			this.SourceOffsetYButton.Text = Local.LocalString("object_properties.source");
 			this.SourceOffsetYButton.UseVisualStyleBackColor = true;
 			// 
 			// ZeroOffsetYButton
@@ -326,7 +328,7 @@
 			this.SourceOffsetXButton.Name = "SourceOffsetXButton";
 			this.SourceOffsetXButton.Size = new System.Drawing.Size(70, 23);
 			this.SourceOffsetXButton.TabIndex = 13;
-			this.SourceOffsetXButton.Text = "Source";
+			this.SourceOffsetXButton.Text = Local.LocalString("object_properties.source");
 			this.SourceOffsetXButton.UseVisualStyleBackColor = true;
 			// 
 			// ZeroOffsetXButton
@@ -374,7 +376,7 @@
 			this.UniqueEntityNames.Name = "UniqueEntityNames";
 			this.UniqueEntityNames.Size = new System.Drawing.Size(166, 19);
 			this.UniqueEntityNames.TabIndex = 15;
-			this.UniqueEntityNames.Text = "Make entity names unique";
+			this.UniqueEntityNames.Text = Local.LocalString("paste_special.unique_name");
 			this.UniqueEntityNames.UseVisualStyleBackColor = true;
 			// 
 			// PrefixEntityNamesCheckbox
@@ -385,7 +387,7 @@
 			this.PrefixEntityNamesCheckbox.Name = "PrefixEntityNamesCheckbox";
 			this.PrefixEntityNamesCheckbox.Size = new System.Drawing.Size(166, 19);
 			this.PrefixEntityNamesCheckbox.TabIndex = 15;
-			this.PrefixEntityNamesCheckbox.Text = "Prefix named entities with:";
+			this.PrefixEntityNamesCheckbox.Text = Local.LocalString("paste_special.prefix");
 			this.PrefixEntityNamesCheckbox.UseVisualStyleBackColor = true;
 			// 
 			// EntityPrefix
@@ -405,7 +407,7 @@
 			this.OkButton.Name = "OkButton";
 			this.OkButton.Size = new System.Drawing.Size(75, 23);
 			this.OkButton.TabIndex = 16;
-			this.OkButton.Text = "OK";
+			this.OkButton.Text = Local.LocalString("ok");
 			this.OkButton.UseVisualStyleBackColor = true;
 			this.OkButton.Click += new System.EventHandler(this.OkButtonClicked);
 			// 
@@ -418,7 +420,7 @@
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 16;
-			this.cancelButton.Text = "Cancel";
+			this.cancelButton.Text = Local.LocalString("cancel");
 			this.cancelButton.UseVisualStyleBackColor = true;
 			// 
 			// groupBox4
@@ -438,7 +440,7 @@
 			this.groupBox4.Size = new System.Drawing.Size(215, 104);
 			this.groupBox4.TabIndex = 15;
 			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = "Rotation (accumulative)";
+			this.groupBox4.Text = Local.LocalString("paste_special.rotation");
 			// 
 			// RotationY
 			// 
@@ -573,7 +575,7 @@
 			this.MinimizeBox = false;
 			this.Name = "PasteSpecialDialog";
 			this.ShowInTaskbar = false;
-			this.Text = "Paste Special";
+			this.Text = Local.LocalString("paste_special");
 			((System.ComponentModel.ISupportInitialize)(this.NumCopies)).EndInit();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();

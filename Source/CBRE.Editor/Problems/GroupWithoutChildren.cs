@@ -1,6 +1,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Operations;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace CBRE.Editor.Problems
                 .OfType<Group>()
                 .Where(x => !x.GetChildren().Any()))
             {
-                yield return new Problem(GetType(), map, new[] { @group }, Fix, "Group has no children", "This group is empty. A group must have contents. Fixing the problem will delete the group.");
+                yield return new Problem(GetType(), map, new[] { @group }, Fix, Local.LocalString("document.empty_group"), Local.LocalString("document.empty_group.description"));
             }
         }
 

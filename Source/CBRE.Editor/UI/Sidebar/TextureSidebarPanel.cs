@@ -1,5 +1,6 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.Editor.Documents;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using CBRE.Settings;
 using System;
@@ -71,7 +72,7 @@ namespace CBRE.Editor.UI.Sidebar
             // Textures
             int index = GroupComboBox.SelectedIndex;
             GroupComboBox.Items.Clear();
-            GroupComboBox.Items.Add("All Textures");
+            GroupComboBox.Items.Add(Local.LocalString("category.texture.all"));
             HashSet<string> takenNames = new HashSet<string>();
             foreach (TexturePackage package in doc.TextureCollection.Packages)
             {

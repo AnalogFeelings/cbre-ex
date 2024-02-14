@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -203,7 +204,7 @@ namespace CBRE.Editor.UI.Layout
 
             WindowDropDown.Items.Clear();
             WindowDropDown.Items.AddRange(_configurations
-                .Select(x => x.WindowID == 0 ? "Main Window" : "Window " + x.WindowID)
+                .Select(x => x.WindowID == 0 ? Local.LocalString("layout.window.main") : Local.LocalString("layout.window", x.WindowID))
                 .OfType<object>().ToArray());
             WindowDropDown.SelectedIndex = 0;
         }

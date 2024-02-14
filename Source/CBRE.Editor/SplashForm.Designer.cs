@@ -1,4 +1,7 @@
-﻿namespace CBRE.Editor
+﻿using CBRE.Localization;
+using System.Reflection;
+
+namespace CBRE.Editor
 {
 	partial class SplashForm
 	{
@@ -116,8 +119,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(322, 111);
 			this.label2.TabIndex = 2;
-			this.label2.Text = "Containment Breach Room Editor - Extended\r\n\"omgggg it doesnt have model baking it" +
-    " sucks as much as the original cbre :(((((\"";
+			this.label2.Text = Local.LocalString("info.editor.title");
 			this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// pictureBox1
@@ -138,7 +140,7 @@
 			this.BottomPanelLabel.Name = "BottomPanelLabel";
 			this.BottomPanelLabel.Size = new System.Drawing.Size(176, 15);
 			this.BottomPanelLabel.TabIndex = 0;
-			this.BottomPanelLabel.Text = "Loading CBRE-EX Version (ver)...";
+			this.BottomPanelLabel.Text = Local.LocalString("info.editor.loading", Assembly.GetAssembly(typeof(Editor)).GetName().Version.ToString(2));
 			// 
 			// SplashForm
 			// 

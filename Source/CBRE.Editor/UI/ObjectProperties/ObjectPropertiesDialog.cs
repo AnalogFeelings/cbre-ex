@@ -5,6 +5,7 @@ using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Entities;
 using CBRE.Editor.Actions.Visgroups;
 using CBRE.Editor.UI.ObjectProperties.SmartEdit;
+using CBRE.Localization;
 using CBRE.QuickForms;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace CBRE.Editor.UI.ObjectProperties
                 if (editAction != null)
                 {
                     // The entity change is more important to show
-                    actionText = "Edit entity data";
+                    actionText = Local.LocalString("object_properties.action.edit_data");
                     ac.Add(editAction);
                 }
             }
@@ -102,7 +103,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             if (visgroupAction != null)
             {
                 // Visgroup change shows if entity data not changed
-                if (actionText == null) actionText = "Edit object visgroups";
+                if (actionText == null) actionText = Local.LocalString("object_properties.action.edit_visgroups");
                 ac.Add(visgroupAction);
             }
 
@@ -356,7 +357,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             string cls = classes.Count > 1 ? "" : classes[0];
             if (classes.Count > 1)
             {
-                Class.Text = @"<multiple types> - " + String.Join(", ", classes);
+                Class.Text = Local.LocalString("object_properties.multiple_types", String.Join(", ", classes));
                 SmartEditButton.Checked = SmartEditButton.Enabled = false;
             }
             else
@@ -610,7 +611,7 @@ namespace CBRE.Editor.UI.ObjectProperties
         {
             if (_changingClass) return;
 
-            using (QuickForm qf = new QuickForm("Add Property") { UseShortcutKeys = true }.TextBox("Key").TextBox("Value").OkCancel())
+            using (QuickForm qf = new QuickForm(Local.LocalString("object_properties.add_property")) { UseShortcutKeys = true }.TextBox("Key").TextBox("Value").OkCancel())
             {
                 if (qf.ShowDialog(this) != DialogResult.OK) return;
 

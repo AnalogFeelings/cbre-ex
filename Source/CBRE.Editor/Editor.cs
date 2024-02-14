@@ -10,6 +10,7 @@ using CBRE.Editor.Tools;
 using CBRE.Editor.UI;
 using CBRE.Editor.UI.Sidebar;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using CBRE.Providers;
 using CBRE.Providers.Map;
 using CBRE.Providers.Model;
@@ -80,7 +81,7 @@ namespace CBRE.Editor
 				Map map = MapProvider.GetMapFromFile(fileName, Directories.ModelDirs, out lightmaps);
 				if (MapProvider.warnings != "")
 				{
-					MessageBox.Show(MapProvider.warnings, "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(MapProvider.warnings, Local.LocalString("warning.title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				}
 				Document doc = new Document(fileName, map, game);
 				DocumentManager.AddAndSwitch(doc);
@@ -106,7 +107,7 @@ namespace CBRE.Editor
 			}
 			catch (ProviderException e)
 			{
-				Error.Warning("The map file could not be opened:\n" + e.Message);
+				Error.Warning(Local.LocalString("error.editor.file_cannot_open") + "\n" + e.Message);
 			}
 		}
 
@@ -174,7 +175,7 @@ namespace CBRE.Editor
 
 			Subscribe();
 
-			Mediator.MediatorException += (mthd, ex) => Logging.Logger.ShowException(ex.Exception, "Mediator Error: " + ex.Message);
+			Mediator.MediatorException += (mthd, ex) => Logging.Logger.ShowException(ex.Exception, Local.LocalString("exception.mediator_2", ex.Message));
 
 			if (!Directories.TextureDirs.Any())
 			{
@@ -193,9 +194,9 @@ namespace CBRE.Editor
 
 			ViewportManager.RefreshClearColour(DocumentTabs.TabPages.Count == 0);
 
-			if (CBRE.Settings.General.CheckUpdatesOnStartup) CheckForUpdates(true);
+			if (General.CheckUpdatesOnStartup) CheckForUpdates(true);
 			
-			ToggleDiscord(CBRE.Settings.General.EnableDiscordPresence);
+			ToggleDiscord(General.EnableDiscordPresence);
 		}
 
 		public void ToggleDiscord(bool Enabled)
@@ -253,8 +254,7 @@ namespace CBRE.Editor
 						//Missing required files? The update must have changed the structure!
 						if (PackageAsset == default(ReleaseAsset) || ChecksumAsset == default(ReleaseAsset))
 						{
-							DialogResult Result = MessageBox.Show("There is a new update available, but the required files are missing. This may mean that you need to update CBRE-EX manually.\n\n" +
-																  "Do you want to open the latest GitHub release?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+							DialogResult Result = MessageBox.Show(Local.LocalString("warning.editor.update_manually"), Local.LocalString("warning.title"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
 							if (Result == DialogResult.Yes) Process.Start(GIT_LATEST_RELEASE_URL);
 
@@ -269,8 +269,7 @@ namespace CBRE.Editor
 						//Kinda ugly maybe?
 						if (!notFromMenu)
 						{
-							MessageBox.Show("There are no updates available.", "Information", MessageBoxButtons.OK,
-								MessageBoxIcon.Information);
+							MessageBox.Show(Local.LocalString("info.updater.no_update"), Local.LocalString("info.title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 						}
 					}
 				}
@@ -286,8 +285,7 @@ namespace CBRE.Editor
 		{
 			if (doc.History.TotalActionsSinceLastSave > 0)
 			{
-				DialogResult result = MessageBox.Show("Would you like to save your changes to " + doc.MapFileName + "?", "Changes Detected",
-					MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+				DialogResult result = MessageBox.Show(Local.LocalString("document.save_change_2", doc.MapFileName), Local.LocalString("document.changes_detected"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
 				if (result == DialogResult.Cancel)
 				{
 					return false;
@@ -428,7 +426,7 @@ namespace CBRE.Editor
 				string filter = String.Join("|", FileTypeRegistration.GetSupportedExtensions().Where(x => x.CanLoad)
 						.Select(x => x.Description + " (*" + x.Extension + ")|*" + x.Extension));
 				string[] all = FileTypeRegistration.GetSupportedExtensions().Where(x => x.CanLoad).Select(x => "*" + x.Extension).ToArray();
-				ofd.Filter = "All supported formats (" + String.Join(", ", all) + ")|" + String.Join(";", all) + "|" + filter;
+				ofd.Filter = Local.LocalString("filetype.all") + " (" + String.Join(", ", all) + ")|" + String.Join(";", all) + "|" + filter;
 
 				if (ofd.ShowDialog() != DialogResult.OK) return;
 				LoadFile(ofd.FileName);
@@ -487,7 +485,7 @@ namespace CBRE.Editor
 			ViewportManager.RefreshClearColour(Instance.DocumentTabs.TabPages.Count == 0);
 			TextureHelper.EnableTransparency = !CBRE.Settings.View.GloballyDisableTransparency;
 			
-			Editor.Instance.ToggleDiscord(CBRE.Settings.General.EnableDiscordPresence);
+			Instance.ToggleDiscord(General.EnableDiscordPresence);
 		}
 
 		private void Exit()
@@ -548,7 +546,7 @@ namespace CBRE.Editor
 				DocumentManager.SwitchTo(DocumentManager.Documents[si]);
 				if (DocumentManager.Documents[si].History.TotalActionsSinceLastSave > 0)
 				{
-					this.Text += " *UNSAVED CHANGES*";
+					this.Text += " " + Local.LocalString("document.unsaved_changes");
 				}
 			}
 		}
@@ -591,7 +589,7 @@ namespace CBRE.Editor
 			if (DocumentManager.CurrentDocument != null)
 			{
 				Document doc = DocumentManager.CurrentDocument;
-				Text = $"{titleStart} - {(String.IsNullOrWhiteSpace(doc.MapFile) ? "Untitled" : System.IO.Path.GetFileName(doc.MapFile))}";
+				Text = $"{titleStart} - {(String.IsNullOrWhiteSpace(doc.MapFile) ? Local.LocalString("document.untitled_2") : System.IO.Path.GetFileName(doc.MapFile))}";
 			}
 			else
 			{
@@ -639,7 +637,7 @@ namespace CBRE.Editor
 			int count = sel.Count;
 			if (count == 0)
 			{
-				StatusSelectionLabel.Text = "No Objects Selected";
+				StatusSelectionLabel.Text = Local.LocalString("info.editor.no_objects_selected");
 			}
 			else if (count == 1)
 			{
@@ -657,13 +655,13 @@ namespace CBRE.Editor
 			}
 			else
 			{
-				StatusSelectionLabel.Text = count.ToString() + " Objects Selected";
+				StatusSelectionLabel.Text = Local.LocalString("info.editor.objects_selected", count);
 			}
 		}
 
 		private void ViewZoomChanged(decimal zoom)
 		{
-			StatusZoomLabel.Text = "Zoom: " + zoom.ToString("0.00");
+			StatusZoomLabel.Text = Local.LocalString("info.editor.zoom", zoom.ToString("0.00"));
 		}
 
 		private void ViewFocused()
@@ -679,7 +677,7 @@ namespace CBRE.Editor
 
 		private void DocumentGridSpacingChanged(decimal spacing)
 		{
-			StatusSnapLabel.Text = "Grid: " + spacing.ToString("0.##");
+			StatusSnapLabel.Text = Local.LocalString("info.editor.grid", spacing.ToString("0.##"));
 		}
 
 		public void ToolSelected()
@@ -751,15 +749,15 @@ namespace CBRE.Editor
 			Screen screen = Screen.FromControl(this);
 			Rectangle area = screen.Bounds;
 
-			using (QuickForm qf = new QuickForm("Select Screenshot Size") { UseShortcutKeys = true }
-				.NumericUpDown("Width", 640, 5000, 0, area.Width)
-				.NumericUpDown("Height", 480, 5000, 0, area.Height)
-				.CheckBox("Copy to Clipboard", false)
+			using (QuickForm qf = new QuickForm(Local.LocalString("info.editor.screenshot_size")) { UseShortcutKeys = true }
+				.NumericUpDown(Local.LocalString("info.editor.screenshot_size.width"), 640, 5000, 0, area.Width)
+				.NumericUpDown(Local.LocalString("info.editor.screenshot_size.height"), 480, 5000, 0, area.Height)
+				.CheckBox(Local.LocalString("info.editor.screenshot_size.copy"), false)
 				.OkCancel())
 			{
 				if (qf.ShowDialog() != DialogResult.OK) return;
 
-				Image shot = ViewportManager.CreateScreenshot(focused, (int)qf.Decimal("Width"), (int)qf.Decimal("Height"));
+				Image shot = ViewportManager.CreateScreenshot(focused, (int)qf.Decimal(Local.LocalString("info.editor.screenshot_size.width")), (int)qf.Decimal(Local.LocalString("info.editor.screenshot_size.height")));
 				if (shot == null) return;
 
 				string ext = focused is Viewport2D || (focused is Viewport3D && ((Viewport3D)focused).Type != Viewport3D.ViewType.Textured) ? ".png" : ".jpg";
@@ -767,9 +765,9 @@ namespace CBRE.Editor
 				using (SaveFileDialog sfd = new SaveFileDialog())
 				{
 					sfd.FileName = $"{titleStart} - "
-								   + (DocumentManager.CurrentDocument != null ? DocumentManager.CurrentDocument.MapFileName : "untitled")
+								   + (DocumentManager.CurrentDocument != null ? DocumentManager.CurrentDocument.MapFileName : Local.LocalString("document.untitled_2"))
 								   + " - " + DateTime.Now.ToString("yyyy-MM-ddThh-mm-ss") + ext;
-					sfd.Filter = "Image Files (*.png, *.jpg, *.bmp)|*.png;*.jpg;*.bmp";
+					sfd.Filter = Local.LocalString("filetype.image") + " (*.png, *.jpg, *.bmp)|*.png;*.jpg;*.bmp";
 
 					if (sfd.ShowDialog() == DialogResult.OK)
 					{
@@ -792,7 +790,7 @@ namespace CBRE.Editor
 						{
 							shot.Save(sfd.FileName);
 						}
-						if (qf.Bool("Copy to Clipboard"))
+						if (qf.Bool(Local.LocalString("info.editor.screenshot_size.copy")))
 						{
 							System.Windows.Forms.Clipboard.SetFileDropList(new StringCollection { sfd.FileName });
 						}

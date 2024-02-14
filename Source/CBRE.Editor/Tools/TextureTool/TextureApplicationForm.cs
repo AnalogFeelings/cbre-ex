@@ -3,6 +3,7 @@ using CBRE.Common.Mediator;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Documents;
 using CBRE.Editor.UI;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using CBRE.Settings;
 using System;
@@ -286,14 +287,17 @@ namespace CBRE.Editor.Tools.TextureTool
 
         public TextureTool.SelectBehaviour GetLeftClickBehaviour(bool ctrl, bool shift, bool alt)
         {
-            switch (LeftClickCombo.SelectedItem.ToString())
+            if (LeftClickCombo.SelectedItem.ToString() == Local.LocalString("tool.texture.lift_select"))
             {
-                case "Lift and Select":
-                    return TextureTool.SelectBehaviour.LiftSelect;
-                case "Lift":
-                    return TextureTool.SelectBehaviour.Lift;
-                case "Select":
-                    return TextureTool.SelectBehaviour.Select;
+                return TextureTool.SelectBehaviour.LiftSelect;
+            }
+            else if (LeftClickCombo.SelectedItem.ToString() == Local.LocalString("tool.texture.lift"))
+            {
+                return TextureTool.SelectBehaviour.Lift;
+            }
+            else if (LeftClickCombo.SelectedItem.ToString() == Local.LocalString("tool.texture.select"))
+            {
+                return TextureTool.SelectBehaviour.Select;
             }
             TextureTool.SelectBehaviour b;
             if (Enum.TryParse(LeftClickCombo.SelectedItem.ToString(), true, out b))
@@ -305,14 +309,17 @@ namespace CBRE.Editor.Tools.TextureTool
 
         public TextureTool.SelectBehaviour GetRightClickBehaviour(bool ctrl, bool shift, bool alt)
         {
-            switch (RightClickCombo.SelectedItem.ToString())
+            if (RightClickCombo.SelectedItem.ToString() == Local.LocalString("tool.texture.apply_texture"))
             {
-                case "Apply Texture":
-                    return alt ? TextureTool.SelectBehaviour.ApplyWithValues : TextureTool.SelectBehaviour.Apply;
-                case "Apply Texture and Values":
-                    return TextureTool.SelectBehaviour.ApplyWithValues;
-                case "Align To View":
-                    return TextureTool.SelectBehaviour.AlignToView;
+                return alt ? TextureTool.SelectBehaviour.ApplyWithValues : TextureTool.SelectBehaviour.Apply;
+            }
+            else if (RightClickCombo.SelectedItem.ToString() == Local.LocalString("tool.texture.apply_texture_values"))
+            {
+                return TextureTool.SelectBehaviour.ApplyWithValues;
+            }
+            else if (RightClickCombo.SelectedItem.ToString() == Local.LocalString("tool.texture.align_to_view"))
+            {
+                return TextureTool.SelectBehaviour.AlignToView;
             }
             TextureTool.SelectBehaviour b;
             if (Enum.TryParse(RightClickCombo.SelectedItem.ToString(), true, out b))

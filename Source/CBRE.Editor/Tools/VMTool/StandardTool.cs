@@ -1,6 +1,7 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using System.Collections.Generic;
@@ -155,18 +156,12 @@ namespace CBRE.Editor.Tools.VMTool
 
         public override string GetName()
         {
-            return "Standard";
+            return Local.LocalString("tool.standard");
         }
 
         public override string GetContextualHelp()
         {
-            return
-@"*Click* a vertex to select all points under the cursor.
- - Hold *control* to select multiple points.
- - Hold *shift* to only select the topmost point.
-Drag vertices to move them around.
-
-Select two (non-adjacent) points on a face to enable splitting.";
+            return Local.LocalString("tool.standard.help");
         }
 
         public override void ToolSelected(bool preventHistory)
@@ -254,7 +249,7 @@ Select two (non-adjacent) points on a face to enable splitting.";
 
         private bool ConfirmMerge()
         {
-            return MessageBox.Show("Merge vertices?", "Overlapping vertices detected", MessageBoxButtons.YesNo) == DialogResult.Yes;
+            return MessageBox.Show(Local.LocalString("tool.merge_vertices"), Local.LocalString("tool.overlap_vertices_detected"), MessageBoxButtons.YesNo) == DialogResult.Yes;
         }
 
         private void CheckMergedVertices()

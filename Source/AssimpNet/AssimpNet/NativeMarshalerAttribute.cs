@@ -20,6 +20,7 @@
 * THE SOFTWARE.
 */
 
+using CBRE.Localization;
 using System;
 
 namespace Assimp
@@ -55,7 +56,7 @@ namespace Assimp
                 throw new NullReferenceException("type");
 
             if (!typeof(INativeCustomMarshaler).IsAssignableFrom(type))
-                throw new ArgumentException(String.Format("{0} does not implement INativeCustomMarshaler.", type.FullName));
+                throw new ArgumentException(Local.LocalString("exception.assimp.not_implement", type.FullName));
 
             m_marshaler = Activator.CreateInstance(type) as INativeCustomMarshaler;
         }

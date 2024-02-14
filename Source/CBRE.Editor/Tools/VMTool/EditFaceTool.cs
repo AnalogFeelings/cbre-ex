@@ -1,6 +1,7 @@
 ﻿using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.DataStructures.Transformations;
+using CBRE.Localization;
 using CBRE.UI;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,13 +103,12 @@ namespace CBRE.Editor.Tools.VMTool
 
         public override string GetName()
         {
-            return "Edit Face";
+            return Local.LocalString("tool.face");
         }
 
         public override string GetContextualHelp()
         {
-            return "*Click* a face in the 3D view to select it.\n" +
-                   "Hold *control* to select multiple faces.";
+            return Local.LocalString("tool.face.help");
         }
 
         public override void ToolSelected(bool preventHistory)

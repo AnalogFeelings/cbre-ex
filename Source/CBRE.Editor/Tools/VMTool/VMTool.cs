@@ -7,6 +7,7 @@ using CBRE.Editor.Properties;
 using CBRE.Editor.Rendering.Immediate;
 using CBRE.Graphics;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK;
@@ -162,7 +163,7 @@ namespace CBRE.Editor.Tools.VMTool
 
         public override string GetName()
         {
-            return "Vertex Manipulation Tool";
+            return Local.LocalString("tool.vertex_manipulation");
         }
 
         public override HotkeyTool? GetHotkeyToolType()
@@ -173,13 +174,13 @@ namespace CBRE.Editor.Tools.VMTool
         public override IEnumerable<KeyValuePair<string, Control>> GetSidebarControls()
         {
             yield return new KeyValuePair<string, Control>(GetName(), _controlPanel);
-            yield return new KeyValuePair<string, Control>("VM Errors", _errorPanel);
+            yield return new KeyValuePair<string, Control>(Local.LocalString("error.vm"), _errorPanel);
         }
 
         public override string GetContextualHelp()
         {
             if (_currentTool != null) return _currentTool.GetContextualHelp();
-            return "Select a VM mode for more information";
+            return Local.LocalString("tool.vertex_manipulation.help");
         }
 
         protected override Color BoxColour
@@ -208,11 +209,11 @@ namespace CBRE.Editor.Tools.VMTool
                 Solid s = kv.Key;
                 foreach (IGrouping<Plane, Face> g in s.GetCoplanarFaces().GroupBy(x => x.Plane))
                 {
-                    yield return new VMError("Coplanar faces", s, g);
+                    yield return new VMError(Local.LocalString("error.vm.coplanar_faces"), s, g);
                 }
                 foreach (Face f in s.GetBackwardsFaces(0.5m))
                 {
-                    yield return new VMError("Backwards face", s, new[] { f });
+                    yield return new VMError(Local.LocalString("error.vm.backwards_face"), s, new[] { f });
                 }
                 foreach (Face f in s.Faces)
                 {
@@ -220,17 +221,17 @@ namespace CBRE.Editor.Tools.VMTool
                     bool found = false;
                     if (np.Any())
                     {
-                        yield return new VMError("Nonplanar vertex", s, new[] { f }, np);
+                        yield return new VMError(Local.LocalString("error.vm.nonplanar_vertex"), s, new[] { f }, np);
                         found = true;
                     }
                     foreach (IGrouping<Coordinate, DataStructures.MapObjects.Vertex> g in f.Vertices.GroupBy(x => x.Location).Where(x => x.Count() > 1))
                     {
-                        yield return new VMError("Overlapping vertices", s, new[] { f }, g);
+                        yield return new VMError(Local.LocalString("error.vm.overlap_vertices"), s, new[] { f }, g);
                         found = true;
                     }
                     if (!f.IsConvex() && !found)
                     {
-                        yield return new VMError("Concave face", s, new[] { f });
+                        yield return new VMError(Local.LocalString("error.vm.concave_face"), s, new[] { f });
                     }
                 }
             }
@@ -319,7 +320,7 @@ namespace CBRE.Editor.Tools.VMTool
             {
                 // Commit the changes
                 ReplaceObjects edit = new ReplaceObjects(kvs.Select(x => x.Value), kvs.Select(x => x.Key));
-                Document.PerformAction("Vertex Manipulation", edit);
+                Document.PerformAction(Local.LocalString("tool.vm"), edit);
             }
         }
 
@@ -543,14 +544,14 @@ namespace CBRE.Editor.Tools.VMTool
                         // deselect solid
                         MapObject[] select = new MapObject[0];
                         Solid[] deselect = new[] { solid };
-                        Document.PerformAction("Deselect VM solid", new ChangeSelection(select, deselect));
+                        Document.PerformAction(Local.LocalString("tool.vm.deselect"), new ChangeSelection(select, deselect));
                     }
                     else if (!solid.IsSelected)
                     {
                         // select solid
                         Solid[] select = new[] { solid };
                         IEnumerable<MapObject> deselect = !KeyboardState.Ctrl ? Document.Selection.GetSelectedObjects() : new MapObject[0];
-                        Document.PerformAction("Select VM solid", new ChangeSelection(select, deselect));
+                        Document.PerformAction(Local.LocalString("tool.vm.select"), new ChangeSelection(select, deselect));
                     }
 
                     // Don't do other click operations
@@ -616,7 +617,7 @@ namespace CBRE.Editor.Tools.VMTool
                     // select solid
                     Solid[] select = new[] { solid };
                     IEnumerable<MapObject> deselect = !KeyboardState.Ctrl ? Document.Selection.GetSelectedObjects() : new MapObject[0];
-                    Document.PerformAction("Select VM solid", new ChangeSelection(select, deselect));
+                    Document.PerformAction(Local.LocalString("tool.vm.select"), new ChangeSelection(select, deselect));
 
                     // Don't do other click operations
                     return;
@@ -784,7 +785,7 @@ namespace CBRE.Editor.Tools.VMTool
             {
                 case HotkeysMediator.HistoryUndo:
                 case HotkeysMediator.HistoryRedo:
-                    MessageBox.Show("Please exit the VM tool to undo any changes.");
+                    MessageBox.Show(Local.LocalString("tool.vm.undo"));
                     return HotkeyInterceptResult.Abort;
                 case HotkeysMediator.OperationsPaste:
                 case HotkeysMediator.OperationsPasteSpecial:

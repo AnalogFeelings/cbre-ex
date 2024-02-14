@@ -1,5 +1,6 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.Editor.Documents;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using CBRE.QuickForms;
 using CBRE.Settings;
@@ -54,19 +55,19 @@ namespace CBRE.Editor.UI
             List<TextureItem> list = selection.ToList();
             if (!list.Any())
             {
-                TextureNameLabel.Text = "Name: None";
-                TextureSizeLabel.Text = "Size: None";
+                TextureNameLabel.Text = Local.LocalString("paste_special.name", Local.LocalString("filetype.none"));
+                TextureSizeLabel.Text = Local.LocalString("paste_special.size", Local.LocalString("filetype.none"));
             }
             else if (list.Count == 1)
             {
                 TextureItem t = list[0];
-                TextureNameLabel.Text = "Name: " + t.Name;
-                TextureSizeLabel.Text = "Size: " + t.Width + " x " + t.Height;
+                TextureNameLabel.Text = Local.LocalString("paste_special.name", t.Name);
+                TextureSizeLabel.Text = Local.LocalString("paste_special.size", t.Width + " x " + t.Height);
             }
             else
             {
-                TextureNameLabel.Text = list.Count + " textures selected.";
-                TextureSizeLabel.Text = "Size: Unable to display.";
+                TextureNameLabel.Text = Local.LocalString("paste_special.name.many", list.Count);
+                TextureSizeLabel.Text = Local.LocalString("paste_special.size", Local.LocalString("paste_special.size.unable_display"));
             }
         }
 
@@ -155,7 +156,7 @@ namespace CBRE.Editor.UI
             string selectedKey = selected == null ? GetMemory<string>("SelectedPackage") : selected.Name;
             IEnumerable<TexturePackage> packages = _textures.Select(x => x.Package).Distinct();
             PackageTree.Nodes.Clear();
-            TreeNode parent = PackageTree.Nodes.Add("", "All Packages");
+            TreeNode parent = PackageTree.Nodes.Add("", Local.LocalString("paste_special.all_packages"));
             TreeNode reselect = null;
             foreach (TexturePackage tp in packages.OrderBy(x => x.ToString()))
             {
@@ -172,7 +173,7 @@ namespace CBRE.Editor.UI
             string selectedKey = selected == null ? GetMemory<string>("SelectedFavourite") : selected.Name;
             List<FavouriteTextureFolder> favourites = SettingsManager.FavouriteTextureFolders;
             FavouritesTree.Nodes.Clear();
-            TreeNode parent = FavouritesTree.Nodes.Add("", "All Favourites");
+            TreeNode parent = FavouritesTree.Nodes.Add("", Local.LocalString("paste_special.all_packages"));
             TreeNode reselect;
             AddFavouriteTextureFolders(parent, favourites, selectedKey, out reselect);
             FavouritesTree.SelectedNode = reselect;
@@ -341,11 +342,11 @@ namespace CBRE.Editor.UI
             TreeNode selected = FavouritesTree.SelectedNode;
             if (selected != null) parent = selected.Tag as FavouriteTextureFolder;
             List<FavouriteTextureFolder> siblings = parent != null ? parent.Children : SettingsManager.FavouriteTextureFolders;
-            using (QuickForm qf = new QuickForm("Enter Folder Name") { UseShortcutKeys = true }.TextBox("Name").OkCancel())
+            using (QuickForm qf = new QuickForm(Local.LocalString("texture_browser.folder_name")) { UseShortcutKeys = true }.TextBox(Local.LocalString("entity_report.name")).OkCancel())
             {
                 if (qf.ShowDialog() != DialogResult.OK) return;
 
-                string name = qf.String("Name");
+                string name = qf.String(Local.LocalString("entity_report.name"));
                 string uniqName = name;
                 if (String.IsNullOrWhiteSpace(name)) return;
 
