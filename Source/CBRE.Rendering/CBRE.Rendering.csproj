@@ -188,10 +188,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ImGui.NET">
-      <Version>1.90.1.1</Version>
+      <Version>1.90.6.1</Version>
     </PackageReference>
     <PackageReference Include="System.Diagnostics.DiagnosticSource">
-      <Version>8.0.0</Version>
+      <Version>8.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Numerics.Vectors">
       <Version>4.5.0</Version>
