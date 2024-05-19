@@ -29,18 +29,11 @@ namespace CBRE.BspEditor.Environment.Controls
 
         public SettingKey Key { get; set; }
 
-        private Label _nameLabel;
-        private TextBox _nameBox;
-
         public EnvironmentCollectionEditor(IEnumerable<IEnvironmentFactory> factories)
         {
             _factories = factories.ToList();
             InitializeComponent();
-            Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
-
-            _nameLabel = new Label {Text = "Name", Padding = new Padding(0, 6, 0, 0), AutoSize = true};
-            _nameBox = new TextBox{Width = 250};
-            _nameBox.TextChanged += UpdateEnvironment;
+            base.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
 
             if (_factories.Any())
             {
@@ -62,7 +55,7 @@ namespace CBRE.BspEditor.Environment.Controls
             string prefix = GetType().FullName;
             btnAdd.Text = strings.GetString(prefix, "Add");
             btnRemove.Text = strings.GetString(prefix, "Remove");
-            _nameLabel.Text = strings.GetString(prefix, "Name");
+            nameLabel.Text = strings.GetString(prefix, "Name");
         }
 
         private void UpdateTreeNodes()
@@ -126,6 +119,7 @@ namespace CBRE.BspEditor.Environment.Controls
             ITranslationStringProvider translate = Common.Container.Get<ITranslationStringProvider>();
 
             _currentEditor = null;
+            nameBox.Text = string.Empty;
             pnlSettings.Controls.Clear();
 
             SerialisedEnvironment node = e?.Node?.Tag as SerialisedEnvironment;
@@ -134,23 +128,16 @@ namespace CBRE.BspEditor.Environment.Controls
                 IEnvironmentFactory factory = _factories.FirstOrDefault(x => x.TypeName == node.Type);
                 if (factory != null)
                 {
-                    FlowLayoutPanel fp = new FlowLayoutPanel
-                    {
-                        Height = 30,
-                        Width = 400,
-                        FlowDirection = FlowDirection.LeftToRight,
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
-                    };
-                    fp.Controls.Add(_nameLabel);
-                    fp.Controls.Add(_nameBox);
-                    pnlSettings.Controls.Add(fp);
-
-                    _nameBox.Text = node.Name;
+                    nameBox.Text = node.Name;
 
                     IEnvironment des = factory.Deserialise(node);
+
                     _currentEditor = factory.CreateEditor();
+                    _currentEditor.Control.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
                     translate.Translate(_currentEditor);
                     pnlSettings.Controls.Add(_currentEditor.Control);
+
                     _currentEditor.Environment = des;
                     _currentEditor.EnvironmentChanged += UpdateEnvironment;
                 }
@@ -162,12 +149,12 @@ namespace CBRE.BspEditor.Environment.Controls
             SerialisedEnvironment node = treEnvironments.SelectedNode?.Tag as SerialisedEnvironment;
             if (node != null && _currentEditor != null)
             {
-                treEnvironments.SelectedNode.Text = _nameBox.Text;
+                treEnvironments.SelectedNode.Text = nameBox.Text;
                 IEnvironmentFactory factory = _factories.FirstOrDefault(x => x.TypeName == node.Type);
                 if (factory != null)
                 {
                     SerialisedEnvironment ser = factory.Serialise(_currentEditor.Environment);
-                    node.Name = _nameBox.Text;
+                    node.Name = nameBox.Text;
                     node.Properties = ser.Properties;
                 }
                 OnValueChanged?.Invoke(this, Key);

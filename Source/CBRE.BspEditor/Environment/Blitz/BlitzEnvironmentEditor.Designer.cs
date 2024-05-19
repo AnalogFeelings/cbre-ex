@@ -36,6 +36,9 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.lblDefaultTextureScale = new System.Windows.Forms.Label();
             this.grpFgds = new System.Windows.Forms.GroupBox();
             this.grpDirectories = new System.Windows.Forms.GroupBox();
+            this.btnBrowseEntity = new System.Windows.Forms.Button();
+            this.txtEntityPath = new System.Windows.Forms.TextBox();
+            this.lblEntityPath = new System.Windows.Forms.Label();
             this.modelsGrid = new System.Windows.Forms.DataGridView();
             this.deleteButtonsModel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.modelDirs = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,9 +47,6 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.deleteButtons = new System.Windows.Forms.DataGridViewButtonColumn();
             this.textureDirs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.browseButtons = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.lblEntityPath = new System.Windows.Forms.Label();
-            this.txtEntityPath = new System.Windows.Forms.TextBox();
-            this.btnBrowseEntity = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDefaultTextureScale)).BeginInit();
             this.grpFgds.SuspendLayout();
             this.grpDirectories.SuspendLayout();
@@ -58,58 +58,64 @@ namespace CBRE.BspEditor.Environment.Blitz
             // 
             this.lblDefaultBrushEntity.Location = new System.Drawing.Point(5, 47);
             this.lblDefaultBrushEntity.Name = "lblDefaultBrushEntity";
-            this.lblDefaultBrushEntity.Size = new System.Drawing.Size(151, 20);
+            this.lblDefaultBrushEntity.Size = new System.Drawing.Size(154, 21);
             this.lblDefaultBrushEntity.TabIndex = 30;
             this.lblDefaultBrushEntity.Text = "Default Brush Entity";
             this.lblDefaultBrushEntity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblDefaultPointEntity
             // 
-            this.lblDefaultPointEntity.Location = new System.Drawing.Point(5, 19);
+            this.lblDefaultPointEntity.Location = new System.Drawing.Point(10, 20);
             this.lblDefaultPointEntity.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.lblDefaultPointEntity.Name = "lblDefaultPointEntity";
-            this.lblDefaultPointEntity.Size = new System.Drawing.Size(151, 20);
+            this.lblDefaultPointEntity.Size = new System.Drawing.Size(149, 21);
             this.lblDefaultPointEntity.TabIndex = 31;
             this.lblDefaultPointEntity.Text = "Default Point Entity";
             this.lblDefaultPointEntity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cmbDefaultBrushEntity
             // 
+            this.cmbDefaultBrushEntity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbDefaultBrushEntity.DropDownHeight = 300;
             this.cmbDefaultBrushEntity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDefaultBrushEntity.FormattingEnabled = true;
             this.cmbDefaultBrushEntity.IntegralHeight = false;
             this.cmbDefaultBrushEntity.Items.AddRange(new object[] {
             "Valve"});
-            this.cmbDefaultBrushEntity.Location = new System.Drawing.Point(162, 47);
+            this.cmbDefaultBrushEntity.Location = new System.Drawing.Point(165, 47);
             this.cmbDefaultBrushEntity.Name = "cmbDefaultBrushEntity";
-            this.cmbDefaultBrushEntity.Size = new System.Drawing.Size(199, 21);
+            this.cmbDefaultBrushEntity.Size = new System.Drawing.Size(295, 21);
             this.cmbDefaultBrushEntity.TabIndex = 32;
             // 
             // cmbDefaultPointEntity
             // 
+            this.cmbDefaultPointEntity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbDefaultPointEntity.DropDownHeight = 300;
             this.cmbDefaultPointEntity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDefaultPointEntity.FormattingEnabled = true;
             this.cmbDefaultPointEntity.IntegralHeight = false;
             this.cmbDefaultPointEntity.Items.AddRange(new object[] {
             "Valve"});
-            this.cmbDefaultPointEntity.Location = new System.Drawing.Point(162, 20);
+            this.cmbDefaultPointEntity.Location = new System.Drawing.Point(165, 20);
             this.cmbDefaultPointEntity.Name = "cmbDefaultPointEntity";
-            this.cmbDefaultPointEntity.Size = new System.Drawing.Size(199, 21);
+            this.cmbDefaultPointEntity.Size = new System.Drawing.Size(295, 21);
             this.cmbDefaultPointEntity.TabIndex = 33;
             // 
             // nudDefaultTextureScale
             // 
+            this.nudDefaultTextureScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.nudDefaultTextureScale.DecimalPlaces = 2;
             this.nudDefaultTextureScale.Increment = new decimal(new int[] {
             5,
             0,
             0,
             131072});
-            this.nudDefaultTextureScale.Location = new System.Drawing.Point(162, 74);
+            this.nudDefaultTextureScale.Location = new System.Drawing.Point(165, 74);
             this.nudDefaultTextureScale.Name = "nudDefaultTextureScale";
-            this.nudDefaultTextureScale.Size = new System.Drawing.Size(199, 20);
+            this.nudDefaultTextureScale.Size = new System.Drawing.Size(295, 20);
             this.nudDefaultTextureScale.TabIndex = 38;
             this.nudDefaultTextureScale.Value = new decimal(new int[] {
             25,
@@ -121,47 +127,83 @@ namespace CBRE.BspEditor.Environment.Blitz
             // 
             this.lblDefaultTextureScale.Location = new System.Drawing.Point(10, 74);
             this.lblDefaultTextureScale.Name = "lblDefaultTextureScale";
-            this.lblDefaultTextureScale.Size = new System.Drawing.Size(146, 20);
+            this.lblDefaultTextureScale.Size = new System.Drawing.Size(149, 20);
             this.lblDefaultTextureScale.TabIndex = 36;
             this.lblDefaultTextureScale.Text = "Default Texture Scale";
             this.lblDefaultTextureScale.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // grpFgds
             // 
+            this.grpFgds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpFgds.Controls.Add(this.cmbDefaultPointEntity);
             this.grpFgds.Controls.Add(this.cmbDefaultBrushEntity);
             this.grpFgds.Controls.Add(this.lblDefaultPointEntity);
             this.grpFgds.Controls.Add(this.lblDefaultBrushEntity);
             this.grpFgds.Controls.Add(this.lblDefaultTextureScale);
             this.grpFgds.Controls.Add(this.nudDefaultTextureScale);
-            this.grpFgds.Location = new System.Drawing.Point(8, 454);
+            this.grpFgds.Location = new System.Drawing.Point(3, 461);
             this.grpFgds.Name = "grpFgds";
-            this.grpFgds.Size = new System.Drawing.Size(456, 107);
+            this.grpFgds.Size = new System.Drawing.Size(466, 104);
             this.grpFgds.TabIndex = 47;
             this.grpFgds.TabStop = false;
             this.grpFgds.Text = "Environment Parameters";
             // 
             // grpDirectories
             // 
-            this.grpDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.grpDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpDirectories.Controls.Add(this.btnBrowseEntity);
             this.grpDirectories.Controls.Add(this.txtEntityPath);
             this.grpDirectories.Controls.Add(this.lblEntityPath);
             this.grpDirectories.Controls.Add(this.modelsGrid);
             this.grpDirectories.Controls.Add(this.texturesGrid);
-            this.grpDirectories.Location = new System.Drawing.Point(8, 8);
+            this.grpDirectories.Location = new System.Drawing.Point(3, 3);
             this.grpDirectories.Name = "grpDirectories";
-            this.grpDirectories.Size = new System.Drawing.Size(456, 440);
+            this.grpDirectories.Size = new System.Drawing.Size(466, 452);
             this.grpDirectories.TabIndex = 50;
             this.grpDirectories.TabStop = false;
             this.grpDirectories.Text = "Resource Directories";
+            // 
+            // btnBrowseEntity
+            // 
+            this.btnBrowseEntity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseEntity.Location = new System.Drawing.Point(377, 418);
+            this.btnBrowseEntity.Name = "btnBrowseEntity";
+            this.btnBrowseEntity.Size = new System.Drawing.Size(83, 23);
+            this.btnBrowseEntity.TabIndex = 34;
+            this.btnBrowseEntity.Text = "Browse";
+            this.btnBrowseEntity.UseVisualStyleBackColor = true;
+            // 
+            // txtEntityPath
+            // 
+            this.txtEntityPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtEntityPath.Location = new System.Drawing.Point(162, 420);
+            this.txtEntityPath.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+            this.txtEntityPath.Name = "txtEntityPath";
+            this.txtEntityPath.Size = new System.Drawing.Size(209, 20);
+            this.txtEntityPath.TabIndex = 33;
+            // 
+            // lblEntityPath
+            // 
+            this.lblEntityPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblEntityPath.Location = new System.Drawing.Point(5, 420);
+            this.lblEntityPath.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.lblEntityPath.Name = "lblEntityPath";
+            this.lblEntityPath.Size = new System.Drawing.Size(151, 20);
+            this.lblEntityPath.TabIndex = 32;
+            this.lblEntityPath.Text = "Entity Definition Path";
+            this.lblEntityPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // modelsGrid
             // 
             this.modelsGrid.AllowUserToAddRows = false;
             this.modelsGrid.AllowUserToResizeColumns = false;
             this.modelsGrid.AllowUserToResizeRows = false;
+            this.modelsGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.modelsGrid.BackgroundColor = System.Drawing.SystemColors.Control;
             this.modelsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.modelsGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -169,10 +211,10 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.modelDirs,
             this.browseButtonsModel});
             this.modelsGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.modelsGrid.Location = new System.Drawing.Point(13, 212);
+            this.modelsGrid.Location = new System.Drawing.Point(6, 224);
             this.modelsGrid.Name = "modelsGrid";
             this.modelsGrid.RowHeadersVisible = false;
-            this.modelsGrid.Size = new System.Drawing.Size(437, 187);
+            this.modelsGrid.Size = new System.Drawing.Size(454, 187);
             this.modelsGrid.TabIndex = 1;
             // 
             // deleteButtonsModel
@@ -207,6 +249,9 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.texturesGrid.AllowUserToAddRows = false;
             this.texturesGrid.AllowUserToResizeColumns = false;
             this.texturesGrid.AllowUserToResizeRows = false;
+            this.texturesGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.texturesGrid.BackgroundColor = System.Drawing.SystemColors.Control;
             this.texturesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.texturesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -214,10 +259,10 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.textureDirs,
             this.browseButtons});
             this.texturesGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.texturesGrid.Location = new System.Drawing.Point(13, 19);
+            this.texturesGrid.Location = new System.Drawing.Point(6, 19);
             this.texturesGrid.Name = "texturesGrid";
             this.texturesGrid.RowHeadersVisible = false;
-            this.texturesGrid.Size = new System.Drawing.Size(437, 187);
+            this.texturesGrid.Size = new System.Drawing.Size(454, 199);
             this.texturesGrid.TabIndex = 0;
             // 
             // deleteButtons
@@ -247,33 +292,6 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.browseButtons.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.browseButtons.Width = 50;
             // 
-            // lblEntityPath
-            // 
-            this.lblEntityPath.Location = new System.Drawing.Point(5, 408);
-            this.lblEntityPath.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.lblEntityPath.Name = "lblEntityPath";
-            this.lblEntityPath.Size = new System.Drawing.Size(151, 20);
-            this.lblEntityPath.TabIndex = 32;
-            this.lblEntityPath.Text = "Entity Definition Path";
-            this.lblEntityPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // txtEntityPath
-            // 
-            this.txtEntityPath.Location = new System.Drawing.Point(162, 408);
-            this.txtEntityPath.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.txtEntityPath.Name = "txtEntityPath";
-            this.txtEntityPath.Size = new System.Drawing.Size(199, 20);
-            this.txtEntityPath.TabIndex = 33;
-            // 
-            // btnBrowseEntity
-            // 
-            this.btnBrowseEntity.Location = new System.Drawing.Point(367, 406);
-            this.btnBrowseEntity.Name = "btnBrowseEntity";
-            this.btnBrowseEntity.Size = new System.Drawing.Size(83, 23);
-            this.btnBrowseEntity.TabIndex = 34;
-            this.btnBrowseEntity.Text = "Browse";
-            this.btnBrowseEntity.UseVisualStyleBackColor = true;
-            // 
             // BlitzEnvironmentEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -281,7 +299,6 @@ namespace CBRE.BspEditor.Environment.Blitz
             this.Controls.Add(this.grpDirectories);
             this.Controls.Add(this.grpFgds);
             this.Name = "BlitzEnvironmentEditor";
-            this.Padding = new System.Windows.Forms.Padding(5);
             this.Size = new System.Drawing.Size(472, 568);
             ((System.ComponentModel.ISupportInitialize)(this.nudDefaultTextureScale)).EndInit();
             this.grpFgds.ResumeLayout(false);

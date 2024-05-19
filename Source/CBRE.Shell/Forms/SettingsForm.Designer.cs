@@ -44,7 +44,6 @@
             this.SettingsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.SettingsPanel.Location = new System.Drawing.Point(169, 12);
             this.SettingsPanel.Name = "SettingsPanel";
-            this.SettingsPanel.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
             this.SettingsPanel.Size = new System.Drawing.Size(720, 411);
             this.SettingsPanel.TabIndex = 7;
             // 
