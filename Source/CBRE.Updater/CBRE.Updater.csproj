@@ -77,7 +77,7 @@
     <None Include="Resources\CBRE.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Pastel" Version="5.2.1" />
+    <PackageReference Include="Pastel" Version="6.0.0" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
