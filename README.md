@@ -1,3 +1,9 @@
+> [!CAUTION]
+> This repository has been moved to https://codeberg.org/AnalogFeelings/cbre-ex and will no longer receive updates.  
+> Do not use this code as it may contain vulnerabilities or bugs that may have been fixed in the Codeberg version. A copy of the original README will be left below.
+
+---
+
 <div align="center">
   <img width="256" height="256" src="Branding/cbre-ex.svg">
   <h1>CBRE-EX</h1>
