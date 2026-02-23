@@ -129,6 +129,7 @@ namespace CBRE.DataStructures.GameData
 
             GameDataObject soundEmitterDataObj = new GameDataObject("soundemitter", Local.LocalString("data.soundemitter"), ClassType.Point);
             soundEmitterDataObj.Properties.Add(new Property("sound", VariableType.Integer) { ShortDescription = Local.LocalString("data.soundemitter.sound"), DefaultValue = "1" });
+            soundEmitterDataObj.Properties.Add(new Property("range", VariableType.Float) { ShortDescription = Local.LocalString("data.soundemitter.range"), DefaultValue = "1.0" });
             soundEmitterDataObj.Behaviours.Add(new Behaviour("sprite", "sprites/speaker"));
             Classes.Add(soundEmitterDataObj);
 
@@ -147,6 +148,14 @@ namespace CBRE.DataStructures.GameData
 
             GameDataObject noShadowObj = new GameDataObject("noshadow", Local.LocalString("data.noshadow"), ClassType.Solid);
             Classes.Add(noShadowObj);
+            
+            // TODO
+            //GameDataObject noCollisionObj = new GameDataObject("nocoll", "Disables collisions for this brush.", ClassType.Solid);
+            //Classes.Add(noCollisionObj);
+
+            GameDataObject triggerBoxObj = new GameDataObject("triggerbox", "Turns this brush into a trigger box.", ClassType.Solid);
+            triggerBoxObj.Properties.Add(new Property("name", VariableType.String) { ShortDescription = "Name", DefaultValue = "" });
+            Classes.Add(triggerBoxObj);
 
             Property p = new Property("position", VariableType.Vector) { ShortDescription = Local.LocalString("data.position"), DefaultValue = "0 0 0" };
             foreach (GameDataObject gdo in Classes)

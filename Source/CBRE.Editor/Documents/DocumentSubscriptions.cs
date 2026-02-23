@@ -507,10 +507,10 @@ namespace CBRE.Editor.Documents
             if (existing == null)
             {
                 string def = _document.Game.DefaultBrushEntity;
-                GameDataObject entity = _document.GameData.Classes.FirstOrDefault(x => x.Name.ToLower() == def.ToLower())
-                             ?? _document.GameData.Classes.Where(x => x.ClassType == ClassType.Solid)
-                                 .OrderBy(x => x.Name.StartsWith("trigger_once") ? 0 : 1)
-                                 .FirstOrDefault();
+                GameDataObject entity = _document.Selection.GetSelectedObjects().OfType<Solid>().SelectMany(x => x.Faces).Any(x => x.Texture.Name == "tooltextures/triggerbox")
+                    ? _document.GameData.Classes.FirstOrDefault(x => x.Name.ToLower() == "triggerbox")
+                    : _document.GameData.Classes.FirstOrDefault(x => x.Name.ToLower() == def.ToLower())
+                      ?? _document.GameData.Classes.FirstOrDefault(x => x.ClassType == ClassType.Solid);
                 if (entity == null)
                 {
                     MessageBox.Show(Local.LocalString("document.no_solid_entities"), Local.LocalString("document.no_entities_found"));

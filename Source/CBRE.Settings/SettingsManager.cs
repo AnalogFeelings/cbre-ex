@@ -39,6 +39,7 @@ namespace CBRE.Settings
                                               {"skip", 0.5f},
                                               {"tooltextures/remove_face", 0.5f},
                                               {"tooltextures/invisible_collision", 0.5f},
+                                              {"tooltextures/triggerbox", 0.5f},
                                               {"tooltextures/block_light", 0.5f},
                                           };
             AdditionalSettings = new Dictionary<string, GenericStructure>();

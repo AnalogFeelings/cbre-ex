@@ -79,7 +79,6 @@
         LoadFile,
         UpdateMenu,
         UpdateToolstrip,
-        CheckForUpdates,
         OpenWebsite,
         About,
         Exit,

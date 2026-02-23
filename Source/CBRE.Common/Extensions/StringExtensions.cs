@@ -41,9 +41,9 @@ namespace CBRE.Common.Extensions
             return result.ToArray();
         }
         
-        public static bool ToBool(this string Value)
+        public static bool ToBool(this string value)
         {
-            string lowercaseValue = Value.ToLower();
+            string lowercaseValue = value.ToLower();
 
             return lowercaseValue == "1" || lowercaseValue == "yes" || lowercaseValue == "true";
         }

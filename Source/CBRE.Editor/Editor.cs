@@ -34,6 +34,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Steamworks;
 using LayoutSettings = CBRE.Editor.UI.Layout.LayoutSettings;
 
 namespace CBRE.Editor
@@ -45,10 +46,7 @@ namespace CBRE.Editor
 		
 		public static Editor Instance { get; private set; }
 
-		private const string API_RELEASES_URL = "https://api.github.com/repos/AnalogFeelings/cbre-ex/releases/latest";
-		private const string GIT_LATEST_RELEASE_URL = "https://github.com/AnalogFeelings/cbre-ex/releases/latest";
-
-		public const string GITHUB_REPORT_BUG_URL = "https://github.com/AnalogFeelings/cbre-ex/issues/new?assignees=AnalogFeelings&labels=bug&template=bug_report.md&title=";
+		public const string GITHUB_REPORT_BUG_URL = "https://github.com/SCP-CB-Community-Preservation-Project/cbre-ex/issues/new?assignees=Saalvage&labels=bug&template=bug_report.md&title=";
 
 		public bool CaptureAltPresses { get; set; }
 		public bool ShowEntityErrorForm = true;
@@ -194,9 +192,17 @@ namespace CBRE.Editor
 
 			ViewportManager.RefreshClearColour(DocumentTabs.TabPages.Count == 0);
 
-			if (General.CheckUpdatesOnStartup) CheckForUpdates(true);
-			
-			ToggleDiscord(General.EnableDiscordPresence);
+			ToggleDiscord(CBRE.Settings.General.EnableDiscordPresence);
+
+			try
+			{
+				SteamClient.Init(4257960);
+			}
+			catch (Exception ex)
+			{
+				Logging.Logger.ShowException(ex, "Failed to initialize Steam client: " + ex.Message);
+			}
+
 		}
 
 		public void ToggleDiscord(bool Enabled)
@@ -211,75 +217,6 @@ namespace CBRE.Editor
 				_DiscordManager = null;
 			}
 		}
-
-		#region Updates
-		private Version GetCurrentVersion()
-		{
-			Version info = typeof(Editor).Assembly.GetName().Version;
-			return info;
-		}
-
-		private void CheckForUpdates(bool notFromMenu)
-		{
-			using (HttpClient Client = new HttpClient())
-			{
-				try
-				{
-					Version ParsedNewVersion;
-					Version CurrentVersion = GetCurrentVersion();
-
-					//Github wants me to set a user agent, sure!
-					Client.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-					Client.DefaultRequestHeaders.Add("User-Agent", "AnalogFeelings/cbre-ex");
-
-					JsonSerializerSettings DeserializeSettings = new JsonSerializerSettings
-					{
-						MissingMemberHandling = MissingMemberHandling.Ignore
-					};
-
-					ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-
-					string ServerResponse = Task.Run(() => Client.GetStringAsync(API_RELEASES_URL)).Result;
-
-					UpdaterResponse Response = JsonConvert.DeserializeObject<UpdaterResponse>(ServerResponse, DeserializeSettings);
-
-					//Version is invalid? Die
-					if (!Version.TryParse(Response.VersionTag, out ParsedNewVersion)) return;
-
-					ReleaseAsset PackageAsset = Response.Assets.FirstOrDefault(x => x.Filename.EndsWith(".zip"));
-					ReleaseAsset ChecksumAsset = Response.Assets.FirstOrDefault(x => x.Filename.EndsWith(".sha256"));
-
-					if (ParsedNewVersion > CurrentVersion)
-					{
-						//Missing required files? The update must have changed the structure!
-						if (PackageAsset == default(ReleaseAsset) || ChecksumAsset == default(ReleaseAsset))
-						{
-							DialogResult Result = MessageBox.Show(Local.LocalString("warning.editor.update_manually"), Local.LocalString("warning.title"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-							if (Result == DialogResult.Yes) Process.Start(GIT_LATEST_RELEASE_URL);
-
-							return;
-						}
-
-						UpdaterForm Form = new UpdaterForm(ParsedNewVersion, Response.Description, PackageAsset, ChecksumAsset);
-						Form.ShowDialog();
-					}
-					else
-					{
-						//Kinda ugly maybe?
-						if (!notFromMenu)
-						{
-							MessageBox.Show(Local.LocalString("info.updater.no_update"), Local.LocalString("info.title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
-						}
-					}
-				}
-				catch (Exception)
-				{
-					return; //Do nothing.
-				}
-			}
-		}
-		#endregion
 
 		private bool PromptForChanges(Document doc)
 		{
@@ -315,6 +252,7 @@ namespace CBRE.Editor
 			ViewportManager.SaveLayout();
 			SettingsManager.SaveSession(DocumentManager.Documents.Select(x => Tuple.Create(x.MapFile, x.Game)));
 			SettingsManager.Write();
+			SteamClient.Shutdown();
 		}
 
 		protected override void OnDragDrop(DragEventArgs drgevent)
@@ -397,7 +335,6 @@ namespace CBRE.Editor
 			Mediator.Subscribe(EditorMediator.ToolSelected, this);
 
 			Mediator.Subscribe(EditorMediator.OpenWebsite, this);
-			Mediator.Subscribe(EditorMediator.CheckForUpdates, this);
 			Mediator.Subscribe(EditorMediator.About, this);
 		}
 

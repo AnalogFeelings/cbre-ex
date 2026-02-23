@@ -150,7 +150,6 @@ namespace CBRE.Editor.Menu
             Add(Local.LocalString("menu.tools"), new MenuSplitter { IsVisible = mapOpen });
             Add(Local.LocalString("menu.tools"), new SimpleMenuBuilder(Local.LocalString("menu.tools.options"), EditorMediator.OpenSettings) { Image = Resources.Menu_Options, ShowInToolStrip = true });
 
-            Add(Local.LocalString("menu.help"), new SimpleMenuBuilder(Local.LocalString("menu.help.updates"), EditorMediator.CheckForUpdates) { Image = Resources.Menu_Update });
             Add(Local.LocalString("menu.help"), new SimpleMenuBuilder(Local.LocalString("menu.help.report"), EditorMediator.OpenWebsite, Editor.GITHUB_REPORT_BUG_URL) { Image = Resources.Menu_GitHub });
             Add(Local.LocalString("menu.help"), new MenuSplitter { IsVisible = mapOpen });
             Add(Local.LocalString("menu.help"), new SimpleMenuBuilder(Local.LocalString("menu.help.about"), EditorMediator.About) { Image = Resources.Menu_ShowInformation });

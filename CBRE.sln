@@ -21,15 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.FileSystem", "Source\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.QuickForms", "Source\CBRE.QuickForms\CBRE.QuickForms.csproj", "{7FED88F3-717C-408A-85D9-28DD125DB61A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssimpNet", "Source\AssimpNet\AssimpNet\AssimpNet.csproj", "{582ED347-E705-4EF5-B6DD-5AC1191D2FC2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F63AFB39-8F25-4997-AAE2-3459B593980B} = {F63AFB39-8F25-4997-AAE2-3459B593980B}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssimpNet.Interop.Generator", "Source\AssimpNet\AssimpNet.Interop.Generator\AssimpNet.Interop.Generator.csproj", "{F63AFB39-8F25-4997-AAE2-3459B593980B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AssimpNet", "AssimpNet", "{EF0512C1-E050-4809-8404-7FFE9598B515}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CBRE.SMFConverter", "Source\CBRE.SMFConverter\CBRE.SMFConverter.csproj", "{E4242C98-6AE0-487B-86B2-031867444865}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBRE.Packages", "Source\CBRE.Packages\CBRE.Packages.csproj", "{BB1AF818-8CCA-4BC8-A4A8-B7A0627B68DD}"
@@ -236,10 +227,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{582ED347-E705-4EF5-B6DD-5AC1191D2FC2} = {EF0512C1-E050-4809-8404-7FFE9598B515}
-		{F63AFB39-8F25-4997-AAE2-3459B593980B} = {EF0512C1-E050-4809-8404-7FFE9598B515}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {835AF666-5AB4-4321-B616-6FF942053279}

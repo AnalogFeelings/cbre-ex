@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "AssimpNet.Interop.Generator": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

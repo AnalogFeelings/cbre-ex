@@ -350,7 +350,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             Class.Items.Clear();
             bool allowWorldspawn = Objects.Any(x => x is World);
             Class.Items.AddRange(Document.GameData.Classes
-                                     .Where(x => x.ClassType != ClassType.Base && (allowWorldspawn || x.Name != "worldspawn"))
+                                     .Where(x => x.ClassType != ClassType.Base && (allowWorldspawn || x.Name != "worldspawn") && Objects[0] is Entity e && e.GameData.ClassType == x.ClassType)
                                      .Select(x => x.Name).OrderBy(x => x.ToLower()).OfType<object>().ToArray());
             if (!Objects.Any()) return;
             List<string> classes = Objects.Where(x => x is Entity || x is World).Select(x => x.GetEntityData().Name.ToLower()).Distinct().ToList();
@@ -442,7 +442,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             Class.BackColor = Color.LightBlue;
 
             string className = Class.Text;
-            if (_values.All(x => x.Class == null || x.Class == className))
+            if (_values.Any() && _values.All(x => x.Class == null || x.Class == className))
             {
                 CancelClassChange(null, null);
                 return;

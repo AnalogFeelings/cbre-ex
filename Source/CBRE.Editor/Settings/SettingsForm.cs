@@ -509,9 +509,7 @@ namespace CBRE.Editor.Settings
         private void SettingsFormLoad(object sender, EventArgs e)
         {
             AddHeading(Local.LocalString("setting.general.general"));
-            AddSetting(() => CBRE.Settings.General.CheckUpdatesOnStartup, Local.LocalString("setting.general.check_for_updates"));
             AddSetting(() => CBRE.Settings.General.EnableDiscordPresence, Local.LocalString("setting.general.discord_rich_presence"));
-
             AddHeading(Local.LocalString("setting.object"));
             AddSetting(() => CBRE.Settings.Select.SwitchToSelectAfterCreation, Local.LocalString("setting.object.switch_after_create_brush"));
             AddSetting(() => CBRE.Settings.Select.SwitchToSelectAfterEntity, Local.LocalString("setting.object.switch_after_create_entity"));

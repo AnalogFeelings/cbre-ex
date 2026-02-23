@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using Assimp;
+using System.IO;
 
-namespace Assimp
+namespace CBRE.SMFConverter
 {
     public static class BinaryExtensions
     {
