@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.Sidebar
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.Sidebar
 {
     partial class BrushSidebarPanel
     {
@@ -44,7 +46,7 @@
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(64, 15);
 			this.label3.TabIndex = 5;
-			this.label3.Text = "Brush Type";
+			this.label3.Text = Local.LocalString("brush.type");
 			this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// BrushTypeList
@@ -80,7 +82,7 @@
 			this.RoundCreatedVerticesCheckbox.Name = "RoundCreatedVerticesCheckbox";
 			this.RoundCreatedVerticesCheckbox.Size = new System.Drawing.Size(152, 20);
 			this.RoundCreatedVerticesCheckbox.TabIndex = 6;
-			this.RoundCreatedVerticesCheckbox.Text = "Round created vertices";
+			this.RoundCreatedVerticesCheckbox.Text = Local.LocalString("brush.round_created_vertices");
 			this.RoundCreatedVerticesCheckbox.UseVisualStyleBackColor = true;
 			this.RoundCreatedVerticesCheckbox.CheckedChanged += new System.EventHandler(this.RoundCreatedVerticesChanged);
 			// 

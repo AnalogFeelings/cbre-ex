@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.Sidebar
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.Sidebar
 {
     partial class EntitySidebarPanel
     {
@@ -42,7 +44,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(64, 15);
 			this.label2.TabIndex = 9;
-			this.label2.Text = "Entity Type";
+			this.label2.Text = Local.LocalString("entity.type");
 			this.label2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
 			// 
 			// EntityTypeList

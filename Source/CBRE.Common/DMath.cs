@@ -30,7 +30,7 @@ namespace CBRE.Extensions
         {
             return (decimal)Math.Atan((double)angle);
         }
-
+        
         public static decimal Atan2(decimal angle1, decimal angle2)
         {
             return (decimal)Math.Atan2((double)angle1, (double)angle2);

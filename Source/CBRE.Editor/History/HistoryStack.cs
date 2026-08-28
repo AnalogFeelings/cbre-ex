@@ -1,4 +1,5 @@
 ﻿using CBRE.Editor.Documents;
+using CBRE.Localization;
 using System.Collections.Generic;
 
 namespace CBRE.Editor.History
@@ -60,13 +61,13 @@ namespace CBRE.Editor.History
 
         public string GetUndoString()
         {
-            if (!CanUndo()) return "Can't undo";
+            if (!CanUndo()) return Local.LocalString("document.cant_undo");
             return "Undo " + _items[_currentIndex].Name;
         }
 
         public string GetRedoString()
         {
-            if (!CanRedo()) return "Can't redo";
+            if (!CanRedo()) return Local.LocalString("document.cant_redo");
             return "Redo " + _items[_currentIndex + 1].Name;
         }
 

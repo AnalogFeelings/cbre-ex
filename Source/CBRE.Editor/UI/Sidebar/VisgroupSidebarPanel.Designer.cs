@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.Sidebar
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.Sidebar
 {
     partial class VisgroupSidebarPanel
     {
@@ -49,7 +51,7 @@
 			this.ShowAllButton.Size = new System.Drawing.Size(52, 23);
 			this.ShowAllButton.TabIndex = 5;
 			this.ShowAllButton.Tag = "ShowAll";
-			this.ShowAllButton.Text = "Show All";
+			this.ShowAllButton.Text = Local.LocalString("entity_report.show_all");
 			this.ShowAllButton.UseVisualStyleBackColor = true;
 			this.ShowAllButton.Click += new System.EventHandler(this.ShowAllButtonClicked);
 			// 
@@ -65,7 +67,7 @@
 			this.SelectButton.Size = new System.Drawing.Size(39, 23);
 			this.SelectButton.TabIndex = 6;
 			this.SelectButton.Tag = "Select";
-			this.SelectButton.Text = "Select";
+			this.SelectButton.Text = Local.LocalString("tool.texture.select");
 			this.SelectButton.UseVisualStyleBackColor = true;
 			this.SelectButton.Click += new System.EventHandler(this.SelectButtonClicked);
 			// 
@@ -81,7 +83,7 @@
 			this.EditButton.Size = new System.Drawing.Size(42, 23);
 			this.EditButton.TabIndex = 7;
 			this.EditButton.Tag = "Edit";
-			this.EditButton.Text = "Edit";
+			this.EditButton.Text = Local.LocalString("edit");
 			this.EditButton.UseVisualStyleBackColor = true;
 			this.EditButton.Click += new System.EventHandler(this.EditButtonClicked);
 			// 
@@ -97,7 +99,7 @@
 			this.NewButton.Size = new System.Drawing.Size(37, 23);
 			this.NewButton.TabIndex = 9;
 			this.NewButton.Tag = "New";
-			this.NewButton.Text = "New";
+			this.NewButton.Text = Local.LocalString("new");
 			this.NewButton.UseVisualStyleBackColor = true;
 			this.NewButton.Click += new System.EventHandler(this.NewButtonClicked);
 			// 

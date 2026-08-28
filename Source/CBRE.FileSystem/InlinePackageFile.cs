@@ -1,4 +1,5 @@
-﻿using CBRE.Packages;
+﻿using CBRE.Localization;
+using CBRE.Packages;
 using CBRE.Packages.Pak;
 using CBRE.Packages.Vpk;
 using System;
@@ -33,7 +34,7 @@ namespace CBRE.FileSystem
                     _package = new VpkDirectory(new FileInfo(fileName));
                     break;
                 default:
-                    throw new ArgumentException("This file format is not a valid inline package file.");
+                    throw new ArgumentException(Local.LocalString("exception.invalid_inline_package"));
             }
             FilePath = "";
             _entry = null;

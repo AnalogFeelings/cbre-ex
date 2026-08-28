@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.Tools.VMTool
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.Tools.VMTool
 {
     partial class StandardControl
     {
@@ -42,7 +44,7 @@
 			this.MergeButton.Name = "MergeButton";
 			this.MergeButton.Size = new System.Drawing.Size(160, 23);
 			this.MergeButton.TabIndex = 8;
-			this.MergeButton.Text = "Merge overlapping vertices";
+			this.MergeButton.Text = Local.LocalString("tool.merge_overlap_vertices");
 			this.MergeButton.UseVisualStyleBackColor = true;
 			this.MergeButton.Click += new System.EventHandler(this.MergeButtonClicked);
 			// 
@@ -57,7 +59,7 @@
 			this.AutoMerge.Name = "AutoMerge";
 			this.AutoMerge.Size = new System.Drawing.Size(141, 20);
 			this.AutoMerge.TabIndex = 7;
-			this.AutoMerge.Text = "Merge automatically";
+			this.AutoMerge.Text = Local.LocalString("tool.merge_auto");
 			this.AutoMerge.UseVisualStyleBackColor = true;
 			// 
 			// SplitButton
@@ -69,7 +71,7 @@
 			this.SplitButton.Name = "SplitButton";
 			this.SplitButton.Size = new System.Drawing.Size(76, 25);
 			this.SplitButton.TabIndex = 8;
-			this.SplitButton.Text = "Split face";
+			this.SplitButton.Text = Local.LocalString("tool.split_face");
 			this.SplitButton.UseVisualStyleBackColor = true;
 			this.SplitButton.Click += new System.EventHandler(this.SplitButtonClicked);
 			// 
@@ -83,7 +85,7 @@
 			this.MergeResultsLabel.Name = "MergeResultsLabel";
 			this.MergeResultsLabel.Size = new System.Drawing.Size(194, 18);
 			this.MergeResultsLabel.TabIndex = 9;
-			this.MergeResultsLabel.Text = "Merge Result Merge";
+			this.MergeResultsLabel.Text = Local.LocalString("tool.merge_result");
 			this.MergeResultsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// StandardControl

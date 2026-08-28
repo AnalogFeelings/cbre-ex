@@ -2,6 +2,7 @@
 using CBRE.DataStructures.GameData;
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using System;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace CBRE.Providers.Map
 
             if (reader.ReadFixedLengthString(Encoding.ASCII, 3) != "CBR")
             {
-                throw new ProviderException("CBR file is corrupted/invalid!");
+                throw new ProviderException(Local.LocalString("exception.cbr_corrupted"));
             }
             uint revision = reader.ReadUInt32();
 

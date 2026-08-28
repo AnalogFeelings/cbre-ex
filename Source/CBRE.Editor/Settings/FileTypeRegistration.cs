@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using CBRE.Localization;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,10 +15,10 @@ namespace CBRE.Editor.Settings
         {
             return new[]
             {
-                new FileType(".cbr", "Containment Breach Room", false, true),
-                new FileType(".vmf", "Valve Map File", true, true),
-                new FileType(".3dw", "Leadwerks 3D World Studio File", false, true),
-                new FileType(".msl", "Mapscape 2 Level", false, true),
+                new FileType(".cbr", Local.LocalString("filetype.cbr"), false, true),
+                new FileType(".vmf", Local.LocalString("filetype.vmf"), true, true),
+                new FileType(".3dw", Local.LocalString("filetype.3dw"), false, true),
+                new FileType(".msl", Local.LocalString("filetype.msl"), false, true),
             };
         }
 

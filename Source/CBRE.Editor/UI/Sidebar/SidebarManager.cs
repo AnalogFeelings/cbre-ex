@@ -1,5 +1,6 @@
 ﻿using CBRE.Common.Mediator;
 using CBRE.Editor.Tools;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,9 @@ namespace CBRE.Editor.UI.Sidebar
 
             container.Controls.Add(_container);
 
-            CreatePanel("Textures", new TextureSidebarPanel());
-            CreatePanel("Visgroups", new VisgroupSidebarPanel());
-            CreatePanel("Contextual Help", new HelpSidebarPanel());
+            CreatePanel(Local.LocalString("setting.textures"), new TextureSidebarPanel());
+            CreatePanel(Local.LocalString("sidebar.visgroups"), new VisgroupSidebarPanel());
+            CreatePanel(Local.LocalString("sidebar.help"), new HelpSidebarPanel());
             //CreatePanel("Entities", new EntitySidebarPanel());
             //CreatePanel("Brushes", new BrushSidebarPanel());
         }

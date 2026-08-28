@@ -1,6 +1,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Entities;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace CBRE.Editor.Problems
             {
                 string target = entity.EntityData.GetPropertyValue("target");
                 Entity tname = entities.FirstOrDefault(x => x.EntityData.GetPropertyValue("targetname") == target);
-                if (tname == null) yield return new Problem(GetType(), map, new[] { entity }, Fix, "Entity target has no matching named entity", "This entity's target value doesn't have an matching named entity. Each target should have a matching target name. Fixing the problem will reset the target's value to a blank string.");
+                if (tname == null) yield return new Problem(GetType(), map, new[] { entity }, Fix, Local.LocalString("document.entity_no_match"), Local.LocalString("document.entity_no_match.description"));
             }
         }
 

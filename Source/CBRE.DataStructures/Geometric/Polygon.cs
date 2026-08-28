@@ -1,4 +1,5 @@
 ﻿using CBRE.DataStructures.Transformations;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -259,7 +260,7 @@ namespace CBRE.DataStructures.Geometric
                     Coordinate start = Vertices[i - 1];
                     Line line = new Line(start, end);
                     Coordinate isect = clip.GetIntersectionPoint(line, true);
-                    if (isect == null) throw new Exception("Expected intersection, got null.");
+                    if (isect == null) throw new Exception(Local.LocalString("exception.null_intersection"));
                     frontVerts.Add(isect);
                     backVerts.Add(isect);
                 }

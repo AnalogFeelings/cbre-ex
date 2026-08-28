@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.Tools.TextureTool
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.Tools.TextureTool
 {
     partial class TextureToolSidebarPanel
     {
@@ -74,7 +76,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(28, 15);
 			this.label2.TabIndex = 2;
-			this.label2.Text = "Min";
+			this.label2.Text = Local.LocalString("min");
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// RandomShiftMax
@@ -107,7 +109,7 @@
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(30, 15);
 			this.label3.TabIndex = 2;
-			this.label3.Text = "Max";
+			this.label3.Text = Local.LocalString("max");
 			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// RandomShiftXButton
@@ -117,7 +119,7 @@
 			this.RandomShiftXButton.Name = "RandomShiftXButton";
 			this.RandomShiftXButton.Size = new System.Drawing.Size(86, 23);
 			this.RandomShiftXButton.TabIndex = 3;
-			this.RandomShiftXButton.Text = "Randomize";
+			this.RandomShiftXButton.Text = Local.LocalString("randomize");
 			this.RandomShiftXButton.UseVisualStyleBackColor = true;
 			this.RandomShiftXButton.Click += new System.EventHandler(this.RandomShiftXButtonClicked);
 			// 
@@ -128,7 +130,7 @@
 			this.RandomShiftYButton.Name = "RandomShiftYButton";
 			this.RandomShiftYButton.Size = new System.Drawing.Size(86, 23);
 			this.RandomShiftYButton.TabIndex = 3;
-			this.RandomShiftYButton.Text = "Randomize";
+			this.RandomShiftYButton.Text = Local.LocalString("randomize");
 			this.RandomShiftYButton.UseVisualStyleBackColor = true;
 			this.RandomShiftYButton.Click += new System.EventHandler(this.RandomShiftYButtonClicked);
 			// 
@@ -148,7 +150,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(205, 83);
 			this.groupBox1.TabIndex = 4;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Randomize Shift Values";
+			this.groupBox1.Text = Local.LocalString("tool.random_shift");
 			// 
 			// groupBox2
 			// 
@@ -165,7 +167,7 @@
 			this.groupBox2.Size = new System.Drawing.Size(205, 80);
 			this.groupBox2.TabIndex = 5;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Times  To Tile On Face";
+			this.groupBox2.Text = Local.LocalString("tool.times_to_tile");
 			// 
 			// TileFitX
 			// 
@@ -191,7 +193,7 @@
 			this.TileFitButton.Name = "TileFitButton";
 			this.TileFitButton.Size = new System.Drawing.Size(54, 23);
 			this.TileFitButton.TabIndex = 3;
-			this.TileFitButton.Text = "Fit";
+			this.TileFitButton.Text = Local.LocalString("tool.texture.justify.fit");
 			this.TileFitButton.UseVisualStyleBackColor = true;
 			this.TileFitButton.Click += new System.EventHandler(this.TileFitButtonClicked);
 			// 

@@ -2,6 +2,7 @@
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Documents;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,7 +73,7 @@ namespace CBRE.Editor.Compiling
 
             IEnumerable<Entity> props = map.WorldSpawn.Find(x => x.ClassName != null && x.ClassName.ToLower() == "model").OfType<Entity>();
 
-            form.ProgressLog.Invoke((MethodInvoker)(() => form.ProgressLog.AppendText("\nDetermining waypoint visibility...")));
+            form.ProgressLog.Invoke((MethodInvoker)(() => form.ProgressLog.AppendText("\n" + Local.LocalString("progress.export.determining_waypoint"))));
             form.ProgressBar.Invoke((MethodInvoker)(() => form.ProgressBar.Value = 9100));
 
             for (int i = 0; i < waypoints.Count; i++)
@@ -165,7 +166,7 @@ namespace CBRE.Editor.Compiling
                             br.Write((byte)lmInd);
                         }
 
-                        if (vertCount > UInt16.MaxValue) throw new Exception("Vertex overflow!");
+                        if (vertCount > UInt16.MaxValue) throw new Exception(Local.LocalString("error.export.vertex_overflow"));
                         br.Write((UInt16)vertCount);
                         foreach (Lightmap.LMFace face in tLmFaces)
                         {
@@ -219,7 +220,7 @@ namespace CBRE.Editor.Compiling
                     br.Write((byte)RM2Chunks.VisibleGeometry);
                     br.Write((byte)i);
 
-                    if (vertCount > UInt16.MaxValue) throw new Exception("Vertex overflow!");
+                    if (vertCount > UInt16.MaxValue) throw new Exception(Local.LocalString("error.export.vertex_overflow"));
                     br.Write((UInt16)vertCount);
                     foreach (Face face in tTrptFaces)
                     {
@@ -266,7 +267,7 @@ namespace CBRE.Editor.Compiling
 
                 br.Write((byte)RM2Chunks.InvisibleGeometry);
 
-                if (vertCount > UInt16.MaxValue) throw new Exception("Vertex overflow!");
+                if (vertCount > UInt16.MaxValue) throw new Exception(Local.LocalString("error.export.vertex_overflow"));
                 br.Write((UInt16)vertCount);
                 foreach (Face face in invisibleCollisionFaces)
                 {
@@ -344,7 +345,7 @@ namespace CBRE.Editor.Compiling
             br.Dispose();
             stream.Dispose();
 
-            form.ProgressLog.Invoke((MethodInvoker)(() => form.ProgressLog.AppendText("\nDone!")));
+            form.ProgressLog.Invoke((MethodInvoker)(() => form.ProgressLog.AppendText("\n" + Local.LocalString("progress.export.done"))));
             form.ProgressBar.Invoke((MethodInvoker)(() => form.ProgressBar.Value = 10000));
         }
     }

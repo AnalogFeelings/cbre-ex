@@ -8,6 +8,7 @@ using CBRE.Editor.Brushes;
 using CBRE.Editor.Extensions;
 using CBRE.Editor.Properties;
 using CBRE.Editor.Rendering.Immediate;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK.Graphics.OpenGL;
@@ -70,7 +71,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetName()
         {
-            return "Sketch Tool";
+            return Local.LocalString("tool.sketch");
         }
 
         public override HotkeyTool? GetHotkeyToolType()
@@ -80,10 +81,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetContextualHelp()
         {
-            return "*Click* a face to start sketching the base of the brush.\n" +
-                   "*Click* again to choose the height of the brush.\n" +
-                   "*Click* a third time to create the brush.\n" +
-                   "*Right click* at any time to go back one step.";
+            return Local.LocalString("tool.sketch.help");
         }
 
         public override IEnumerable<KeyValuePair<string, Control>> GetSidebarControls()
@@ -164,7 +162,7 @@ namespace CBRE.Editor.Tools
                     action = new ActionCollection(new ChangeSelection(new MapObject[0], Document.Selection.GetSelectedObjects()), action);
                 }
             }
-            Document.PerformAction("Create " + BrushManager.CurrentBrush.Name.ToLower(), action);
+            Document.PerformAction(Local.LocalString("tool.brush.create", BrushManager.CurrentBrush.Name.ToLower()), action);
         }
 
         private MapObject GetBrush(Polygon bounds, decimal depth, IDGenerator idGenerator)

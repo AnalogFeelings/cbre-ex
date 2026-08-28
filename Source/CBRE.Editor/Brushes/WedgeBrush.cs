@@ -2,6 +2,7 @@ using CBRE.Common;
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Brushes.Controls;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +12,7 @@ namespace CBRE.Editor.Brushes
     {
         public string Name
         {
-            get { return "Wedge"; }
+            get { return Local.LocalString("brush.wedge"); }
         }
 
         public bool CanRound { get { return true; } }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using CBRE.Localization;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.ComponentModel;
@@ -43,7 +44,7 @@ namespace CBRE.Editor.Settings
             catch (Win32Exception e)
             {
                 if (e.NativeErrorCode == 1223) // 1223: The operation was canceled by the user. 
-                    TaskDialog.Show("The operation was canceled by the user.");
+                    TaskDialog.Show(Local.LocalString("info.canceled"));
             }
         }
     }

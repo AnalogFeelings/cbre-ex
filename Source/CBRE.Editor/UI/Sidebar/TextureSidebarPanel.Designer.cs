@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.Sidebar
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.Sidebar
 {
     partial class TextureSidebarPanel
     {
@@ -50,7 +52,7 @@
 			this.BrowseButton.Name = "BrowseButton";
 			this.BrowseButton.Size = new System.Drawing.Size(66, 22);
 			this.BrowseButton.TabIndex = 11;
-			this.BrowseButton.Text = "Browse...";
+			this.BrowseButton.Text = Local.LocalString("browse");
 			this.BrowseButton.UseVisualStyleBackColor = true;
 			this.BrowseButton.Click += new System.EventHandler(this.BrowseButtonClicked);
 			// 
@@ -63,7 +65,7 @@
 			this.ReplaceButton.Name = "ReplaceButton";
 			this.ReplaceButton.Size = new System.Drawing.Size(66, 22);
 			this.ReplaceButton.TabIndex = 12;
-			this.ReplaceButton.Text = "Replace...";
+			this.ReplaceButton.Text = Local.LocalString("replace");
 			this.ReplaceButton.UseVisualStyleBackColor = true;
 			this.ReplaceButton.Click += new System.EventHandler(this.ReplaceButtonClicked);
 			// 
@@ -90,7 +92,7 @@
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(45, 15);
 			this.label5.TabIndex = 6;
-			this.label5.Text = "Texture";
+			this.label5.Text = Local.LocalString("sidebar.texture");
 			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// label4
@@ -102,7 +104,7 @@
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(40, 15);
 			this.label4.TabIndex = 7;
-			this.label4.Text = "Group";
+			this.label4.Text = Local.LocalString("sidebar.group");
 			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// ApplyButton
@@ -114,7 +116,7 @@
 			this.ApplyButton.Name = "ApplyButton";
 			this.ApplyButton.Size = new System.Drawing.Size(66, 22);
 			this.ApplyButton.TabIndex = 11;
-			this.ApplyButton.Text = "Apply";
+			this.ApplyButton.Text = Local.LocalString("apply");
 			this.ApplyButton.UseVisualStyleBackColor = true;
 			this.ApplyButton.Click += new System.EventHandler(this.ApplyButtonClicked);
 			// 
@@ -140,7 +142,7 @@
 			this.SizeLabel.Name = "SizeLabel";
 			this.SizeLabel.Size = new System.Drawing.Size(27, 15);
 			this.SizeLabel.TabIndex = 13;
-			this.SizeLabel.Text = "Size";
+			this.SizeLabel.Text = Local.LocalString("sidebar.size");
 			// 
 			// label1
 			// 

@@ -1,3 +1,4 @@
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -38,7 +39,7 @@ namespace CBRE.QuickForms.Items
             t.Size = new Size(textBoxWidth, h);
             controls.Add(t);
 
-            Button b = new Button { Text = "Browse", Width = 60, Font = SystemFonts.MessageBoxFont, FlatStyle = FlatStyle.System, Anchor = AnchorStyles.Top | AnchorStyles.Right };
+            Button b = new Button { Text = Local.LocalString("browse"), Width = 60, Font = SystemFonts.MessageBoxFont, FlatStyle = FlatStyle.System, Anchor = AnchorStyles.Top | AnchorStyles.Right };
             Location(b, qf, false);
             b.Location = new Point(qf.ClientSize.Width - QuickForm.ItemPadding - b.Width, b.Location.Y);
             b.Click += (s, e) => ShowBrowseDialog(t);

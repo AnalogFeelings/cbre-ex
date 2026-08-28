@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using CBRE.Localization;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace CBRE.Graphics.Shaders
             if (status == 0)
             {
                 string err = GL.GetProgramInfoLog(program);
-                throw new Exception("Error linking program: " + err);
+                throw new Exception(Local.LocalString("exception.error_linking_program", err));
             }
 
             return program;

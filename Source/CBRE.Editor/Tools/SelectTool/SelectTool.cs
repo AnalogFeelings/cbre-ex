@@ -12,6 +12,7 @@ using CBRE.Editor.Tools.SelectTool.TransformationTools;
 using CBRE.Editor.Tools.Widgets;
 using CBRE.Editor.UI.ObjectProperties;
 using CBRE.Graphics;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK;
@@ -75,7 +76,7 @@ namespace CBRE.Editor.Tools.SelectTool
 
         public override string GetName()
         {
-            return "Select Tool";
+            return Local.LocalString("tool.select");
         }
 
         public override HotkeyTool? GetHotkeyToolType()
@@ -100,9 +101,7 @@ namespace CBRE.Editor.Tools.SelectTool
 
         public override string GetContextualHelp()
         {
-            return "*Click* to select an object.\n" +
-                   "In the 3D view, *click and hold* and use the *mouse wheel* to cycle through objects behind the cursor.\n" +
-                   "In the 2D view, *click the selection box* to cycle between manipulation modes.";
+            return Local.LocalString("tool.select.help");
         }
 
         public override void ToolSelected(bool preventHistory)
@@ -150,7 +149,7 @@ namespace CBRE.Editor.Tools.SelectTool
             }
             if (deselect.Any() || select.Any())
             {
-                Document.PerformAction("Apply group selection", new ChangeSelection(select, deselect));
+                Document.PerformAction(Local.LocalString("tool.apply_group_select"), new ChangeSelection(select, deselect));
             }
         }
 
@@ -174,7 +173,7 @@ namespace CBRE.Editor.Tools.SelectTool
         {
             if (transformation.HasValue)
             {
-                ExecuteTransform("Manipulate", CreateMatrixMultTransformation(transformation.Value), false);
+                ExecuteTransform(Local.LocalString("tool.manipulate"), CreateMatrixMultTransformation(transformation.Value), false);
             }
 
             Document.EndSelectionTransform();
@@ -344,7 +343,7 @@ namespace CBRE.Editor.Tools.SelectTool
             List<MapObject> deselected = objectsToDeselect.ToList();
             List<MapObject> selected = objectsToSelect.ToList();
 
-            Document.PerformAction("Selection changed", new ChangeSelection(selected, deselected));
+            Document.PerformAction(Local.LocalString("tool.selection_changed"), new ChangeSelection(selected, deselected));
         }
 
         #endregion
@@ -913,9 +912,9 @@ namespace CBRE.Editor.Tools.SelectTool
         /// <param name="clone">True to create a clone before transforming the original.</param>
         private void ExecuteTransform(string transformationName, IUnitTransformation transform, bool clone)
         {
-            if (clone) transformationName += "-clone";
+            if (clone) transformationName = Local.LocalString("tool.clone", transformationName);
             List<MapObject> objects = Document.Selection.GetSelectedParents().ToList();
-            string name = String.Format("{0} {1} object{2}", transformationName, objects.Count, (objects.Count == 1 ? "" : "s"));
+            string name = Local.LocalString("tool.execute_name", transformationName, objects.Count);
 
             CreateEditDelete cad = new CreateEditDelete();
             ActionCollection action = new ActionCollection(cad);

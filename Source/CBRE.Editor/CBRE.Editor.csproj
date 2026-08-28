@@ -71,6 +71,9 @@
     <OutputPath>bin\x86\Release\</OutputPath>
     <Optimize>true</Optimize>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -507,13 +510,6 @@
     <Compile Include="UI\TransformDialog.Designer.cs">
       <DependentUpon>TransformDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\UpdaterClasses.cs" />
-    <Compile Include="UI\UpdaterForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\UpdaterForm.Designer.cs">
-      <DependentUpon>UpdaterForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\ViewportContextMenu.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -703,9 +699,6 @@
     <EmbeddedResource Include="UI\TransformDialog.resx">
       <DependentUpon>TransformDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\UpdaterForm.resx">
-      <DependentUpon>UpdaterForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\Layout\ViewportWindow.resx">
       <DependentUpon>ViewportWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -717,9 +710,6 @@
     </EmbeddedResource>
     <None Include="App.config" />
     <None Include="app.manifest" />
-    <None Include="Entities\Entity Guide.url">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -733,10 +723,10 @@
     <EmbeddedResource Include="Rendering\Shaders\MapObject3D.vert" />
     <EmbeddedResource Include="Rendering\Shaders\MapObject2D.vert" />
     <EmbeddedResource Include="Rendering\Shaders\MapObject2D.frag" />
-    <None Include="Sprites\lightbulb.png">
+    <None Include="Entities\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Sprites\speaker.png">
+    <None Include="Sprites\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Tools\CameraTool.cs" />
@@ -767,32 +757,14 @@
     <None Include="Resources\Menu_ExportRmesh.png" />
     <None Include="Resources\CBRE_Icon.png" />
     <None Include="Resources\CBRE.ico" />
-    <None Include="Sprites\waypoint.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\Menu_HideEntitySprites.png" />
     <None Include="Resources\Menu_HideMapOrigin.png" />
     <None Include="Resources\Options.ico" />
     <None Include="Resources\Lightmapper.ico" />
     <Content Include="Resources\Menu_GitHub.png" />
-    <None Include="Sprites\model.png">
+    <None Include="ToolTextures\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Sprites\screen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Sprites\spotlight.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Content Include="ToolTextures\BLOCK_LIGHT.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToolTextures\INVISIBLE_COLLISION.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToolTextures\REMOVE_FACE.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\Button_ColourPicker.png" />
     <Content Include="Resources\embedded_icons.txt" />
     <Content Include="Resources\Menu_Align.png" />
@@ -904,6 +876,10 @@
       <Project>{614d4144-8920-4975-ac67-dbba5cb1eb43}</Project>
       <Name>CBRE.Graphics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CBRE.Localization\CBRE.Localization.csproj">
+      <Project>{68fa12f2-c380-4c51-a1f6-24840684090f}</Project>
+      <Name>CBRE.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CBRE.Providers\CBRE.Providers.csproj">
       <Project>{c7bd4ac8-1f8d-4520-af2d-d279c0601ab4}</Project>
       <Name>CBRE.Providers</Name>
@@ -924,11 +900,23 @@
       <Project>{abbee97f-b5a6-4ed6-8d8f-6d4091fb9d44}</Project>
       <Name>CBRE.UI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CBRE.Updater\CBRE.Updater.csproj">
-      <Project>{5d01022f-a383-4e5b-80ac-1ed2f8a1b9c7}</Project>
-      <Name>CBRE.Updater</Name>
-    </ProjectReference>
   </ItemGroup>
+  <Choose>
+    <When Condition="'$(Platform)' == 'x86'">
+      <ItemGroup>
+        <PackageReference Include="Facepunch.Steamworks.Dll" Version="1.48.0"/>
+        <PackageReference Include="Facepunch.Steamworks.win32" Version="2.3.3"/>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="'$(Platform)' == 'x64'">
+      <ItemGroup>
+        <PackageReference Include="Facepunch.Steamworks" Version="2.3.3"/>
+        <PackageReference Include="Facepunch.Steamworks.Library" Version="2.3.3"/>
+      </ItemGroup>
+  </When>
+  </Choose>
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence" Version="1.1.4.20" />
     <PackageReference Include="LargeAddressAware" Version="1.0.6" />
@@ -938,5 +926,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <LargeAddressAware>true</LargeAddressAware>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>mkdir Localization
+copy /y $(ProjectDir)\..\CBRE.Localization\Localization\*.json $(TargetDir)\Localization\*.json</PostBuildEvent>
   </PropertyGroup>
 </Project>

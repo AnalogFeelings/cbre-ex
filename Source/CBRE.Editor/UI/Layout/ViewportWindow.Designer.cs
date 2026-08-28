@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.Layout
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.Layout
 {
     partial class ViewportWindow
     {
@@ -63,7 +65,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ViewportWindow";
 			this.ShowInTaskbar = false;
-			this.Text = "CBRE-EX Viewport Window";
+			this.Text = Local.LocalString("viewport");
 			this.ResumeLayout(false);
 
         }

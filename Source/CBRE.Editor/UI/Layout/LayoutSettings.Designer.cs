@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI.Layout
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI.Layout
 {
     partial class LayoutSettings
     {
@@ -95,7 +97,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(35, 15);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "Rows";
+			this.label1.Text = Local.LocalString("layout.rows")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ;
 			// 
 			// Columns
 			// 
@@ -131,7 +133,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(55, 15);
 			this.label2.TabIndex = 2;
-			this.label2.Text = "Columns";
+			this.label2.Text = Local.LocalString("layout.columns");
 			// 
 			// ApplyButton
 			// 
@@ -142,7 +144,7 @@
 			this.ApplyButton.Name = "ApplyButton";
 			this.ApplyButton.Size = new System.Drawing.Size(75, 23);
 			this.ApplyButton.TabIndex = 3;
-			this.ApplyButton.Text = "Apply";
+			this.ApplyButton.Text = Local.LocalString("apply");
 			this.ApplyButton.UseVisualStyleBackColor = true;
 			this.ApplyButton.Click += new System.EventHandler(this.ApplyButtonClick);
 			// 
@@ -155,7 +157,7 @@
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 3;
-			this.cancelButton.Text = "Cancel";
+			this.cancelButton.Text = Local.LocalString("cancel");
 			this.cancelButton.UseVisualStyleBackColor = true;
 			this.cancelButton.Click += new System.EventHandler(this.CancelButtonClick);
 			// 
@@ -180,7 +182,7 @@
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(51, 15);
 			this.label3.TabIndex = 2;
-			this.label3.Text = "Window";
+			this.label3.Text = Local.LocalString("layout.window_2");
 			// 
 			// label4
 			// 
@@ -191,8 +193,7 @@
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(389, 45);
 			this.label4.TabIndex = 2;
-			this.label4.Text = "Each rectangle represents a viewport.\r\nClick and drag rectangles (click start, dr" +
-    "ag to end) to combine viewports.\r\nClick a combined viewport to un-combine it.";
+			this.label4.Text = Local.LocalString("layout.help");
 			// 
 			// label5
 			// 
@@ -203,7 +204,7 @@
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(147, 15);
 			this.label5.TabIndex = 2;
-			this.label5.Text = "Click to try a preset layout:";
+			this.label5.Text = Local.LocalString("layout.click_to_try");
 			// 
 			// PresetButtonPanel
 			// 
@@ -237,7 +238,7 @@
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(380, 380);
 			this.Name = "LayoutSettings";
-			this.Text = "Layout Settings";
+			this.Text = Local.LocalString("layout");
 			((System.ComponentModel.ISupportInitialize)(this.Rows)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.Columns)).EndInit();
 			this.ResumeLayout(false);

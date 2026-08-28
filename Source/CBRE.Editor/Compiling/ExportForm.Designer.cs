@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.Compiling {
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.Compiling {
     partial class ExportForm {
         /// <summary>
         /// Required designer variable.
@@ -64,7 +66,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(110, 15);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Texture Dimensions";
+            this.label2.Text = Local.LocalString("export.dimensions");
             // 
             // label3
             // 
@@ -74,7 +76,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 15);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Downscale Factor";
+            this.label3.Text = Local.LocalString("export.downscale");
             // 
             // label4
             // 
@@ -84,7 +86,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 15);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Blur Radius";
+            this.label4.Text = Local.LocalString("export.blur");
             // 
             // label5
             // 
@@ -94,7 +96,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(85, 15);
             this.label5.TabIndex = 7;
-            this.label5.Text = "Ambient Color";
+            this.label5.Text = Local.LocalString("export.ambient");
             // 
             // ambientRed
             // 
@@ -135,7 +137,7 @@
             this.render.Name = "render";
             this.render.Size = new System.Drawing.Size(75, 23);
             this.render.TabIndex = 13;
-            this.render.Text = "Render";
+            this.render.Text = Local.LocalString("export.render");
             this.render.UseVisualStyleBackColor = true;
             this.render.Click += new System.EventHandler(this.render_Click);
             // 
@@ -149,7 +151,7 @@
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(75, 23);
             this.cancel.TabIndex = 16;
-            this.cancel.Text = "Cancel";
+            this.cancel.Text = Local.LocalString("cancel");
             this.cancel.UseVisualStyleBackColor = true;
             this.cancel.Click += new System.EventHandler(this.cancel_Click);
             // 
@@ -197,7 +199,7 @@
             this.export.Name = "export";
             this.export.Size = new System.Drawing.Size(75, 23);
             this.export.TabIndex = 14;
-            this.export.Text = "Export";
+            this.export.Text = Local.LocalString("export.export");
             this.export.UseVisualStyleBackColor = true;
             this.export.Click += new System.EventHandler(this.export_Click);
             // 
@@ -233,7 +235,7 @@
             this.viewAfterCheckbox.Name = "viewAfterCheckbox";
             this.viewAfterCheckbox.Size = new System.Drawing.Size(361, 23);
             this.viewAfterCheckbox.TabIndex = 15;
-            this.viewAfterCheckbox.Text = "View output on explorer after export?";
+            this.viewAfterCheckbox.Text = Local.LocalString("export.view_output");
             this.viewAfterCheckbox.UseVisualStyleBackColor = true;
             this.viewAfterCheckbox.CheckedChanged += new System.EventHandler(this.viewAfterCheckbox_CheckedChanged);
             // 
@@ -245,7 +247,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(119, 15);
             this.label1.TabIndex = 22;
-            this.label1.Text = "Bake Model Shadows";
+            this.label1.Text = Local.LocalString("export.bake_shadows");
             // 
             // modelBakeYes
             // 
@@ -257,7 +259,7 @@
             this.modelBakeYes.Size = new System.Drawing.Size(42, 19);
             this.modelBakeYes.TabIndex = 11;
             this.modelBakeYes.TabStop = true;
-            this.modelBakeYes.Text = "Yes";
+            this.modelBakeYes.Text = Local.LocalString("yes");
             this.modelBakeYes.UseVisualStyleBackColor = true;
             this.modelBakeYes.CheckedChanged += new System.EventHandler(this.modelBakeYes_CheckedChanged);
             // 
@@ -272,7 +274,7 @@
             this.modelBakeNo.Size = new System.Drawing.Size(41, 19);
             this.modelBakeNo.TabIndex = 12;
             this.modelBakeNo.TabStop = true;
-            this.modelBakeNo.Text = "No";
+            this.modelBakeNo.Text = Local.LocalString("no");
             this.modelBakeNo.UseVisualStyleBackColor = true;
             // 
             // label7
@@ -283,7 +285,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(105, 15);
             this.label7.TabIndex = 24;
-            this.label7.Text = "Max Thread Count";
+            this.label7.Text = Local.LocalString("export.max_thread");
             // 
             // threadCount
             // 
@@ -428,7 +430,7 @@
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "ExportForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Export / Lightmap";
+            this.Text = Local.LocalString("export.title");
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formClosing);
             this.Load += new System.EventHandler(this.ExportForm_Load);
             this.panel1.ResumeLayout(false);

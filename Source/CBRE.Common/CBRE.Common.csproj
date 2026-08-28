@@ -70,6 +70,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureFlags.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CBRE.Localization\CBRE.Localization.csproj">
+      <Project>{68FA12F2-C380-4C51-A1F6-24840684090F}</Project>
+      <Name>CBRE.Localization</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,4 +1,5 @@
 using CBRE.DataStructures.Geometric;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -134,7 +135,7 @@ namespace CBRE.DataStructures.Models
                 Width = width,
                 Image = bmp,
                 Index = 0,
-                Name = "Combined Texture"
+                Name = Local.LocalString("data.combined_texture")
             };
             foreach (Texture texture in Textures)
             {

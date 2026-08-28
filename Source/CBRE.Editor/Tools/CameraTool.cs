@@ -3,6 +3,7 @@ using CBRE.DataStructures.Geometric;
 using CBRE.Editor.Properties;
 using CBRE.Editor.UI;
 using CBRE.Graphics;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK;
@@ -68,7 +69,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetName()
         {
-            return "Camera Tool";
+            return Local.LocalString("tool.camera");
         }
 
         public override HotkeyTool? GetHotkeyToolType()
@@ -78,9 +79,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetContextualHelp()
         {
-            return "*Click* the camera origin or direction arrow to move the camera.\n" +
-                   "Hold *shift* and *click* to create multiple cameras.\n" +
-                   "Press *Tab* to cycle between cameras";
+            return Local.LocalString("tool.camera.help");
         }
 
         private Tuple<Coordinate, Coordinate> GetViewportCamera()

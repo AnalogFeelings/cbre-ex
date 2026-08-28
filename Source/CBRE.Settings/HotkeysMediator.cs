@@ -10,7 +10,7 @@ namespace CBRE.Settings
 
     public enum HotkeysMediator
     {
-
+        // Seems the descriptions are not being used
         [Description("New")]
         FileNew,
         [Description("Open")]

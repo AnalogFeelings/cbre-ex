@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CBRE.Localization;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -47,7 +48,7 @@ namespace CBRE.Providers.GameData
                 DataStructures.GameData.GameData gd = provider.GetFromFile(fileName);
                 return gd;
             }
-            throw new ProviderNotFoundException("No GameData provider was found for this file.");
+            throw new ProviderNotFoundException(Local.LocalString("exception.no_gamedata_provider_file"));
         }
 
         public static DataStructures.GameData.GameData GetGameDataFromString(string contents)
@@ -58,7 +59,7 @@ namespace CBRE.Providers.GameData
                 DataStructures.GameData.GameData gd = provider.GetFromString(contents);
                 return gd;
             }
-            throw new ProviderNotFoundException("No GameData provider was found for this string.");
+            throw new ProviderNotFoundException(Local.LocalString("exception.no_gamedata_provider_string"));
         }
 
         public static DataStructures.GameData.GameData GetGameDataFromStream(Stream stream)
@@ -69,7 +70,7 @@ namespace CBRE.Providers.GameData
                 DataStructures.GameData.GameData gd = provider.GetFromStream(stream);
                 return gd;
             }
-            throw new ProviderNotFoundException("No GameData provider was found for this stream.");
+            throw new ProviderNotFoundException(Local.LocalString("exception.no_gamedata_provider_stream"));
         }
 
         protected virtual bool IsValidForFile(string filename)

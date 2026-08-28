@@ -1,4 +1,5 @@
 ﻿using CBRE.Extensions;
+using CBRE.Localization;
 using OpenTK;
 using System;
 using System.Runtime.Serialization;
@@ -63,7 +64,7 @@ namespace CBRE.DataStructures.Geometric
 
         public Matrix(params decimal[] values)
         {
-            if (values.Length != 16) throw new Exception("A matrix must be 16 values long.");
+            if (values.Length != 16) throw new Exception(Local.LocalString("exception.matrix_16_values"));
             Values = values;
         }
 
@@ -142,7 +143,7 @@ namespace CBRE.DataStructures.Geometric
                 // check for singular matrix
                 if (pivot == 0)
                 {
-                    throw new InvalidOperationException("Matrix is singular and cannot be inverted.");
+                    throw new InvalidOperationException(Local.LocalString("exception.matrix_singular_cannot_inverted"));
                 }
 
                 // Scale row so it has a unit diagonal

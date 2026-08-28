@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
     partial class TextureReplaceDialog
     {
@@ -70,7 +72,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(193, 152);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Find";
+			this.groupBox1.Text = Local.LocalString("find");
 			// 
 			// Find
 			// 
@@ -86,7 +88,7 @@
 			this.FindInfo.Name = "FindInfo";
 			this.FindInfo.Size = new System.Drawing.Size(69, 15);
 			this.FindInfo.TabIndex = 3;
-			this.FindInfo.Text = "Texture info";
+			this.FindInfo.Text = Local.LocalString("texture.info");
 			// 
 			// FindImage
 			// 
@@ -103,7 +105,7 @@
 			this.FindBrowse.Name = "FindBrowse";
 			this.FindBrowse.Size = new System.Drawing.Size(75, 23);
 			this.FindBrowse.TabIndex = 1;
-			this.FindBrowse.Text = "Browse...";
+			this.FindBrowse.Text = Local.LocalString("browse");
 			this.FindBrowse.UseVisualStyleBackColor = true;
 			// 
 			// groupBox2
@@ -118,7 +120,7 @@
 			this.groupBox2.Size = new System.Drawing.Size(193, 152);
 			this.groupBox2.TabIndex = 0;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Replace";
+			this.groupBox2.Text = Local.LocalString("replace");
 			// 
 			// Replace
 			// 
@@ -134,7 +136,7 @@
 			this.ReplaceInfo.Name = "ReplaceInfo";
 			this.ReplaceInfo.Size = new System.Drawing.Size(69, 15);
 			this.ReplaceInfo.TabIndex = 3;
-			this.ReplaceInfo.Text = "Texture info";
+			this.ReplaceInfo.Text = Local.LocalString("texture.info");
 			// 
 			// ReplaceImage
 			// 
@@ -151,7 +153,7 @@
 			this.ReplaceBrowse.Name = "ReplaceBrowse";
 			this.ReplaceBrowse.Size = new System.Drawing.Size(75, 23);
 			this.ReplaceBrowse.TabIndex = 1;
-			this.ReplaceBrowse.Text = "Browse...";
+			this.ReplaceBrowse.Text = Local.LocalString("browse");
 			this.ReplaceBrowse.UseVisualStyleBackColor = true;
 			// 
 			// groupBox3
@@ -165,7 +167,7 @@
 			this.groupBox3.Size = new System.Drawing.Size(193, 126);
 			this.groupBox3.TabIndex = 1;
 			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Replace In";
+			this.groupBox3.Text = Local.LocalString("texture.replace");
 			// 
 			// ReplaceEverything
 			// 
@@ -175,7 +177,7 @@
 			this.ReplaceEverything.Size = new System.Drawing.Size(81, 19);
 			this.ReplaceEverything.TabIndex = 0;
 			this.ReplaceEverything.TabStop = true;
-			this.ReplaceEverything.Text = "Everything";
+			this.ReplaceEverything.Text = Local.LocalString("texture.replace.everything");
 			this.ReplaceEverything.UseVisualStyleBackColor = true;
 			// 
 			// ReplaceVisible
@@ -186,7 +188,7 @@
 			this.ReplaceVisible.Size = new System.Drawing.Size(116, 19);
 			this.ReplaceVisible.TabIndex = 0;
 			this.ReplaceVisible.TabStop = true;
-			this.ReplaceVisible.Text = "All visible objects";
+			this.ReplaceVisible.Text = Local.LocalString("texture.replace.visible");
 			this.ReplaceVisible.UseVisualStyleBackColor = true;
 			// 
 			// ReplaceSelection
@@ -197,7 +199,7 @@
 			this.ReplaceSelection.Size = new System.Drawing.Size(73, 19);
 			this.ReplaceSelection.TabIndex = 0;
 			this.ReplaceSelection.TabStop = true;
-			this.ReplaceSelection.Text = "Selection";
+			this.ReplaceSelection.Text = Local.LocalString("texture.replace.selection");
 			this.ReplaceSelection.UseVisualStyleBackColor = true;
 			// 
 			// groupBox4
@@ -212,7 +214,7 @@
 			this.groupBox4.Size = new System.Drawing.Size(193, 126);
 			this.groupBox4.TabIndex = 1;
 			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = "Action";
+			this.groupBox4.Text = Local.LocalString("texture.action");
 			// 
 			// ActionSelect
 			// 
@@ -222,7 +224,7 @@
 			this.ActionSelect.Size = new System.Drawing.Size(184, 19);
 			this.ActionSelect.TabIndex = 0;
 			this.ActionSelect.TabStop = true;
-			this.ActionSelect.Text = "Select matches (don\'t replace)";
+			this.ActionSelect.Text = Local.LocalString("texture.action.matches");
 			this.ActionSelect.UseVisualStyleBackColor = true;
 			// 
 			// ActionSubstitute
@@ -233,7 +235,7 @@
 			this.ActionSubstitute.Size = new System.Drawing.Size(162, 19);
 			this.ActionSubstitute.TabIndex = 0;
 			this.ActionSubstitute.TabStop = true;
-			this.ActionSubstitute.Text = "Substitute partial matches";
+			this.ActionSubstitute.Text = Local.LocalString("texture.action.substitute");
 			this.ActionSubstitute.UseVisualStyleBackColor = true;
 			// 
 			// ActionPartial
@@ -244,7 +246,7 @@
 			this.ActionPartial.Size = new System.Drawing.Size(150, 19);
 			this.ActionPartial.TabIndex = 0;
 			this.ActionPartial.TabStop = true;
-			this.ActionPartial.Text = "Replace partial matches";
+			this.ActionPartial.Text = Local.LocalString("texture.action.partial");
 			this.ActionPartial.UseVisualStyleBackColor = true;
 			// 
 			// ActionExact
@@ -255,7 +257,7 @@
 			this.ActionExact.Size = new System.Drawing.Size(145, 19);
 			this.ActionExact.TabIndex = 0;
 			this.ActionExact.TabStop = true;
-			this.ActionExact.Text = "Replace exact matches";
+			this.ActionExact.Text = Local.LocalString("texture.action.exact");
 			this.ActionExact.UseVisualStyleBackColor = true;
 			// 
 			// RescaleTextures
@@ -265,7 +267,7 @@
 			this.RescaleTextures.Name = "RescaleTextures";
 			this.RescaleTextures.Size = new System.Drawing.Size(158, 17);
 			this.RescaleTextures.TabIndex = 2;
-			this.RescaleTextures.Text = "Rescale texture coordinates";
+			this.RescaleTextures.Text = Local.LocalString("texture.rescale");
 			this.RescaleTextures.UseVisualStyleBackColor = true;
 			// 
 			// cancelButton
@@ -276,7 +278,7 @@
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 3;
-			this.cancelButton.Text = "Cancel";
+			this.cancelButton.Text = Local.LocalString("cancel");
 			this.cancelButton.UseVisualStyleBackColor = true;
 			// 
 			// OKButton
@@ -287,7 +289,7 @@
 			this.OKButton.Name = "OKButton";
 			this.OKButton.Size = new System.Drawing.Size(75, 23);
 			this.OKButton.TabIndex = 3;
-			this.OKButton.Text = "OK";
+			this.OKButton.Text = Local.LocalString("ok");
 			this.OKButton.UseVisualStyleBackColor = true;
 			// 
 			// TextureReplaceDialog
@@ -308,7 +310,7 @@
 			this.Name = "TextureReplaceDialog";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
-			this.Text = "Replace Textures";
+			this.Text = Local.LocalString("texture");
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.FindImage)).EndInit();

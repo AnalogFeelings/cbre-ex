@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -38,11 +39,11 @@ namespace CBRE.Common.Extensions
             if (source is null)
                 throw new ArgumentNullException(nameof(source));
             if (!source.CanRead)
-                throw new InvalidOperationException($"'{nameof(source)}' is not readable.");
+                throw new InvalidOperationException(Local.LocalString("exception.not_readable", nameof(source)));
             if (destination == null)
                 throw new ArgumentNullException(nameof(destination));
             if (!destination.CanWrite)
-                throw new InvalidOperationException($"'{nameof(destination)}' is not writable.");
+                throw new InvalidOperationException(Local.LocalString("exception.not_writable", nameof(destination)));
 
             byte[] buffer = new byte[bufferSize];
             long totalBytesRead = 0;

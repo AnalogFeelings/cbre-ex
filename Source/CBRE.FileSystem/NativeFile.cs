@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace CBRE.FileSystem
 
         public Stream Open()
         {
-            if (IsContainer) throw new FileNotFoundException("Unable to open a container.");
+            if (IsContainer) throw new FileNotFoundException(Local.LocalString("exception.unable_open_container"));
             return FileInfo.Open(FileMode.Open, FileAccess.Read);
         }
 

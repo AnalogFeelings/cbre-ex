@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.Tools.VMTool
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.Tools.VMTool
 {
     partial class VMSidebarPanel
     {
@@ -76,7 +78,7 @@
 			this.ResetButton.Name = "ResetButton";
 			this.ResetButton.Size = new System.Drawing.Size(99, 23);
 			this.ResetButton.TabIndex = 6;
-			this.ResetButton.Text = "Reset Brush";
+			this.ResetButton.Text = Local.LocalString("tool.reset_brush");
 			this.ResetButton.UseVisualStyleBackColor = true;
 			this.ResetButton.Click += new System.EventHandler(this.ResetButtonClicked);
 			// 
@@ -89,7 +91,7 @@
 			this.DeselectAllButton.Name = "DeselectAllButton";
 			this.DeselectAllButton.Size = new System.Drawing.Size(99, 23);
 			this.DeselectAllButton.TabIndex = 5;
-			this.DeselectAllButton.Text = "Deselect All";
+			this.DeselectAllButton.Text = Local.LocalString("deselect_all");
 			this.DeselectAllButton.UseVisualStyleBackColor = true;
 			this.DeselectAllButton.Click += new System.EventHandler(this.DeselectAllButtonClicked);
 			// 

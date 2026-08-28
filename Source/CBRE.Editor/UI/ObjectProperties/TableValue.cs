@@ -1,4 +1,5 @@
 using CBRE.DataStructures.GameData;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -55,7 +56,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             foreach (IGrouping<string, Property> group in props.Where(x => gameDataProps.All(y => x.Key != y.Name)).GroupBy(x => x.Key))
             {
                 List<string> vals = @group.Select(x => x.Value).Distinct().ToList();
-                string value = vals.Count == 1 ? vals.First() : "<multiple values> - " + String.Join(", ", vals);
+                string value = vals.Count == 1 ? vals.First() : Local.LocalString("object_properties.multiple_values", String.Join(", ", vals));
                 list.Add(new TableValue { Class = className, OriginalKey = @group.Key, NewKey = @group.Key, Value = value });
             }
             return list;

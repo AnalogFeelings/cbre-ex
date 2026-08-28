@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.Brushes.Controls {
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.Brushes.Controls {
     partial class FontChooserControl {
         /// <summary> 
         /// Required designer variable.
@@ -35,7 +37,7 @@
 			this.Label.Name = "Label";
 			this.Label.Size = new System.Drawing.Size(31, 15);
 			this.Label.TabIndex = 2;
-			this.Label.Text = "Font";
+			this.Label.Text = Local.LocalString("info.editor.font");
 			// 
 			// FontPicker
 			// 

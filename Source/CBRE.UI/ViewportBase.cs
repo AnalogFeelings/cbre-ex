@@ -1,6 +1,7 @@
 ﻿using CBRE.DataStructures.Geometric;
 using CBRE.Graphics;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using OpenTK;
 using OpenTK.Graphics;
 using System;
@@ -52,7 +53,7 @@ namespace CBRE.UI
             {
                 StackTrace st = new StackTrace();
                 StackFrame[] frames = st.GetFrames() ?? new StackFrame[0];
-                string msg = "Rendering exception: " + ex.Message;
+                string msg = Local.LocalString("exception.ui.rendering", ex.Message);
                 foreach (StackFrame frame in frames)
                 {
                     System.Reflection.MethodBase method = frame.GetMethod();
@@ -70,7 +71,7 @@ namespace CBRE.UI
             {
                 StackTrace st = new StackTrace();
                 StackFrame[] frames = st.GetFrames() ?? new StackFrame[0];
-                string msg = "Listener exception: " + ex.Message;
+                string msg = Local.LocalString("exception.ui.listener", ex.Message);
                 foreach (StackFrame frame in frames)
                 {
                     System.Reflection.MethodBase method = frame.GetMethod();

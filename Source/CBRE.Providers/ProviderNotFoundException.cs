@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 
 namespace CBRE.Providers
 {
@@ -8,7 +9,7 @@ namespace CBRE.Providers
         {
         }
 
-        public ProviderNotFoundException() : base("A suitable provider was not able to be found.")
+        public ProviderNotFoundException() : base(Local.LocalString("exception.provider_not_found"))
         {
         }
 

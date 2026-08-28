@@ -1,0 +1,49 @@
+{
+  "Name": "item",
+  "Description": "Spawn an item.",
+  "Sprite": "sprites/item",
+  "Properties": [
+    {
+      "Name": "name",
+      "Type": "String",
+      "SmartEditName": "Name",
+      "DefaultValue": "",
+      "HelpText": "The name of the item, as it appears in items.ini."
+    },
+    {
+      "Name": "use_custom_rotation",
+      "Type": "Bool",
+      "SmartEditName": "Use Custom Rotation",
+      "DefaultValue": "No",
+      "HelpText": "If set to No, the item's rotation will be randomized."
+    },
+    {
+      "Name": "angles",
+      "Type": "Vector",
+      "SmartEditName": "Custom Rotation",
+      "DefaultValue": "0 0 0",
+      "HelpText": "In Euler angles and degrees. Only has an effect when 'Use Custom Rotation' is set to Yes."
+    },
+    {
+      "Name": "state",
+      "Type": "Float",
+      "SmartEditName": "State 1",
+      "DefaultValue": "0.0",
+      "HelpText": "Multi-purpose state variable. Exclusively used (for the purposes of a room editor) to represent the remaining power in battery-powered items. 0-1000 for the Night Vision Goggles, 0-100 for all others."
+    },
+    {
+      "Name": "state2",
+      "Type": "Float",
+      "SmartEditName": "State 2",
+      "DefaultValue": "0.0",
+      "HelpText": "Second multi-purpose state variable."
+    },
+    {
+      "Name": "chance",
+      "Type": "Float",
+      "SmartEditName": "Spawn Chance",
+      "DefaultValue": "1.0",
+      "HelpText": "The chance for this item to spawn. Between 0 and 1 where 1 means a guaranteed spawn and 0.25 means a 25% chance for the item to spawn."
+    }
+  ]
+}

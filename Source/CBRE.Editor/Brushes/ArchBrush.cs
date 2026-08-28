@@ -3,6 +3,7 @@ using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Brushes.Controls;
 using CBRE.Extensions;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -24,21 +25,21 @@ namespace CBRE.Editor.Brushes
 
         public ArchBrush()
         {
-            _numSides = new NumericControl(this) { LabelText = "Number of sides" };
-            _wallWidth = new NumericControl(this) { LabelText = "Wall width", Minimum = 1, Maximum = 1024, Value = 32, Precision = 1 };
-            _arc = new NumericControl(this) { LabelText = "Arc", Minimum = 1, Maximum = 360 * 4, Value = 360 };
-            _startAngle = new NumericControl(this) { LabelText = "Start angle", Minimum = 0, Maximum = 359, Value = 0 };
-            _addHeight = new NumericControl(this) { LabelText = "Add height", Minimum = -1024, Maximum = 1024, Value = 0, Precision = 1 };
-            _curvedRamp = new BooleanControl(this) { LabelText = "Curved ramp", Checked = false };
-            _tiltAngle = new NumericControl(this) { LabelText = "Tilt angle", Minimum = -Atan2, Maximum = Atan2, Value = 0, Enabled = false, Precision = 1 };
-            _tiltInterp = new BooleanControl(this) { LabelText = "Tilt interpolation", Checked = false, Enabled = false };
+            _numSides = new NumericControl(this) { LabelText = Local.LocalString("brush.sides") };
+            _wallWidth = new NumericControl(this) { LabelText = Local.LocalString("brush.width"), Minimum = 1, Maximum = 1024, Value = 32, Precision = 1 };
+            _arc = new NumericControl(this) { LabelText = Local.LocalString("brush.arc"), Minimum = 1, Maximum = 360 * 4, Value = 360 };
+            _startAngle = new NumericControl(this) { LabelText = Local.LocalString("brush.angle"), Minimum = 0, Maximum = 359, Value = 0 };
+            _addHeight = new NumericControl(this) { LabelText = Local.LocalString("brush.height"), Minimum = -1024, Maximum = 1024, Value = 0, Precision = 1 };
+            _curvedRamp = new BooleanControl(this) { LabelText = Local.LocalString("brush.ramp"), Checked = false };
+            _tiltAngle = new NumericControl(this) { LabelText = Local.LocalString("brush.tilt_angle"), Minimum = -Atan2, Maximum = Atan2, Value = 0, Enabled = false, Precision = 1 };
+            _tiltInterp = new BooleanControl(this) { LabelText = Local.LocalString("brush.tilt_interpolation"), Checked = false, Enabled = false };
 
             _curvedRamp.ValuesChanged += (s, b) => _tiltAngle.Enabled = _tiltInterp.Enabled = _curvedRamp.GetValue();
         }
 
         public string Name
         {
-            get { return "Arch"; }
+            get { return Local.LocalString("brush.arch"); }
         }
 
         public bool CanRound { get { return true; } }

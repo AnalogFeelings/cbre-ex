@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
     partial class EntityReportDialog
     {
@@ -76,12 +78,12 @@
 			// 
 			// ClassNameHeader
 			// 
-			this.ClassNameHeader.Text = "Class";
+			this.ClassNameHeader.Text = Local.LocalString("object_properties.class");
 			this.ClassNameHeader.Width = 107;
 			// 
 			// EntityNameHeader
 			// 
-			this.EntityNameHeader.Text = "Name";
+			this.EntityNameHeader.Text = Local.LocalString("entity_report.name");
 			this.EntityNameHeader.Width = 153;
 			// 
 			// groupBox1
@@ -107,7 +109,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(178, 242);
 			this.groupBox1.TabIndex = 1;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Filter";
+			this.groupBox1.Text = Local.LocalString("entity_report.filter");
 			// 
 			// ResetFiltersButton
 			// 
@@ -115,7 +117,7 @@
 			this.ResetFiltersButton.Name = "ResetFiltersButton";
 			this.ResetFiltersButton.Size = new System.Drawing.Size(75, 23);
 			this.ResetFiltersButton.TabIndex = 6;
-			this.ResetFiltersButton.Text = "Reset Filters";
+			this.ResetFiltersButton.Text = Local.LocalString("reset");
 			this.ResetFiltersButton.UseVisualStyleBackColor = true;
 			this.ResetFiltersButton.Click += new System.EventHandler(this.ResetFilters);
 			// 
@@ -128,7 +130,7 @@
 			this.IncludeHidden.Name = "IncludeHidden";
 			this.IncludeHidden.Size = new System.Drawing.Size(146, 19);
 			this.IncludeHidden.TabIndex = 5;
-			this.IncludeHidden.Text = "Include hidden objects";
+			this.IncludeHidden.Text = Local.LocalString("entity_report.include_hidden_objects");
 			this.IncludeHidden.UseVisualStyleBackColor = true;
 			this.IncludeHidden.CheckedChanged += new System.EventHandler(this.FiltersChanged);
 			// 
@@ -139,7 +141,7 @@
 			this.FilterClassExact.Name = "FilterClassExact";
 			this.FilterClassExact.Size = new System.Drawing.Size(54, 19);
 			this.FilterClassExact.TabIndex = 4;
-			this.FilterClassExact.Text = "Exact";
+			this.FilterClassExact.Text = Local.LocalString("entity_report.exact");
 			this.FilterClassExact.UseVisualStyleBackColor = true;
 			this.FilterClassExact.CheckedChanged += new System.EventHandler(this.FiltersChanged);
 			// 
@@ -150,7 +152,7 @@
 			this.FilterKeyValueExact.Name = "FilterKeyValueExact";
 			this.FilterKeyValueExact.Size = new System.Drawing.Size(54, 19);
 			this.FilterKeyValueExact.TabIndex = 4;
-			this.FilterKeyValueExact.Text = "Exact";
+			this.FilterKeyValueExact.Text = Local.LocalString("entity_report.exact");
 			this.FilterKeyValueExact.UseVisualStyleBackColor = true;
 			this.FilterKeyValueExact.CheckedChanged += new System.EventHandler(this.FiltersChanged);
 			// 
@@ -186,7 +188,7 @@
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(80, 15);
 			this.label3.TabIndex = 1;
-			this.label3.Text = "Filter by class:";
+			this.label3.Text = Local.LocalString("entity_report.filter_by_class");
 			// 
 			// FilterKey
 			// 
@@ -203,7 +205,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(106, 15);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Filter by key/value:";
+			this.label1.Text = Local.LocalString("entity_report.filter_by_keyvalue");
 			// 
 			// TypeBrush
 			// 
@@ -212,7 +214,7 @@
 			this.TypeBrush.Name = "TypeBrush";
 			this.TypeBrush.Size = new System.Drawing.Size(124, 19);
 			this.TypeBrush.TabIndex = 0;
-			this.TypeBrush.Text = "Brush Entities Only";
+			this.TypeBrush.Text = Local.LocalString("entity_report.brush_entities_only");
 			this.TypeBrush.UseVisualStyleBackColor = true;
 			this.TypeBrush.Click += new System.EventHandler(this.FiltersChanged);
 			// 
@@ -223,7 +225,7 @@
 			this.TypePoint.Name = "TypePoint";
 			this.TypePoint.Size = new System.Drawing.Size(122, 19);
 			this.TypePoint.TabIndex = 0;
-			this.TypePoint.Text = "Point Entities Only";
+			this.TypePoint.Text = Local.LocalString("entity_report.point_entities_only");
 			this.TypePoint.UseVisualStyleBackColor = true;
 			this.TypePoint.Click += new System.EventHandler(this.FiltersChanged);
 			// 
@@ -236,7 +238,7 @@
 			this.TypeAll.Size = new System.Drawing.Size(71, 19);
 			this.TypeAll.TabIndex = 0;
 			this.TypeAll.TabStop = true;
-			this.TypeAll.Text = "Show All";
+			this.TypeAll.Text = Local.LocalString("entity_report.show_all");
 			this.TypeAll.UseVisualStyleBackColor = true;
 			this.TypeAll.Click += new System.EventHandler(this.FiltersChanged);
 			// 
@@ -248,7 +250,7 @@
 			this.GoToButton.Name = "GoToButton";
 			this.GoToButton.Size = new System.Drawing.Size(75, 23);
 			this.GoToButton.TabIndex = 2;
-			this.GoToButton.Text = "Go to";
+			this.GoToButton.Text = Local.LocalString("entity_report.goto");
 			this.GoToButton.UseVisualStyleBackColor = true;
 			this.GoToButton.Click += new System.EventHandler(this.GoToSelectedEntity);
 			// 
@@ -260,7 +262,7 @@
 			this.DeleteButton.Name = "DeleteButton";
 			this.DeleteButton.Size = new System.Drawing.Size(75, 23);
 			this.DeleteButton.TabIndex = 3;
-			this.DeleteButton.Text = "Delete";
+			this.DeleteButton.Text = Local.LocalString("delete");
 			this.DeleteButton.UseVisualStyleBackColor = true;
 			this.DeleteButton.Click += new System.EventHandler(this.DeleteSelectedEntity);
 			// 
@@ -272,7 +274,7 @@
 			this.PropertiesButton.Name = "PropertiesButton";
 			this.PropertiesButton.Size = new System.Drawing.Size(75, 23);
 			this.PropertiesButton.TabIndex = 4;
-			this.PropertiesButton.Text = "Properties";
+			this.PropertiesButton.Text = Local.LocalString("entity_report.properties");
 			this.PropertiesButton.UseVisualStyleBackColor = true;
 			this.PropertiesButton.Click += new System.EventHandler(this.OpenEntityProperties);
 			// 
@@ -285,7 +287,7 @@
 			this.CloseButton.Name = "CloseButton";
 			this.CloseButton.Size = new System.Drawing.Size(75, 23);
 			this.CloseButton.TabIndex = 5;
-			this.CloseButton.Text = "Close";
+			this.CloseButton.Text = Local.LocalString("close");
 			this.CloseButton.UseVisualStyleBackColor = true;
 			this.CloseButton.Click += new System.EventHandler(this.CloseButtonClicked);
 			// 
@@ -300,7 +302,7 @@
 			this.FollowSelection.Name = "FollowSelection";
 			this.FollowSelection.Size = new System.Drawing.Size(111, 19);
 			this.FollowSelection.TabIndex = 6;
-			this.FollowSelection.Text = "Follow selection";
+			this.FollowSelection.Text = Local.LocalString("entity_report.follow_selection");
 			this.FollowSelection.UseVisualStyleBackColor = true;
 			// 
 			// EntityReportDialog
@@ -323,7 +325,7 @@
 			this.Name = "EntityReportDialog";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Entity Report";
+			this.Text = Local.LocalString("entity_report");
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.ResumeLayout(false);

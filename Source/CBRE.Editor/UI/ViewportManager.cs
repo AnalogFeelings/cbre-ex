@@ -3,6 +3,7 @@ using CBRE.Editor.Rendering;
 using CBRE.Editor.UI.Layout;
 using CBRE.Graphics.Helpers;
 using CBRE.Graphics.Renderables;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK;
@@ -241,8 +242,8 @@ namespace CBRE.Editor.UI
 
         private static void SubscribeExceptions(ViewportBase vp)
         {
-            vp.ListenerException += (sender, ex) => Logging.Logger.ShowException(ex, "Viewport Listener Exception");
-            vp.RenderException += (sender, ex) => Logging.Logger.ShowException(ex, "Viewport Render Exception");
+            vp.ListenerException += (sender, ex) => Logging.Logger.ShowException(ex, Local.LocalString("exception.viewport_listener"));
+            vp.RenderException += (sender, ex) => Logging.Logger.ShowException(ex, Local.LocalString("exception.viewport_render"));
         }
 
         private static void RunAll()

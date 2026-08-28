@@ -3,6 +3,7 @@ using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.DataStructures.Models;
 using CBRE.FileSystem;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -161,7 +162,7 @@ namespace CBRE.Providers.Model
                 }
                 tex = new DataStructures.Models.Texture
                 {
-                    Name = "blank",
+                    Name = Local.LocalString("texture.blank"),
                     Index = 0,
                     Width = 64,
                     Height = 64,

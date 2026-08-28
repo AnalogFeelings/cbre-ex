@@ -2,6 +2,7 @@ using CBRE.DataStructures.GameData;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Operations;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace CBRE.Editor.Problems
                 .Where(x => x.GameData.ClassType == ClassType.Solid)
                 .Where(x => x.GetChildren().SelectMany(y => y.FindAll()).Any(y => !(y is Group) && !(y is Solid))))
             {
-                yield return new Problem(GetType(), map, new[] { entity }, Fix, "Brush entity has child entities", "A brush entity with child entities was found. A brush entity must only have solid contents. Fixing the problem will move the child entities outside of the entity's group.");
+                yield return new Problem(GetType(), map, new[] { entity }, Fix, Local.LocalString("document.brush_entity_children"), Local.LocalString("document.brush_entity_children.description"));
             }
         }
 

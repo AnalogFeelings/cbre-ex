@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
     partial class TransformDialog
     {
@@ -60,7 +62,7 @@
 			this.Rotate.Size = new System.Drawing.Size(59, 19);
 			this.Rotate.TabIndex = 0;
 			this.Rotate.TabStop = true;
-			this.Rotate.Text = "Rotate";
+			this.Rotate.Text = Local.LocalString("tool.rotate");
 			this.Rotate.UseVisualStyleBackColor = true;
 			this.Rotate.Click += new System.EventHandler(this.TypeChanged);
 			// 
@@ -72,7 +74,7 @@
 			this.Translate.Name = "Translate";
 			this.Translate.Size = new System.Drawing.Size(71, 19);
 			this.Translate.TabIndex = 0;
-			this.Translate.Text = "Translate";
+			this.Translate.Text = Local.LocalString("transform.translate");
 			this.Translate.UseVisualStyleBackColor = true;
 			this.Translate.Click += new System.EventHandler(this.TypeChanged);
 			// 
@@ -84,7 +86,7 @@
 			this.scale.Name = "scale";
 			this.scale.Size = new System.Drawing.Size(52, 19);
 			this.scale.TabIndex = 0;
-			this.scale.Text = "Scale";
+			this.scale.Text = Local.LocalString("data.model.scale");
 			this.scale.UseVisualStyleBackColor = true;
 			this.scale.Click += new System.EventHandler(this.TypeChanged);
 			// 
@@ -151,7 +153,7 @@
 			this.SourceValueZButton.Name = "SourceValueZButton";
 			this.SourceValueZButton.Size = new System.Drawing.Size(50, 23);
 			this.SourceValueZButton.TabIndex = 18;
-			this.SourceValueZButton.Text = "Source";
+			this.SourceValueZButton.Text = Local.LocalString("object_properties.source");
 			this.SourceValueZButton.UseVisualStyleBackColor = true;
 			// 
 			// ZeroValueZButton
@@ -169,7 +171,7 @@
 			this.SourceValueYButton.Name = "SourceValueYButton";
 			this.SourceValueYButton.Size = new System.Drawing.Size(50, 23);
 			this.SourceValueYButton.TabIndex = 20;
-			this.SourceValueYButton.Text = "Source";
+			this.SourceValueYButton.Text = Local.LocalString("object_properties.source");
 			this.SourceValueYButton.UseVisualStyleBackColor = true;
 			// 
 			// ZeroValueYButton
@@ -189,7 +191,7 @@
 			this.SourceValueXButton.Name = "SourceValueXButton";
 			this.SourceValueXButton.Size = new System.Drawing.Size(50, 23);
 			this.SourceValueXButton.TabIndex = 22;
-			this.SourceValueXButton.Text = "Source";
+			this.SourceValueXButton.Text = Local.LocalString("object_properties.source");
 			this.SourceValueXButton.UseVisualStyleBackColor = true;
 			// 
 			// ZeroValueXButton
@@ -240,7 +242,7 @@
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 27;
-			this.cancelButton.Text = "Cancel";
+			this.cancelButton.Text = Local.LocalString("cancel");
 			this.cancelButton.UseVisualStyleBackColor = true;
 			// 
 			// OkButton
@@ -250,7 +252,7 @@
 			this.OkButton.Name = "OkButton";
 			this.OkButton.Size = new System.Drawing.Size(75, 23);
 			this.OkButton.TabIndex = 28;
-			this.OkButton.Text = "OK";
+			this.OkButton.Text = Local.LocalString("ok");
 			this.OkButton.UseVisualStyleBackColor = true;
 			this.OkButton.Click += new System.EventHandler(this.OkButtonClicked);
 			// 
@@ -282,7 +284,7 @@
 			this.Name = "TransformDialog";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
-			this.Text = "Transform";
+			this.Text = Local.LocalString("transform");
 			((System.ComponentModel.ISupportInitialize)(this.ValueY)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.ValueZ)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.ValueX)).EndInit();

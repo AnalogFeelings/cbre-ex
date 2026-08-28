@@ -1,3 +1,4 @@
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace CBRE.FileSystem
             {
                 string name = path.Split('/', '\\')[i];
                 if (i == 0 && name == "") while (f != null && f.Parent != null) f = f.Parent;
-                else if (name == "") throw new FileNotFoundException("Invalid path.");
+                else if (name == "") throw new FileNotFoundException(Local.LocalString("exception.invalid_path"));
 
                 if (f == null) return null;
 

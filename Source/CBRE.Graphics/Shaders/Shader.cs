@@ -1,3 +1,4 @@
+using CBRE.Localization;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace CBRE.Graphics.Shaders
             });
             if (!ShaderCode.Trim().StartsWith("#version 120"))
             {
-                throw new Exception("Please use #version 120 for shaders to keep support for older hardware.");
+                throw new Exception(Local.LocalString("exception.shaders_version"));
             }
         }
 
@@ -64,7 +65,7 @@ namespace CBRE.Graphics.Shaders
             if (status == 0)
             {
                 string err = GL.GetShaderInfoLog(shader);
-                throw new Exception("Error compiling " + shaderType + " shader: " + err);
+                throw new Exception(Local.LocalString("exception.error_compiling_shader", shaderType, err));
             }
 
             return shader;

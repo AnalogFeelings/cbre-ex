@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using CBRE.Localization;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace CBRE.Editor
@@ -10,7 +11,7 @@ namespace CBRE.Editor
         /// </summary>
         public static void Critical(string message)
         {
-            MessageBox.Show("A critical error has occurred:\n\n" + message + "\n\nThe application will now close.", "Critical Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(Local.LocalString("error.editor.critical", message), Local.LocalString("error.editor.critical.title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             Application.Exit();
         }
 
@@ -19,7 +20,7 @@ namespace CBRE.Editor
         /// </summary>
         public static void Warning(string message)
         {
-            MessageBox.Show("An error has occurred:\n\n" + message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(Local.LocalString("error.editor.warning") + "\n\n" + message, Local.LocalString("error.editor.warning.title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace CBRE.Editor
         /// </summary>
         public static void Log(string message)
         {
-            Debug.WriteLine("Log output: " + message);
+            Debug.WriteLine(Local.LocalString("error.editor.log", message));
         }
     }
 }

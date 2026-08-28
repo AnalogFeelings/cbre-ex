@@ -1,6 +1,7 @@
 ﻿using CBRE.DataStructures.Geometric;
 using CBRE.Editor.Documents;
 using CBRE.Editor.Tools.Widgets;
+using CBRE.Localization;
 using CBRE.UI;
 using OpenTK;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace CBRE.Editor.Tools.SelectTool.TransformationTools
 
         public override string GetTransformName()
         {
-            return "Skew";
+            return Local.LocalString("tool.skew");
         }
 
         public override Cursor CursorForHandle(BaseBoxTool.ResizeHandle handle)

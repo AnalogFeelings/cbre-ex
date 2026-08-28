@@ -2,6 +2,7 @@
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Brushes.Controls;
+using CBRE.Localization;
 using Poly2Tri;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,11 @@ namespace CBRE.Editor.Brushes
         public TextBrush()
         {
             _fontChooser = new FontChooserControl(this);
-            _flattenFactor = new NumericControl(this) { LabelText = "Aliasing Factor", Minimum = 0.1m, Maximum = 10m, Value = 1, Precision = 1, Increment = 0.1m };
-            _text = new TextControl(this) { EnteredText = "Enter text here" };
+            _flattenFactor = new NumericControl(this) { LabelText = Local.LocalString("brush.aliasing_factor"), Minimum = 0.1m, Maximum = 10m, Value = 1, Precision = 1, Increment = 0.1m };
+            _text = new TextControl(this) { EnteredText = Local.LocalString("brush.enter_text_here") };
         }
 
-        public string Name { get { return "Text"; } }
+        public string Name { get { return Local.LocalString("brush.text"); } }
 
         public bool CanRound { get { return true; } }
 

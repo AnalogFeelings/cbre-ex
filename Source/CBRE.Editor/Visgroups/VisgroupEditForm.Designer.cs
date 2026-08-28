@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.Visgroups
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.Visgroups
 {
     partial class VisgroupEditForm
     {
@@ -58,7 +60,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(39, 15);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "Name";
+			this.label1.Text = Local.LocalString("entity_report.name");
 			// 
 			// label2
 			// 
@@ -69,7 +71,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(36, 15);
 			this.label2.TabIndex = 3;
-			this.label2.Text = "Color\r\n";
+			this.label2.Text = Local.LocalString("data.light.color");
 			// 
 			// ColourPanel
 			// 
@@ -91,7 +93,7 @@
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 5;
-			this.cancelButton.Text = "Cancel";
+			this.cancelButton.Text = Local.LocalString("cancel");
 			this.cancelButton.UseVisualStyleBackColor = true;
 			this.cancelButton.Click += new System.EventHandler(this.CloseButtonClicked);
 			// 
@@ -104,7 +106,7 @@
 			this.AddButton.Name = "AddButton";
 			this.AddButton.Size = new System.Drawing.Size(95, 23);
 			this.AddButton.TabIndex = 5;
-			this.AddButton.Text = "Add Group";
+			this.AddButton.Text = Local.LocalString("visgroup_edit.add_group");
 			this.AddButton.UseVisualStyleBackColor = true;
 			this.AddButton.Click += new System.EventHandler(this.AddGroup);
 			// 
@@ -118,7 +120,7 @@
 			this.RemoveButton.Name = "RemoveButton";
 			this.RemoveButton.Size = new System.Drawing.Size(95, 23);
 			this.RemoveButton.TabIndex = 5;
-			this.RemoveButton.Text = "Remove Group";
+			this.RemoveButton.Text = Local.LocalString("visgroup_edit.remove_group");
 			this.RemoveButton.UseVisualStyleBackColor = true;
 			this.RemoveButton.Click += new System.EventHandler(this.RemoveGroup);
 			// 
@@ -132,7 +134,7 @@
 			this.OkButton.Name = "OkButton";
 			this.OkButton.Size = new System.Drawing.Size(75, 23);
 			this.OkButton.TabIndex = 5;
-			this.OkButton.Text = "OK";
+			this.OkButton.Text = Local.LocalString("ok");
 			this.OkButton.UseVisualStyleBackColor = true;
 			this.OkButton.Click += new System.EventHandler(this.CloseButtonClicked);
 			// 
@@ -173,7 +175,7 @@
 			this.Name = "VisgroupEditForm";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
-			this.Text = "Visgroup Editor";
+			this.Text = Local.LocalString("visgroup_edit");
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

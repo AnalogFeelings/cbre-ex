@@ -9,6 +9,7 @@ using CBRE.Editor.Properties;
 using CBRE.Editor.Rendering.Immediate;
 using CBRE.Editor.UI;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK.Graphics.OpenGL;
@@ -33,7 +34,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetName()
         {
-            return "Brush Tool";
+            return Local.LocalString("tool.brush");
         }
 
         public override HotkeyTool? GetHotkeyToolType()
@@ -48,9 +49,7 @@ namespace CBRE.Editor.Tools
 
         public override string GetContextualHelp()
         {
-            return "Draw a box in the 2D view to define the size of the brush.\n" +
-                   "Select the type of the brush to create in the sidebar.\n" +
-                   "Press *enter* in the 2D view to create the brush.";
+            return Local.LocalString("tool.brush.help");
         }
 
         protected override Color BoxColour
@@ -117,7 +116,7 @@ namespace CBRE.Editor.Tools
                 action = new ActionCollection(new ChangeSelection(new MapObject[0], Document.Selection.GetSelectedObjects()), action);
             }
 
-            Document.PerformAction("Create " + BrushManager.CurrentBrush.Name.ToLower(), action);
+            Document.PerformAction(Local.LocalString("tool.brush.create", BrushManager.CurrentBrush.Name.ToLower()), action);
         }
 
         private MapObject GetBrush(Box bounds, IDGenerator idg)
@@ -198,7 +197,7 @@ namespace CBRE.Editor.Tools
             menu.Items.Clear();
             if (State.Handle == ResizeHandle.Center)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem("Create Object");
+                ToolStripMenuItem item = new ToolStripMenuItem(Local.LocalString("menu.tools.create_object"));
                 item.Click += (sender, args) => BoxDrawnConfirm(vp);
                 menu.Items.Add(item);
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CBRE.Localization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace CBRE.FileSystem
         {
             Files = new List<IFile>(files.Where(x => x != null));
             Parent = parent;
-            if (!Files.Any()) throw new FileNotFoundException("Cannot create a composite file with no files.");
+            if (!Files.Any()) throw new FileNotFoundException(Local.LocalString("exception.composite_file"));
         }
 
         public FileSystemType Type

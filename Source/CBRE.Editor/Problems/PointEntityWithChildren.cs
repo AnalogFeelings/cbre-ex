@@ -2,6 +2,7 @@ using CBRE.DataStructures.GameData;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Operations;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace CBRE.Editor.Problems
                 .Where(x => x.GameData != null)
                 .Where(x => x.GameData.ClassType != ClassType.Solid && x.GetChildren().Any()))
             {
-                yield return new Problem(GetType(), map, new[] { entity }, Fix, "Point entity has children", "A point entity with children was found. A point entity cannot have any contents. Fixing the issue will move the children outside of the entity's group.");
+                yield return new Problem(GetType(), map, new[] { entity }, Fix, Local.LocalString("document.point_entity_children"), Local.LocalString("document.point_entity_children.description"));
             }
         }
 

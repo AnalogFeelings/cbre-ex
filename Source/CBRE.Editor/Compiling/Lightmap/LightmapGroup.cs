@@ -1,5 +1,6 @@
 ﻿using CBRE.DataStructures.Geometric;
 using CBRE.Settings;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,11 +33,11 @@ namespace CBRE.Editor.Compiling.Lightmap
 
                 if (Plane.OnPlane(Plane.PointOnPlane + uAxis * 1000f) != 0)
                 {
-                    throw new Exception("uAxis is misaligned");
+                    throw new Exception(Local.LocalString("exception.uaxis_misaligned"));
                 }
                 if (Plane.OnPlane(Plane.PointOnPlane + vAxis * 1000f) != 0)
                 {
-                    throw new Exception("vAxis is misaligned");
+                    throw new Exception(Local.LocalString("exception.vaxis_misaligned"));
                 }
             }
 

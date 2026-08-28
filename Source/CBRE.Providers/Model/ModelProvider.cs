@@ -1,6 +1,7 @@
 ﻿using CBRE.Common;
 using CBRE.FileSystem;
 using CBRE.Graphics.Helpers;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace CBRE.Providers.Model
             string path = file.FullPathName;
             if (Models.ContainsKey(path)) return Models[path];
 
-            if (!file.Exists) throw new ProviderException("The supplied file doesn't exist.");
+            if (!file.Exists) throw new ProviderException(Local.LocalString("exception.supplied_file_not_exist"));
             ModelProvider provider = RegisteredProviders.FirstOrDefault(p => p.IsValidForFile(file));
             if (provider != null)
             {
@@ -71,12 +72,12 @@ namespace CBRE.Providers.Model
                 for (int i = 0; i < model.Textures.Count; i++)
                 {
                     DataStructures.Models.Texture t = model.Textures[i];
-                    t.TextureObject = TextureHelper.Create(String.Format("ModelProvider: {0}/{1}/{2}", path, t.Name, i), t.Image, t.Image.Width, t.Image.Height, TextureFlags.None);
+                    t.TextureObject = TextureHelper.Create(Local.LocalString("data.model.provider", path, t.Name, i), t.Image, t.Image.Width, t.Image.Height, TextureFlags.None);
                 }
                 Models[path] = model;
                 return model;
             }
-            throw new ProviderNotFoundException("No model provider was found for this file.");
+            throw new ProviderNotFoundException(Local.LocalString("exception.no_model_provider_for_file"));
         }
 
         private static void UnloadModel(DataStructures.Models.Model model)

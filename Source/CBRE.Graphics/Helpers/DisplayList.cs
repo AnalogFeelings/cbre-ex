@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using CBRE.Localization;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 
@@ -36,11 +37,11 @@ namespace CBRE.Graphics.Helpers
         {
             if (!Lists.ContainsKey(name))
             {
-                throw new Exception("This list does not exist!");
+                throw new Exception(Local.LocalString("exception.list_not_exist"));
             }
             else if (CurrentList != null)
             {
-                throw new Exception("Another list (" + CurrentList + ") is already in progress!");
+                throw new Exception(Local.LocalString("exception.another_list_in_progress", CurrentList));
             }
             GL.NewList(Lists[name], ListMode.Compile);
             CurrentList = name;
@@ -50,11 +51,11 @@ namespace CBRE.Graphics.Helpers
         {
             if (CurrentList == null)
             {
-                throw new Exception("There is currently no list in progress to end");
+                throw new Exception(Local.LocalString("exception.no_list_in_progress"));
             }
             else if (CurrentList != name)
             {
-                throw new Exception("Cannot end " + name + ", as " + CurrentList + " is the current list.");
+                throw new Exception(Local.LocalString("exception.cannot_end_current_list", name, CurrentList));
             }
             GL.EndList();
             CurrentList = null;
@@ -64,7 +65,7 @@ namespace CBRE.Graphics.Helpers
         {
             if (!Lists.ContainsKey(name))
             {
-                throw new Exception("This list does not exist!");
+                throw new Exception(Local.LocalString("exception.list_not_exist"));
             }
             GL.CallList(Lists[name]);
         }

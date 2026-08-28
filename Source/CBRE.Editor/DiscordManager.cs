@@ -22,7 +22,7 @@ namespace CBRE.Editor
                 new Button()
                 {
                     Label = "GitHub",
-                    Url = "https://github.com/AnalogFeelings/cbre-ex"
+                    Url = "https://github.com/SCP-CB-Community-Preservation-Project/cbre-ex"
                 }
             }
         };

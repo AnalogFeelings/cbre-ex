@@ -1,4 +1,5 @@
 ﻿using CBRE.DataStructures.MapObjects;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using System.Collections.Generic;
 using System.Drawing;
@@ -35,14 +36,14 @@ namespace CBRE.Providers.Map
 
         public static DataStructures.MapObjects.Map GetMapFromFile(string fileName, IEnumerable<string> modelDirs, out Image[] lightmaps)
         {
-            if (!File.Exists(fileName)) throw new ProviderException("The supplied file doesn't exist.");
+            if (!File.Exists(fileName)) throw new ProviderException(Local.LocalString("exception.supplied_file_not_exist"));
             MapProvider provider = RegisteredProviders.FirstOrDefault(p => p.IsValidForFileName(fileName));
             if (provider != null)
             {
                 warnings = "";
                 return provider.GetFromFile(fileName, modelDirs, out lightmaps);
             }
-            throw new ProviderNotFoundException("No map provider was found for this file.");
+            throw new ProviderNotFoundException(Local.LocalString("exception.no_map_provider_for_file"));
         }
 
         public static void SaveMapToFile(string filename, DataStructures.MapObjects.Map map, DataStructures.GameData.GameData gameData, TextureCollection textureCollection = null)
@@ -53,7 +54,7 @@ namespace CBRE.Providers.Map
                 provider.SaveToFile(filename, map, gameData, textureCollection);
                 return;
             }
-            throw new ProviderNotFoundException("No map provider was found for this file format.");
+            throw new ProviderNotFoundException(Local.LocalString("exception.no_map_provider_for_format"));
         }
 
         public static IEnumerable<MapFeature> GetFormatFeatures(string filename)
@@ -63,7 +64,7 @@ namespace CBRE.Providers.Map
             {
                 return provider.GetFormatFeatures();
             }
-            throw new ProviderNotFoundException("No map provider was found for this file format.");
+            throw new ProviderNotFoundException(Local.LocalString("exception.no_map_provider_for_format"));
         }
 
         protected virtual DataStructures.MapObjects.Map GetFromFile(string filename, IEnumerable<string> modelDirs, out Image[] lightmaps)

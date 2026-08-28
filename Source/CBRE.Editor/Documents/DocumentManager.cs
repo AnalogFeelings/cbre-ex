@@ -1,5 +1,6 @@
 using CBRE.Common.Mediator;
 using CBRE.Editor.Tools;
+using CBRE.Localization;
 using System.Collections.Generic;
 
 namespace CBRE.Editor.Documents
@@ -13,7 +14,7 @@ namespace CBRE.Editor.Documents
 
         public static string GetUntitledDocumentName()
         {
-            return "Untitled " + _untitledCount++;
+            return Local.LocalString("document.untitled", _untitledCount++);
         }
 
         static DocumentManager()

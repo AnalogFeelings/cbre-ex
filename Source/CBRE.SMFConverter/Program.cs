@@ -1,4 +1,5 @@
 ﻿using Assimp;
+using CBRE.Localization;
 using CBRE.Packages;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace CBRE.SMFConverter
         {
             if (!args.Any())
             {
-                Log("No input files defined! Just drag and drop files onto CBRE.SMFConverter.exe", ConsoleColor.Red);
-                Log("Press any key to exit...");
+                Log(Local.LocalString("error.converter.no_input"), ConsoleColor.Red);
+                Log(Local.LocalString("log.converter.press_any_key"));
             }
             else
             {
@@ -39,7 +40,7 @@ namespace CBRE.SMFConverter
                                 UInt16 mapVersion = reader.ReadUInt16();
                                 if (mapVersion != 1)
                                 {
-                                    Log($"[{file}] Warning: mapVersion != 1 ({mapVersion})", ConsoleColor.Yellow);
+                                    Log(Local.LocalString("warning.converter.mapversion", file, mapVersion), ConsoleColor.Yellow);
                                 }
                                 byte mapFlags = reader.ReadByte();
 
@@ -49,17 +50,17 @@ namespace CBRE.SMFConverter
 
                                 context.ExportFile(scene, resultFilename, "x");
 
-                                Log($"[{file}] Complete!", ConsoleColor.Green);
+                                Log(Local.LocalString("warning.converter.complete", file), ConsoleColor.Green);
                             }
                         }
                     }
                     catch (Exception e)
                     {
-                        Log($"[{file}] Error: {e.Message}\n{e.StackTrace}", ConsoleColor.Red);
+                        Log(Local.LocalString("error.converter", file, e.Message, e.StackTrace), ConsoleColor.Red);
                     }
                 }
 
-                Log("Done! Press any key to exit...", ConsoleColor.Cyan);
+                Log(Local.LocalString("log.converter.done"), ConsoleColor.Cyan);
             }
             Console.ReadKey();
         }
@@ -70,7 +71,7 @@ namespace CBRE.SMFConverter
 
             if (childCount > 0)
             {
-                Log($"Processing {childCount} node{(childCount == 1 ? "" : "s")}");
+                Log(Local.LocalString("log.converter.processing", childCount));
             }
 
             for (int i = 0; i < childCount; i++)

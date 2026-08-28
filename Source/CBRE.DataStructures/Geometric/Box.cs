@@ -1,4 +1,5 @@
 ﻿using CBRE.DataStructures.Transformations;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace CBRE.DataStructures.Geometric
         {
             if (!coordinates.Any())
             {
-                throw new Exception("Cannot create a bounding box out of zero coordinates.");
+                throw new Exception(Local.LocalString("exception.box_out_of_zero"));
             }
             Coordinate min = new Coordinate(decimal.MaxValue, decimal.MaxValue, decimal.MaxValue);
             Coordinate max = new Coordinate(decimal.MinValue, decimal.MinValue, decimal.MinValue);
@@ -77,7 +78,7 @@ namespace CBRE.DataStructures.Geometric
         {
             if (!boxes.Any())
             {
-                throw new Exception("Cannot create a bounding box out of zero other boxes.");
+                throw new Exception(Local.LocalString("exception.box_out_of_zero_other"));
             }
             Coordinate min = new Coordinate(decimal.MaxValue, decimal.MaxValue, decimal.MaxValue);
             Coordinate max = new Coordinate(decimal.MinValue, decimal.MinValue, decimal.MinValue);

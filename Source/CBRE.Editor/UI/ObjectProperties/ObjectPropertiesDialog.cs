@@ -5,6 +5,7 @@ using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Entities;
 using CBRE.Editor.Actions.Visgroups;
 using CBRE.Editor.UI.ObjectProperties.SmartEdit;
+using CBRE.Localization;
 using CBRE.QuickForms;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace CBRE.Editor.UI.ObjectProperties
                 if (editAction != null)
                 {
                     // The entity change is more important to show
-                    actionText = "Edit entity data";
+                    actionText = Local.LocalString("object_properties.action.edit_data");
                     ac.Add(editAction);
                 }
             }
@@ -102,7 +103,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             if (visgroupAction != null)
             {
                 // Visgroup change shows if entity data not changed
-                if (actionText == null) actionText = "Edit object visgroups";
+                if (actionText == null) actionText = Local.LocalString("object_properties.action.edit_visgroups");
                 ac.Add(visgroupAction);
             }
 
@@ -349,14 +350,14 @@ namespace CBRE.Editor.UI.ObjectProperties
             Class.Items.Clear();
             bool allowWorldspawn = Objects.Any(x => x is World);
             Class.Items.AddRange(Document.GameData.Classes
-                                     .Where(x => x.ClassType != ClassType.Base && (allowWorldspawn || x.Name != "worldspawn"))
+                                     .Where(x => x.ClassType != ClassType.Base && (allowWorldspawn || x.Name != "worldspawn") && Objects[0] is Entity e && e.GameData.ClassType == x.ClassType)
                                      .Select(x => x.Name).OrderBy(x => x.ToLower()).OfType<object>().ToArray());
             if (!Objects.Any()) return;
             List<string> classes = Objects.Where(x => x is Entity || x is World).Select(x => x.GetEntityData().Name.ToLower()).Distinct().ToList();
             string cls = classes.Count > 1 ? "" : classes[0];
             if (classes.Count > 1)
             {
-                Class.Text = @"<multiple types> - " + String.Join(", ", classes);
+                Class.Text = Local.LocalString("object_properties.multiple_types", String.Join(", ", classes));
                 SmartEditButton.Checked = SmartEditButton.Enabled = false;
             }
             else
@@ -441,7 +442,7 @@ namespace CBRE.Editor.UI.ObjectProperties
             Class.BackColor = Color.LightBlue;
 
             string className = Class.Text;
-            if (_values.All(x => x.Class == null || x.Class == className))
+            if (_values.Any() && _values.All(x => x.Class == null || x.Class == className))
             {
                 CancelClassChange(null, null);
                 return;
@@ -610,7 +611,7 @@ namespace CBRE.Editor.UI.ObjectProperties
         {
             if (_changingClass) return;
 
-            using (QuickForm qf = new QuickForm("Add Property") { UseShortcutKeys = true }.TextBox("Key").TextBox("Value").OkCancel())
+            using (QuickForm qf = new QuickForm(Local.LocalString("object_properties.add_property")) { UseShortcutKeys = true }.TextBox("Key").TextBox("Value").OkCancel())
             {
                 if (qf.ShowDialog(this) != DialogResult.OK) return;
 

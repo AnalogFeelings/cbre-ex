@@ -1,4 +1,5 @@
 ﻿using CBRE.Common;
+using CBRE.Localization;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -208,7 +209,7 @@ namespace CBRE.Graphics.Helpers
         {
             if (!Exists(name))
             {
-                throw new Exception("Texture " + name + " doesn't exist");
+                throw new Exception(Local.LocalString("exception.texture_doesnt_exist", name));
             }
             Bind(Get(name).Reference);
         }

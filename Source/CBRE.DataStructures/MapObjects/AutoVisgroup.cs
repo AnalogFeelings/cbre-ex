@@ -1,4 +1,5 @@
 using CBRE.DataStructures.MapObjects.VisgroupFilters;
+using CBRE.Localization;
 using System;
 using System.Linq;
 
@@ -37,7 +38,7 @@ namespace CBRE.DataStructures.MapObjects
             {
                 ID = i--,
                 IsHidden = false,
-                Name = "Auto",
+                Name = Local.LocalString("sidebar.visgroups.auto"),
                 Visible = true
             };
             foreach (IVisgroupFilter f in filters)

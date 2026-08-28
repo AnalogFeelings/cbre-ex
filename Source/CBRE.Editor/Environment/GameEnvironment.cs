@@ -1,4 +1,5 @@
 ﻿using CBRE.FileSystem;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using CBRE.Settings;
 using CBRE.Settings.Models;
@@ -50,7 +51,7 @@ namespace CBRE.Editor.Environment
                 yield return new TextureProvider.TextureCategory
                 {
                     Path = dir,
-                    CategoryName = $"Texture dir {i}"
+                    CategoryName = Local.LocalString("category.texture", i)
                 };
             }
 
@@ -58,13 +59,13 @@ namespace CBRE.Editor.Environment
             yield return new TextureProvider.TextureCategory
             {
                 Path = Path.Combine(exeDir, "ToolTextures"),
-                CategoryName = "Tool textures",
+                CategoryName = Local.LocalString("category.tool_textures"),
                 Prefix = "tooltextures/"
             };
             yield return new TextureProvider.TextureCategory
             {
                 Path = Path.Combine(exeDir, "Sprites"),
-                CategoryName = "Sprites",
+                CategoryName = Local.LocalString("category.sprites"),
                 Prefix = "sprites/"
             };
         }

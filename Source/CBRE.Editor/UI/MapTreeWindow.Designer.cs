@@ -1,4 +1,6 @@
-﻿namespace CBRE.Editor.UI
+﻿using CBRE.Localization;
+
+namespace CBRE.Editor.UI
 {
     partial class MapTreeWindow
     {
@@ -65,12 +67,12 @@
 			// 
 			// KeyColumn
 			// 
-			this.KeyColumn.Text = "Key";
+			this.KeyColumn.Text = Local.LocalString("maptree.key");
 			this.KeyColumn.Width = 105;
 			// 
 			// ValueColumn
 			// 
-			this.ValueColumn.Text = "Value";
+			this.ValueColumn.Text = Local.LocalString("object_properties.value");
 			this.ValueColumn.Width = 177;
 			// 
 			// MapTreeWindow
@@ -86,7 +88,7 @@
 			this.Name = "MapTreeWindow";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
-			this.Text = "Tree View";
+			this.Text = Local.LocalString("maptree");
 			this.ResumeLayout(false);
 
         }

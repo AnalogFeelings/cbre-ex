@@ -1,6 +1,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Operations;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace CBRE.Editor.Problems
                                                             select g;
             foreach (IGrouping<long, MapObject> dupe in dupes)
             {
-                yield return new Problem(GetType(), map, dupe, Fix, "Multiple objects have the same ID", "More than one object has the same ID. Each object ID should be unique. Fixing the problem will assign the duplicates new IDs.");
+                yield return new Problem(GetType(), map, dupe, Fix, Local.LocalString("document.duplicate_object"), Local.LocalString("document.duplicate_object.description"));
             }
         }
 

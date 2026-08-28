@@ -1,6 +1,7 @@
 ﻿using CBRE.Common;
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
+using CBRE.Localization;
 using CBRE.Providers.Texture;
 using System;
 using System.Collections.Generic;
@@ -251,7 +252,7 @@ namespace CBRE.Providers.Map
                     if (f == null)
                     {
                         // TODO: Report invalid solids
-                        Debug.WriteLine("Invalid solid! ID: " + solid["id"]);
+                        Debug.WriteLine(Local.LocalString("log.invalid_solid", solid["id"]));
                         return null;
                     }
                     face.Texture = f.Texture;

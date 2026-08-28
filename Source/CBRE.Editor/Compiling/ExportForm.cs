@@ -1,9 +1,9 @@
 ﻿using CBRE.Editor.Documents;
 using CBRE.Settings;
+using CBRE.Localization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,6 +11,9 @@ using System.Threading;
 using System.Windows.Forms;
 using CBRE.UI.Native;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using Steamworks;
+using Steamworks.Data;
+using Color = System.Drawing.Color;
 
 namespace CBRE.Editor.Compiling
 {
@@ -34,12 +37,7 @@ namespace CBRE.Editor.Compiling
 
         private DialogResult ShowPerformanceWarning()
         {
-            DialogResult result = MessageBox.Show("Baking model shadows will SEVERELY impact lightmapping performance, " +
-                                                  "especially if there are lots of models in your room.\n" +
-                                                  "It's recommended to leave it off unless you're exporting the room.\n\n" +
-                                                  "Are you sure you want to continue?\n\n" +
-                                                  "This warning can be turned off in Settings.",
-                "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            DialogResult result = MessageBox.Show(Local.LocalString("warning.export.performance"), Local.LocalString("warning.title"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             return result;
         }
@@ -77,7 +75,7 @@ namespace CBRE.Editor.Compiling
                 }
             }
 
-            ProgressLog.Text = "Rendering lightmap";
+            ProgressLog.Text = Local.LocalString("progress.export.render_lightmap");
             ProgressBar.Enabled = true;
 
             actionThread = new Thread(() => { PerformAction(false, LightmapConfig.ViewAfterExport); }) { CurrentCulture = CultureInfo.InvariantCulture };
@@ -86,7 +84,7 @@ namespace CBRE.Editor.Compiling
 
         private void export_Click(object sender, EventArgs e)
         {
-            if (LightmapConfig.BakeModelShadows && CBRE.Settings.Exporting.ShowModelBakingWarning)
+            if (LightmapConfig.BakeModelShadows && Exporting.ShowModelBakingWarning)
             {
                 DialogResult result = ShowPerformanceWarning();
 
@@ -100,19 +98,20 @@ namespace CBRE.Editor.Compiling
             {
                 string filter = "";
 #if RM2
-                filter += "SCP-CB v1.4 RM2 (*.rm2)|*.rm2|";
+                filter += Local.LocalString("filetype.rmesh2") + " (*.rm2)|*.rm2|";
 #endif
-                filter += "SCP-CB v1.3.11 RMesh (*.rmesh)|*.rmesh";
-                filter += "|Autodesk Filmbox (*.fbx)|*.fbx";
-                filter += "|Wavefront Object (*.obj)|*.obj";
-                filter += "|Stereolithography (*.stl)|*.stl";
-                filter += "|Stanford Polygon Library (*.ply)|*.ply";
+                filter += Local.LocalString("filetype.rm") + " (*.rm)|*.rm|";
+                filter += Local.LocalString("filetype.rmesh") + " (*.rmesh)|*.rmesh|";
+                filter += Local.LocalString("filetype.filmbox") + " (*.fbx)|*.fbx|";
+                filter += Local.LocalString("filetype.object") + " (*.obj)|*.obj|";
+                filter += Local.LocalString("filetype.stereolithography") + " (*.stl)|*.stl|";
+                filter += Local.LocalString("filetype.polygon") + " (*.ply)|*.ply";
                 save.Filter = filter;
                 if (save.ShowDialog() == DialogResult.OK)
                 {
                     SaveFileName = save.FileName;
 
-                    ProgressLog.Text = "Exporting to " + save.FileName;
+                    ProgressLog.Text = Local.LocalString("progress.export.exporting", save.FileName);
                     ProgressBar.Enabled = true;
 
                     actionThread = new Thread(() => { PerformAction(true, LightmapConfig.ViewAfterExport); }) { CurrentCulture = CultureInfo.InvariantCulture };
@@ -197,7 +196,7 @@ namespace CBRE.Editor.Compiling
         {
             if (ambientRed.Enabled)
             {
-                using (ColorDialog cb = new System.Windows.Forms.ColorDialog())
+                using (ColorDialog cb = new ColorDialog())
                 {
                     if (cb.ShowDialog() == DialogResult.OK)
                     {
@@ -261,9 +260,17 @@ namespace CBRE.Editor.Compiling
                     {
                         RM2Export.SaveToFile(SaveFileName, Document, this);
                     }
-                    else if (extension.Equals(".rmesh", StringComparison.OrdinalIgnoreCase))
+                    else if (extension.Equals(".rmesh", StringComparison.OrdinalIgnoreCase) || extension.Equals(".rm", StringComparison.OrdinalIgnoreCase))
                     {
-                        RMeshExport.SaveToFile(SaveFileName, Document, this);
+                        RMeshExport.SaveToFile(SaveFileName, Document, this, extension.Equals(".rm", StringComparison.OrdinalIgnoreCase));
+                        if (SteamClient.IsValid)
+                        {
+                            Achievement achExported = SteamUserStats.Achievements.FirstOrDefault(x => x.Identifier == "exported_rmesh");
+                            if (achExported.Identifier != null && !achExported.State)
+                            {
+                                achExported.Trigger();
+                            }
+                        }
                     }
                     else if (_GenericExtensions.Contains(extension.ToLower()))
                     {
@@ -271,7 +278,7 @@ namespace CBRE.Editor.Compiling
                     }
                     else
                     {
-                        throw new Exception($"Unknown file extension ({extension})");
+                        throw new Exception(Local.LocalString("error.export.unknown_extension", extension));
                     }
 
                     if (viewAfterwards)
@@ -299,7 +306,7 @@ namespace CBRE.Editor.Compiling
                     }
                 }
 
-                ProgressLog.Invoke((MethodInvoker)(() => ProgressLog.AppendText("\nCancelled by the user")));
+                ProgressLog.Invoke((MethodInvoker)(() => ProgressLog.AppendText("\n" + Local.LocalString("progress.export.cancelled"))));
                 ProgressBar.Invoke((MethodInvoker)(() => ProgressBar.Value = 0));
                 ProgressBar.Invoke((MethodInvoker)(() => TaskbarManager.Instance.SetProgressValue(0, 10000)));
                 ProgressBar.Invoke((MethodInvoker)(() => TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress, this.Handle)));
@@ -311,7 +318,7 @@ namespace CBRE.Editor.Compiling
                     ProgressLog.SelectionStart = ProgressLog.TextLength;
                     ProgressLog.SelectionLength = 0;
                     ProgressLog.SelectionColor = Color.Red;
-                    ProgressLog.AppendText("\nError: " + e.Message + "\n" + e.StackTrace);
+                    ProgressLog.AppendText("\n" + Local.LocalString("progress.export.error", e.Message) + "\n" + e.StackTrace);
                     ProgressLog.SelectionColor = ProgressLog.ForeColor;
                 }));
                 ProgressBar.Invoke((MethodInvoker)(() => ProgressBar.Value = 0));

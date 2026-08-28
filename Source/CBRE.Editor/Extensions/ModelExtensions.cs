@@ -2,6 +2,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Documents;
 using CBRE.FileSystem;
+using CBRE.Localization;
 using CBRE.Providers.Model;
 using CBRE.Settings;
 using System;
@@ -99,7 +100,7 @@ namespace CBRE.Editor.Extensions
                 }
                 catch (Exception exception)
                 {
-                    File.AppendAllText("modelLoadErrors.txt", $"\nFailed to load {file.FullPathName}: " +
+                    File.AppendAllText("modelLoadErrors.txt",  "\n" + Local.LocalString("error.failed_to_load", file.FullPathName) +
                         $"{exception.Message} ({exception.GetType().Name})\n" +
                         $"{exception.StackTrace}");
                     // Couldn't load

@@ -1,3 +1,4 @@
+using CBRE.Localization;
 using CBRE.Settings;
 using CBRE.UI;
 using OpenTK;
@@ -38,7 +39,7 @@ namespace CBRE.Editor.Tools.Widgets
         }
 
         public override Image GetIcon() { return null; }
-        public override string GetName() { return "Widget"; }
+        public override string GetName() { return Local.LocalString("tool.widget"); }
         public override HotkeyTool? GetHotkeyToolType() { return null; }
         public override string GetContextualHelp() { return ""; }
 

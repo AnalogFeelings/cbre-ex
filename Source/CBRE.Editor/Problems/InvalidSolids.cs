@@ -1,6 +1,7 @@
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Actions;
 using CBRE.Editor.Actions.MapObjects.Operations;
+using CBRE.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace CBRE.Editor.Problems
         {
             foreach (MapObject invalid in map.WorldSpawn.Find(x => x is Solid && (!visibleOnly || (!x.IsVisgroupHidden && !x.IsCodeHidden)) && !((Solid)x).IsValid()))
             {
-                yield return new Problem(GetType(), map, new[] { invalid }, Fix, "Invalid solid", "This solid is invalid. It is either not convex, has coplanar faces, or has off-plane vertices. Fixing the issue will delete the solid.");
+                yield return new Problem(GetType(), map, new[] { invalid }, Fix, Local.LocalString("document.invalid_solid"), Local.LocalString("document.invalid_solid.description"));
             }
         }
 

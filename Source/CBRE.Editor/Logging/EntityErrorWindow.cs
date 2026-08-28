@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using CBRE.Localization;
 using CBRE.UI.Native;
 
 namespace CBRE.Editor.Logging
@@ -31,17 +32,17 @@ namespace CBRE.Editor.Logging
 
                 using (StreamWriter streamWriter = new StreamWriter($"Logs\\Entities\\{filename}"))
                 {
-                    string content = "CBRE-EX has encountered errors when loading custom entities. Details can be found below.\n" +
+                    string content = Local.LocalString("error.loading_custom_entites") + "\n" +
                                      "----------------------------------------------------------------------------------------\n" +
                                      joinedText;
                     streamWriter.Write(content);
                 }
 
-                logLabel.Text += $"Details have been written to \"Logs\\Entities\\{filename}\"";
+                logLabel.Text += Local.LocalString("log.details_written_to", $"\"Logs\\Entities\\{filename}\"");
             }
             catch (Exception ex)
             {
-                logLabel.Text += $"Could not write error log: {ex.Message}";
+                logLabel.Text += Local.LocalString("log.could_not_write_errorlog", ex.Message);
             }
         }
 

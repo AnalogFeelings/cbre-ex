@@ -57,7 +57,7 @@ namespace CBRE.Providers.Texture
 
                     if (!loadedImages.ContainsKey(rel))
                     {
-                        Bitmap bmp = new Bitmap(spr);
+                        Bitmap bmp = LoadBitmap(spr);
                         TextureFlags flags = TextureFlags.None;
                         for (int x = 0; x < 4; x++)
                         {
@@ -74,6 +74,18 @@ namespace CBRE.Providers.Texture
                             if (flags != TextureFlags.None) break;
                         }
                         loadedImages.Add(rel, new Tuple<Bitmap, TextureFlags>(bmp, flags));
+
+                        Bitmap LoadBitmap(string str)
+                        {
+                            try
+                            {
+                                return new Bitmap(str);
+                            }
+                            catch (ArgumentException)
+                            {
+                                throw new ArgumentException($"Could not load texture at '{str}'");
+                            }
+                        }
                     }
 
                     tp.AddTexture(new TextureItem(tp, rel.ToLower(), loadedImages[rel].Item2, loadedImages[rel].Item1.Width, loadedImages[rel].Item1.Height));

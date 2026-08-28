@@ -10,9 +10,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the datastructures package.
   - package-ecosystem: "nuget"
@@ -24,9 +24,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the editor package.
   - package-ecosystem: "nuget"
@@ -38,9 +38,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the filesystem package.
   - package-ecosystem: "nuget"
@@ -52,9 +52,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the graphics package.
   - package-ecosystem: "nuget"
@@ -66,9 +66,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the packages package.
   - package-ecosystem: "nuget"
@@ -80,9 +80,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the providers package.
   - package-ecosystem: "nuget"
@@ -94,9 +94,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the quickforms package.
   - package-ecosystem: "nuget"
@@ -108,9 +108,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the smf converter package.
   - package-ecosystem: "nuget"
@@ -122,9 +122,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the settings package.
   - package-ecosystem: "nuget"
@@ -136,9 +136,9 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
+      - "Saalvage"
 
     # For the UI package.
   - package-ecosystem: "nuget"
@@ -150,20 +150,6 @@ updates:
       - "dependencies"
       - "enhancement"
     assignees:
-      - "analogfeelings"
+      - "Saalvage"
     reviewers:
-      - "analogfeelings"
-
-    # For the updater package.
-  - package-ecosystem: "nuget"
-    directory: "/Source/CBRE.Updater"
-    schedule:
-      interval: "daily"
-    target-branch: "main"
-    labels:
-      - "dependencies"
-      - "enhancement"
-    assignees:
-      - "analogfeelings"
-    reviewers:
-      - "analogfeelings"
+      - "Saalvage"

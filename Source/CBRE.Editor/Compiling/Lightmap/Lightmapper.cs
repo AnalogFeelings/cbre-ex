@@ -7,7 +7,6 @@ using CBRE.Settings;
 using CBRE.UI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -21,6 +20,7 @@ using CBRE.Extensions;
 using CBRE.Providers.Model;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ThreadState = System.Threading.ThreadState;
+using CBRE.Localization;
 
 namespace CBRE.Editor.Compiling.Lightmap
 {
@@ -45,7 +45,7 @@ namespace CBRE.Editor.Compiling.Lightmap
         {
             string currTxt = "";
             exportForm.ProgressLog.Invoke((MethodInvoker)(() => currTxt = exportForm.ProgressLog.Text));
-            if (msg.EndsWith("faces complete") && currTxt.EndsWith("faces complete"))
+            if (msg.StartsWith("⌛") && currTxt.StartsWith("⌛"))
             {
                 exportForm.ProgressLog.Invoke((MethodInvoker)(() =>
                 {
@@ -174,15 +174,15 @@ namespace CBRE.Editor.Compiling.Lightmap
             List<LMFace> exclusiveBlockers = new List<LMFace>();
 
             //get faces
-            UpdateProgress(exportForm, "Finding faces and determining UV coordinates...", 0);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.finding_faces_and_uv_coor"), 0);
             LMFace.FindFacesAndGroups(map, out faces, out lmGroups);
 
-            if (!lmGroups.Any()) { throw new Exception("No lightmap groups!"); }
+            if (!lmGroups.Any()) { throw new Exception(Local.LocalString("exception.no_lightmap_groups")); }
 
             int blockerCount = 0;
             int modelBlockerCount = 0;
 
-            UpdateProgress(exportForm, "Finding light blocker brushes...", 0.02f);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.finding_light_blocker_brushes"), 0.02f);
 
             foreach (Solid solid in map.WorldSpawn.Find(x => x is Solid).OfType<Solid>())
             {
@@ -197,7 +197,7 @@ namespace CBRE.Editor.Compiling.Lightmap
 
             if (LightmapConfig.BakeModelShadows)
             {
-                UpdateProgress(exportForm, "Finding model faces...", 0.03f);
+                UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.finding_model_faces"), 0.03f);
 
                 Dictionary<string, ModelReference> modelReferences = document.GetMemory<Dictionary<string, ModelReference>>("ModelCache");
 
@@ -290,7 +290,7 @@ namespace CBRE.Editor.Compiling.Lightmap
                 }
             }
 
-            UpdateProgress(exportForm, "Sorting lightmap groups...", 0.03f);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.sorting_lightmap_groups"), 0.03f);
             //put the faces into the bitmap
             lmGroups.Sort((x, y) =>
             {
@@ -313,7 +313,7 @@ namespace CBRE.Editor.Compiling.Lightmap
 
             FaceRenderThreads = new List<Thread>();
 
-            UpdateProgress(exportForm, "Finding light entities...", 0.04f);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.finding_light_entites"), 0.04f);
             Light.FindLights(map, out lightEntities);
 
             List<LMFace> allBlockers = lmGroups.Select(q => q.Faces).SelectMany(q => q).Where(f => f.CastsShadows).Union(exclusiveBlockers).ToList();
@@ -335,7 +335,7 @@ namespace CBRE.Editor.Compiling.Lightmap
 
             if (uvCalcFaces.Count > 0)
             {
-                throw new Exception("Could not fit lightmap into four textures; try increasing texture dimensions or downscale factor");
+                throw new Exception(Local.LocalString("exception.lightmap_not_fit_four_textures"));
             }
 
             float[][] buffers = new float[4][];
@@ -363,14 +363,14 @@ namespace CBRE.Editor.Compiling.Lightmap
 
             if (LightmapConfig.BakeModelShadows)
             {
-                UpdateProgress(exportForm, $"Found {blockerCount + modelBlockerCount} blockers, {blockerCount} which are from brushes, and {modelBlockerCount} from models", 0.05f);
+                UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.found_blockers_bake", blockerCount + modelBlockerCount, blockerCount, modelBlockerCount), 0.05f);
             }
             else
             {
-                UpdateProgress(exportForm, $"Found {blockerCount} blockers from brushes.", 0.05f);
+                UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.found_blockers", blockerCount), 0.05f);
             }
             
-            UpdateProgress(exportForm, "Started calculating brightness levels...", 0.05f);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.calculating_brightness"), 0.05f);
             while (FaceRenderThreads.Count > 0)
             {
                 for (int i = 0; i < LightmapConfig.MaxThreadCount; i++)
@@ -385,7 +385,7 @@ namespace CBRE.Editor.Compiling.Lightmap
                         FaceRenderThreads.RemoveAt(i);
                         i--;
                         faceNum++;
-                        UpdateProgress(exportForm, faceNum.ToString() + "/" + faceCount.ToString() + " faces complete", 0.05f + ((float)faceNum / (float)faceCount) * 0.85f);
+                        UpdateProgress(exportForm, "⌛ " + Local.LocalString("progress.lightmapper.faces_complete", faceNum, faceCount), 0.05f + (faceNum / faceCount) * 0.85f);
                     }
                 }
 
@@ -404,7 +404,7 @@ namespace CBRE.Editor.Compiling.Lightmap
             }
 
             //blur the lightmap so it doesn't look too pixellated
-            UpdateProgress(exportForm, "Blurring lightmap...", 0.95f);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.blur_lightmap"), 0.95f);
             float[] blurBuffer = new float[buffers[0].Length];
             for (int k = 0; k < 4; k++)
             {
@@ -495,7 +495,7 @@ namespace CBRE.Editor.Compiling.Lightmap
                 }
             }
 
-            UpdateProgress(exportForm, "Copying bitmap data...", 0.99f);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.copying_bitmap_data"), 0.99f);
             for (int k = 0; k < 4; k++)
             {
                 byte[] byteBuffer = new byte[buffers[k].Length];
@@ -528,7 +528,7 @@ namespace CBRE.Editor.Compiling.Lightmap
             buffers = null;
             GC.Collect();
 
-            UpdateProgress(exportForm, "Lightmapping complete!", 1.0f);
+            UpdateProgress(exportForm, Local.LocalString("progress.lightmapper.lightmapping_complete"), 1.0f);
         }
 
         public static void SaveLightmaps(Document document, int lmCount, string path, bool threeBasisModel)
